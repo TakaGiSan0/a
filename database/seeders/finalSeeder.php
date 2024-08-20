@@ -17,6 +17,11 @@ class finalSeeder extends Seeder
      */
     public function run(): void
     {
-        
+
+        DB::table('final_judgements')->insert([
+            ['name' => 'Competence', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Attend', 'created_at' => now(), 'updated_at' => now()],
+        ]);
+
     }
 }
