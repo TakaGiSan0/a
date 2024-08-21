@@ -62,4 +62,15 @@ class PesertaController extends Controller
     {
         //
     }
+
+    public function getParticipantByBadgeNo($badge_no)
+    {
+        $participant = peserta::where('badge_no', $badge_no)->first();
+
+        if ($participant) {
+            return response()->json($participant);
+        } else {
+            return response()->json(['error' => 'Participant not found'], 404);
+        }
+    }
 }

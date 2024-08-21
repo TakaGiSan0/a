@@ -12,6 +12,10 @@ class level extends Model
     protected $table = "levels";
 
     protected $fillable = [
-        'name',
+        'level',
     ];
+    public function trainingRecords()
+    {
+        return $this->hasMany(training_record::class, 'level');
+    }
 }

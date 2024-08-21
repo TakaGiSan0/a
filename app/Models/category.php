@@ -9,9 +9,12 @@ class category extends Model
 {
     use HasFactory;
 
-    protected $table = "categories";
+    protected $table = 'categories';
 
-    protected $fillable = [
-        'name',
-    ];
+    protected $fillable = ['name'];
+
+    public function trainingRecords()
+    {
+        return $this->hasMany(training_record::class, 'category_id');
+    }
 }

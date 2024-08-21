@@ -14,4 +14,8 @@ class final_judgement extends Model
     protected $fillable = [
         'name',
     ];
+    public function trainingRecords()
+    {
+        return $this->hasMany(training_record::class, 'final_judgement_id');
+    }
 }

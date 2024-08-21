@@ -14,4 +14,9 @@ class practical_result extends Model
     protected $fillable = [
         'name',
     ];
+
+    public function trainingRecords()
+    {
+        return $this->hasMany(training_record::class, 'practical_result_id');
+    }
 }

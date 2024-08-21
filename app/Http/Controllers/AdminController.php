@@ -11,7 +11,13 @@ class AdminController extends Controller
      */
     public function index()
     {
-        return view("index.admin");
+        return view("user.admin");
+    }
+
+    public function create()
+    {
+        return view('form.form');
+
     }
 
     /**
@@ -19,7 +25,8 @@ class AdminController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return view('admin.form');
+
     }
 
     /**
