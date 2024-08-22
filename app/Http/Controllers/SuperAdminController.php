@@ -31,6 +31,34 @@ class SuperAdminController extends Controller
         return view('user.super_admin', compact('training_records'));
     }
 
+    public function employee()
+    {
+        $training_records = training_record::with([
+            'trainingCategory',
+            'final_judgement',
+            'level',
+            'peserta',
+            'practical',
+            'theory',
+        ])->get();
+
+        return view('index.employee', compact('training_records'));
+    }
+
+    public function summary()
+    {
+        $training_records = training_record::with([
+            'trainingCategory:id,name',
+            'final_judgement:id,name',
+            'level:id,level',
+            'peserta',
+            'practical:id,name',
+            'theory:id,name',
+        ])->get();
+
+        return view('index.summary', compact('training_records'));
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -62,6 +90,7 @@ class SuperAdminController extends Controller
             'rev' => 'required',
             'license' => 'nullable|boolean',
             'station' => 'required',
+
             'skill_code' => 'required',
             'training_date' => 'required',
             'peserta_id' => 'required|exists:pesertas,id',
@@ -99,9 +128,26 @@ class SuperAdminController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Escape $escape)
+    public function show($id)
     {
-        //
+        $trainingRecord = training_record::with([
+        'trainingCategory',
+        'final_judgement',
+        'level',
+        'peserta',
+        'practical',
+        'theory',
+    ])->find($id);
+
+    if (!$trainingRecord) {
+        return response()->json(['error' => 'Record not found'], 404);
+    }
+
+    return response()->json([
+        'trainingRecord' => $trainingRecord,
+        'trainingCategory' => $trainingRecord->trainingCategory,
+        'theory' => $trainingRecord->theory,
+        ]);
     }
 
     /**

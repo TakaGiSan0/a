@@ -6,36 +6,74 @@
     <div class="container mx-auto">
         <!-- Dashboard Header -->
         <!-- Start block -->
-        <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
-            <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
+        <section class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden antialiased">
+            <div class="mx-auto max-w-screen-xl px-4 lg:px-12 py-3">
                 <!-- Start coding here -->
-                <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
-                    <div
-                        class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
-                        <div class="w-full md:w-1/2">
-                            <form class="flex items-center">
-                                <label for="simple-search" class="sr-only">Search</label>
-                                <div class="relative w-full">
-                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                        <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400"
-                                            fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                            <path fill-rule="evenodd"
-                                                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                    </div>
-                                    <input type="text" id="simple-search"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                        placeholder="Search" required="">
-                                </div>
-                            </form>
+
+                <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-lg">
+                    <form class="">
+                        <div class="relative mb-10 w-full flex  items-center justify-between rounded-md">
+                            <svg class="absolute left-2 block h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg"
+                                width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8" class=""></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65" class=""></line>
+                            </svg>
+                            <input type="name" name="search"
+                                class="h-12 w-full cursor-text rounded-md border border-gray-100 bg-gray-100 py-4 pr-40 pl-12 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                                placeholder="Training Name" />
                         </div>
 
-                    </div>
-                    <div class="overflow-x-auto">
+                        <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4">
+                            <div class="flex flex-col">
+                                <label for="manufacturer" class="text-sm font-medium text-stone-600">Dept</label>
+
+                                <select id="manufacturer"
+                                    class="mt-2 block w-full rounded-md border border-gray-100 bg-gray-100 px-2 py-2 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                                    <option>N/A</option>
+                                    <option>N/A</option>
+                                    <option>N/A</option>
+                                </select>
+                            </div>
+
+                            <div class="flex flex-col">
+                                <label for="manufacturer" class="text-sm font-medium text-stone-600">Station</label>
+
+                                <select id="manufacturer"
+                                    class="mt-2 block w-full rounded-md border border-gray-100 bg-gray-100 px-2 py-2 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                                    <option>N/A</option>
+                                    <option>N/A</option>
+                                    <option>N/A</option>
+                                </select>
+                            </div>
+
+                            <div class="flex flex-col">
+                                <label for="date" class="text-sm font-medium text-stone-600">Training Date</label>
+                                <input type="date" id="date"
+                                    class="mt-2 block w-full cursor-pointer rounded-md border border-gray-100 bg-gray-100 px-2 py-2 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" />
+                            </div>
+
+                            <div class="flex flex-col">
+                                <label for="status" class="text-sm font-medium text-stone-600">Training Category</label>
+
+                                <select id="status"
+                                    class="mt-2 block w-full cursor-pointer rounded-md border border-gray-100 bg-gray-100 px-2 py-2 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                                    <option>N/A</option>
+                                    <option>N/A</option>
+                                    <option>N/A</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="overflow-x-auto mt-4">
+                    <?php $no = 0; ?>
+                    @foreach ($training_records as $rc)
                         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                 <tr>
+                                    <th scope="col" class="px-4 py-4">No</th>
                                     <th scope="col" class="px-4 py-4">Doc. Ref</th>
                                     <th scope="col" class="px-4 py-3">Training Category</th>
                                     <th scope="col" class="px-4 py-3">Training Name</th>
@@ -50,16 +88,16 @@
                             </thead>
                             <tbody>
                                 <tr class="border-b dark:border-gray-700">
-                                    <td scope="row"
-                                        class="px-4 py-3 ">
-                                        N/A</td>
-                                    <td class="px-4 py-3">N/A</td>
-                                    <td class="px-4 py-3">John Doe</td>
-                                    <td class="px-4 py-3">N/A</td>
-                                    <td class="px-4 py-3">N/A</td>
-                                    <td class="px-4 py-3">N/A</td>
-                                    <td class="px-4 py-3">N/A</td>
-                                    <td class="px-4 py-3">N/A</td>
+                                    <td scope="row" class="px-4 py-3 ">
+                                        {{ ++$no }}</td>
+                                    <td class="px-4 py-3">{{ $rc->doc_ref }}</td>
+                                    <td class="px-4 py-3">{{ $rc->trainingCategory->name ?? 'N/A' }}</td>
+                                    <td class="px-4 py-3">{{ $rc->training_name }}</td>
+                                    <td class="px-4 py-3">{{ $rc->peserta->dept ?? 'N/A' }}</td>
+                                    <td class="px-4 py-3">{{ $rc->station ?? 'N/A' }}</td>
+                                    <td class="px-4 py-3">{{ $rc->trainer_name ?? 'N/A' }}</td>
+                                    <td class="px-4 py-3">{{ $rc->training_date ?? 'N/A' }}</td>
+                                    <td class="px-4 py-3">TR-{{ $rc->id }}</td>
                                     <td class="px-4 py-3 flex items-center justify-">
                                         <button id="apple-imac-27-dropdown-button"
                                             data-dropdown-toggle="apple-imac-27-dropdown"
@@ -91,7 +129,8 @@
                                                 <li>
                                                     <button type="button" data-modal-target="readProductModal"
                                                         data-modal-toggle="readProductModal"
-                                                        class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
+                                                        onclick="openModal({{ $rc->id }})"
+                                                        class="flex w-full items-center justify-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
                                                         <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg"
                                                             viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                                             <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
@@ -107,12 +146,13 @@
                                 </tr>
                             </tbody>
                         </table>
-                    </div>
+                    @endforeach
                 </div>
             </div>
-        </section>
-        <!-- End block -->
-        <!-- Create modal -->
+    </div>
+    </section>
+    <!-- End block -->
+    <!-- Create modal -->
 
     </div>
     </div>
@@ -131,7 +171,7 @@
             <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
                 <!-- Modal header -->
                 <div class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Add Product</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Form</h3>
                     <button type="button"
                         class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
                         data-modal-target="createProductModal" data-modal-toggle="createProductModal">
@@ -145,19 +185,41 @@
                     </button>
                 </div>
                 <!-- Modal body -->
-                <form action="#">
+                <div id="modalBody">
+                    <!-- Konten akan diisi secara dinamis melalui JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Delete modal -->
+    <script>
+        let controller = new AbortController();
+
+        function openModal(recordId) {
+            if (controller) {
+                controller.abort(); // Cancel the previous request if it's still ongoing
+            }
+            controller = new AbortController();
+
+            fetch(`/superadmin/employee/${recordId}`, {
+                    signal: controller.signal
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('modalBody').innerHTML = `
+                    <form action="#">
                     <div class="grid gap-4 mb-4 sm:grid-cols-2">
                         <div>
                             <label for="name"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Doc. Ref</label>
-                            <input type="text" name="name" id="name"
+                            <input type="text" name="name" id="name" value="${data.doc_ref ?? 'N/A'}"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 required="John Doe" placeholder="John Doe" disabled>
                         </div>
                         <div>
                             <label for="brand"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Rev</label>
-                            <input type="text" name="brand" id="brand"
+                            <input type="text" name="brand" id="brand" value="${data.rev ?? 'N/A'}"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 required="" disabled placeholder="John Doe">
                         </div>
@@ -165,112 +227,103 @@
                             <label for="price"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Training
                                 Name</label>
-                            <input type="type" name="price" id="price"
+                            <input type="type" name="price" id="price" value="${data.training_name ?? 'N/A'}"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 required="" placeholder="John Doawe" disabled>
                         </div>
                         <div><label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Station</label>
-                            <input type="text"
+                            <input type="text" value="${data.station ?? 'N/A'}"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="John Doe" disabled>
                         </div>
                         <div class="sm:col-span-2"><label for="description"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Job Skill</label>
-                            <textarea id="description" rows="4"
+                            <textarea id="description" rows="4" value="${data.job_skill ?? 'N/A'}"
                                 class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="Write product description here" disabled></textarea>
                         </div>
                         <div><label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Skill Code</label>
-                            <input type="text"
+                            <input type="text" value="${data.skill_code ?? 'N/A'}"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="N/A" disabled>
                         </div>
                         <div><label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Badge No</label>
-                            <input type="text"
+                            <input type="text" value="${data.peserta.badge_no ?? 'N/A'}"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="N/A" disabled>
                         </div>
                         <div><label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Emp Name</label>
-                            <input type="text"
+                            <input type="text" value="${data.peserta.employee_name ?? 'N/A'}"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 disabled placeholder="John Doe">
                         </div>
                         <div><label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Dept</label>
-                            <input type="text"
+                            <input type="text" value="${data.peserta.dept ?? 'N/A'}"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="John Doe" disabled>
                         </div>
                         <div><label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Position</label>
-                            <input type="text"
+                            <input type="text" value="${data.peserta.position ?? 'N/A'}"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="John Doe" disabled>
                         </div>
                         <div><label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Training
                                 Date</label>
-                            <input type="date"
+                            <input type="date" value="${data.training_date ?? 'N/A'}"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="17 Desember 2021" disabled>
                         </div>
                         <div><label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Training
                                 Name</label>
-                            <input type="text"
+                            <input type="text" value="${data.trainer_name ?? 'N/A'}"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="John Doe" disabled>
                         </div>
                         <div><label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Theory
                                 Result</label><select id="category"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 disabled>
-                                <option value="TV">Pass</option>
-                                <option value="TV">Fail</option>
-                                <option selected="" value="TV">N/A</optionse>
+                                <option value="${data.theory.name ?? 'N/A'}">${data.theory.name ?? 'N/A'}</option>
+
                             </select></div>
                         <div><label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Practical
-                                Result</label><select id="category"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                Result</label>
+                                <input id="category" value="${data.practical.name ?? 'N/A'}"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 disabled>
-                                <option value="TV">Pass</option>
-                                <option value="TV">Fail</option>
-                                <option selected="" value="TV">N/A</option>
-                            </select></div>
+                        </div>
                         <div><label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Level
                             </label><select id="category"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 disabled>
-                                <option value="TV">Level 1</option>
-                                <option value="TV">Level 2</option>
-                                <option value="TV">Level 3</option>
-                                <option value="TV">Level 4</option>
-                                <option selected="" value="TV">N/A</option>
+                                <option value="TV">${data.level.level ?? 'N/A'}</option>
+
                             </select></div>
                         <div><label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Final
                                 Judgement</label><select id="category"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 disabled>
-                                <option value="TV">Competence</option>
-                                <option selected="" value="TV">Attend</option>
+                                <option value="TV">${data.final_judgement.name ?? 'N/A'}</option>
                             </select></div>
                         <div><label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Training
                                 Category</label><select id="category"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 disabled>
-                                <option selected="" value="TV">Neo</option>
-                                <option value="TV">Project</option>
-                                <option value="TV">Internal</option>
-                                <option value="TV">External</option>
+                                <option selected="" value="TV">${data.training_category?.name ?? 'N/A'}</option>
+
                             </select></div>
                         <div class="flex items-center mb-4">
                             <input id="default-checkbox" type="checkbox" value=""
@@ -282,11 +335,21 @@
                         </div>
                     </div>
                 </form>
-                
-            </div>
-        </div>
-    </div>
-    <!-- Delete modal -->
+            `;
+                    console.log(data.trainingCategory);
+                    console.log('Full data:', data);
+                    console.log('Training Category:', data.trainingCategory);
 
-    </div>
+                    let categoryName = data.trainingCategory?.name ?? 'N/A';
+                    console.log('Category Name:', categoryName);
+                })
+                .catch(error => {
+                    if (error.name === 'AbortError') {
+                        console.log('Fetch aborted');
+                    } else {
+                        console.error('Fetch error:', error);
+                    }
+                });
+        }
+    </script>
 @endsection

@@ -1,211 +1,93 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    @vite('resources/css/app.css')
-</head>
+@section('title', 'Dashboard')
 
-<body>
-
+@section('content')
     <div class="container mx-auto">
-        <!-- component -->
-        <header>
-            <nav x-data="{ open: false }"
-                class="flex h-auto w-auto bg-white shadow-lg rounded-lg justify-between
-        md:h-16">
-                <div class="flex w-full justify-between ">
-                    <div :class="open ? 'hidden' : 'flex'"
-                        class="flex px-6 w-1/2 items-center font-semibold
-            md:w-1/5 md:px-1 md:flex md:items-center md:justify-center"
-                        x-transition:enter="transition ease-out duration-300">
-                        <a href="">
-                            @auth
-                                {{ Auth::user()->name }}
-                            @endauth
-                        </a>
-                    </div>
-
-                    <div x-show="open" x-transition:enter="transition ease-in-out duration-300"
-                        class="flex flex-col w-full h-auto
-            md:hidden">
-                        <div class="flex flex-col items-center justify-center gap-2">
-                            <a href="">Home</a>
-                            <a href="">About Us</a>
-                            <a href="">Products</a>
-                            <a href="">Contact</a>
-                            <button>Login</button>
-                            <button>Sign Up</button>
-                        </div>
-                    </div>
-                    <div class="hidden w-3/5 items-center justify-evenly font-semibold
-            md:flex">
-                        <a href="{{ route('superadmin.create') }}">Home</a>
-                        <a href="">About Us</a>
-                        <a href="">Products</a>
-                        <a href="">Contact</a>
-                    </div>
-                    <div class="hidden w-1/5 items-center justify-evenly font-semibold
-            md:flex">
-                        <button>Login</button>
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit">Logout</button>
-                        </form>
-                    </div>
-                    <button
-                        class="text-gray-500 w-10 h-10 relative focus:outline-none bg-white
-                            md:hidden
-                          "
-                        @click="open = !open">
-                        <span class="sr-only">Open main menu</span>
-                        <div class="block w-5 absolute left-1/2 top-1/2   transform  -translate-x-1/2 -translate-y-1/2">
-                            <span aria-hidden="true"
-                                class="block absolute h-0.5 w-5 bg-current transform transition duration-500 ease-in-out"
-                                :class="{ 'rotate-45': open, ' -translate-y-1.5': !open }"></span>
-                            <span aria-hidden="true"
-                                class="block absolute  h-0.5 w-5 bg-current   transform transition duration-500 ease-in-out"
-                                :class="{ 'opacity-0': open }"></span>
-                            <span aria-hidden="true"
-                                class="block absolute  h-0.5 w-5 bg-current transform  transition duration-500 ease-in-out"
-                                :class="{ '-rotate-45': open, ' translate-y-1.5': !open }"></span>
-                        </div>
-                    </button>
-                </div>
-            </nav>
-        </header>
-
-
-
-        <div class="relative overflow-x-auto">
-            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                    <tr>
-                        <th scope="col" class="px-6 py-3">
-                            No
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Doc Ref
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Training Name
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Trainer Name
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Rev
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Badge No
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Employee Name
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Dept
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Position
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Theory Result
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Practical Result
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Level
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Final Judgement
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Category
-                        </th>
-                    </tr>
-                </thead>
-                <?php $no = 0; ?>
-                @foreach ($training_records as $rc)
-                <tbody>
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                        <th scope="row"
-                            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            {{ ++$no }}
-                        </th>
-                            <td class="px-6 py-4">
-                                {{ $rc->doc_ref }}
-                            </td>
-                            <td class="px-6 py-4">
-                                {{ $rc->training_name }}
-                            </td>
-                            <td class="px-6 py-4">
-                                {{ $rc->trainer_name }}
-                            </td>
-                            <td class="px-6 py-4">
-                                {{ $rc->rev }}
-                            </td>
-                            <td class="px-6 py-4">
-                                {{ $rc->peserta->badge_no ?? 'N/A' }}
-                            </td>
-                            <td class="px-6 py-4">
-                                {{ $rc->peserta->employee_name ?? 'N/A' }}
-                            </td>
-                            <td class="px-6 py-4">
-                                {{ $rc->peserta->dept ?? 'N/A' }}
-
-                            </td>
-                            <td class="px-6 py-4">
-                                {{ $rc->peserta->position ?? 'N/A' }}
-
-                            </td>
-                            <td class="px-6 py-4">
-                                {{ $rc->theory->name ?? 'N/A' }}
-
-                            </td>
-                            <td class="px-6 py-4">
-                                {{ $rc->practical->name ?? 'N/A' }}
-
-                            </td>
-                            <td class="px-6 py-4">
-                                {{ $rc->level->level ?? 'N/A' }}
-
-                            </td>
-
-                            <td class="px-6 py-4">
-                                {{ $rc->final_judgement->name ?? 'N/A' }}
-
-                            </td>
-                            <td class="px-6 py-4">
-                                {{ $rc->trainingCategory->name ?? 'N/A' }}
-
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="flex items-center mb-4">
-                                    <input id="license-checkbox"
-                                           type="checkbox"
-                                           name="license"
-                                           value="1"
-                                           disabled
-                                           class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                           @if($rc->license) checked @endif>
-                                    <label for="license-checkbox"
-                                           class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">License/Certification</label>
+        <!-- Dashboard Header -->
+        <!-- Start block -->
+        <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
+            <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
+                <!-- Start coding here -->
+                <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
+                    <div
+                        class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
+                        <div class="w-full md:w-1/2">
+                            <form class="flex items-center">
+                                <label for="simple-search" class="sr-only">Search</label>
+                                <div class="relative w-full">
+                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                        <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400"
+                                            fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd"
+                                                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <input type="text" id="simple-search"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        placeholder="Search" required="">
                                 </div>
-                            </td>
-                        </tr>
+                            </form>
+                        </div>
+                        <div
+                            class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+                            <a href="{{ route("superadmin.create") }}">
+                                <button type="button" id="createProductModalButton" data-modal-target="createProductModal"
+                                    data-modal-toggle="createProductModal"
+                                    class="flex items-center justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                                    <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20"
+                                        xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <path clip-rule="evenodd" fill-rule="evenodd"
+                                            d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
+                                    </svg>
+                                    Add product
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-center text-gray-500 dark:text-gray-400">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                <tr>
+                                    <th scope="col" class="px-4 py-4">Training Name</th>
+                                    <th scope="col" class="px-4 py-3">Training Date</th>
+                                    <th scope="col" class="px-4 py-3">Trainer Name</th>
+                                    <th scope="col" class="px-4 py-3">Status</th>
+                                    <th scope="col" class="px-4 py-3">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b dark:border-gray-700">
+                                    <th scope="row"
+                                        class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white flex justify-center">
+                                        <svg class="h-8 w-8 text-slate-500"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <polyline points="3 9 12 15 21 9 12 3 3 9" />  <path d="M21 9v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10" />  <line x1="3" y1="19" x2="9" y2="13" />  <line x1="15" y1="13" x2="21" y2="19" /></svg>
+                                        <p class="text-center justify-center mx-4 py-2">Training</p>
+                                    </th>
+                                    <td class="px-4 py-3">20 Agustus 2024</td>
+                                    <td class="px-4 py-3">Jhon Doe</td>
+                                    <td class="px-4 py-3">Pending</td>
+                                    <td class="px-4 py-3 flex items-center justify-center">
+                                        <a href="#">
+                                            <svg class="h-8 w-8 text-slate-500"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />  <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" /></svg>
+                                        </a>
+                                        <a href="#">
+                                            <svg class="h-8 w-8 text-slate-500"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                              </svg>
 
-                </tbody>
-                @endforeach
-            </table>
-        </div>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- End block -->
+        <!-- Create modal -->
 
-        <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
     </div>
-
-</body>
-
-</html>
+    
+@endsection

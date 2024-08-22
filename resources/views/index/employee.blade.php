@@ -32,128 +32,106 @@
                         </div>
                         <div
                             class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-                            <a type="button" id="createProductModalButton" href="{{route('create')}}"
-                                data-modal-target="createProductModal" data-modal-toggle="createProductModal"
-                                class="flex items-center justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" href="">
-                                <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20"
-                                    xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                    <path clip-rule="evenodd" fill-rule="evenodd"
-                                        d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
-                                </svg>
-                                Add product
-                            </a>
+
+                            <div class="flex items-center space-x-3 w-full md:w-auto">
+
+                                <button id="filterDropdownButton" data-dropdown-toggle="filterDropdown"
+                                    class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                                    type="button">
+                                    <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
+                                        class="h-4 w-4 mr-2 text-gray-400" viewbox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    Dept
+                                    <svg class="-mr-1 ml-1.5 w-5 h-5" fill="currentColor" viewbox="0 0 20 20"
+                                        xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <path clip-rule="evenodd" fill-rule="evenodd"
+                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                                    </svg>
+                                </button>
+                                <div id="filterDropdown"
+                                    class="z-10 hidden w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
+                                    <ul class="space-y-2 text-sm" aria-labelledby="filterDropdownButton">
+                                        <li class="flex items-center">
+                                            <input id="apple" type="checkbox" value=""
+                                                class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                            <label for="apple"
+                                                class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">N/A</label>
+                                        </li>
+                                        <li class="flex items-center">
+                                            <input id="apple" type="checkbox" value=""
+                                                class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                            <label for="apple"
+                                                class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">N/A</label>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="overflow-x-auto">
-                        <table class="w-full text-sm text-center text-gray-500 dark:text-gray-400">
-                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                <tr>
-                                    <th class="px-4 py-4 flex justify-between items-center ">
-                                        <div class="flex items-center justify-between">
-                                            <svg class="w-6 h-6 text-gray-800 dark:text-white flex" aria-hidden="true"
-                                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                                                <path stroke="currentColor" stroke-linejoin="round" stroke-width="2"
-                                                    d="M8 8v1h4V8m4 7H4a1 1 0 0 1-1-1V5h14v9a1 1 0 0 1-1 1ZM2 1h16a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1Z" />
-                                            </svg>
-                                            <h1 class="text-center items-center mx-2">Draft 1</h1>
-                                        </div>
-                                        <div class="flex justify-between items-center">
-                                            <svg class="h-8 w-8 text-red-500" width="24" height="24"
-                                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                                stroke-linecap="round" stroke-linejoin="round">
-                                                <path stroke="none" d="M0 0h24v24H0z" />
-                                                <line x1="4" y1="7" x2="20" y2="7" />
-                                                <line x1="10" y1="11" x2="10" y2="17" />
-                                                <line x1="14" y1="11" x2="14" y2="17" />
-                                                <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                                                <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-                                            </svg>
-                                            <svg class="h-8 w-8 text-black-500" width="24" height="24"
-                                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                                stroke-linecap="round" stroke-linejoin="round">
-                                                <path stroke="none" d="M0 0h24v24H0z" />
-                                                <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
-                                                <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
-                                            </svg>
-                                        </div>
-                                    </th>
-                                    <th class="px-4 py-4 flex justify-between items-center ">
-                                        <div class="flex items-center">
-                                            <svg class="w-6 h-6 text-gray-800 dark:text-white flex" aria-hidden="true"
-                                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                                                <path stroke="currentColor" stroke-linejoin="round" stroke-width="2"
-                                                    d="M8 8v1h4V8m4 7H4a1 1 0 0 1-1-1V5h14v9a1 1 0 0 1-1 1ZM2 1h16a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1Z" />
-                                            </svg>
-                                            <h1 class="text-center items-center mx-2">Draft 1</h1>
-                                        </div>
-                                        <div class="flex justify-between items-center">
-                                            <svg class="h-8 w-8 text-red-500" width="24" height="24"
-                                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                                fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                <path stroke="none" d="M0 0h24v24H0z" />
-                                                <line x1="4" y1="7" x2="20" y2="7" />
-                                                <line x1="10" y1="11" x2="10" y2="17" />
-                                                <line x1="14" y1="11" x2="14" y2="17" />
-                                                <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                                                <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-                                            </svg>
-                                            <svg class="h-8 w-8 text-black-500" width="24" height="24"
-                                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                                fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                <path stroke="none" d="M0 0h24v24H0z" />
-                                                <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
-                                                <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
-                                            </svg>
-                                        </div>
-                                    </th>
-                                    <th class="px-4 py-4 flex justify-between items-center ">
-                                        <div class="flex items-center">
-                                            <svg class="w-6 h-6 text-gray-800 dark:text-white flex" aria-hidden="true"
-                                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                                                <path stroke="currentColor" stroke-linejoin="round" stroke-width="2"
-                                                    d="M8 8v1h4V8m4 7H4a1 1 0 0 1-1-1V5h14v9a1 1 0 0 1-1 1ZM2 1h16a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1Z" />
-                                            </svg>
-                                            <h1 class="text-center items-center mx-2">Draft 1</h1>
-                                        </div>
-                                        <div class="flex justify-between items-center">
-                                            <svg class="h-8 w-8 text-red-500" width="24" height="24"
-                                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                                fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                <path stroke="none" d="M0 0h24v24H0z" />
-                                                <line x1="4" y1="7" x2="20" y2="7" />
-                                                <line x1="10" y1="11" x2="10" y2="17" />
-                                                <line x1="14" y1="11" x2="14" y2="17" />
-                                                <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                                                <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-                                            </svg>
-                                            <svg class="h-8 w-8 text-black-500" width="24" height="24"
-                                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                                fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                <path stroke="none" d="M0 0h24v24H0z" />
-                                                <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
-                                                <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
-                                            </svg>
-                                        </div>
-                                    </th>
-                                </tr>
-                            </thead>
+                        <?php $no = 0; ?>
+                        @foreach ($training_records as $rc)
+                            <table class="w-full text-sm text-center text-gray-500 dark:text-gray-400">
+                                <thead
+                                    class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                    <tr>
+                                        <th scope="col" class="px-4 py-4">No</th>
+                                        <th scope="col" class="px-4 py-4">Badge No</th>
+                                        <th scope="col" class="px-4 py-3">Emp Name</th>
+                                        <th scope="col" class="px-4 py-3">Dept</th>
+                                        <th scope="col" class="px-4 py-3">Position</th>
+                                        <th scope="col" class="px-4 py-3">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b dark:border-gray-700">
+                                        <th scope="row"
+                                            class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                            {{ ++$no }}</th>
+                                        <td class="px-4 py-3">
+                                            {{ $rc->peserta->badge_no ?? 'N/A' }}
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            {{ $rc->peserta->employee_name ?? 'N/A' }}
 
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            {{ $rc->peserta->dept ?? 'N/A' }}
+
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            {{ $rc->peserta->position ?? 'N/A' }}
+
+                                        </td>
+                                        <td class="px-4 py-3 flex items-center justify-center">
+
+                                            <button type="button" data-modal-target="readProductModal"
+                                                data-modal-toggle="readProductModal"
+                                                onclick="openModal({{ $rc->id }})"
+                                                class="flex w-full items-center justify-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
+                                                <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg"
+                                                    viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                                        d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" />
+                                                </svg>
+                                                Preview
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                        @endforeach
                         </table>
                     </div>
                 </div>
             </div>
         </section>
         <!-- End block -->
-        <!-- Create modal -->
 
     </div>
-    </div>
-
-    </form>
-    </div>
-    </div>
-    </div>
-    <!-- Update modal -->
 
     <!-- Read modal -->
     <div id="readProductModal" tabindex="-1" aria-hidden="true"
@@ -164,11 +142,12 @@
                 <!-- Modal header -->
                 <div class="flex justify-between mb-4 rounded-t sm:mb-5">
                     <div class="text-lg text-gray-900 md:text-xl dark:text-white">
+                        Detail Training Record
                     </div>
                     <div>
                         <button type="button"
                             class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 inline-flex dark:hover:bg-gray-600 dark:hover:text-white"
-                            data-modal-toggle="readProductModal">
+                            data-modal-toggle="readProductModal" onclick="closeModal()">
                             <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd"
@@ -179,23 +158,45 @@
                         </button>
                     </div>
                 </div>
-                <div class="grid gap-4 mb-4 sm:grid-cols-2">
+                <!-- Modal body -->
+                <div id="modalBody">
+                    <!-- Konten akan diisi secara dinamis melalui JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let controller = new AbortController();
+
+        function openModal(recordId) {
+            if (controller) {
+                controller.abort(); // Cancel the previous request if it's still ongoing
+            }
+            controller = new AbortController();
+
+            fetch(`/superadmin/employee/${recordId}`, {
+                    signal: controller.signal
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('modalBody').innerHTML = `
+                    <div class="grid gap-4 mb-4 sm:grid-cols-2">
                     <div><label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Emp
                             name :
-                            Ida
+                            ${data.peserta.employee_name ?? 'N/A'}
                         </label>
                     </div>
                     <div><label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Dept :
-                            HR-Adm
+                            ${data.peserta.dept ?? 'N/A'}
                         </label>
                     </div>
                     <div><label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Badge
-                            No : P-214-22
+                            No : ${data.peserta.badge_no ?? 'N/A'}
                         </label>
                     </div>
                     <div><label for="category"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Position
-                            : HR-Officer
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Position : ${data.peserta.position ?? 'N/A'}
                         </label>
                     </div>
                 </div>
@@ -203,10 +204,10 @@
                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 mb-7">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
-                            <th scope="col" class="px-4 py-4">Badge No</th>
-                            <th scope="col" class="px-4 py-3">Emp Name</th>
-                            <th scope="col" class="px-4 py-3">Dept</th>
-                            <th scope="col" class="px-4 py-3">Position</th>
+                            <th scope="col" class="px-4 py-4">Training Name</th>
+                            <th scope="col" class="px-4 py-3">Trainer Name</th>
+                            <th scope="col" class="px-4 py-3">Training Date</th>
+                            <th scope="col" class="px-4 py-3">Level</th>
                             <th scope="col" class="px-4 py-3">Action</th>
                         </tr>
                     </thead>
@@ -286,10 +287,24 @@
 
                     </tbody>
                 </table>
-            </div>
-        </div>
-    </div>
-    </div>
-    <!-- Delete modal -->
-    </div>
+
+                <p>Training Category: ${data.trainingCategory?.name ?? 'N/A'}</p>
+                <p>Final Judgement: ${data.final_judgement?.name ?? 'N/A'}</p>
+                <p>Level: ${data.level?.level ?? 'N/A'}</p>
+                <p>Theory Result: ${data.theory?.name ?? 'N/A'}</p>
+                <p>Practical Result: ${data.practical?.name ?? 'N/A'}</p>
+            `;
+
+                })
+                .catch(error => {
+                    if (error.name === 'AbortError') {
+                        console.log('Fetch aborted');
+                    } else {
+                        console.error('Fetch error:', error);
+                    }
+                });
+        }
+    </script>
+
+
 @endsection

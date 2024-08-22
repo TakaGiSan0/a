@@ -7,9 +7,6 @@
     <title>@yield('title', 'Dashboard')</title>
     @vite('resources/css/app.css')
     <link href="https://cdn.jsdelivr.net/npm/flowbite@2.4.1/dist/flowbite.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
-    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"/> <!--Replace with your tailwind.css once created-->
-
 
 </head>
 
@@ -18,7 +15,6 @@
         @include('layouts.navbar')
 
         <!-- Sidebar -->
-            @include('layouts.sidebar')
             <!-- Main Content -->
             <div class="flex flex-col flex-1 overflow-y-auto bg-gray-50">
                 <main class="p-6">

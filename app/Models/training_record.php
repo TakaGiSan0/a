@@ -12,7 +12,7 @@ class training_record extends Model
     protected $table = 'training_records';
 
     protected $fillable = [
-        'Doc_ref',
+        'doc_ref',
         'theory_result_id',
         'practical_result_id',
         'level_id',
