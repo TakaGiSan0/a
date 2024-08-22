@@ -143,11 +143,7 @@ class SuperAdminController extends Controller
         return response()->json(['error' => 'Record not found'], 404);
     }
 
-    return response()->json([
-        'trainingRecord' => $trainingRecord,
-        'trainingCategory' => $trainingRecord->trainingCategory,
-        'theory' => $trainingRecord->theory,
-        ]);
+    return response()->json($trainingRecord);
     }
 
     /**

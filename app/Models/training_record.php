@@ -43,7 +43,7 @@ class training_record extends Model
     }
     public function peserta()
     {
-        return $this->belongsTo(Peserta::class, 'peserta_id');
+        return $this->belongsTo(peserta::class, 'peserta_id');
     }
     public function practical()
     {
