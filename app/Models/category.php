@@ -11,7 +11,9 @@ class category extends Model
 
     protected $table = 'categories';
 
-    protected $fillable = ['name'];
+    protected $fillable = [
+        'name',
+    ];
 
     public function trainingRecords()
     {

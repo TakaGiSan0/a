@@ -19,42 +19,30 @@ class SuperAdminController extends Controller
      */
     public function index()
     {
-        $training_records = training_record::with([
-            'trainingCategory',
-            'final_judgement',
-            'level',
-            'peserta',
-            'practical',
-            'theory',
-        ])->get();
+        $training_records = training_record::with(['trainingCategory', 'final_judgement', 'level', 'peserta', 'practical', 'theory'])->get();
 
         return view('user.super_admin', compact('training_records'));
     }
 
     public function employee()
     {
-        $training_records = training_record::with([
-            'trainingCategory',
-            'final_judgement',
-            'level',
-            'peserta',
-            'practical',
-            'theory',
-        ])->get();
+        $training_records = training_record::with(['trainingCategory:id,name', 'final_judgement:id,name', 'level:id,level', 'peserta'])->get();
 
-        return view('index.employee', compact('training_records'));
+        // Mengelompokkan berdasarkan badge_no dan mengambil item pertama dari setiap grup
+        $unique_training_records = $training_records
+            ->groupBy(function ($item) {
+                return $item->peserta->badge_no;
+            })
+            ->map(function ($group) {
+                return $group->first();
+            });
+
+        return view('index.employee', ['training_records' => $unique_training_records]);
     }
 
     public function summary()
     {
-        $training_records = training_record::with([
-            'trainingCategory:id,name',
-            'final_judgement:id,name',
-            'level:id,level',
-            'peserta',
-            'practical:id,name',
-            'theory:id,name',
-        ])->get();
+        $training_records = training_record::with(['trainingCategory:id,name', 'final_judgement:id,name', 'level:id,level', 'peserta', 'practical:id,name', 'theory:id,name'])->get();
 
         return view('index.summary', compact('training_records'));
     }
@@ -72,7 +60,6 @@ class SuperAdminController extends Controller
         $peserta = peserta::all();
 
         return view('form.form', compact('categories', 'theory_result', 'level', 'practical_result', 'final_judgement', 'peserta'));
-
     }
 
     /**
@@ -90,7 +77,6 @@ class SuperAdminController extends Controller
             'rev' => 'required',
             'license' => 'nullable|boolean',
             'station' => 'required',
-
             'skill_code' => 'required',
             'training_date' => 'required',
             'peserta_id' => 'required|exists:pesertas,id',
@@ -128,23 +114,26 @@ class SuperAdminController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
-    {
-        $trainingRecord = training_record::with([
-        'trainingCategory',
-        'final_judgement',
-        'level',
-        'peserta',
-        'practical',
-        'theory',
-    ])->find($id);
+     public function show($recordId)
+{
+    // Dapatkan peserta_id dari record yang diberikan
+    $training_record = training_record::findOrFail($recordId);
+    $peserta_id = $training_record->peserta_id;
 
-    if (!$trainingRecord) {
-        return response()->json(['error' => 'Record not found'], 404);
-    }
+    // Ambil semua training records untuk peserta_id yang sama
+    $all_records = training_record::with(['trainingCategory:id,name', 'final_judgement:id,name', 'level:id,level', 'peserta'])
+        ->where('peserta_id', $peserta_id)
+        ->get();
 
-    return response()->json($trainingRecord);
-    }
+    // Kelompokkan berdasarkan category_id
+    $grouped_records = $all_records->groupBy('category_id');
+
+    return response()->json([
+        'peserta' => $training_record->peserta,
+        'grouped_records' => $grouped_records,
+    ]);
+}
+
 
     /**
      * Show the form for editing the specified resource.

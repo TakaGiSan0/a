@@ -16,6 +16,15 @@
         <div class="container mx-auto p-4">
             <form id="autoSaveForm" class="space-y-4" action="{{ route('superadmin.store') }}" method="POST">
                 @csrf
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 <div class="grid gap-4 mb-4 sm:grid-cols-2">
                     <div>
                         <label for="doc_ref" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Doc.

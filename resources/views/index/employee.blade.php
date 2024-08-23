@@ -107,7 +107,6 @@
 
                                         </td>
                                         <td class="px-4 py-3 flex items-center justify-center">
-
                                             <button type="button" data-modal-target="readProductModal"
                                                 data-modal-toggle="readProductModal"
                                                 onclick="openModal({{ $rc->id }})"
@@ -160,19 +159,34 @@
                 </div>
                 <!-- Modal body -->
                 <div id="modalBody">
-                    <!-- Konten akan diisi secara dinamis melalui JavaScript -->
+                    <div class="grid gap-4 mb-4 sm:grid-cols-2">
+                        <div><label for="category"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Emp Name:</label>
+                            <span id="employeeName">N/A</span>
+                        </div>
+                        <div><label for="category"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Dept:</label>
+                            <span id="dept">N/A</span>
+                        </div>
+                        <div><label for="category"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Badge No:</label>
+                            <span id="badgeNo">N/A</span>
+                        </div>
+                        <div><label for="category"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Position:</label>
+                            <span id="position">N/A</span>
+                        </div>
+                    </div>
+                    <div id="trainingCategories">
+                        <!-- Training categories and tables will be filled by JavaScript -->
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        let controller = new AbortController();
-
         function openModal(recordId) {
-            if (controller) {
-                controller.abort(); // Cancel the previous request if it's still ongoing
-            }
             controller = new AbortController();
 
             fetch(`/superadmin/employee/${recordId}`, {
@@ -180,121 +194,93 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    document.getElementById('modalBody').innerHTML = `
-                    <div class="grid gap-4 mb-4 sm:grid-cols-2">
-                    <div><label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Emp
-                            name :
-                            ${data.peserta.employee_name ?? 'N/A'}
-                        </label>
-                    </div>
-                    <div><label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Dept :
-                            ${data.peserta.dept ?? 'N/A'}
-                        </label>
-                    </div>
-                    <div><label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Badge
-                            No : ${data.peserta.badge_no ?? 'N/A'}
-                        </label>
-                    </div>
-                    <div><label for="category"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Position : ${data.peserta.position ?? 'N/A'}
-                        </label>
-                    </div>
-                </div>
-                <p>1. New Employee Induction (NEO)</p>
-                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 mb-7">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                        <tr>
-                            <th scope="col" class="px-4 py-4">Training Name</th>
-                            <th scope="col" class="px-4 py-3">Trainer Name</th>
-                            <th scope="col" class="px-4 py-3">Training Date</th>
-                            <th scope="col" class="px-4 py-3">Level</th>
-                            <th scope="col" class="px-4 py-3">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="border-b dark:border-gray-700">
-                            <th scope="row"
-                                class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                -Safety Inductior</th>
-                            <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">Indar</td>
-                            <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">23/07/2024
-                            </td>
-                            <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">N/A</td>
-                            <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">Attend</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <p>2. Internal Training</p>
-                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 mb-7">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                        <tr>
-                            <th scope="col" class="px-4 py-4">Badge No</th>
-                            <th scope="col" class="px-4 py-3">Emp Name</th>
-                            <th scope="col" class="px-4 py-3">Dept</th>
-                            <th scope="col" class="px-4 py-3">Position</th>
-                            <th scope="col" class="px-4 py-3">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="border-b dark:border-gray-700">
-                            <th scope="row"
-                                class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                -Safety Inductior</th>
-                            <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">Indar</td>
-                            <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">23/07/2024
-                            </td>
-                            <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">N/A</td>
-                            <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">Attend</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <p>3. External Training</p>
-                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 mb-7">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                        <tr>
-                            <th scope="col" class="px-4 py-4">Badge No</th>
-                            <th scope="col" class="px-4 py-3">Emp Name</th>
-                            <th scope="col" class="px-4 py-3">Dept</th>
-                            <th scope="col" class="px-4 py-3">Position</th>
-                            <th scope="col" class="px-4 py-3">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="border-b dark:border-gray-700">
-                            <th scope="row"
-                                class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                -Safety Inductior</th>
-                            <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">Indar</td>
-                            <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">23/07/2024
-                            </td>
-                            <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">N/A</td>
-                            <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">Attend</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <p>4. Project Training</p>
-                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 mb-7">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                        <tr>
-                            <th scope="col" class="px-4 py-4">Badge No</th>
-                            <th scope="col" class="px-4 py-3">Emp Name</th>
-                            <th scope="col" class="px-4 py-3">Dept</th>
-                            <th scope="col" class="px-4 py-3">Position</th>
-                            <th scope="col" class="px-4 py-3">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                    // Update detail karyawan di modal
+                    document.getElementById('employeeName').innerText = data.peserta.employee_name ?? 'N/A';
+                    document.getElementById('dept').innerText = data.peserta.dept ?? 'N/A';
+                    document.getElementById('badgeNo').innerText = data.peserta.badge_no ?? 'N/A';
+                    document.getElementById('position').innerText = data.peserta.position ?? 'N/A';
 
-                    </tbody>
-                </table>
+                    // Data kategori yang sudah didefinisikan
+                    const categories = [{
+                            id: 1,
+                            name: 'New Employee Induction (NEO)'
+                        },
+                        {
+                            id: 2,
+                            name: 'Internal Training'
+                        },
+                        {
+                            id: 3,
+                            name: 'External Training'
+                        },
+                        {
+                            id: 4,
+                            name: 'Project Training'
+                        }
+                    ];
 
-                <p>Training Category: ${data.trainingCategory?.name ?? 'N/A'}</p>
-                <p>Final Judgement: ${data.final_judgement?.name ?? 'N/A'}</p>
-                <p>Level: ${data.level?.level ?? 'N/A'}</p>
-                <p>Theory Result: ${data.theory?.name ?? 'N/A'}</p>
-                <p>Practical Result: ${data.practical?.name ?? 'N/A'}</p>
-            `;
+                    let trainingRecordsContent = '';
+                    const groupedRecords = data.grouped_records;
 
+                    categories.forEach(category => {
+                        const category_id = category.id;
+                        const records = groupedRecords[category_id] ||
+                    []; // Ambil data atau set sebagai array kosong jika tidak ada data
+
+                        trainingRecordsContent += `<p>Category Name: ${category.name}</p>
+                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 mb-7">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                            <tr>
+                                <th scope="col" class="px-4 py-4">Training Name</th>
+                                <th scope="col" class="px-4 py-3">Trainer Name</th>
+                                <th scope="col" class="px-4 py-3">Training Date</th>
+                                <th scope="col" class="px-4 py-3">Level</th>
+                                <th scope="col" class="px-4 py-3">Final Judgement</th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
+
+                        if (records.length > 0) {
+                            // Jika ada data, tampilkan
+                            records.forEach(training => {
+                                trainingRecordsContent += `
+                          <tr class="border-b dark:border-gray-700">
+                                <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    ${training.training_name ?? '-'}
+                                </th>
+                                <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    ${training.trainer_name ?? '-'}
+                                </td>
+                                <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    ${training.training_date ?? '-'}
+                                </td>
+                                <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    ${training.level?.level ?? 'N/A'}
+                                </td>
+                                <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    ${training.final_judgement?.name ?? 'N/A'}
+                                </td>
+                            </tr>`;
+                            });
+                        } else {
+                            // Jika tidak ada data, tampilkan pesan atau baris kosong
+                            trainingRecordsContent += `
+                        <tr>
+                            <td colspan="5" class="px-4 py-3 text-center text-gray-500 dark:text-gray-400">
+                                No training records available for this category.
+                            </td>
+                        </tr>`;
+                        }
+
+                        trainingRecordsContent += `
+                        </tbody>
+                    </table>`;
+                    });
+
+                    document.getElementById('trainingCategories').innerHTML = trainingRecordsContent;
+
+                    // Tampilkan modal
+                    document.getElementById('modalBody').style.display = 'block';
                 })
                 .catch(error => {
                     if (error.name === 'AbortError') {
@@ -305,6 +291,7 @@
                 });
         }
     </script>
+
 
 
 @endsection
