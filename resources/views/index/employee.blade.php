@@ -124,6 +124,9 @@
                                 </tbody>
                         @endforeach
                         </table>
+                        <div class="mt-4">
+                            {{ $training_records->links() }}
+                        </div>
                     </div>
                 </div>
             </div>

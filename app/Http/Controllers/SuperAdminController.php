@@ -19,25 +19,36 @@ class SuperAdminController extends Controller
      */
     public function index()
     {
-        $training_records = training_record::with(['trainingCategory', 'final_judgement', 'level', 'peserta', 'practical', 'theory'])->get();
+        $training_records = training_record::with(['trainingCategory:id,name', 'final_judgement:id,name', 'level:id,level', 'peserta'])->get();
 
         return view('user.super_admin', compact('training_records'));
     }
 
     public function employee()
     {
-        $training_records = training_record::with(['trainingCategory:id,name', 'final_judgement:id,name', 'level:id,level', 'peserta'])->get();
+        // Ambil data dengan relasi
+        $training_records = Training_record::with(['trainingCategory:id,name', 'final_judgement:id,name', 'level:id,level', 'peserta'])->get();
 
-        // Mengelompokkan berdasarkan badge_no dan mengambil item pertama dari setiap grup
-        $unique_training_records = $training_records
+        // Kelompokkan data berdasarkan badge_no
+        $groupedRecords = $training_records
             ->groupBy(function ($item) {
                 return $item->peserta->badge_no;
             })
             ->map(function ($group) {
-                return $group->first();
-            });
+                return $group->first(); // Ambil item pertama dari setiap grup
+            })
+            ->values(); // Kembalikan koleksi sebagai array
 
-        return view('index.employee', ['training_records' => $unique_training_records]);
+        // Buat koleksi baru dengan data yang sudah dikelompokkan
+        $paginatedGroupedRecords = new \Illuminate\Pagination\LengthAwarePaginator(
+            $groupedRecords->forPage(\Request::input('page', 1), 10), // Paginasi
+            $groupedRecords->count(), // Total item
+            10, // Item per halaman
+            \Request::input('page', 1), // Halaman saat ini
+            ['path' => \Request::url(), 'query' => \Request::query()],
+        );
+
+        return view('index.employee', ['training_records' => $paginatedGroupedRecords]);
     }
 
     public function summary()
@@ -114,26 +125,38 @@ class SuperAdminController extends Controller
     /**
      * Display the specified resource.
      */
-     public function show($recordId)
-{
-    // Dapatkan peserta_id dari record yang diberikan
-    $training_record = training_record::findOrFail($recordId);
-    $peserta_id = $training_record->peserta_id;
+    public function show($recordId)
+    {
+        // Dapatkan peserta_id dari record yang diberikan
+        $training_record = training_record::findOrFail($recordId);
+        $peserta_id = $training_record->peserta_id;
 
-    // Ambil semua training records untuk peserta_id yang sama
-    $all_records = training_record::with(['trainingCategory:id,name', 'final_judgement:id,name', 'level:id,level', 'peserta'])
-        ->where('peserta_id', $peserta_id)
-        ->get();
+        // Ambil semua training records untuk peserta_id yang sama
+        $all_records = training_record::with(['trainingCategory:id,name', 'final_judgement:id,name', 'level:id,level', 'peserta'])
+            ->where('peserta_id', $peserta_id)
+            ->get();
 
-    // Kelompokkan berdasarkan category_id
-    $grouped_records = $all_records->groupBy('category_id');
+        // Kelompokkan berdasarkan category_id
+        $grouped_records = $all_records->groupBy('category_id');
 
-    return response()->json([
-        'peserta' => $training_record->peserta,
-        'grouped_records' => $grouped_records,
-    ]);
+        return response()->json([
+            'peserta' => $training_record->peserta,
+            'grouped_records' => $grouped_records,
+        ]);
+    }
+
+    public function showall($id)
+    {
+        //
+        $trainingRecord = training_record::with(['trainingCategory:id,name', 'final_judgement:id,name', 'level:id,level', 'peserta', 'practical:id,name', 'theory:id,name'])->find($id);
+    if (!$trainingRecord) {
+        return response()->json(['error' => 'Record not found'], 404);
+    }
+
+    return response()->json($trainingRecord);
+    return response($trainingRecord)
+    ->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
 }
-
 
     /**
      * Show the form for editing the specified resource.

@@ -178,23 +178,31 @@
         let controller = new AbortController();
 
         function openModal(recordId) {
-            console.log("ID yang diterima:", recordId);
             if (controller) {
-                controller.abort(); // Cancel the previous request if it's still ongoing
+                controller.abort(); // Membatalkan permintaan sebelumnya jika masih berjalan
             }
             controller = new AbortController();
 
-            fetch(`/superadmin/employee/${recordId}`, {
+            fetch(`/superadmin/summary/${recordId}`, {
                     signal: controller.signal
                 })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
                 .then(data => {
+                    if (!data) {
+                        throw new Error('No data received');
+                    }
                     document.getElementById('modalBody').innerHTML = `
                     <form action="#">
                     <div class="grid gap-4 mb-4 sm:grid-cols-2">
                         <div>
                             <label for="name"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Doc. Ref</label>
+
                             <input type="text" name="name" id="name" value="${data.doc_ref ?? 'N/A'}"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 required="John Doe" placeholder="John Doe" disabled>
@@ -210,48 +218,56 @@
                             <label for="price"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Training
                                 Name</label>
+
                             <input type="type" name="price" id="price" value="${data.training_name ?? 'N/A'}"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 required="" placeholder="John Doawe" disabled>
                         </div>
                         <div><label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Station</label>
+
                             <input type="text" value="${data.station ?? 'N/A'}"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="John Doe" disabled>
                         </div>
                         <div class="sm:col-span-2"><label for="description"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Job Skill</label>
+
                             <textarea id="description" rows="4" value="${data.job_skill ?? 'N/A'}"
                                 class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="Write product description here" disabled></textarea>
                         </div>
                         <div><label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Skill Code</label>
+
                             <input type="text" value="${data.skill_code ?? 'N/A'}"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="N/A" disabled>
                         </div>
                         <div><label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Badge No</label>
+
                             <input type="text" value="${data.peserta.badge_no ?? 'N/A'}"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="N/A" disabled>
                         </div>
                         <div><label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Emp Name</label>
+
                             <input type="text" value="${data.peserta.employee_name ?? 'N/A'}"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 disabled placeholder="John Doe">
                         </div>
                         <div><label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Dept</label>
+
                             <input type="text" value="${data.peserta.dept ?? 'N/A'}"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="John Doe" disabled>
                         </div>
                         <div><label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Position</label>
+
                             <input type="text" value="${data.peserta.position ?? 'N/A'}"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="John Doe" disabled>
@@ -259,6 +275,7 @@
                         <div><label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Training
                                 Date</label>
+
                             <input type="date" value="${data.training_date ?? 'N/A'}"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="17 Desember 2021" disabled>
@@ -266,6 +283,7 @@
                         <div><label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Training
                                 Name</label>
+
                             <input type="text" value="${data.trainer_name ?? 'N/A'}"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="John Doe" disabled>
@@ -273,29 +291,33 @@
                         <div><label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Theory
                                 Result</label><select id="category"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 disabled>
                                 <option value="${data.theory.name ?? 'N/A'}">${data.theory.name ?? 'N/A'}</option>
-
                             </select></div>
                         <div><label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Practical
+                                Result</label><select id="category"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                 Result</label>
-                                <input id="category" value="${data.practical.name ?? 'N/A'}"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 disabled>
+                                <option value="${data.practical.name ?? 'N/A'}">${data.practical.name ?? 'N/A'}</option>
+                           </select></div>
                         </div>
                         <div><label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Level
                             </label><select id="category"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 disabled>
                                 <option value="TV">${data.level.level ?? 'N/A'}</option>
-
                             </select></div>
                         <div><label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Final
                                 Judgement</label><select id="category"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 disabled>
                                 <option value="TV">${data.final_judgement.name ?? 'N/A'}</option>
@@ -303,36 +325,24 @@
                         <div><label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Training
                                 Category</label><select id="category"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 disabled>
-                                <option selected="" value="TV">${data.training_category?.name ?? 'N/A'}</option>
-
+                               <option selected="" value="TV">${data.training_category.name ?? 'N/A'}</option>
                             </select></div>
                         <div class="flex items-center mb-4">
                             <input id="default-checkbox" type="checkbox" value=""
-                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                disabled>
-                            <label for="default-checkbox"
-                                class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                @disabled(true)>Lisence/Certification</label>
+@@ -282,11 +335,21 @@ class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                         </div>
                     </div>
                 </form>
             `;
-                    console.log(data.trainingCategory);
                     console.log('Full data:', data);
-                    console.log('Training Category:', data.training_category);
-
-                    let categoryName = data.training_category?.name ?? 'N/A';
-                    console.log('Category Name:', categoryName);
                 })
                 .catch(error => {
-                    if (error.name === 'AbortError') {
-                        console.log('Fetch aborted');
-                    } else {
-                        console.error('Fetch error:', error);
-                    }
+                    console.error('Error fetching data:', error);
                 });
+
         }
     </script>
 @endsection
