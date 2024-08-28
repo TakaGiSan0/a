@@ -20,8 +20,8 @@
         <!-- Sidebar -->
             @include('layouts.sidebar')
             <!-- Main Content -->
-            <div class="flex flex-col flex-1 overflow-y-auto bg-gray-50">
-                <main class="p-6">
+            <div class="flex flex-col flex-1 overflow-y-auto bg-gray-50" >
+                <main class="p-6 mt-10">
                     @yield('content')
                 </main>
             </div>

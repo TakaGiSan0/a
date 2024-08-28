@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
 use App\Models\training_record;
 use Illuminate\Http\Request;
 use App\Models\category;
@@ -24,10 +26,34 @@ class SuperAdminController extends Controller
         return view('user.super_admin', compact('training_records'));
     }
 
-    public function employee()
+    public function employee(Request $request)
     {
-        // Ambil data dengan relasi
-        $training_records = Training_record::with(['trainingCategory:id,name', 'final_judgement:id,name', 'level:id,level', 'peserta'])->get();
+        // Ambil filter dan input pencarian dari request
+        $deptFilter = $request->input('dept');
+        $searchQuery = $request->input('badge_no');
+
+        // Dapatkan semua nilai dept unik dari tabel peserta
+        $uniqueDepts = Peserta::select('dept')->distinct()->pluck('dept');
+
+        // Mulai dengan query training_records dan relasi yang dibutuhkan
+        $query = Training_record::with(['peserta']);
+
+        // Terapkan filter berdasarkan dept jika ada
+        if ($deptFilter) {
+            $query->whereHas('peserta', function ($q) use ($deptFilter) {
+                $q->where('dept', $deptFilter);
+            });
+        }
+
+        // Terapkan filter pencarian jika ada
+        if ($searchQuery) {
+            $query->whereHas('peserta', function ($q) use ($searchQuery) {
+                $q->where('badge_no', 'like', '%' . $searchQuery . '%');
+            });
+        }
+
+        // Ambil data dengan relasi dan filter
+        $training_records = $query->get();
 
         // Kelompokkan data berdasarkan badge_no
         $groupedRecords = $training_records
@@ -41,14 +67,19 @@ class SuperAdminController extends Controller
 
         // Buat koleksi baru dengan data yang sudah dikelompokkan
         $paginatedGroupedRecords = new \Illuminate\Pagination\LengthAwarePaginator(
-            $groupedRecords->forPage(\Request::input('page', 1), 10), // Paginasi
+            $groupedRecords->forPage($request->input('page', 1), 10), // Paginasi
             $groupedRecords->count(), // Total item
             10, // Item per halaman
-            \Request::input('page', 1), // Halaman saat ini
-            ['path' => \Request::url(), 'query' => \Request::query()],
+            $request->input('page', 1), // Halaman saat ini
+            ['path' => $request->url(), 'query' => $request->query()],
         );
 
-        return view('index.employee', ['training_records' => $paginatedGroupedRecords]);
+        return view('index.employee', [
+            'training_records' => $paginatedGroupedRecords,
+            'deptFilter' => $deptFilter, // Kirimkan filter ke view untuk mempertahankan nilai filter
+            'searchQuery' => $searchQuery, // Kirimkan pencarian ke view untuk mempertahankan nilai pencarian
+            'uniqueDepts' => $uniqueDepts, // Kirimkan nilai dept unik ke view
+        ]);
     }
 
     public function summary()
@@ -127,14 +158,17 @@ class SuperAdminController extends Controller
      */
     public function show($recordId)
     {
-        // Dapatkan peserta_id dari record yang diberikan
+        // Ambil data training_record dengan ID yang diberikan
         $training_record = training_record::findOrFail($recordId);
         $peserta_id = $training_record->peserta_id;
 
-        // Ambil semua training records untuk peserta_id yang sama
-        $all_records = training_record::with(['trainingCategory:id,name', 'final_judgement:id,name', 'level:id,level', 'peserta'])
-            ->where('peserta_id', $peserta_id)
-            ->get();
+        // Cek apakah data sudah ada di cache
+        $cacheKey = "peserta_records:{$peserta_id}";
+        $all_records = Cache::remember($cacheKey, 3600, function () use ($peserta_id) {
+            return training_record::with(['trainingCategory:id,name', 'final_judgement:id,name', 'level:id,level', 'peserta'])
+                ->where('peserta_id', $peserta_id)
+                ->get();
+        });
 
         // Kelompokkan berdasarkan category_id
         $grouped_records = $all_records->groupBy('category_id');
@@ -149,14 +183,13 @@ class SuperAdminController extends Controller
     {
         //
         $trainingRecord = training_record::with(['trainingCategory:id,name', 'final_judgement:id,name', 'level:id,level', 'peserta', 'practical:id,name', 'theory:id,name'])->find($id);
-    if (!$trainingRecord) {
-        return response()->json(['error' => 'Record not found'], 404);
-    }
+        if (!$trainingRecord) {
+            return response()->json(['error' => 'Record not found'], 404);
+        }
 
-    return response()->json($trainingRecord);
-    return response($trainingRecord)
-    ->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
-}
+        return response()->json($trainingRecord);
+        return response($trainingRecord)->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+    }
 
     /**
      * Show the form for editing the specified resource.
