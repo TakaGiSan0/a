@@ -29,53 +29,44 @@ class SuperAdminController extends Controller
     public function employee(Request $request)
     {
         // Ambil filter dan input pencarian dari request
-        $deptFilter = $request->input('dept');
-        $searchQuery = $request->input('badge_no');
+        $deptFilter = $request->input('dept', []); // Pastikan deptFilter adalah array
+        $searchQuery = $request->input('badge_no', '');
 
+        // Pastikan deptFilter adalah array
+        if (is_string($deptFilter)) {
+            $deptFilter = explode(',', $deptFilter); // Ubah string menjadi array jika perlu
+        }
         // Dapatkan semua nilai dept unik dari tabel peserta
-        $uniqueDepts = Peserta::select('dept')->distinct()->pluck('dept');
+        $uniqueDepts = Peserta::select('dept')->distinct()->pluck('dept')->toArray(); // Konversi ke array
 
-        // Mulai dengan query training_records dan relasi yang dibutuhkan
-        $query = Training_record::with(['peserta']);
+        // Mulai dengan query peserta
+        $query = Peserta::query();
 
         // Terapkan filter berdasarkan dept jika ada
-        if ($deptFilter) {
-            $query->whereHas('peserta', function ($q) use ($deptFilter) {
-                $q->where('dept', $deptFilter);
-            });
+        if (!empty($deptFilter) && is_array($deptFilter)) {
+            // Pastikan deptFilter adalah array
+            $query->whereIn('dept', $deptFilter);
         }
 
         // Terapkan filter pencarian jika ada
-        if ($searchQuery) {
-            $query->whereHas('peserta', function ($q) use ($searchQuery) {
-                $q->where('badge_no', 'like', '%' . $searchQuery . '%');
-            });
+        if (!empty($searchQuery)) {
+            $query->where('badge_no', 'like', '%' . $searchQuery . '%');
         }
 
-        // Ambil data dengan relasi dan filter
-        $training_records = $query->get();
+        // Ambil data peserta dengan filter
+        $peserta_records = $query->get();
 
-        // Kelompokkan data berdasarkan badge_no
-        $groupedRecords = $training_records
-            ->groupBy(function ($item) {
-                return $item->peserta->badge_no;
-            })
-            ->map(function ($group) {
-                return $group->first(); // Ambil item pertama dari setiap grup
-            })
-            ->values(); // Kembalikan koleksi sebagai array
-
-        // Buat koleksi baru dengan data yang sudah dikelompokkan
-        $paginatedGroupedRecords = new \Illuminate\Pagination\LengthAwarePaginator(
-            $groupedRecords->forPage($request->input('page', 1), 10), // Paginasi
-            $groupedRecords->count(), // Total item
+        // Buat koleksi baru dengan data peserta
+        $paginatedPesertaRecords = new \Illuminate\Pagination\LengthAwarePaginator(
+            $peserta_records->forPage($request->input('page', 1), 10), // Paginasi
+            $peserta_records->count(), // Total item
             10, // Item per halaman
             $request->input('page', 1), // Halaman saat ini
             ['path' => $request->url(), 'query' => $request->query()],
         );
 
         return view('index.employee', [
-            'training_records' => $paginatedGroupedRecords,
+            'peserta_records' => $paginatedPesertaRecords,
             'deptFilter' => $deptFilter, // Kirimkan filter ke view untuk mempertahankan nilai filter
             'searchQuery' => $searchQuery, // Kirimkan pencarian ke view untuk mempertahankan nilai pencarian
             'uniqueDepts' => $uniqueDepts, // Kirimkan nilai dept unik ke view
@@ -156,10 +147,15 @@ class SuperAdminController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($recordId)
+    public function show($id)
     {
-        // Ambil data training_record dengan ID yang diberikan
-        $training_record = training_record::findOrFail($recordId);
+        // Ambil data training_record berdasarkan ID
+        $training_record = training_record::find($id);
+
+        if (!$training_record) {
+            return response()->json(['error' => 'Training record not found'], 404);
+        }
+
         $peserta_id = $training_record->peserta_id;
 
         // Cek apakah data sudah ada di cache
@@ -170,8 +166,13 @@ class SuperAdminController extends Controller
                 ->get();
         });
 
-        // Kelompokkan berdasarkan category_id
+        // Kelompokkan data berdasarkan category_id
         $grouped_records = $all_records->groupBy('category_id');
+
+        // Jika tidak ada data pelatihan, set grouped_records ke null
+        if ($all_records->isEmpty()) {
+            $grouped_records = null;
+        }
 
         return response()->json([
             'peserta' => $training_record->peserta,

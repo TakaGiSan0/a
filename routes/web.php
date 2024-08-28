@@ -32,7 +32,7 @@ Route::middleware(['auth', 'role:superadmin'])->group(function () {
     Route::get('/superadmin/create', [SuperAdminController::class, 'create'])->name('superadmin.create');
     Route::post('/superadmin/create', [SuperAdminController::class, 'store'])->name('superadmin.store');
     Route::get('/superadmin/employee', [SuperAdminController::class, 'employee'])->name('superadmin.employee');
-    Route::get('/superadmin/employee/{recordId}', [SuperAdminController::class, 'show'])->name('superadmin.show');
+    Route::get('/superadmin/employee/{id}', [SuperAdminController::class, 'show'])->name('superadmin.show');
 
     Route::get('/superadmin/summary', [SuperAdminController::class, 'summary'])->name('superadmin.summary');
     Route::get('/superadmin/summary/{recordId}', [SuperAdminController::class, 'showall'])->name('superadmin.showall');

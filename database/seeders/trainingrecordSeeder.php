@@ -16,11 +16,6 @@ class trainingrecordSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('training_records')->insert([
-            ['name' => 'PASS',
-             'created_at' => now(),
-             'updated_at' => now()],
-            ['name' => 'FAIL', 'created_at' => now(), 'updated_at' => now()],
-        ]);
+     
     }
 }

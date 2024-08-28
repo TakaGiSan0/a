@@ -26,51 +26,58 @@
                                     </div>
                                     <input type="text" id="simple-search"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                        placeholder="Search" required="" value="{{ request('search') }}" name="badge_no">
+                                        placeholder="Search" required="" value="{{ request('badge_no') }}"
+                                        name="badge_no">
                                 </div>
                             </form>
                         </div>
                         <div
                             class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
 
-                            <div class="flex items-center space-x-3 w-full md:w-auto">
-
-                                <form method="GET" action="{{ route('superadmin.employee') }}" class="flex justify-center items-center mx-3">
-                                    <select name="dept"
-                                        class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
-                                        <option value="">Semua Departemen</option>
-                                        @foreach ($uniqueDepts as $dept)
-                                            <option value="{{ $dept }}"
-                                                {{ request('dept') == $dept ? 'selected' : '' }}>{{ $dept }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    <button type="submit">Filter</button>
-                                </form>
+                            <div class="relative inline-block text-left">
+                                <div>
+                                    <button id="filterDropdownButton" type="button"
+                                        class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                                        aria-haspopup="true" aria-expanded="true">
+                                        Dept
+                                        <svg class="-mr-1 ml-1.5 w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                                            xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                            <path clip-rule="evenodd" fill-rule="evenodd"
+                                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                                        </svg>
+                                    </button>
+                                </div>
 
                                 <div id="filterDropdown"
-                                    class="z-10 hidden w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
-                                    <ul class="space-y-2 text-sm" aria-labelledby="filterDropdownButton">
-                                        <li class="flex items-center">
-                                            <input id="apple" type="checkbox" value=""
-                                                class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                            <label for="apple"
-                                                class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">N/A</label>
-                                        </li>
-                                        <li class="flex items-center">
-                                            <input id="apple" type="checkbox" value=""
-                                                class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                            <label for="apple"
-                                                class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">N/A</label>
-                                        </li>
-                                    </ul>
+                                    class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none hidden"
+                                    role="menu" aria-orientation="vertical" aria-labelledby="filterDropdownButton">
+                                    <form method="GET" action="{{ url()->current() }}">
+                                        <div class="p-4">
+                                            <div>
+                                                @foreach ($uniqueDepts as $dept)
+                                                    <div class="flex items-center">
+                                                        <input type="checkbox" name="dept[]" value="{{ $dept }}"
+                                                            id="dept_{{ $dept }}"
+                                                            {{ in_array($dept, $deptFilter) ? 'checked' : '' }}
+                                                            class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700">
+                                                        <label for="dept_{{ $dept }}"
+                                                            class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">{{ $dept }}</label>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+
+
+                                            <button type="submit"
+                                                class="mt-4 w-full inline-flex items-center justify-center py-2 px-4 text-sm font-medium text-white bg-blue-600 bg-primary-600 rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-4 focus:ring-primary-300">Filter</button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="overflow-x-auto">
                         <?php $no = 0; ?>
-                        @foreach ($training_records as $rc)
+                        @foreach ($peserta_records as $rc)
                             <table class="w-full text-sm text-center text-gray-500 dark:text-gray-400">
                                 <thead
                                     class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -85,22 +92,22 @@
                                 </thead>
                                 <tbody>
                                     <tr class="border-b dark:border-gray-700">
-                                        <th scope="row"
+                                        <th scope="row" name="id"
                                             class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                             {{ ++$no }}</th>
                                         <td class="px-4 py-3">
-                                            {{ $rc->peserta->badge_no ?? 'N/A' }}
+                                            {{ $rc->badge_no ?? 'N/A' }}
                                         </td>
                                         <td class="px-4 py-3">
-                                            {{ $rc->peserta->employee_name ?? 'N/A' }}
+                                            {{ $rc->employee_name ?? 'N/A' }}
 
                                         </td>
                                         <td class="px-4 py-3">
-                                            {{ $rc->peserta->dept ?? 'N/A' }}
+                                            {{ $rc->dept ?? 'N/A' }}
 
                                         </td>
                                         <td class="px-4 py-3">
-                                            {{ $rc->peserta->position ?? 'N/A' }}
+                                            {{ $rc->position ?? 'N/A' }}
 
                                         </td>
                                         <td class="px-4 py-3 flex items-center justify-center">
@@ -122,7 +129,7 @@
                         @endforeach
                         </table>
                         <div class="mt-4">
-                            {{ $training_records->links() }}
+                            {{ $peserta_records->links() }}
                         </div>
                     </div>
                 </div>
@@ -160,8 +167,10 @@
                 <!-- Modal body -->
                 <div id="modalBody">
                     <div class="grid gap-4 mb-4 sm:grid-cols-2">
+                            <span id="id" hidden>N/A</span>
                         <div><label for="category"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Emp Name:</label>
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Emp
+                                Name:</label>
                             <span id="employeeName">N/A</span>
                         </div>
                         <div><label for="category"
@@ -186,15 +195,18 @@
     </div>
 
     <script>
-        function openModal(recordId) {
+        function openModal(id) {
             controller = new AbortController();
 
-            fetch(`/superadmin/employee/${recordId}`, {
+            fetch(`/superadmin/employee/${id}`, {
                     signal: controller.signal
                 })
                 .then(response => response.json())
                 .then(data => {
+                    console.log('Data diterima:', data); // Debugging: lihat data yang diterima
+
                     // Update detail karyawan di modal
+                    document.getElementById('id').innerText = data.peserta.id ?? 'N/A';
                     document.getElementById('employeeName').innerText = data.peserta.employee_name ?? 'N/A';
                     document.getElementById('dept').innerText = data.peserta.dept ?? 'N/A';
                     document.getElementById('badgeNo').innerText = data.peserta.badge_no ?? 'N/A';
@@ -227,7 +239,8 @@
                         const records = groupedRecords[category_id] ||
                     []; // Ambil data atau set sebagai array kosong jika tidak ada data
 
-                        trainingRecordsContent += `<p>Category Name: ${category.name}</p>
+                        trainingRecordsContent += `
+                    <p>Category Name: ${category.name}</p>
                     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 mb-7">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
@@ -241,10 +254,9 @@
                         <tbody>`;
 
                         if (records.length > 0) {
-                            // Jika ada data, tampilkan
                             records.forEach(training => {
                                 trainingRecordsContent += `
-                          <tr class="border-b dark:border-gray-700">
+                            <tr class="border-b dark:border-gray-700">
                                 <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     ${training.training_name ?? '-'}
                                 </th>
@@ -263,7 +275,6 @@
                             </tr>`;
                             });
                         } else {
-                            // Jika tidak ada data, tampilkan pesan atau baris kosong
                             trainingRecordsContent += `
                         <tr>
                             <td colspan="5" class="px-4 py-3 text-center text-gray-500 dark:text-gray-400">
@@ -288,8 +299,21 @@
                     } else {
                         console.error('Fetch error:', error);
                     }
+
                 });
         }
+        document.getElementById('filterDropdownButton').addEventListener('click', function() {
+            const dropdown = document.getElementById('filterDropdown');
+            dropdown.classList.toggle('hidden');
+        });
+
+        // Close dropdown when clicking outside
+        window.addEventListener('click', function(event) {
+            if (!event.target.closest('#filterDropdownButton')) {
+                const dropdown = document.getElementById('filterDropdown');
+
+            }
+        });
     </script>
 
 
