@@ -167,7 +167,7 @@
                 <!-- Modal body -->
                 <div id="modalBody">
                     <div class="grid gap-4 mb-4 sm:grid-cols-2">
-                            <span id="id" hidden>N/A</span>
+                        <span id="id" hidden>N/A</span>
                         <div><label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Emp
                                 Name:</label>
@@ -196,7 +196,20 @@
 
     <script>
         function openModal(id) {
-            controller = new AbortController();
+            const controller = new AbortController();
+
+            // Tampilkan modal setelah delay kecil
+            function showModal() {
+                document.getElementById('modalBody').style.display = 'block';
+            }
+
+            // Fungsi untuk menutup modal
+            function hideModal() {
+                document.getElementById('modalBody').style.display = 'none';
+            }
+
+            // Tutup modal sebelum membuka yang baru
+            hideModal();
 
             fetch(`/superadmin/employee/${id}`, {
                     signal: controller.signal
@@ -232,66 +245,78 @@
                     ];
 
                     let trainingRecordsContent = '';
-                    const groupedRecords = data.grouped_records;
+                    const groupedRecords = data.grouped_records || {};
+
+                    let hasTraining = false; // Flag untuk mengecek apakah ada training records
 
                     categories.forEach(category => {
                         const category_id = category.id;
                         const records = groupedRecords[category_id] ||
                     []; // Ambil data atau set sebagai array kosong jika tidak ada data
 
+                        if (records.length > 0) {
+                            hasTraining = true; // Set flag jika ada training
+                        }
+
                         trainingRecordsContent += `
-                    <p>Category Name: ${category.name}</p>
-                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 mb-7">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                            <tr>
-                                <th scope="col" class="px-4 py-4">Training Name</th>
-                                <th scope="col" class="px-4 py-3">Trainer Name</th>
-                                <th scope="col" class="px-4 py-3">Training Date</th>
-                                <th scope="col" class="px-4 py-3">Level</th>
-                                <th scope="col" class="px-4 py-3">Final Judgement</th>
-                            </tr>
-                        </thead>
-                        <tbody>`;
+                        <p>Category Name: ${category.name}</p>
+                        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 mb-7">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                <tr>
+                                    <th scope="col" class="px-4 py-4">Training Name</th>
+                                    <th scope="col" class="px-4 py-3">Trainer Name</th>
+                                    <th scope="col" class="px-4 py-3">Training Date</th>
+                                    <th scope="col" class="px-4 py-3">Level</th>
+                                    <th scope="col" class="px-4 py-3">Final Judgement</th>
+                                </tr>
+                            </thead>
+                            <tbody>`;
 
                         if (records.length > 0) {
                             records.forEach(training => {
                                 trainingRecordsContent += `
-                            <tr class="border-b dark:border-gray-700">
-                                <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    ${training.training_name ?? '-'}
-                                </th>
-                                <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    ${training.trainer_name ?? '-'}
-                                </td>
-                                <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    ${training.training_date ?? '-'}
-                                </td>
-                                <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    ${training.level?.level ?? 'N/A'}
-                                </td>
-                                <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    ${training.final_judgement?.name ?? 'N/A'}
-                                </td>
-                            </tr>`;
+                                <tr class="border-b dark:border-gray-700">
+                                    <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        ${training.training_name ?? '-'}
+                                    </th>
+                                    <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        ${training.trainer_name ?? '-'}
+                                    </td>
+                                    <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        ${training.training_date ?? '-'}
+                                    </td>
+                                    <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        ${training.level ?? 'N/A'}
+                                    </td>
+                                    <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        ${training.final_judgement ?? 'N/A'}
+                                    </td>
+                                </tr>`;
                             });
                         } else {
                             trainingRecordsContent += `
-                        <tr>
-                            <td colspan="5" class="px-4 py-3 text-center text-gray-500 dark:text-gray-400">
-                                No training records available for this category.
-                            </td>
-                        </tr>`;
+                            <tr>
+                                <td colspan="5" class="px-4 py-3 text-center text-gray-500 dark:text-gray-400">
+                                    No training records available for this category.
+                                </td>
+                            </tr>`;
                         }
 
                         trainingRecordsContent += `
-                        </tbody>
-                    </table>`;
+                            </tbody>
+                        </table>`;
                     });
+
+                    // Jika tidak ada training records sama sekali, tampilkan pesan khusus
+                    if (!hasTraining) {
+                        trainingRecordsContent = `
+                        <p class="text-center text-gray-500">This employee has not participated in any training.</p>`;
+                    }
 
                     document.getElementById('trainingCategories').innerHTML = trainingRecordsContent;
 
-                    // Tampilkan modal
-                    document.getElementById('modalBody').style.display = 'block';
+                    // Tampilkan modal setelah delay kecil
+                    setTimeout(showModal, 100); // Delay 0,5 detik
                 })
                 .catch(error => {
                     if (error.name === 'AbortError') {
@@ -299,9 +324,9 @@
                     } else {
                         console.error('Fetch error:', error);
                     }
-
                 });
         }
+
         document.getElementById('filterDropdownButton').addEventListener('click', function() {
             const dropdown = document.getElementById('filterDropdown');
             dropdown.classList.toggle('hidden');
@@ -311,10 +336,12 @@
         window.addEventListener('click', function(event) {
             if (!event.target.closest('#filterDropdownButton')) {
                 const dropdown = document.getElementById('filterDropdown');
-
+                dropdown.classList.add('hidden');
             }
         });
     </script>
+
+
 
 
 

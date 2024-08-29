@@ -21,7 +21,7 @@ class SuperAdminController extends Controller
      */
     public function index()
     {
-        $training_records = training_record::with(['trainingCategory:id,name', 'final_judgement:id,name', 'level:id,level', 'peserta'])->get();
+        $training_records = training_record::with(['trainingCategory:id,name', 'peserta'])->get();
 
         return view('user.super_admin', compact('training_records'));
     }
@@ -75,7 +75,7 @@ class SuperAdminController extends Controller
 
     public function summary()
     {
-        $training_records = training_record::with(['trainingCategory:id,name', 'final_judgement:id,name', 'level:id,level', 'peserta', 'practical:id,name', 'theory:id,name'])->get();
+        $training_records = training_record::with(['trainingCategory:id,name','peserta'])->get();
 
         return view('index.summary', compact('training_records'));
     }
@@ -86,13 +86,9 @@ class SuperAdminController extends Controller
     public function create()
     {
         $categories = category::all();
-        $final_judgement = final_judgement::all();
-        $level = level::all();
-        $practical_result = practical_result::all();
-        $theory_result = theory_result::all();
         $peserta = peserta::all();
 
-        return view('form.form', compact('categories', 'theory_result', 'level', 'practical_result', 'final_judgement', 'peserta'));
+        return view('form.form', compact('categories','peserta'));
     }
 
     /**
@@ -113,11 +109,11 @@ class SuperAdminController extends Controller
             'skill_code' => 'required',
             'training_date' => 'required',
             'peserta_id' => 'required|exists:pesertas,id',
-            'theory_result_id' => 'required|exists:theory_results,id',
-            'practical_result_id' => 'required|exists:practical_results,id',
+            'theory_result' => 'required|exists:theory_results,id',
+            'practical_result' => 'required|exists:practical_results,id',
             'category_id' => 'required|exists:categories,id',
-            'level_id' => 'required|exists:levels,id',
-            'final_judgement_id' => 'required|exists:final_judgements,id',
+            'level' => 'required|exists:levels,id',
+            'final_judgement' => 'required|exists:final_judgements,id',
         ]);
 
         $validatedDate['license'] = $request->has('license') ? 1 : 0;
@@ -132,10 +128,10 @@ class SuperAdminController extends Controller
         $trainingRecord->skill_code = $validateDate['skill_code'];
         $trainingRecord->training_date = $validateDate['training_date'];
         $trainingRecord->peserta_id = $validateDate['peserta_id'];
-        $trainingRecord->theory_result_id = $validateDate['theory_result_id'];
-        $trainingRecord->practical_result_id = $validateDate['practical_result_id'];
-        $trainingRecord->level_id = $validateDate['level_id'];
-        $trainingRecord->final_judgement_id = $validateDate['final_judgement_id'];
+        $trainingRecord->theory_result = $validateDate['theory_result'];
+        $trainingRecord->practical_result = $validateDate['practical_result'];
+        $trainingRecord->level = $validateDate['level'];
+        $trainingRecord->final_judgement = $validateDate['final_judgement'];
         $trainingRecord->category_id = $validateDate['category_id'];
         $trainingRecord->license = $validatedDate['license'];
 
@@ -147,38 +143,37 @@ class SuperAdminController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
-    {
-        // Ambil data training_record berdasarkan ID
-        $training_record = training_record::find($id);
+     public function show($id)
+{
+    // Ambil data peserta berdasarkan ID
+    $peserta = Peserta::find($id);
 
-        if (!$training_record) {
-            return response()->json(['error' => 'Training record not found'], 404);
-        }
-
-        $peserta_id = $training_record->peserta_id;
-
-        // Cek apakah data sudah ada di cache
-        $cacheKey = "peserta_records:{$peserta_id}";
-        $all_records = Cache::remember($cacheKey, 3600, function () use ($peserta_id) {
-            return training_record::with(['trainingCategory:id,name', 'final_judgement:id,name', 'level:id,level', 'peserta'])
-                ->where('peserta_id', $peserta_id)
-                ->get();
-        });
-
-        // Kelompokkan data berdasarkan category_id
-        $grouped_records = $all_records->groupBy('category_id');
-
-        // Jika tidak ada data pelatihan, set grouped_records ke null
-        if ($all_records->isEmpty()) {
-            $grouped_records = null;
-        }
-
-        return response()->json([
-            'peserta' => $training_record->peserta,
-            'grouped_records' => $grouped_records,
-        ]);
+    if (!$peserta) {
+        return response()->json(['error' => 'Peserta not found'], 404);
     }
+
+    // Ambil semua training_record yang terkait dengan peserta tersebut
+    $cacheKey = "peserta_records:{$id}";
+    $all_records = Cache::remember($cacheKey, 3600, function () use ($id) {
+        return training_record::with(['trainingCategory:id,name'])
+            ->where('peserta_id', $id)
+            ->get();
+    });
+
+    // Kelompokkan data berdasarkan category_id
+    $grouped_records = $all_records->groupBy('category_id');
+
+    // Jika tidak ada data pelatihan, set grouped_records ke null
+    if ($all_records->isEmpty()) {
+        $grouped_records = null;
+    }
+
+    return response()->json([
+        'peserta' => $peserta,
+        'grouped_records' => $grouped_records,
+    ]);
+}
+
 
     public function showall($id)
     {
