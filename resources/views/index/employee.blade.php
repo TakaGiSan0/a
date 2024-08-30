@@ -82,7 +82,7 @@
                                 <thead
                                     class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
-                                        <th scope="col" class="px-4 py-4">No</th>
+                                        <th scope="col" class="px-4 py-4 ">No</th>
                                         <th scope="col" class="px-4 py-4">Badge No</th>
                                         <th scope="col" class="px-4 py-3">Emp Name</th>
                                         <th scope="col" class="px-4 py-3">Dept</th>
@@ -91,7 +91,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr class="border-b dark:border-gray-700">
+                                    <tr class="border-b dark:border-gray-700 text-center">
                                         <th scope="row" name="id"
                                             class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                             {{ ++$no }}</th>
@@ -276,19 +276,19 @@
                             records.forEach(training => {
                                 trainingRecordsContent += `
                                 <tr class="border-b dark:border-gray-700">
-                                    <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    <th scope="row" class="px-4 py-3 font-medium text-gray-900 text-center whitespace-nowrap dark:text-white">
                                         ${training.training_name ?? '-'}
                                     </th>
-                                    <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap text-center dark:text-white">
                                         ${training.trainer_name ?? '-'}
                                     </td>
-                                    <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap text-center dark:text-white">
                                         ${training.training_date ?? '-'}
                                     </td>
-                                    <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap text-center dark:text-white">
                                         ${training.level ?? 'N/A'}
                                     </td>
-                                    <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap text-center dark:text-white">
                                         ${training.final_judgement ?? 'N/A'}
                                     </td>
                                 </tr>`;
@@ -335,8 +335,7 @@
         // Close dropdown when clicking outside
         window.addEventListener('click', function(event) {
             if (!event.target.closest('#filterDropdownButton')) {
-                const dropdown = document.getElementById('filterDropdown');
-                dropdown.classList.add('hidden');
+                
             }
         });
     </script>

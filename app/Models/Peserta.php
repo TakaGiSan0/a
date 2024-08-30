@@ -11,7 +11,7 @@ class peserta extends Model
 
     protected $table = 'pesertas';
 
-    protected $fillable = ['badge_no', 'employee_name', 'dept', 'station', 'position'];
+    protected $fillable = ['badge_no', 'employee_name', 'dept', 'position'];
 
     public function trainingRecords()
     {

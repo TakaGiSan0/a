@@ -110,35 +110,33 @@
                     </div>
                     <div><label for="category"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Theory
-                            Result</label><select id="category" name="theory_result_id"
+                            Result</label><select id="category" name="theory_result"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                            @foreach ($theory_result as $tr)
-                                <option value="{{ $tr->id }}">{{ $tr->name }}</option>
-                            @endforeach
+                            <option name="Pass" value="Pass">Pass</option>
+                            <option name="Fail" value="Fail">Fail</option>
                         </select></div>
                     <div><label for="category"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Practical
-                            Result</label><select id="category" name="practical_result_id"
+                            Result</label><select id="category" name="practical_result"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                            @foreach ($practical_result as $pr)
-                                <option value="{{ $pr->id }}">{{ $pr->name }}</option>
-                            @endforeach
+                            <option name="Pass" value="Pass">Pass</option>
+                            <option name="Fail" value="Fail">Fail</option>
                         </select></div>
                     <div><label for="category"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Level
-                        </label><select id="category" name="level_id"
+                        </label><select id="category" name="level"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                            @foreach ($level as $lvl)
-                                <option value="{{ $lvl->id }}">{{ $lvl->level }}</option>
-                            @endforeach
+                            <option name="Level 1" value="Level 1">Level 1</option>
+                            <option name="Level 2" value="Level 2">Level 2</option>
+                            <option name="Level 3" value="Level 3">Level 3</option>
+                            <option name="Level 4" value="Level 4">Level 4</option>
                         </select></div>
                     <div><label for="category"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Final
                             Judgement</label><select id="category" name="final_judgement_id"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                            @foreach ($final_judgement as $final)
-                                <option value="{{ $final->id }}">{{ $final->name }}</option>
-                            @endforeach
+                            <option name="Attend " value="Attend ">Attend </option>
+                            <option name="Competence" value="Competence">Competence</option>
                         </select></div>
                     <div><label for="category"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Training

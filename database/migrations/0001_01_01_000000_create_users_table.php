@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('role');
             $table->string('password');
             $table->timestamps();
+            $table->unsignedBigInteger('peserta_id');
+
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

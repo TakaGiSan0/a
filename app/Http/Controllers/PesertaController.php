@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Peserta;
+use App\Models\peserta;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PesertaController extends Controller
 {
@@ -12,7 +13,14 @@ class PesertaController extends Controller
      */
     public function index()
     {
-        //
+        // Ambil semua data peserta tanpa relasi ke tabel lain
+        $peserta = Peserta::select('id', 'badge_no', 'employee_name', 'dept', 'position')->get();
+
+        // Kembalikan view dengan data peserta dan pesan
+        return view('peserta.index', [
+            'peserta' => $peserta,
+            'message' => $peserta->isEmpty() ? '' : null,
+        ]);
     }
 
     /**
@@ -20,7 +28,7 @@ class PesertaController extends Controller
      */
     public function create()
     {
-        //
+        return view('peserta.create');
     }
 
     /**
@@ -28,7 +36,28 @@ class PesertaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validasi input
+        $validatedData = $request->validate([
+            'badge_no' => 'required|string|max:255',
+            'employee_name' => 'required|string|max:255',
+            'dept' => 'required|string|max:255',
+            'position' => 'required|string|max:255',
+        ]);
+
+        // Membuat instance Peserta baru
+        $peserta = new peserta();
+
+        // Mengisi data peserta dengan input yang divalidasi
+        $peserta->badge_no = $validatedData['badge_no'];
+        $peserta->employee_name = $validatedData['employee_name'];
+        $peserta->dept = $validatedData['dept'];
+        $peserta->position = $validatedData['position'];
+
+        // Simpan data ke database
+        $peserta->save();
+
+        // Mengembalikan response atau redirect
+        return redirect()->route('superadmin.peserta')->with('success', 'Peserta berhasil ditambahkan.');
     }
 
     /**
@@ -44,7 +73,11 @@ class PesertaController extends Controller
      */
     public function edit(Peserta $peserta)
     {
-        //
+        // Cek otorisasi menggunakan policy
+        $this->authorize('update', $peserta);
+
+        // Kembalikan view dengan data peserta
+        return view('peserta.edit', compact('peserta'));
     }
 
     /**
@@ -52,15 +85,35 @@ class PesertaController extends Controller
      */
     public function update(Request $request, Peserta $peserta)
     {
-        //
+        $validated = $request->validate([
+            'badge_no' => 'required|string|max:255',
+            'employee_name' => 'required|string|max:255',
+            'dept' => 'required|string|max:255',
+            'position' => 'required|string|max:255',
+        ]);
+
+        $peserta->update($validated);
+
+        return redirect()->route('superadmin.peserta')->with('success', 'Peserta berhasil diperbarui.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Peserta $peserta)
+    public function destroy($id)
     {
-        //
+        $peserta = Peserta::findOrFail($id);
+
+        $peserta->trainingRecords()->delete();
+
+        // Menggunakan Policy untuk memeriksa izin
+        $this->authorize('delete', $peserta);
+
+        // Hapus data peserta
+        $peserta->delete();
+
+        // Redirect atau response dengan pesan sukses
+        return redirect()->route('superadmin.peserta')->with('success', 'Peserta berhasil dihapus.');
     }
 
     public function getParticipantByBadgeNo($badge_no)

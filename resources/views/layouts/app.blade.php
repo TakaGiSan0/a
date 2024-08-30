@@ -21,7 +21,7 @@
             @include('layouts.sidebar')
             <!-- Main Content -->
             <div class="flex flex-col flex-1 overflow-y-auto bg-gray-50" >
-                <main class="p-6 mt-10">
+                <main class="p-6 mt-10 flex justify-center items-center">
                     @yield('content')
                 </main>
             </div>
