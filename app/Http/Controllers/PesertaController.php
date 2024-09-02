@@ -11,17 +11,29 @@ class PesertaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        // Ambil semua data peserta tanpa relasi ke tabel lain
-        $peserta = Peserta::select('id', 'badge_no', 'employee_name', 'dept', 'position')->get();
+     public function index(Request $request)
+{
+    $searchQuery = $request->input('badge_no', '');
 
-        // Kembalikan view dengan data peserta dan pesan
-        return view('peserta.index', [
-            'peserta' => $peserta,
-            'message' => $peserta->isEmpty() ? '' : null,
-        ]);
+    // Mulai dengan query peserta
+    $query = Peserta::query();
+
+    // Terapkan filter pencarian jika ada
+    if (!empty($searchQuery)) {
+        $query->where('badge_no', 'like', '%' . $searchQuery . '%');
     }
+
+    // Ambil data peserta berdasarkan filter pencarian
+    $peserta = $query->select('id', 'badge_no', 'employee_name', 'dept', 'position')->get();
+
+    // Kembalikan view dengan data peserta dan pesan
+    return view('peserta.index', [
+        'peserta' => $peserta,
+        'searchQuery' => $searchQuery, // Kirimkan pencarian ke view untuk mempertahankan nilai pencarian
+        'message' => $peserta->isEmpty() ? 'No results found for your search.' : null,
+    ]);
+}
+
 
     /**
      * Show the form for creating a new resource.
@@ -37,12 +49,22 @@ class PesertaController extends Controller
     public function store(Request $request)
     {
         // Validasi input
-        $validatedData = $request->validate([
-            'badge_no' => 'required|string|max:255',
-            'employee_name' => 'required|string|max:255',
-            'dept' => 'required|string|max:255',
-            'position' => 'required|string|max:255',
-        ]);
+        $validatedData = $request->validate(
+            [
+                'badge_no' => 'required|string|max:255|regex:/^[A-Z0-9\-]+$/|unique:pesertas,badge_no',
+                'employee_name' => 'required|string|max:255|regex:/^[A-Z0-9\-]+$/|unique:pesertas,employee_name',
+                'dept' => 'required|string|max:255',
+                'position' => 'required|string|max:255',
+            ],
+            [
+                'employee_name.unique' => 'Peserta dengan Nama ini sudah ada.',
+                'badge_no.unique' => 'Peserta dengan Badge No ini sudah ada.',
+                'badge_no.regex' => 'Badge No hanya boleh berisi huruf besar, angka, dan tanda hubung.',
+                'employee_name.regex' => 'Nama hanya boleh berisi huruf',
+
+
+            ],
+        );
 
         // Membuat instance Peserta baru
         $peserta = new peserta();
@@ -58,6 +80,15 @@ class PesertaController extends Controller
 
         // Mengembalikan response atau redirect
         return redirect()->route('superadmin.peserta')->with('success', 'Peserta berhasil ditambahkan.');
+
+        // Mengembalikan response dengan status 201 (Created)
+        return response()->json(
+            [
+                'message' => 'Peserta berhasil ditambahkan.',
+                'peserta' => $peserta,
+            ],
+            201,
+        );
     }
 
     /**
@@ -85,13 +116,23 @@ class PesertaController extends Controller
      */
     public function update(Request $request, Peserta $peserta)
     {
-        $validated = $request->validate([
-            'badge_no' => 'required|string|max:255',
-            'employee_name' => 'required|string|max:255',
-            'dept' => 'required|string|max:255',
-            'position' => 'required|string|max:255',
-        ]);
+        // Validasi input dengan pengecualian untuk ID yang sedang diperbarui
+        $validated = $request->validate(
+            [
+                'badge_no' => 'required|string|max:255|regex:/^[A-Z0-9\-]+$/|unique:pesertas,badge_no,' . $peserta->id,
+                'employee_name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/|unique:pesertas,employee_name,' . $peserta->id,
+                'dept' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
+                'position' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
+            ],
+            [
+                'badge_no.regex' => 'Badge No hanya boleh berisi huruf besar, angka, dan tanda hubung.',
+                'employee_name.regex' => 'Nama hanya boleh berisi huruf',
+                'badge_no.unique' => 'Peserta dengan Badge No ini sudah ada.',
+                'employee_name.unique' => 'Peserta dengan Nama ini sudah ada.',
+            ],
+        );
 
+        // Update data peserta
         $peserta->update($validated);
 
         return redirect()->route('superadmin.peserta')->with('success', 'Peserta berhasil diperbarui.');

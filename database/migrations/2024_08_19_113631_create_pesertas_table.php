@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('pesertas', function (Blueprint $table) {
             $table->id();
-            $table->string('badge_no');
+            $table->string('badge_no')->unique();
             $table->string('employee_name');
             $table->string('dept');
             $table->string('position');

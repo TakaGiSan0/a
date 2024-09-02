@@ -27,7 +27,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/create', [AdminController::class, 'create'])->name('admin.create');
 });
 
-Route::middleware(['auth', 'role:superadmin'])->group(function () {
+Route::middleware(['auth', 'role:super admin'])->group(function () {
 
     // Dashboard Form
     Route::get('/superadmin/dashboard/', [SuperAdminController::class, 'index'])->name('superadmin.dashboard');

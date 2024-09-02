@@ -15,10 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('user');
             $table->string('name');
-            $table->string('role');
+            $table->enum('role', ['super admin', 'admin', 'user'])->default('user');
             $table->string('password');
             $table->timestamps();
-            $table->unsignedBigInteger('peserta_id');
 
         });
 

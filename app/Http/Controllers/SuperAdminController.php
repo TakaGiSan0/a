@@ -109,11 +109,11 @@ class SuperAdminController extends Controller
             'skill_code' => 'required',
             'training_date' => 'required',
             'peserta_id' => 'required|exists:pesertas,id',
-            'theory_result' => 'required|exists:theory_results,id',
-            'practical_result' => 'required|exists:practical_results,id',
+            'theory_result' => 'required|',
+            'practical_result' => 'required|',
             'category_id' => 'required|exists:categories,id',
-            'level' => 'required|exists:levels,id',
-            'final_judgement' => 'required|exists:final_judgements,id',
+            'level' => 'required|',
+            'final_judgement' => 'required|',
         ]);
 
         $validatedDate['license'] = $request->has('license') ? 1 : 0;
@@ -178,7 +178,7 @@ class SuperAdminController extends Controller
     public function showall($id)
     {
         //
-        $trainingRecord = training_record::with(['trainingCategory:id,name', 'final_judgement:id,name', 'level:id,level', 'peserta', 'practical:id,name', 'theory:id,name'])->find($id);
+        $trainingRecord = training_record::with(['trainingCategory:id,name','peserta'])->find($id);
         if (!$trainingRecord) {
             return response()->json(['error' => 'Record not found'], 404);
         }

@@ -38,8 +38,8 @@ class PesertaPolicy
      */
     public function update(User $user, Peserta $peserta): bool
     {
-        return $user->role === 'superadmin';
-        
+        return $user->role === 'super admin';
+
     }
 
     /**
@@ -48,7 +48,7 @@ class PesertaPolicy
     public function delete(User $user, Peserta $peserta): bool
     {
         // Hanya izinkan pengguna dengan role 'superadmin' untuk menghapus
-        return $user->role === 'superadmin';
+        return $user->role === 'super admin';
     }
 
     /**

@@ -13,7 +13,7 @@
                     <div
                         class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                         <div class="w-full md:w-1/2">
-                            <form class="flex items-center">
+                            <form class="flex items-center" method="GET" action="{{ route('superadmin.peserta') }}">
                                 <label for="simple-search" class="sr-only">Search</label>
                                 <div class="relative w-full">
                                     <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -26,10 +26,14 @@
                                     </div>
                                     <input type="text" id="simple-search"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                        placeholder="Search" required="" value="{{ request('badge_no') }}"
+                                        placeholder="Search" value="{{ old('badge_no', $searchQuery) }}"
                                         name="badge_no">
                                 </div>
                             </form>
+                            @if ($message)
+                                <p>{{ $message }}</p>
+                            @endif
+
                         </div>
                         <div
                             class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
@@ -54,25 +58,24 @@
                     @endif
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm text-center text-gray-500 dark:text-gray-400">
-                            <thead
-                            class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                            <tr>
-                                <th scope="col" class="px-4 py-4">No</th>
-                                <th scope="col" class="px-4 py-4">Badge No</th>
-                                <th scope="col" class="px-4 py-3">Employee Name</th>
-                                <th scope="col" class="px-4 py-3">Dept</th>
-                                <th scope="col" class="px-4 py-3">Position</th>
-                                <th scope="col" class="px-4 py-3">Action</th>
-                            </tr>
-                        </thead>
-                        @if ($peserta->isEmpty())
-                            <p>{{ $message }}</p>
-                        @else
-                        <?php $no = 0; ?>
-                        @foreach ($peserta as $p)
-                        <tbody>
-                            <tr class="border-b dark:border-gray-700">
-                                <th scope="row" name="id"
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                <tr>
+                                    <th scope="col" class="px-4 py-4">No</th>
+                                    <th scope="col" class="px-4 py-4">Badge No</th>
+                                    <th scope="col" class="px-4 py-3">Employee Name</th>
+                                    <th scope="col" class="px-4 py-3">Dept</th>
+                                    <th scope="col" class="px-4 py-3">Position</th>
+                                    <th scope="col" class="px-4 py-3">Action</th>
+                                </tr>
+                            </thead>
+                            @if ($peserta->isEmpty())
+                                <p>{{ $message }}</p>
+                            @else
+                                <?php $no = 0; ?>
+                                @foreach ($peserta as $p)
+                                    <tbody>
+                                        <tr class="border-b dark:border-gray-700">
+                                            <th scope="row" name="id"
                                                 class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                                 {{ ++$no }}</th>
                                             <td class="px-4 py-3">{{ $p->badge_no }}</td>
@@ -107,7 +110,7 @@
                                         </tr>
                                     </tbody>
                                 @endforeach
-                            </table>
+                        </table>
                         @endif
                     </div>
                 </div>

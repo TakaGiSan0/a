@@ -102,7 +102,7 @@
                             placeholder="17 Desember 2021">
                     </div>
                     <div><label for="category"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Training
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Trainer
                             Name</label>
                         <input type="text" name="trainer_name"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -133,7 +133,7 @@
                         </select></div>
                     <div><label for="category"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Final
-                            Judgement</label><select id="category" name="final_judgement_id"
+                            Judgement</label><select id="category" name="final_judgement"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                             <option name="Attend " value="Attend ">Attend </option>
                             <option name="Competence" value="Competence">Competence</option>
