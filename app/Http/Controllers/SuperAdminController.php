@@ -94,51 +94,52 @@ class SuperAdminController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        Log::info('Received data:', $request->all());
+     public function store(Request $request)
+{
+    dd($request->all());
+    $data = $request->all();
 
-        $validateDate = $request->validate([
-            'training_name' => 'required|string|max:255',
-            'doc_ref' => 'required',
-            'job_skill' => 'required',
-            'trainer_name' => 'required',
-            'rev' => 'required',
-            'license' => 'nullable|boolean',
-            'station' => 'required',
-            'skill_code' => 'required',
-            'training_date' => 'required',
-            'peserta_id' => 'required|exists:pesertas,id',
-            'theory_result' => 'required|',
-            'practical_result' => 'required|',
-            'category_id' => 'required|exists:categories,id',
-            'level' => 'required|',
-            'final_judgement' => 'required|',
-        ]);
+    // Ambil detail training yang sama untuk setiap peserta
+    $trainingName = $data['training_name'];
+    $docRef = $data['doc_ref'];
+    $job_skill = $data['job_skill'];
+    $trainer_name = $data['trainer_name'];
+    $rev = $data['rev'];
+    $station = $data['station'];
+    $training_date = $data['training_date'];
+    $skill_code = $data['skill_code'];
+    $category_id = $data['category_id'];
+    // Ambil detail lain jika diperlukan
 
-        $validatedDate['license'] = $request->has('license') ? 1 : 0;
+    foreach ($data['participants'] as $participant) {
+        $peserta = Peserta::where('badge_no', $participant['badge_no'])->first();
 
-        $trainingRecord = new training_record();
-        $trainingRecord->training_name = $validateDate['training_name'];
-        $trainingRecord->doc_ref = $validateDate['doc_ref'];
-        $trainingRecord->job_skill = $validateDate['job_skill'];
-        $trainingRecord->trainer_name = $validateDate['trainer_name'];
-        $trainingRecord->rev = $validateDate['rev'];
-        $trainingRecord->station = $validateDate['station'];
-        $trainingRecord->skill_code = $validateDate['skill_code'];
-        $trainingRecord->training_date = $validateDate['training_date'];
-        $trainingRecord->peserta_id = $validateDate['peserta_id'];
-        $trainingRecord->theory_result = $validateDate['theory_result'];
-        $trainingRecord->practical_result = $validateDate['practical_result'];
-        $trainingRecord->level = $validateDate['level'];
-        $trainingRecord->final_judgement = $validateDate['final_judgement'];
-        $trainingRecord->category_id = $validateDate['category_id'];
-        $trainingRecord->license = $validatedDate['license'];
-
-        $trainingRecord->save();
-
-        return redirect()->route('superadmin.dashboard')->with('success', 'Training record created successfully.');
+        // Pastikan peserta ditemukan
+        if ($peserta) {
+            training_record::create([
+                'training_name' => $trainingName,
+                'doc_ref' => $docRef,
+                // Isi detail lainnya jika perlu
+                'job_skill' => $job_skill,
+                'trainer_name' => $trainer_name,
+                'rev' => $rev,
+                'station' => $station,
+                'skill_code' => $skill_code,
+                'training_date' => $training_date,
+                'level' => $participant['level'],
+                'final_judgement' => $participant['final_judgement'],
+                'category_id' => $category_id,
+                'license' => $participant['license'],
+                'theory_result' => $participant['theory_result'],
+                'practical_result' => $participant['practical_result'],
+                'peserta_id' => $peserta->id
+            ]);
+        }
     }
+
+    return redirect()->back()->with('success', 'Training records created successfully!');
+}
+
 
     /**
      * Display the specified resource.

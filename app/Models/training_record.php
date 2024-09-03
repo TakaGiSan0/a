@@ -15,6 +15,7 @@ class training_record extends Model
         'doc_ref',
         'theory_result',
         'practical_result',
+        'station',
         'level',
         'final_judgement',
         'category_id',

@@ -52,7 +52,7 @@ Route::middleware(['auth', 'role:super admin'])->group(function () {
 
 
 
-    Route::get('/participants/{badge_no}', [PesertaController::class, 'getParticipantByBadgeNo']);
+    Route::get('/participants/{badgeNo}', [PesertaController::class, 'getParticipantByBadgeNo']);
 });
 
 Route::middleware(['auth', 'role:user'])->group(function () {

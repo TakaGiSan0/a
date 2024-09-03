@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('training_records', function (Blueprint $table) {
             $table->id();
-            $table->string('doc_ref')->unique();
+            $table->string('doc_ref');
             $table->boolean('license')->default(0);
             $table->string('training_name',length:50);
             $table->string('job_skill', length:50);
