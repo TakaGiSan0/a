@@ -195,8 +195,8 @@
             hideModal();
 
             fetch(`/superadmin/summary/${eventNumber}`, {
-                signal: abortController.signal,
-            })
+                    signal: abortController.signal,
+                })
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
@@ -205,37 +205,37 @@
                     return response.json();
                 })
                 .then(data => {
-        const trainingList = data.map(record => `
-            <div>
-                <h3>Training Name: ${record.training_name}</h3>
-                <p>Doc Ref: ${record.doc_ref}</p>
-                <p>License: ${record.license}</p>
-                <p>Job Skill: ${record.job_skill}</p>
-                <p>Trainer Name: ${record.trainer_name}</p>
-                <p>Rev: ${record.rev}</p>
-                <p>Station: ${record.station}</p>
-                <p>Skill Code: ${record.skill_code}</p>
-                <p>Training Date: ${record.training_date}</p>
-                <p>Event Number: ${record.event_number}</p>
-                <p>Level: ${record.level}</p>
-                <p>Final Judgement: ${record.final_judgement}</p>
-                <p>Training Category: ${record.training_category.name}</p>
-                <h4>Peserta:</h4>
-                <ul>
-                    ${record.peserta.map(peserta => `
-                        <li>
-                            ${peserta.employee_name} (Badge No: ${peserta.badge_no}, Dept: ${peserta.dept}, Position: ${peserta.position})
+                    const trainingList = data.map(record => `
+                        <div>
+                            <h3>Training Name: ${record.training_name}</h3>
+                            <p>Doc Ref: ${record.doc_ref}</p>
+                            <p>License: ${record.license}</p>
+                            <p>Job Skill: ${record.job_skill}</p>
+                            <p>Trainer Name: ${record.trainer_name}</p>
+                            <p>Rev: ${record.rev}</p>
+                            <p>Station: ${record.station}</p>
+                            <p>Skill Code: ${record.skill_code}</p>
+                            <p>Training Date: ${record.training_date}</p>
+                            <p>Event Number: ${record.event_number}</p>
+                            <p>Level: ${record.level}</p>
+                            <h4>Peserta:</h4>
                             <ul>
-                                <li>Theory Result: ${peserta.pivot.theory_result}</li>
-                                <li>Practical Result: ${peserta.pivot.practical_result}</li>
+                                ${record.peserta.map(peserta => `
+                                            <li>
+                                                ${peserta.employee_name} (Badge No: ${peserta.badge_no}, Dept: ${peserta.dept}, Position: ${peserta.position})
+                                                <ul>
+                                                    <li>Theory Result: ${peserta.pivot.theory_result || 'N/A'}</li>
+                                                    <li>Practical Result: ${peserta.pivot.practical_result || 'N/A'}</li>
+                                                    <li>Level : ${peserta.pivot.level || 'N/A'}</li>
+                                                    <li>Final Judgement: ${peserta.pivot.final_judgement || 'N/A'}</li>
+                                                </ul>
+                                            </li>
+                                        `).join('')}
                             </ul>
-                        </li>
-                    `).join('')}
-                </ul>
-            </div>
-        `).join('');
+                        </div>
+                    `).join('');
 
-        document.getElementById('modalBody').innerHTML = trainingList;
+                    document.getElementById('modalBody').innerHTML = trainingList;
                     setTimeout(showModal, 100);
                 })
                 .catch(error => console.error('Error fetching data:', error));
@@ -249,4 +249,5 @@
             document.getElementById('modalBody').style.display = 'none';
         }
     </script>
+
 @endsection

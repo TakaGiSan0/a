@@ -75,7 +75,7 @@ class SuperAdminController extends Controller
 
     public function summary()
     {
-        $training_records = training_record::with(['trainingCategory:id,name', 'peserta'])->get();
+        $training_records = training_record::with(['trainingCategory:id,name'])->get();
 
         return view('index.summary', compact('training_records'));
     }
@@ -175,7 +175,7 @@ class SuperAdminController extends Controller
     public function showall($event_number)
     {
 // Ambil semua training records berdasarkan event_number
-$trainingRecords = TrainingRecord::with(['peserta', 'trainingCategory'])
+$trainingRecords = Training_Record::with(['pesertas', 'trainingCategory'])
         ->where('event_number', $event_number)
         ->get();
 
@@ -186,7 +186,7 @@ $trainingRecords = TrainingRecord::with(['peserta', 'trainingCategory'])
     // Ambil data peserta untuk setiap training record
     $trainingWithPeserta = $trainingRecords->map(function ($record) {
         // Ambil semua peserta untuk training record tertentu
-        $peserta = $record->peserta()->get();
+        $peserta = $record->pesertas()->get();
 
         return [
             'id' => $record->id,
@@ -200,9 +200,6 @@ $trainingRecords = TrainingRecord::with(['peserta', 'trainingCategory'])
             'skill_code' => $record->skill_code,
             'training_date' => $record->training_date,
             'event_number' => $record->event_number,
-            'level' => $record->level,
-            'final_judgement' => $record->final_judgement,
-            'training_category' => $record->trainingCategory,
             'peserta' => $peserta
         ];
     });
