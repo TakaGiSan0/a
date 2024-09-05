@@ -18,4 +18,10 @@ class peserta extends Model
     {
         return $this->hasMany(hasil_peserta::class, 'peserta_id');
     }
+
+    public function trainingRecords()
+    {
+        return $this->belongsToMany(Training_Record::class, 'hasil_peserta')
+                    ->withPivot('theory_result', 'practical_result', 'level', 'final_judgement', 'license');
+    }
 }

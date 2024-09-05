@@ -52,7 +52,7 @@ class PesertaController extends Controller
         $validatedData = $request->validate(
             [
                 'badge_no' => 'required|string|max:255|regex:/^[A-Z0-9\-]+$/|unique:pesertas,badge_no',
-                'employee_name' => 'required|string|max:255|regex:/^[A-Z0-9\-]+$/|unique:pesertas,employee_name',
+                'employee_name' => 'required|string|max:255|regex:/^[a-zA-Z\- ]+$/|unique:pesertas,employee_name',
                 'dept' => 'required|string|max:255',
                 'position' => 'required|string|max:255',
             ],

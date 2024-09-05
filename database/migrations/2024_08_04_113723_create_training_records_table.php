@@ -21,7 +21,6 @@ return new class extends Migration
             $table->string('station', length:50);
             $table->string('skill_code',length:50);
             $table->date('training_date');
-            $table->integer('event_number')->default(1);
             $table->unsignedBigInteger('category_id');
             $table->foreign('category_id')->references('id')->on('categories');
 
