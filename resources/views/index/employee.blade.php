@@ -26,7 +26,7 @@
                                     </div>
                                     <input type="text" id="simple-search"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                        placeholder="Search" required="" value="{{ request('badge_no') }}"
+                                        placeholder="Search"  value="{{ request('badge_no') }}"
                                         name="badge_no">
                                 </div>
                             </form>
@@ -113,7 +113,7 @@
                                         <td class="px-4 py-3 flex items-center justify-center">
                                             <button type="button" data-modal-target="readProductModal"
                                                 data-modal-toggle="readProductModal"
-                                                onclick="openModal({{ $rc->id }})"
+                                                onclick="BukaModal({{ $rc->id }})"
                                                 class="flex w-full items-center justify-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
                                                 <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg"
                                                     viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -195,7 +195,7 @@
     </div>
 
     <script>
-        function openModal(id) {
+        function BukaModal(id) {
             const controller = new AbortController();
 
             // Tampilkan modal setelah delay kecil
@@ -335,7 +335,7 @@
         // Close dropdown when clicking outside
         window.addEventListener('click', function(event) {
             if (!event.target.closest('#filterDropdownButton')) {
-                
+
             }
         });
     </script>

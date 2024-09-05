@@ -15,6 +15,11 @@ class category extends Model
         'name',
     ];
 
+    /**
+     * Get all of the trainingRecords for the Category
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function trainingRecords()
     {
         return $this->hasMany(training_record::class, 'category_id');

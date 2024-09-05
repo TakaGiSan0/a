@@ -13,20 +13,15 @@ class training_record extends Model
 
     protected $fillable = [
         'doc_ref',
-        'theory_result',
-        'practical_result',
         'station',
-        'level',
-        'final_judgement',
         'category_id',
-        'peserta_id',
-        'license',
         'training_name',
         'job_skill',
         'trainer_name',
         'rev',
         'skill_code',
         'training_date',
+        'event_number',
     ];
 
     public function trainingCategory()
@@ -34,10 +29,15 @@ class training_record extends Model
         return $this->belongsTo(category::class, 'category_id');
     }
 
-
-    public function peserta()
+    public function hasil_peserta()
     {
-        return $this->belongsTo(peserta::class, 'peserta_id');
+        return $this->hasMany(hasil_peserta::class, 'training_record_id');
     }
+    public function pesertas()
+    {
+        return $this->belongsToMany(Peserta::class, 'hasil_peserta')
+                    ->withPivot('level', 'final_judgement', 'license', 'theory_result', 'practical_result');
+    }
+
 
 }

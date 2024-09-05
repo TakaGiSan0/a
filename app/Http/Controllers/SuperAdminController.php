@@ -75,7 +75,7 @@ class SuperAdminController extends Controller
 
     public function summary()
     {
-        $training_records = training_record::with(['trainingCategory:id,name','peserta'])->get();
+        $training_records = training_record::with(['trainingCategory:id,name', 'peserta'])->get();
 
         return view('index.summary', compact('training_records'));
     }
@@ -88,7 +88,7 @@ class SuperAdminController extends Controller
         $categories = category::all();
         $peserta = peserta::all();
 
-        return view('form.form', compact('categories','peserta'));
+        return view('form.form', compact('categories', 'peserta'));
     }
 
     /**
@@ -96,43 +96,41 @@ class SuperAdminController extends Controller
      */
      public function store(Request $request)
 {
-    dd($request->all());
+
+    // Ambil event number terakhir dari database dan tambahkan 1
+    $lastEventNumber = Training_Record::max('event_number') ?? 0;
+    $newEventNumber = $lastEventNumber + 1;
+
     $data = $request->all();
 
-    // Ambil detail training yang sama untuk setiap peserta
-    $trainingName = $data['training_name'];
-    $docRef = $data['doc_ref'];
-    $job_skill = $data['job_skill'];
-    $trainer_name = $data['trainer_name'];
-    $rev = $data['rev'];
-    $station = $data['station'];
-    $training_date = $data['training_date'];
-    $skill_code = $data['skill_code'];
-    $category_id = $data['category_id'];
-    // Ambil detail lain jika diperlukan
+    // Simpan data pelatihan utama
+    $trainingRecord = Training_Record::create([
+        'training_name' => $data['training_name'],
+        'doc_ref' => $data['doc_ref'],
+        'job_skill' => $data['job_skill'],
+        'trainer_name' => $data['trainer_name'],
+        'rev' => $data['rev'],
+        'station' => $data['station'],
+        'training_date' => $data['training_date'],
+        'skill_code' => $data['skill_code'],
+        'category_id' => $data['category_id'],
+        'event_number' => $newEventNumber,
+        // Tambahkan detail lainnya jika perlu
+    ]);
 
     foreach ($data['participants'] as $participant) {
+        // Ambil data peserta berdasarkan badge number
         $peserta = Peserta::where('badge_no', $participant['badge_no'])->first();
 
         // Pastikan peserta ditemukan
         if ($peserta) {
-            training_record::create([
-                'training_name' => $trainingName,
-                'doc_ref' => $docRef,
-                // Isi detail lainnya jika perlu
-                'job_skill' => $job_skill,
-                'trainer_name' => $trainer_name,
-                'rev' => $rev,
-                'station' => $station,
-                'skill_code' => $skill_code,
-                'training_date' => $training_date,
+            // Buat relasi di tabel pivot training_record_peserta
+            $trainingRecord->pesertas()->attach($peserta->id, [
                 'level' => $participant['level'],
                 'final_judgement' => $participant['final_judgement'],
-                'category_id' => $category_id,
                 'license' => $participant['license'],
                 'theory_result' => $participant['theory_result'],
                 'practical_result' => $participant['practical_result'],
-                'peserta_id' => $peserta->id
             ]);
         }
     }
@@ -140,52 +138,78 @@ class SuperAdminController extends Controller
     return redirect()->back()->with('success', 'Training records created successfully!');
 }
 
-
     /**
      * Display the specified resource.
      */
-     public function show($id)
-{
-    // Ambil data peserta berdasarkan ID
-    $peserta = Peserta::find($id);
-
-    if (!$peserta) {
-        return response()->json(['error' => 'Peserta not found'], 404);
-    }
-
-    // Ambil semua training_record yang terkait dengan peserta tersebut
-    $cacheKey = "peserta_records:{$id}";
-    $all_records = Cache::remember($cacheKey, 3600, function () use ($id) {
-        return training_record::with(['trainingCategory:id,name'])
-            ->where('peserta_id', $id)
-            ->get();
-    });
-
-    // Kelompokkan data berdasarkan category_id
-    $grouped_records = $all_records->groupBy('category_id');
-
-    // Jika tidak ada data pelatihan, set grouped_records ke null
-    if ($all_records->isEmpty()) {
-        $grouped_records = null;
-    }
-
-    return response()->json([
-        'peserta' => $peserta,
-        'grouped_records' => $grouped_records,
-    ]);
-}
-
-
-    public function showall($id)
+    public function show($id)
     {
-        //
-        $trainingRecord = training_record::with(['trainingCategory:id,name','peserta'])->find($id);
-        if (!$trainingRecord) {
-            return response()->json(['error' => 'Record not found'], 404);
+        // Ambil data peserta berdasarkan ID
+        $peserta = Peserta::find($id);
+
+        if (!$peserta) {
+            return response()->json(['error' => 'Peserta not found'], 404);
         }
 
-        return response()->json($trainingRecord);
-        return response($trainingRecord)->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+        // Ambil semua training_record yang terkait dengan peserta tersebut
+        $cacheKey = "peserta_records:{$id}";
+        $all_records = Cache::remember($cacheKey, 3600, function () use ($id) {
+            return training_record::with(['trainingCategory:id,name'])
+                ->where('peserta_id', $id)
+                ->get();
+        });
+
+        // Kelompokkan data berdasarkan category_id
+        $grouped_records = $all_records->groupBy('category_id');
+
+        // Jika tidak ada data pelatihan, set grouped_records ke null
+        if ($all_records->isEmpty()) {
+            $grouped_records = null;
+        }
+
+        return response()->json([
+            'peserta' => $peserta,
+            'grouped_records' => $grouped_records,
+        ]);
+    }
+
+    public function showall($event_number)
+    {
+// Ambil semua training records berdasarkan event_number
+$trainingRecords = TrainingRecord::with(['peserta', 'trainingCategory'])
+        ->where('event_number', $event_number)
+        ->get();
+
+    if ($trainingRecords->isEmpty()) {
+        return response()->json(['error' => 'No records found'], 404);
+    }
+
+    // Ambil data peserta untuk setiap training record
+    $trainingWithPeserta = $trainingRecords->map(function ($record) {
+        // Ambil semua peserta untuk training record tertentu
+        $peserta = $record->peserta()->get();
+
+        return [
+            'id' => $record->id,
+            'doc_ref' => $record->doc_ref,
+            'license' => $record->license,
+            'training_name' => $record->training_name,
+            'job_skill' => $record->job_skill,
+            'trainer_name' => $record->trainer_name,
+            'rev' => $record->rev,
+            'station' => $record->station,
+            'skill_code' => $record->skill_code,
+            'training_date' => $record->training_date,
+            'event_number' => $record->event_number,
+            'level' => $record->level,
+            'final_judgement' => $record->final_judgement,
+            'training_category' => $record->trainingCategory,
+            'peserta' => $peserta
+        ];
+    });
+
+    return response()->json($trainingWithPeserta)
+        ->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+
     }
 
     /**

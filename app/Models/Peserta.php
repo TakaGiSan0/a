@@ -13,8 +13,9 @@ class peserta extends Model
 
     protected $fillable = ['badge_no', 'employee_name', 'dept', 'position'];
 
-    public function trainingRecords()
+
+    public function peserta()
     {
-        return $this->hasMany(training_record::class, 'peserta_id');
+        return $this->hasMany(hasil_peserta::class, 'peserta_id');
     }
 }

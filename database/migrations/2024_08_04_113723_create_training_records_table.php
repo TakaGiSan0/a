@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('training_records', function (Blueprint $table) {
             $table->id();
             $table->string('doc_ref');
-            $table->boolean('license')->default(0);
             $table->string('training_name',length:50);
             $table->string('job_skill', length:50);
             $table->string('trainer_name',length:50);
@@ -22,13 +21,8 @@ return new class extends Migration
             $table->string('station', length:50);
             $table->string('skill_code',length:50);
             $table->date('training_date');
-            $table->unsignedBigInteger('peserta_id');
-            $table->enum('theory_result', ['pass', 'fail']);
-            $table->enum('practical_result', ['pass', 'fail']);
+            $table->integer('event_number')->default(1);
             $table->unsignedBigInteger('category_id');
-            $table->enum('level', ['level 1', 'level 2','level 3', 'level 4']);
-            $table->enum('final_judgement', ['Competence', 'Attend']);
-            $table->foreign('peserta_id')->references('id')->on('pesertas');
             $table->foreign('category_id')->references('id')->on('categories');
 
             $table->timestamps();

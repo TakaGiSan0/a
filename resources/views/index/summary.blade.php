@@ -68,8 +68,12 @@
                 </div>
 
                 <div class="overflow-x-auto mt-4">
-                    <?php $no = 0; ?>
-                    @foreach ($training_records as $rc)
+                    @php
+                        $uniqueRecords = $training_records->unique('doc_ref');
+                    @endphp
+                    <?php $no = 0;
+                    $n = 0; ?>
+                    @foreach ($uniqueRecords as $rc)
                         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                 <tr>
@@ -97,7 +101,7 @@
                                     <td class="px-4 py-3">{{ $rc->station ?? 'N/A' }}</td>
                                     <td class="px-4 py-3">{{ $rc->trainer_name ?? 'N/A' }}</td>
                                     <td class="px-4 py-3">{{ $rc->training_date ?? 'N/A' }}</td>
-                                    <td class="px-4 py-3">TR-0{{ $rc->id }}</td>
+                                    <td class="px-4 py-3">TR-0{{ $rc->event_number ?? 'N/A' }}</td>
                                     <td class="px-4 py-3 flex items-center justify-">
                                         <button type="button" data-modal-target="updateProductModal"
                                             data-modal-toggle="updateProductModal"
@@ -113,7 +117,8 @@
                                         </button>
 
                                         <button type="button" data-modal-target="readProductModal"
-                                            data-modal-toggle="readProductModal" onclick="openModal({{ $rc->id }})"
+                                            data-modal-toggle="readProductModal"
+                                            onclick="openModal({{ $rc->event_number }})"
                                             class="flex w-full items-center justify-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
                                             <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg"
                                                 viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -175,174 +180,73 @@
     </div>
     <!-- Delete modal -->
     <script>
-        let controller = new AbortController();
+        let abortController;
 
-        function openModal(recordId) {
-            if (controller) {
-                controller.abort(); // Membatalkan permintaan sebelumnya jika masih berjalan
+        function openModal(eventNumber) {
+            // Abort any ongoing requests
+            if (abortController) {
+                abortController.abort();
             }
-            controller = new AbortController();
 
-            fetch(`/superadmin/summary/${recordId}`, {
-                    signal: controller.signal
-                })
+            // Create a new AbortController for the new request
+            abortController = new AbortController();
+
+            // Hide the modal before opening a new one
+            hideModal();
+
+            fetch(`/superadmin/summary/${eventNumber}`, {
+                signal: abortController.signal,
+            })
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
                     }
+
                     return response.json();
                 })
                 .then(data => {
-                    if (!data) {
-                        throw new Error('No data received');
-                    }
-                    document.getElementById('modalBody').innerHTML = `
-                    <form action="#">
-                    <div class="grid gap-4 mb-4 sm:grid-cols-2">
-                        <div>
-                            <label for="name"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Doc. Ref</label>
+        const trainingList = data.map(record => `
+            <div>
+                <h3>Training Name: ${record.training_name}</h3>
+                <p>Doc Ref: ${record.doc_ref}</p>
+                <p>License: ${record.license}</p>
+                <p>Job Skill: ${record.job_skill}</p>
+                <p>Trainer Name: ${record.trainer_name}</p>
+                <p>Rev: ${record.rev}</p>
+                <p>Station: ${record.station}</p>
+                <p>Skill Code: ${record.skill_code}</p>
+                <p>Training Date: ${record.training_date}</p>
+                <p>Event Number: ${record.event_number}</p>
+                <p>Level: ${record.level}</p>
+                <p>Final Judgement: ${record.final_judgement}</p>
+                <p>Training Category: ${record.training_category.name}</p>
+                <h4>Peserta:</h4>
+                <ul>
+                    ${record.peserta.map(peserta => `
+                        <li>
+                            ${peserta.employee_name} (Badge No: ${peserta.badge_no}, Dept: ${peserta.dept}, Position: ${peserta.position})
+                            <ul>
+                                <li>Theory Result: ${peserta.pivot.theory_result}</li>
+                                <li>Practical Result: ${peserta.pivot.practical_result}</li>
+                            </ul>
+                        </li>
+                    `).join('')}
+                </ul>
+            </div>
+        `).join('');
 
-                            <input type="text" name="name" id="name" value="${data.doc_ref ?? 'N/A'}"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                required="John Doe" placeholder="John Doe" disabled>
-                        </div>
-                        <div>
-                            <label for="brand"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Rev</label>
-                            <input type="text" name="brand" id="brand" value="${data.rev ?? 'N/A'}"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                required="" disabled placeholder="John Doe">
-                        </div>
-                        <div>
-                            <label for="price"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Training
-                                Name</label>
-
-                            <input type="type" name="price" id="price" value="${data.training_name ?? 'N/A'}"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                required="" placeholder="John Doawe" disabled>
-                        </div>
-                        <div><label for="category"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Station</label>
-
-                            <input type="text" value="${data.station ?? 'N/A'}"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="John Doe" disabled>
-                        </div>
-                        <div class="sm:col-span-2"><label for="description"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Job Skill</label>
-
-                            <textarea id="description" rows="4" value="${data.job_skill ?? 'N/A'}"
-                                class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="Write product description here" disabled></textarea>
-                        </div>
-                        <div><label for="category"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Skill Code</label>
-
-                            <input type="text" value="${data.skill_code ?? 'N/A'}"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="N/A" disabled>
-                        </div>
-                        <div><label for="category"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Badge No</label>
-
-                            <input type="text" value="${data.peserta.badge_no ?? 'N/A'}"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="N/A" disabled>
-                        </div>
-                        <div><label for="category"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Emp Name</label>
-
-                            <input type="text" value="${data.peserta.employee_name ?? 'N/A'}"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                disabled placeholder="John Doe">
-                        </div>
-                        <div><label for="category"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Dept</label>
-
-                            <input type="text" value="${data.peserta.dept ?? 'N/A'}"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="John Doe" disabled>
-                        </div>
-                        <div><label for="category"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Position</label>
-
-                            <input type="text" value="${data.peserta.position ?? 'N/A'}"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="John Doe" disabled>
-                        </div>
-                        <div><label for="category"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Training
-                                Date</label>
-
-                            <input type="date" value="${data.training_date ?? 'N/A'}"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="17 Desember 2021" disabled>
-                        </div>
-                        <div><label for="category"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Training
-                                Name</label>
-
-                            <input type="text" value="${data.trainer_name ?? 'N/A'}"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="John Doe" disabled>
-                        </div>
-                        <div><label for="category"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Theory
-                                Result</label><select id="category"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                disabled>
-                                <option value="${data.theory_result ?? 'N/A'}">${data.theory_result ?? 'N/A'}</option>
-                            </select></div>
-                        <div><label for="category"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Practical
-                                Result</label><select id="category"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                Result</label>
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                disabled>
-                                <option value="${data.practicalresult ?? 'N/A'}">${data.practicalresult ?? 'N/A'}</option>
-                           </select></div>
-                        </div>
-                        <div><label for="category"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Level
-                            </label><select id="category"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                disabled>
-                                <option value="TV">${data.level ?? 'N/A'}</option>
-                            </select></div>
-                        <div><label for="category"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Final
-                                Judgement</label><select id="category"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                disabled>
-                                <option value="TV">${data.final_judgement ?? 'N/A'}</option>
-                            </select></div>
-                        <div><label for="category"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Training
-                                Category</label><select id="category"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                disabled>
-                               <option selected="" value="TV">${data.training_category.name ?? 'N/A'}</option>
-                            </select></div>
-                        <div class="flex items-center mb-4">
-                            <input id="default-checkbox" type="checkbox" value=""
-@@ -282,11 +335,21 @@ class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                        </div>
-                    </div>
-                </form>
-            `;
-                    console.log('Full data:', data);
+        document.getElementById('modalBody').innerHTML = trainingList;
+                    setTimeout(showModal, 100);
                 })
-                .catch(error => {
-                    console.error('Error fetching data:', error);
-                });
+                .catch(error => console.error('Error fetching data:', error));
+        }
 
+        function showModal() {
+            document.getElementById('modalBody').style.display = 'block';
+        }
+
+        function hideModal() {
+            document.getElementById('modalBody').style.display = 'none';
         }
     </script>
 @endsection

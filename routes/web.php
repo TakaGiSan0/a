@@ -40,7 +40,7 @@ Route::middleware(['auth', 'role:super admin'])->group(function () {
 
     // Dashboard Summary Training Record
     Route::get('/superadmin/summary', [SuperAdminController::class, 'summary'])->name('superadmin.summary');
-    Route::get('/superadmin/summary/{recordId}', [SuperAdminController::class, 'showall'])->name('superadmin.showall');
+    Route::get('/superadmin/summary/{event_number}', [SuperAdminController::class, 'showall'])->name('superadmin.showall');
 
     // Dashboard Menambah Peserta
     Route::get('/superadmin/peserta/', [PesertaController::class, 'index'])->name('superadmin.peserta');
