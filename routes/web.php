@@ -31,16 +31,22 @@ Route::middleware(['auth', 'role:super admin'])->group(function () {
 
     // Dashboard Form
     Route::get('/superadmin/dashboard/', [SuperAdminController::class, 'index'])->name('superadmin.dashboard');
-    Route::get('/superadmin/create', [SuperAdminController::class, 'create'])->name('superadmin.create');
-    Route::post('/superadmin/create', [SuperAdminController::class, 'store'])->name('superadmin.store');
+    Route::get('/superadmin/dashboard/create', [SuperAdminController::class, 'create'])->name('superadmin.create');
+    Route::post('/superadmin/dashboard/create', [SuperAdminController::class, 'store'])->name('superadmin.store');
+    Route::get('/superadmin/dashboard/edit/{id}', [SuperAdminController::class, 'edit'])->name('superadmin.edit');
+    Route::delete('/superadmin/dashboard/{id}', [SuperAdminController::class, 'destroy'])->name('superadmin.destroy');
+    Route::put('/superadmin/dashboard/update/{id}', [SuperAdminController::class, 'update'])->name('superadmin.update');
+
 
     // Dashboard Employee Training Record
     Route::get('/superadmin/employee', [SuperAdminController::class, 'employee'])->name('superadmin.employee');
-    Route::get('/superadmin/employee/{id}', [SuperAdminController::class, 'show'])->name('superadmin.show');
+    Route::get('/superadmin/employee/{id}', [SuperAdminController::class, 'show'])->name('superadmin.employee.show');
 
     // Dashboard Summary Training Record
     Route::get('/superadmin/summary', [SuperAdminController::class, 'summary'])->name('superadmin.summary');
-    Route::get('/superadmin/summary/{event_number}', [SuperAdminController::class, 'showall'])->name('superadmin.showall');
+    Route::get('/superadmin/summary/{id}', [SuperAdminController::class, 'showall'])->name('superadmin.summary.show');
+    Route::post('/api/trainings/search', [SuperAdminController::class, 'search']);
+
 
     // Dashboard Menambah Peserta
     Route::get('/superadmin/peserta/', [PesertaController::class, 'index'])->name('superadmin.peserta');

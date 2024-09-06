@@ -16,7 +16,7 @@ class AdminController extends Controller
 
     public function create()
     {
-        return view('form.form');
+        return view('superadmin.form');
 
     }
 

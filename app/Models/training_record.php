@@ -21,7 +21,7 @@ class training_record extends Model
         'rev',
         'skill_code',
         'training_date',
-        'event_number',
+        'status',
     ];
 
     public function trainingCategory()
