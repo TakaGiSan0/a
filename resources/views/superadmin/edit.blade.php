@@ -114,11 +114,11 @@
                                         value="{{ $peserta->badge_no }}" id="badge_no_1"
                                         class="bg-gray-50 badge_no_input border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                 </div>
-                                <div><label for="participants[{{ $index }}][dept]"
+                                <div><label for="participants[{{ $index }}][employee_name]"
                                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Employee Name</label>
-                                <input type="text" name="participants[{{ $index }}][dept]"
-                                    id="dept" value="{{ $peserta->dept }}"
-                                    class="bg-gray-50 dept_input border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                <input type="text" name="participants[{{ $index }}][employee_name]"
+                                    id="employee_name" value="{{ $peserta->employee_name }}"
+                                    class="bg-gray-50 employee_name_input border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     placeholder="John Doe" readonly>
                             </div>
 

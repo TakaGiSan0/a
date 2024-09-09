@@ -13,6 +13,7 @@ use App\Models\theory_result;
 use App\Models\level;
 use App\Models\peserta;
 use Illuminate\Support\Facades\Log;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class SuperAdminController extends Controller
 {
@@ -188,8 +189,30 @@ class SuperAdminController extends Controller
 
     public function store(Request $request)
     {
+        // Validasi data dengan pesan khusus untuk doc_ref yang sudah ada
+        $data = $request->validate(
+            [
+                'training_name' => 'required|string|max:255',
+                'doc_ref' => 'required|string|max:255|unique:training_records,doc_ref', // Validasi unik
+                'job_skill' => 'required|string|max:255',
+                'trainer_name' => 'required|string|max:255',
+                'rev' => 'required|string|max:255',
+                'station' => 'required|string|max:255',
+                'training_date' => 'required|date',
+                'skill_code' => 'required|string|max:255',
+                'category_id' => 'required|integer|exists:categories,id',
+                'participants.*.badge_no' => 'required|string|max:255',
+                'participants.*.level' => 'required|string|max:255',
+                'participants.*.final_judgement' => 'required|string|max:255',
+                'participants.*.license' => 'nullable|string|max:255',
+                'participants.*.theory_result' => 'required|string|max:255',
+                'participants.*.practical_result' => 'required|string|max:255',
+            ],
+            [
+                'doc_ref.unique' => 'Pelatihan sudah ada.', // Pesan khusus untuk doc_ref
+            ],
+        );
 
-        $data = $request->all();
         $status = $request->has('save_as_draft') ? 'pending' : 'completed';
 
         // Simpan data pelatihan utama
@@ -225,7 +248,6 @@ class SuperAdminController extends Controller
             }
         }
 
-
         return redirect()->route('superadmin.dashboard')->with('success', 'Training records berhasil dibuat!');
     }
 
@@ -241,7 +263,6 @@ class SuperAdminController extends Controller
      */
     public function update(Request $request, $id)
     {
-        dd($request->all());
         $trainingRecords = training_record::with(['trainingCategory:id,name']);
         $data = $request->all();
         $status = $request->has('save_as_draft') ? 'pending' : 'completed';
@@ -277,16 +298,14 @@ class SuperAdminController extends Controller
             }
         }
 
-        return redirect()->back()->with('success', 'Training record berhasil diperbarui!');
+        return redirect()->route('superadmin.dashboard')->with('success', 'Training record berhasil diperbarui!');
     }
     /**
      * Remove the specified resource from storage.
      */
-     public function destroy($id)
+    public function destroy($id)
     {
         $trainingRecord = training_record::findOrFail($id);
-
-        $trainingRecord->trainingRecords()->delete();
 
         // Menggunakan Policy untuk memeriksa izin
         $this->authorize('delete', $trainingRecord);
@@ -295,8 +314,9 @@ class SuperAdminController extends Controller
         $trainingRecord->delete();
 
         // Redirect atau response dengan pesan sukses
-        return redirect()->route('superadmin.index')->with('success', 'Peserta berhasil dihapus.');
+        return redirect()->route('superadmin.dashboard')->with('success', 'Peserta berhasil dihapus.');
     }
+
     public function search(Request $request)
     {
         $query = Training_Record::query();
@@ -324,5 +344,59 @@ class SuperAdminController extends Controller
         $results = $query->get();
 
         return response()->json($results);
+    }
+
+    public function downloadSummaryPdf($id)
+    {
+        // Ambil data summary berdasarkan id
+        $trainingRecord = Training_Record::findOrFail($id);
+
+        // Menyiapkan data untuk view PDF
+        $data = [
+            'training_name' => $trainingRecord->training_name,
+            'doc_ref' => $trainingRecord->doc_ref,
+            'job_skill' => $trainingRecord->job_skill,
+            'trainer_name' => $trainingRecord->trainer_name,
+            'rev' => $trainingRecord->rev,
+            'station' => $trainingRecord->station,
+            'training_date' => $trainingRecord->training_date,
+            'skill_code' => $trainingRecord->skill_code,
+            'status' => $trainingRecord->status,
+            'participants' => $trainingRecord->pesertas, // Mengambil relasi peserta jika ada
+        ];
+
+        try {
+            // Render view ke PDF
+            $pdf = Pdf::loadView('pdf.training_summary', $data);
+
+            // Unduh file PDF
+            return $pdf->download('training_summary.pdf');
+        } catch (\Exception $e) {
+            // Log error jika terjadi masalah
+            \Log::error('PDF Generation Error: ' . $e->getMessage());
+            dd($e);
+
+            // Redirect atau tampilkan pesan kesalahan
+            return redirect()->route('superadmin.dashboard')->with('error', 'Terjadi kesalahan saat membuat PDF.');
+        }
+    }
+
+    public function generatePdf()
+    {
+        // Data untuk PDF
+        $data = ['title' => 'Laporan Training Record'];
+
+        // Buat PDF dari view
+        $pdf = Pdf::loadView('pdf.training_summary', $data);
+
+        // Tentukan path tempat penyimpanan
+        $documentsPath = getenv('HOMEDRIVE') . getenv('HOMEPATH') . '\\Documents\\'; // Untuk Windows
+        $fileName = 'training_record.pdf';
+        $fullPath = $documentsPath . $fileName;
+
+        // Simpan PDF di path yang telah ditentukan
+        $pdf->save($fullPath);
+
+        return 'PDF berhasil disimpan di ' . $fullPath;
     }
 }

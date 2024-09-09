@@ -37,6 +37,7 @@ Route::middleware(['auth', 'role:super admin'])->group(function () {
     Route::delete('/superadmin/dashboard/{id}', [SuperAdminController::class, 'destroy'])->name('superadmin.destroy');
     Route::put('/superadmin/dashboard/update/{id}', [SuperAdminController::class, 'update'])->name('superadmin.update');
 
+    Route::get('/test-pdf', [SuperAdminController::class, 'generatePdf']);
 
     // Dashboard Employee Training Record
     Route::get('/superadmin/employee', [SuperAdminController::class, 'employee'])->name('superadmin.employee');
@@ -46,6 +47,7 @@ Route::middleware(['auth', 'role:super admin'])->group(function () {
     Route::get('/superadmin/summary', [SuperAdminController::class, 'summary'])->name('superadmin.summary');
     Route::get('/superadmin/summary/{id}', [SuperAdminController::class, 'showall'])->name('superadmin.summary.show');
     Route::post('/api/trainings/search', [SuperAdminController::class, 'search']);
+    Route::get('/training-records/{id}/download-pdf', [SuperAdminController::class, 'downloadSummaryPdf'])->name('download');
 
 
     // Dashboard Menambah Peserta
