@@ -103,42 +103,53 @@
                                 </option>
                             @endforeach
                         </select>
+                        
                     </div>
-                    @foreach ($trainingRecord->pesertas as $index => $peserta)
-                        <div id="participants-container">
+
+                    <div id="participants-container">
+                        @foreach ($participants as $index => $participant)
                             <div class="participant-row" id="participant_1">
-                                <div><label for="participants[{{ $index }}][badge_no]"
+                                <div>
+                                    <label for="badge_no_{{ $index }}"
                                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Badge
                                         No</label>
                                     <input type="text" name="participants[{{ $index }}][badge_no]"
-                                        value="{{ $peserta->badge_no }}" id="badge_no_1"
-                                        class="bg-gray-50 badge_no_input border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                        id="badge_no_{{ $index }}"
+                                        class="bg-gray-50 badge_no_input border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        value="{{ old('participants.' . $index . '.badge_no', $participant->badge_no) }}">
                                 </div>
-                                <div><label for="participants[{{ $index }}][employee_name]"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Employee Name</label>
-                                <input type="text" name="participants[{{ $index }}][employee_name]"
-                                    id="employee_name" value="{{ $peserta->employee_name }}"
-                                    class="bg-gray-50 employee_name_input border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    placeholder="John Doe" readonly>
-                            </div>
+                                <div>
+                                    <label for="employee_name_{{ $index }}"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Emp
+                                        Name</label>
+                                    <input type="text" name="participants[{{ $index }}][employee_name]"
+                                        id="employee_name_{{ $index }}"
+                                        class="bg-gray-50 employee_name_input border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        value="{{ old('participants.' . $index . '.employee_name', $participant->employee_name) }}"
+                                        readonly>
+                                </div>
 
-                                <div><label for="participants[{{ $index }}][dept]"
+                                <div>
+                                    <label for="dept_{{ $index }}"
                                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Dept</label>
                                     <input type="text" name="participants[{{ $index }}][dept]"
-                                        id="dept" value="{{ $peserta->dept }}"
+                                        id="dept_{{ $index }}"
                                         class="bg-gray-50 dept_input border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                        placeholder="John Doe" readonly>
+                                        value="{{ old('participants.' . $index . '.dept', $participant->dept) }}"
+                                        readonly>
                                 </div>
-                                <div><label for="participants[{{ $index }}][position]" name="position"
+                                <div>
+                                    <label for="position_{{ $index }}"
                                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Position</label>
                                     <input type="text" name="participants[{{ $index }}][position]"
-                                        id="position" value="{{ $peserta->position }}"
+                                        id="position_{{ $index }}"
                                         class="bg-gray-50 position_input border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                        placeholder="John Doe" readonly>
-
-                                    <input type="hidden" name="participants[0][peserta_id]"
-                                        class="peserta_id_input">
+                                        value="{{ old('participants.' . $index . '.position', $participant->position) }}"
+                                        readonly>
                                 </div>
+                                <input type="hidden" name="participants[{{ $index }}][peserta_id]"
+                                    class="peserta_id_input"
+                                    value="{{ old('participants.' . $index . '.peserta_id', $participant->peserta_id) }}">
                                 <div><label for="participants[{{ $index }}][theory_result]"
                                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Theory
                                         Result</label><select id="category"
@@ -192,7 +203,8 @@
                                 </div>
                             </div>
                             <input type="hidden" name="participant_count" value="1">
-                        </div>
+                            @endforeach
+                    </div>
                 </div>
                 <button type="submit"
                     class="text-white inline-flex justify-center items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
@@ -204,25 +216,16 @@
                     </svg>
                     Submit
                 </button>
-                <button type="button" id="add-participant"
-                    class="text-white inline-flex justify-center items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                    <svg class="mr-1 -ml-1 w-6 h-6" fill="currentColor" viewbox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
-                            d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                            clip-rule="evenodd" />
-                    </svg>
-                    Tambahkan Peserta
-                </button>
+                @if ($trainingRecord->status === 'Pending')
+                    <button type="button" id="add-participant" class="btn btn-primary">Add Participant</button>
+                @endif
                 @if (session('success'))
                     <div class="alert alert-success">
                         {{ session('success') }}
                     </div>
                 @endif
                 <button type="submit" name="save_as_draft" value="1">Draft</button>
-
             </form>
-            @endforeach
         </div>
     </div>
 
@@ -265,13 +268,19 @@
             })
         });
 
-        document.getElementById('add-participant').addEventListener('click', function() {
-            const container = document.getElementById('participants-container');
-            const index = container.children.length;
-            const newRow = document.createElement('div');
-            newRow.classList.add('participant-row');
+        document.addEventListener('DOMContentLoaded', function() {
+            const addButton = document.getElementById('add-participant');
 
-            newRow.innerHTML = `
+            // Periksa apakah tombol add participant ada
+            if (addButton) {
+
+                addButton.addEventListener('click', function() {
+                    const container = document.getElementById('participants-container');
+                    const index = container.children.length;
+                    const newRow = document.createElement('div');
+                    newRow.classList.add('participant-row');
+
+                    newRow.innerHTML = `
             <div><label for="badge_no_1"
                                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Badge
                                     No</label>
@@ -346,8 +355,12 @@
                     </div>
 
     `;
-            container.appendChild(newRow);
-            hiddenInput.value = checkbox.checked ? "1" : "0";
+                    container.appendChild(newRow);
+
+                });
+            } else {
+                console.error("Button 'Add Participant' not found. Make sure it exists in the DOM.");
+            }
         });
     </script>
 

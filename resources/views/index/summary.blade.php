@@ -105,7 +105,7 @@
                                     <td class="px-4 py-3">{{ $rc->station }}</td>
                                     <td class="px-4 py-3">{{ $rc->trainer_name ?? 'N/A' }}</td>
                                     <td class="px-4 py-3">{{ $rc->training_date ?? 'N/A' }}</td>
-                                    <td class="px-4 py-3">TR-0{{ $rc->event_number ?? 'N/A' }}</td>
+                                    <td class="px-4 py-3">TR-0{{ $rc->id ?? 'N/A' }}</td>
                                     <td class="px-4 py-3 flex items-center justify-">
                                         <button type="button" data-modal-target="updateProductModal"
                                             data-modal-toggle="updateProductModal"
@@ -116,7 +116,7 @@
                                                     d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
                                                 <path fill-rule="evenodd" clip-rule="evenodd"
                                                     d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
-                                            </svg><a href="{{ route('download', $rc->id) }}">
+                                            </svg><a href="{{ url('generator', $rc->id) }}">
                                             Download
                                             </a>
                                         </button>
@@ -233,6 +233,7 @@
                             <p>Station: ${record.station}</p>
                             <p>Skill Code: ${record.skill_code}</p>
                             <p>Training Date: ${record.training_date}</p>
+                            ${record.status === 'Pending' ? '<p class="text-yellow-600">This training is pending. Please complete the requirements.</p>' : ''}
                             <h4>Peserta:</h4>
                             <ul>
                                 ${record.peserta.map(peserta => `

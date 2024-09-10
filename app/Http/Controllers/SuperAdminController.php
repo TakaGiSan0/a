@@ -13,7 +13,7 @@ use App\Models\theory_result;
 use App\Models\level;
 use App\Models\peserta;
 use Illuminate\Support\Facades\Log;
-use Barryvdh\DomPDF\Facade\Pdf;
+use Barryvdh\DomPDF\Facade\pdf;
 
 class SuperAdminController extends Controller
 {
@@ -180,6 +180,7 @@ class SuperAdminController extends Controller
                 'station' => $record->station,
                 'skill_code' => $record->skill_code,
                 'training_date' => $record->training_date,
+                'status' => $record->status,
                 'peserta' => $peserta,
             ];
         });
@@ -202,6 +203,9 @@ class SuperAdminController extends Controller
                 'skill_code' => 'required|string|max:255',
                 'category_id' => 'required|integer|exists:categories,id',
                 'participants.*.badge_no' => 'required|string|max:255',
+                'participants.*.employee_name' => 'required|string|max:255',
+                'participants.*.dept' => 'required|string|max:255',
+                'participants.*.position' => 'required|string|max:255',
                 'participants.*.level' => 'required|string|max:255',
                 'participants.*.final_judgement' => 'required|string|max:255',
                 'participants.*.license' => 'nullable|string|max:255',
@@ -248,14 +252,27 @@ class SuperAdminController extends Controller
             }
         }
 
+        session(['pending_participants' => $data['participants']]);
+
         return redirect()->route('superadmin.dashboard')->with('success', 'Training records berhasil dibuat!');
     }
 
     public function edit($id)
     {
+        // Ambil data training record berdasarkan ID
+        $trainingRecord = Training_Record::findOrFail($id);
+
+        // Ambil data peserta jika form statusnya draft
+        $participants = $trainingRecord->status === 'Pending'
+        ? session('pending_participants', []) // Ambil data dari session
+        : $trainingRecord->pesertas;          // Jika bukan pending, ambil dari database
+
+    
+        // Ambil semua categories
         $categories = Category::all();
-        $trainingRecord = Training_Record::with('pesertas')->findOrFail($id);
-        return view('superadmin.edit', compact('trainingRecord', 'categories'));
+
+        // Kirim data ke view
+        return view('superadmin.edit_completed', compact('trainingRecord', 'categories', 'participants'));
     }
 
     /**
@@ -381,22 +398,21 @@ class SuperAdminController extends Controller
         }
     }
 
-    public function generatePdf()
+    public function generatePDF()
     {
-        // Data untuk PDF
-        $data = ['title' => 'Laporan Training Record'];
+        ini_set('max_execution_time', 300);
+        ini_set('memory_limit', '512M');
 
-        // Buat PDF dari view
-        $pdf = Pdf::loadView('pdf.training_summary', $data);
+        $users = training_record::get();
 
-        // Tentukan path tempat penyimpanan
-        $documentsPath = getenv('HOMEDRIVE') . getenv('HOMEPATH') . '\\Documents\\'; // Untuk Windows
-        $fileName = 'training_record.pdf';
-        $fullPath = $documentsPath . $fileName;
+        $data = [
+            'title' => 'Welcome to ItSolutionStuff.com',
+            'date' => date('m/d/Y'),
+            'content' => 'This is some content.',
+        ];
 
-        // Simpan PDF di path yang telah ditentukan
-        $pdf->save($fullPath);
+        $pdf = PDF::loadView('pdf.test', $data);
 
-        return 'PDF berhasil disimpan di ' . $fullPath;
+        return $pdf->download('itsolutionstuff.pdf');
     }
 }

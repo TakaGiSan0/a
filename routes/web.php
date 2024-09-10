@@ -47,7 +47,7 @@ Route::middleware(['auth', 'role:super admin'])->group(function () {
     Route::get('/superadmin/summary', [SuperAdminController::class, 'summary'])->name('superadmin.summary');
     Route::get('/superadmin/summary/{id}', [SuperAdminController::class, 'showall'])->name('superadmin.summary.show');
     Route::post('/api/trainings/search', [SuperAdminController::class, 'search']);
-    Route::get('/training-records/{id}/download-pdf', [SuperAdminController::class, 'downloadSummaryPdf'])->name('download');
+    Route::get('/generator/{id}', [SuperAdminController::class, 'downloadSummaryPdf'])->name('download');
 
 
     // Dashboard Menambah Peserta
