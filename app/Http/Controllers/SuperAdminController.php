@@ -7,10 +7,6 @@ use Illuminate\Support\Facades\Redis;
 use App\Models\training_record;
 use Illuminate\Http\Request;
 use App\Models\category;
-use App\Models\final_judgement;
-use App\Models\practical_result;
-use App\Models\theory_result;
-use App\Models\level;
 use App\Models\peserta;
 use Illuminate\Support\Facades\Log;
 use Barryvdh\DomPDF\Facade\pdf;
@@ -41,152 +37,11 @@ class SuperAdminController extends Controller
         return view('superadmin.form', compact('categories', 'peserta'));
     }
 
-    public function employee(Request $request)
-    {
-        // Ambil filter dan input pencarian dari request
-        $deptFilter = $request->input('dept', []); // Pastikan deptFilter adalah array
-        $searchQuery = $request->input('badge_no', '');
 
-        // Pastikan deptFilter adalah array
-        if (is_string($deptFilter)) {
-            $deptFilter = explode(',', $deptFilter); // Ubah string menjadi array jika perlu
-        }
-        // Dapatkan semua nilai dept unik dari tabel peserta
-        $uniqueDepts = Peserta::select('dept')->distinct()->pluck('dept')->toArray(); // Konversi ke array
-
-        // Mulai dengan query peserta
-        $query = Peserta::query();
-
-        // Terapkan filter berdasarkan dept jika ada
-        if (!empty($deptFilter) && is_array($deptFilter)) {
-            // Pastikan deptFilter adalah array
-            $query->whereIn('dept', $deptFilter);
-        }
-
-        // Terapkan filter pencarian jika ada
-        if (!empty($searchQuery)) {
-            $query->where('badge_no', 'like', '%' . $searchQuery . '%');
-        }
-
-        // Ambil data peserta dengan filter
-        $peserta_records = $query->get();
-
-        // Buat koleksi baru dengan data peserta
-        $paginatedPesertaRecords = new \Illuminate\Pagination\LengthAwarePaginator(
-            $peserta_records->forPage($request->input('page', 1), 10), // Paginasi
-            $peserta_records->count(), // Total item
-            10, // Item per halaman
-            $request->input('page', 1), // Halaman saat ini
-            ['path' => $request->url(), 'query' => $request->query()],
-        );
-
-        return view('index.employee', [
-            'peserta_records' => $paginatedPesertaRecords,
-            'deptFilter' => $deptFilter, // Kirimkan filter ke view untuk mempertahankan nilai filter
-            'searchQuery' => $searchQuery, // Kirimkan pencarian ke view untuk mempertahankan nilai pencarian
-            'uniqueDepts' => $uniqueDepts, // Kirimkan nilai dept unik ke view
-        ]);
-    }
-
-    public function show($id)
-    {
-        // Ambil data peserta berdasarkan ID
-        $peserta = Peserta::find($id);
-
-        if (!$peserta) {
-            return response()->json(['error' => 'Peserta not found'], 404);
-        }
-
-        // Key untuk caching
-        $cacheKey = "peserta_records:{$id}";
-
-        // Ambil semua training_record yang terkait dengan peserta tersebut melalui relasi many-to-many
-        $all_records = Cache::remember($cacheKey, 3600, function () use ($peserta) {
-            return $peserta
-                ->trainingRecords() // Pastikan menggunakan relasi many-to-many dari model Peserta
-                ->with(['trainingCategory:id,name'])
-                ->get();
-        });
-
-        // Kelompokkan data berdasarkan category_id
-        $grouped_records = $all_records->groupBy('category_id');
-
-        // Jika tidak ada data pelatihan, set grouped_records ke null
-        if ($all_records->isEmpty()) {
-            $grouped_records = null;
-        }
-
-        return response()->json([
-            'peserta' => $peserta,
-            'grouped_records' => $grouped_records,
-        ]);
-    }
     /**
      * Show the form for creating a new resource.
      */
-    public function summary(Request $request)
-    {
-        $training_records = training_record::with(['trainingCategory:id,name']);
 
-        // Filter tanggal
-        if ($request->has('tanggal')) {
-            $training_records = $training_records->whereDate('created_at', $request->input('tanggal'));
-        }
-
-        // Filter dept
-        if ($request->has('station')) {
-            $training_records = $training_records->where('station', $request->input('station'));
-        }
-
-        // Filter training_category
-        if ($request->has('training_category')) {
-            $training_records = $training_records->where('category_id', $request->input('training_category'));
-        }
-
-        // Search training_name
-        if ($request->has('search')) {
-            $training_records = $training_records->where('training_name', 'like', '%' . $request->input('search') . '%');
-        }
-
-        $training_records = $training_records->get();
-
-        return view('index.summary', compact('training_records'));
-    }
-
-    public function showall($id)
-    {
-        // Ambil semua training records berdasarkan id
-        $trainingRecords = Training_Record::with(['pesertas', 'trainingCategory'])
-            ->where('id', $id)
-            ->get();
-
-        if ($trainingRecords->isEmpty()) {
-            return response()->json(['error' => 'No records found'], 404);
-        }
-
-        // Ambil data peserta untuk setiap training record
-        $trainingWithPeserta = $trainingRecords->map(function ($record) {
-            // Ambil semua peserta untuk training record tertentu
-            $peserta = $record->pesertas()->get();
-
-            return [
-                'id' => $record->id,
-                'doc_ref' => $record->doc_ref,
-                'license' => $record->license,
-                'training_name' => $record->training_name,
-                'job_skill' => $record->job_skill,
-                'trainer_name' => $record->trainer_name,
-                'rev' => $record->rev,
-                'station' => $record->station,
-                'skill_code' => $record->skill_code,
-                'training_date' => $record->training_date,
-                'status' => $record->status,
-                'peserta' => $peserta,
-            ];
-        });
-
-        return response()->json($trainingWithPeserta)->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
-    }
 
     public function store(Request $request)
     {
@@ -267,7 +122,7 @@ class SuperAdminController extends Controller
         ? session('pending_participants', []) // Ambil data dari session
         : $trainingRecord->pesertas;          // Jika bukan pending, ambil dari database
 
-    
+
         // Ambil semua categories
         $categories = Category::all();
 
@@ -363,47 +218,12 @@ class SuperAdminController extends Controller
         return response()->json($results);
     }
 
-    public function downloadSummaryPdf($id)
-    {
-        // Ambil data summary berdasarkan id
-        $trainingRecord = Training_Record::findOrFail($id);
 
-        // Menyiapkan data untuk view PDF
-        $data = [
-            'training_name' => $trainingRecord->training_name,
-            'doc_ref' => $trainingRecord->doc_ref,
-            'job_skill' => $trainingRecord->job_skill,
-            'trainer_name' => $trainingRecord->trainer_name,
-            'rev' => $trainingRecord->rev,
-            'station' => $trainingRecord->station,
-            'training_date' => $trainingRecord->training_date,
-            'skill_code' => $trainingRecord->skill_code,
-            'status' => $trainingRecord->status,
-            'participants' => $trainingRecord->pesertas, // Mengambil relasi peserta jika ada
-        ];
-
-        try {
-            // Render view ke PDF
-            $pdf = Pdf::loadView('pdf.training_summary', $data);
-
-            // Unduh file PDF
-            return $pdf->download('training_summary.pdf');
-        } catch (\Exception $e) {
-            // Log error jika terjadi masalah
-            \Log::error('PDF Generation Error: ' . $e->getMessage());
-            dd($e);
-
-            // Redirect atau tampilkan pesan kesalahan
-            return redirect()->route('superadmin.dashboard')->with('error', 'Terjadi kesalahan saat membuat PDF.');
-        }
-    }
 
     public function generatePDF()
     {
         ini_set('max_execution_time', 300);
         ini_set('memory_limit', '512M');
-
-        $users = training_record::get();
 
         $data = [
             'title' => 'Welcome to ItSolutionStuff.com',

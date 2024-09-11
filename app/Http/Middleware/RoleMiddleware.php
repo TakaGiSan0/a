@@ -21,6 +21,6 @@ class RoleMiddleware
             return $next($request);
         }
 
-        abort(401, "babi kau");
+        abort(401);
     }
 }
