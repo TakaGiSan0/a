@@ -2,6 +2,10 @@
 
 @section('title', 'Dashboard')
 
+@section('sidebar')
+    @include('superadmin.sidebar.sidebar')
+@endsection
+
 @section('content')
     <div class="container mx-auto">
         <!-- Dashboard Header -->
@@ -117,7 +121,7 @@
                                                 <path fill-rule="evenodd" clip-rule="evenodd"
                                                     d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
                                             </svg><a href="{{ url('generator', $rc->id) }}">
-                                            Download
+
                                             </a>
                                         </button>
 
@@ -130,7 +134,7 @@
                                                 <path fill-rule="evenodd" clip-rule="evenodd"
                                                     d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" />
                                             </svg>
-                                            Preview
+                                            
                                         </button>
 
                                     </td>
@@ -141,18 +145,7 @@
                 </div>
             </div>
     </div>
-    </section>
-    <!-- End block -->
-    <!-- Create modal -->
 
-    </div>
-    </div>
-
-    </form>
-    </div>
-    </div>
-    </div>
-    <!-- Update modal -->
 
     <!-- Read modal -->
     <div id="readProductModal" tabindex="-1" aria-hidden="true"
@@ -186,10 +179,10 @@
     <script>
         let abortController;
 
-        document.getElementById('filterForm').addEventListener('submit', function (e) {
-        // Ambil semua input dan select dalam form
-        const inputs = this.querySelectorAll('input, select');
-    });
+        document.getElementById('filterForm').addEventListener('submit', function(e) {
+            // Ambil semua input dan select dalam form
+            const inputs = this.querySelectorAll('input, select');
+        });
 
         inputs.forEach(input => {
             // Jika value kosong atau default, hapus attribute name sehingga tidak akan dikirim
@@ -223,20 +216,20 @@
                 })
                 .then(data => {
                     const trainingList = data.map(record => `
-                        <div>
-                            <h3>Training Name: ${record.training_name}</h3>
-                            <p>Doc Ref: ${record.doc_ref}</p>
-                            <p>License: ${record.license}</p>
-                            <p>Job Skill: ${record.job_skill}</p>
-                            <p>Trainer Name: ${record.trainer_name}</p>
-                            <p>Rev: ${record.rev}</p>
-                            <p>Station: ${record.station}</p>
-                            <p>Skill Code: ${record.skill_code}</p>
-                            <p>Training Date: ${record.training_date}</p>
-                            ${record.status === 'Pending' ? '<p class="text-yellow-600">This training is pending. Please complete the requirements.</p>' : ''}
-                            <h4>Peserta:</h4>
-                            <ul>
-                                ${record.peserta.map(peserta => `
+                    <div>
+                        <h3>Training Name: ${record.training_name}</h3>
+                        <p>Doc Ref: ${record.doc_ref}</p>
+                        <p>License: ${record.license}</p>
+                        <p>Job Skill: ${record.job_skill}</p>
+                        <p>Trainer Name: ${record.trainer_name}</p>
+                        <p>Rev: ${record.rev}</p>
+                        <p>Station: ${record.station}</p>
+                        <p>Skill Code: ${record.skill_code}</p>
+                        <p>Training Date: ${record.training_date}</p>
+                        ${record.status === 'Pending' ? '<p class="text-yellow-600">This training is pending. Please complete the requirements.</p>' : ''}
+                        <h4>Peserta:</h4>
+                        <ul>
+                            ${record.peserta.map(peserta => `
                                                         <li>
                                                             ${peserta.employee_name} (Badge No: ${peserta.badge_no}, Dept: ${peserta.dept}, Position: ${peserta.position})
                                                             <ul>
@@ -247,9 +240,9 @@
                                                             </ul>
                                                         </li>
                                                     `).join('')}
-                            </ul>
-                        </div>
-                    `).join('');
+                        </ul>
+                    </div>
+                `).join('');
 
                     document.getElementById('modalBody').innerHTML = trainingList;
                     setTimeout(showModal, 100);
@@ -264,7 +257,6 @@
         function hideModal() {
             document.getElementById('modalBody').style.display = 'none';
         }
-
     </script>
 
 @endsection

@@ -24,24 +24,26 @@ class SuperAdminController extends Controller
             ->when($searchQuery, function ($query, $searchQuery) {
                 $query->where('training_name', 'like', "%{$searchQuery}%");
             })
-            ->get();
+            ->paginate(10);
 
         return view('superadmin.index', compact('training_records'));
     }
 
     public function create()
     {
-        $categories = category::all();
-        $peserta = peserta::all();
+        $categories = Cache::remember('categories', 60 * 60, function () {
+            return category::all(); // Simpan di cache selama 1 jam
+        });
+        $peserta = Cache::remember('peserta', 60 * 60, function () {
+            return peserta::all(); // Simpan di cache selama 1 jam
+        });
 
         return view('superadmin.form', compact('categories', 'peserta'));
     }
 
-
     /**
      * Show the form for creating a new resource.
      */
-
 
     public function store(Request $request)
     {
@@ -89,24 +91,22 @@ class SuperAdminController extends Controller
         ]);
 
         if ($status === 'completed') {
+            $participantsToAttach = [];
             foreach ($data['participants'] as $participant) {
-                // Ambil data peserta berdasarkan badge number
                 $peserta = Peserta::where('badge_no', $participant['badge_no'])->first();
-
-                // Pastikan peserta ditemukan
                 if ($peserta) {
-                    // Buat relasi di tabel pivot training_record_peserta
-                    $trainingRecord->pesertas()->attach($peserta->id, [
+                    $participantsToAttach[$peserta->id] = [
                         'level' => $participant['level'],
                         'final_judgement' => $participant['final_judgement'],
                         'license' => $participant['license'],
                         'theory_result' => $participant['theory_result'],
                         'practical_result' => $participant['practical_result'],
-                    ]);
+                    ];
                 }
             }
         }
 
+        $trainingRecord->pesertas()->attach($participantsToAttach);
         session(['pending_participants' => $data['participants']]);
 
         return redirect()->route('superadmin.dashboard')->with('success', 'Training records berhasil dibuat!');
@@ -118,10 +118,10 @@ class SuperAdminController extends Controller
         $trainingRecord = Training_Record::findOrFail($id);
 
         // Ambil data peserta jika form statusnya draft
-        $participants = $trainingRecord->status === 'Pending'
-        ? session('pending_participants', []) // Ambil data dari session
-        : $trainingRecord->pesertas;          // Jika bukan pending, ambil dari database
-
+        $participants =
+            $trainingRecord->status === 'Pending'
+                ? session('pending_participants', []) // Ambil data dari session
+                : $trainingRecord->pesertas; // Jika bukan pending, ambil dari database
 
         // Ambil semua categories
         $categories = Category::all();
@@ -217,8 +217,6 @@ class SuperAdminController extends Controller
 
         return response()->json($results);
     }
-
-
 
     public function generatePDF()
     {

@@ -37,19 +37,11 @@ class EmployeeController extends Controller
         }
 
         // Ambil data peserta dengan filter
-        $peserta_records = $query->get();
+        $peserta_records = $query->paginate();
 
-        // Buat koleksi baru dengan data peserta
-        $paginatedPesertaRecords = new \Illuminate\Pagination\LengthAwarePaginator(
-            $peserta_records->forPage($request->input('page', 1), 10), // Paginasi
-            $peserta_records->count(), // Total item
-            10, // Item per halaman
-            $request->input('page', 1), // Halaman saat ini
-            ['path' => $request->url(), 'query' => $request->query()],
-        );
 
-        return view('index.employee', [
-            'peserta_records' => $paginatedPesertaRecords,
+        return view('superadmin.employee', [
+            'peserta_records' => $peserta_records,
             'deptFilter' => $deptFilter, // Kirimkan filter ke view untuk mempertahankan nilai filter
             'searchQuery' => $searchQuery, // Kirimkan pencarian ke view untuk mempertahankan nilai pencarian
             'uniqueDepts' => $uniqueDepts, // Kirimkan nilai dept unik ke view

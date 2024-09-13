@@ -2,12 +2,16 @@
 
 @section('title', 'Dashboard')
 
+@section('sidebar')
+    @include('superadmin.sidebar.sidebar')
+@endsection
+
 @section('content')
     <div class="container mx-auto">
         <!-- Dashboard Header -->
         <!-- Start block -->
-        <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
-            <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
+        <section class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden antialiased">
+            <div class="mx-auto max-w-screen-xl px-4 lg:px-12 py-5">
                 <!-- Start coding here -->
                 <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
                     <div
@@ -26,8 +30,7 @@
                                     </div>
                                     <input type="text" id="simple-search"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                        placeholder="Search"  value="{{ request('badge_no') }}"
-                                        name="badge_no">
+                                        placeholder="Search" value="{{ request('badge_no') }}" name="badge_no">
                                 </div>
                             </form>
                         </div>
@@ -126,8 +129,8 @@
                                         </td>
                                     </tr>
                                 </tbody>
+                            </table>
                         @endforeach
-                        </table>
                         <div class="mt-4">
                             {{ $peserta_records->links() }}
                         </div>
@@ -339,9 +342,5 @@
             }
         });
     </script>
-
-
-
-
 
 @endsection

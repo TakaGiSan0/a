@@ -9,6 +9,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\SummaryController;
 use App\Http\Controllers\ExcelController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use Illuminate\Routing\Middleware\ThrottleRequests;
 
 
 Route::get('/', function () {
@@ -23,7 +24,8 @@ Route::get('/index', function () {
     return view('employee');
 });
 
-Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login');
+Route::post('login', [AuthenticatedSessionController::class, 'store'])
+    ->middleware('throttle:10,1');
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 Route::get('/test-pdf', [SuperAdminController::class, 'generatePdf']);
 

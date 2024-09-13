@@ -35,7 +35,7 @@ class SummaryController extends Controller
 
         $training_records = $training_records->get();
 
-        return view('index.summary', compact('training_records'));
+        return view('superadmin.summary', compact('training_records'));
     }
 
     public function show($id)

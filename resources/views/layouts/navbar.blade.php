@@ -1,69 +1,68 @@
-<div class="container">
-    <!-- component -->
-    <header>
-        <nav x-data="{ open: false }"
-            class="flex h-full w-full bg-white shadow-lg justify-between
-    md:h-16">
-            <div class="flex w-full justify-between ">
-                <div :class="open ? 'hidden' : 'flex'"
-                    class="flex px-6 w-1/2 items-center font-semibold
-        md:w-1/5 md:px-1 md:flex md:items-center md:justify-center"
-                    x-transition:enter="transition ease-out duration-300">
-                    @auth
-                    {{ Auth::user()->name }}
-                    @endauth
-                </div>
 
-                <div x-show="open" x-transition:enter="transition ease-in-out duration-300"
-                    class="flex flex-col w-full h-auto
-        md:hidden">
-                    <div class="flex flex-col items-center justify-center gap-2">
-                        <a href="">Home</a>
-                        <a href="">About Us</a>
-                        <a href="">Products</a>
-                        <a href="">Contact</a>
-                        <button>Login</button>
-                        <button>Sign Up</button>
-                    </div>
+    <header class="z-10 py-4 bg-white shadow-md dark:bg-gray-800">
+        <div class="container flex items-center justify-between px-6 mx-auto text-purple-600 dark:text-purple-300">
+            <!-- Mobile hamburger -->
+            <button class="p-1 mr-5 -ml-1 rounded-md md:hidden focus:outline-none focus:shadow-outline-purple"
+                @click="toggleSideMenu" aria-label="Menu">
+                <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd"
+                        d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                        clip-rule="evenodd"></path>
+                </svg>
+            </button>
+            <!-- Search input -->
+            <div class="flex justify-center flex-1 lg:mr-32">
+                <div class="relative w-full max-w-xl text-center mr-6 focus-within:text-purple-500">
+                    <a class="text-lg font-bold text-center text-gray-800 dark:text-gray-200" href="#">Welcome,
+                        @auth
+                            {{ Auth::user()->name }}
+                        @endauth
+                    </a>
                 </div>
-                <div class="hidden w-3/5 items-center justify-evenly font-semibold
-        md:flex">
-                    <a href="">Home</a>
-                    <a href="">About Us</a>
-                    <a href="">Products</a>
-                    <a href="">Contact</a>
-                </div>
-                <div class="hidden w-1/5 items-center justify-evenly font-semibold
-        md:flex">
-                    <button>Login</button>
-                    <form method="POST" action="{{ route('logout') }}">
+            </div>
+            <ul class="flex items-center flex-shrink-0 space-x-6">
+                <!-- Theme toggler -->
+                <li class="flex">
+                    <button class="rounded-md focus:outline-none focus:shadow-outline-purple" @click="toggleTheme"
+                        aria-label="Toggle color mode">
+                        <template x-if="!dark">
+                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                            </svg>
+                        </template>
+                        <template x-if="dark">
+                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                        </template>
+                    </button>
+                </li>
+                <!-- Notifications menu -->
+                <li class="relative">
+                    <form method="POST" action="{{ route('logout') }}" class="mb-0">
                         @csrf
                         <button type="submit">Logout</button>
                     </form>
-                </div>
-                <button
-                    class="text-gray-500 w-10 h-10 relative focus:outline-none bg-white
-                        md:hidden
-                      "
-                    @click="open = !open">
-                    <span class="sr-only">Open main menu</span>
-                    <div class="block w-5 absolute left-1/2 top-1/2   transform  -translate-x-1/2 -translate-y-1/2">
-                        <span aria-hidden="true"
-                            class="block absolute h-0.5 w-5 bg-current transform transition duration-500 ease-in-out"
-                            :class="{ 'rotate-45': open, ' -translate-y-1.5': !open }"></span>
-                        <span aria-hidden="true"
-                            class="block absolute  h-0.5 w-5 bg-current   transform transition duration-500 ease-in-out"
-                            :class="{ 'opacity-0': open }"></span>
-                        <span aria-hidden="true"
-                            class="block absolute  h-0.5 w-5 bg-current transform  transition duration-500 ease-in-out"
-                            :class="{ '-rotate-45': open, ' translate-y-1.5': !open }"></span>
-                    </div>
-                </button>
-            </div>
-        </nav>
+                </li>
+                <!-- Profile menu -->
+                <li class="relative text-black">
+                    <button
+                    class="align-middle rounded-full focus:shadow-outline-purple focus:outline-none"
+                    @click="toggleProfileMenu"
+                    @keydown.escape="closeProfileMenu"
+                    aria-label="Account"
+                    aria-haspopup="true"
+                  >
+                    <img
+                      class="object-cover w-8 h-8 rounded-full"
+                      src="https://images.unsplash.com/photo-1502378735452-bc7d86632805?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&s=aa3a807e1bbdfd4364d1f449eaa96d82"
+                      alt=""
+                      aria-hidden="true"
+                    />
+                  </button>
+                </li>
+            </ul>
+        </div>
     </header>
-
-        <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
-</div>
-
-<div class="flex">

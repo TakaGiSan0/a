@@ -24,7 +24,7 @@ class PesertaController extends Controller
     }
 
     // Ambil data peserta berdasarkan filter pencarian
-    $peserta = $query->select('id', 'badge_no', 'employee_name', 'dept', 'position')->get();
+    $peserta = $query->select('id', 'badge_no', 'employee_name', 'dept', 'position')->paginate(10);
 
     // Kembalikan view dengan data peserta dan pesan
     return view('peserta.index', [
@@ -81,14 +81,6 @@ class PesertaController extends Controller
         // Mengembalikan response atau redirect
         return redirect()->route('superadmin.peserta')->with('success', 'Peserta berhasil ditambahkan.');
 
-        // Mengembalikan response dengan status 201 (Created)
-        return response()->json(
-            [
-                'message' => 'Peserta berhasil ditambahkan.',
-                'peserta' => $peserta,
-            ],
-            201,
-        );
     }
 
     /**
