@@ -11,29 +11,28 @@ class PesertaController extends Controller
     /**
      * Display a listing of the resource.
      */
-     public function index(Request $request)
-{
-    $searchQuery = $request->input('badge_no', '');
+    public function index(Request $request)
+    {
+        $searchQuery = $request->input('badge_no', '');
 
-    // Mulai dengan query peserta
-    $query = Peserta::query();
+        // Mulai dengan query peserta
+        $query = Peserta::query();
 
-    // Terapkan filter pencarian jika ada
-    if (!empty($searchQuery)) {
-        $query->where('badge_no', 'like', '%' . $searchQuery . '%');
+        // Terapkan filter pencarian jika ada
+        if (!empty($searchQuery)) {
+            $query->where('badge_no', 'like', '%' . $searchQuery . '%');
+        }
+
+        // Ambil data peserta berdasarkan filter pencarian
+        $peserta = $query->select('id', 'badge_no', 'employee_name', 'dept', 'position')->paginate(10);
+
+        // Kembalikan view dengan data peserta dan pesan
+        return view('peserta.index', [
+            'peserta' => $peserta,
+            'searchQuery' => $searchQuery, // Kirimkan pencarian ke view untuk mempertahankan nilai pencarian
+            'message' => $peserta->isEmpty() ? 'No results found for your search.' : null,
+        ]);
     }
-
-    // Ambil data peserta berdasarkan filter pencarian
-    $peserta = $query->select('id', 'badge_no', 'employee_name', 'dept', 'position')->paginate(10);
-
-    // Kembalikan view dengan data peserta dan pesan
-    return view('peserta.index', [
-        'peserta' => $peserta,
-        'searchQuery' => $searchQuery, // Kirimkan pencarian ke view untuk mempertahankan nilai pencarian
-        'message' => $peserta->isEmpty() ? 'No results found for your search.' : null,
-    ]);
-}
-
 
     /**
      * Show the form for creating a new resource.
@@ -61,8 +60,6 @@ class PesertaController extends Controller
                 'badge_no.unique' => 'Peserta dengan Badge No ini sudah ada.',
                 'badge_no.regex' => 'Badge No hanya boleh berisi huruf besar, angka, dan tanda hubung.',
                 'employee_name.regex' => 'Nama hanya boleh berisi huruf',
-
-
             ],
         );
 
@@ -80,7 +77,6 @@ class PesertaController extends Controller
 
         // Mengembalikan response atau redirect
         return redirect()->route('superadmin.peserta')->with('success', 'Peserta berhasil ditambahkan.');
-
     }
 
     /**

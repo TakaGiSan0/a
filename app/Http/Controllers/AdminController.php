@@ -1,23 +1,31 @@
-<?php
+<?php /** @noinspection Annotator */
 
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\training_record;
 
 class AdminController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+     public function index(Request $request)
     {
-        return view("user.admin");
+        $searchQuery = $request->input('search');
+
+        $training_records = training_record::query()
+            ->when($searchQuery, function ($query, $searchQuery) {
+                $query->where('training_name', 'like', "%{$searchQuery}%");
+            })
+            ->paginate(10);
+
+        return view('admin.index', compact('training_records'));
     }
 
     public function create()
     {
         return view('superadmin.form');
-
     }
 
     /**
@@ -25,8 +33,7 @@ class AdminController extends Controller
      */
     public function store(Request $request)
     {
-        return view('admin.form');
-
+        
     }
 
     /**

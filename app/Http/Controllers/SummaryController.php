@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\training_record;
 use Barryvdh\DomPDF\Facade\pdf;
 
-
 class SummaryController extends Controller
 {
     public function index(Request $request)
@@ -35,7 +34,25 @@ class SummaryController extends Controller
 
         $training_records = $training_records->get();
 
-        return view('superadmin.summary', compact('training_records'));
+        // Ambil role pengguna saat ini
+        $userRole = auth()->user()->role; // Asumsikan 'role' adalah atribut di tabel users
+
+        // Pilih view berdasarkan role
+        switch ($userRole) {
+            case 'super admin':
+                $view = 'superadmin.summary';
+                break;
+            case 'admin':
+                $view = 'admin.index'; // Ganti dengan view yang sesuai untuk admin
+                break;
+            case 'user':
+                $view = 'user.summary'; // Ganti dengan view yang sesuai untuk user
+                break;
+            default:
+                abort(403, 'Unauthorized action.'); // Atau arahkan ke view default atau error
+        }
+
+        return view($view, compact('training_records'));
     }
 
     public function show($id)
@@ -72,7 +89,6 @@ class SummaryController extends Controller
 
         return response()->json($trainingWithPeserta)->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
     }
-
 
     public function search(Request $request)
     {
@@ -137,5 +153,4 @@ class SummaryController extends Controller
             return redirect()->route('superadmin.dashboard')->with('error', 'Terjadi kesalahan saat membuat PDF.');
         }
     }
-
 }

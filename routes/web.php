@@ -24,17 +24,15 @@ Route::get('/index', function () {
     return view('employee');
 });
 
+// Login Route
 Route::post('login', [AuthenticatedSessionController::class, 'store'])
-    ->middleware('throttle:10,1');
+->middleware('throttle:10,1')->name('login');
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 Route::get('/test-pdf', [SuperAdminController::class, 'generatePdf']);
 
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
-    Route::get('/admin/create', [AdminController::class, 'create'])->name('admin.create');
-});
-
+// Super Admin Route
 Route::middleware(['auth', 'role:super admin'])->group(function () {
+
 
     // Dashboard Form
     Route::get('/superadmin/dashboard/', [SuperAdminController::class, 'index'])->name('superadmin.dashboard');
@@ -55,6 +53,12 @@ Route::middleware(['auth', 'role:super admin'])->group(function () {
     Route::post('/api/trainings/search', [SummaryController::class, 'search']);
     Route::get('/generator/{id}', [SummaryController::class, 'downloadSummaryPdf'])->name('download');
 
+    // Dashboard User
+    Route::get('/superadmin/user', [UserController::class, 'index'])->name('superadmin.user.index');
+    Route::get('/superadmin/user/create', [UserController::class, 'create'])->name('superadmin.user.create');
+    Route::post('/superadmin/user/create', [UserController::class, 'store'])->name('superadmin.user.store');
+
+
 
     // Dashboard Menambah Peserta
     Route::get('/superadmin/peserta/', [PesertaController::class, 'index'])->name('superadmin.peserta');
@@ -68,6 +72,17 @@ Route::middleware(['auth', 'role:super admin'])->group(function () {
     Route::get('/participants/{badgeNo}', [PesertaController::class, 'getParticipantByBadgeNo']);
 });
 
+
+// Admin Route
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+
+    Route::get('/admin/create', [AdminController::class, 'create'])->name('admin.create');
+});
+
+
+// User Route
 Route::middleware(['auth', 'role:user'])->group(function () {
-    Route::get('/user/dashboard', [UserController::class, 'index'])->name('user.dashboard');
+    Route::get('/user/employee', [EmployeeController::class, 'index'])->name('user.employee');
+    Route::get('/user/summary', [SummaryController::class, 'index'])->name('user.summary');
 });

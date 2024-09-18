@@ -3,7 +3,7 @@
 @section('title', 'Dashboard')
 
 @section('sidebar')
-    @include('superadmin.sidebar.sidebar1')
+    @include('user.sidebar.sidebar1')
 @endsection
 
 @section('content')

@@ -6,24 +6,42 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use App\Models\User;
 
 class AuthenticatedSessionController extends Controller
 {
     public function store(Request $request)
     {
         $request->validate([
-            'user' => ['required'],  // Username field
+            'user' => ['required'], // Username field
             'password' => ['required'],
         ]);
 
-        // Modifikasi Auth attempt untuk menggunakan user
-        if (!Auth::attempt(['user' => $request->user, 'password' => $request->password], $request->filled('remember'))) {
-            throw ValidationException::withMessages([
-                'user' => __('auth.failed'),
-            ]);
+        // Cari user berdasarkan username terlebih dahulu
+        $user = User::where('user', $request->user)->first();
+
+        // Jika user tidak ditemukan, kirim pesan error khusus
+        if (!$user) {
+            return back()
+                ->withErrors([
+                    'user' => 'Username tidak ditemukan.',
+                ])
+                ->onlyInput('user');
         }
+
+        // Jika username ditemukan, cek apakah password benar
+        if (!Auth::attempt(['user' => $request->user, 'password' => $request->password], $request->filled('remember'))) {
+            return back()
+                ->withErrors([
+                    'password' => 'Password salah.',
+                ])
+                ->onlyInput('user');
+        }
+
+        // Jika autentikasi berhasil, regenerasi session dan redirect
         $request->session()->regenerate();
 
+        // Cek role dan redirect sesuai dengan role user
         $user = Auth::user();
         session(['user_name' => $user->name]);
 

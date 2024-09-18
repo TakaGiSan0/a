@@ -1,3 +1,5 @@
+{{-- Sidebar Element Employee --}}
+
 <aside class="z-20 hidden w-64 overflow-y-auto bg-white dark:bg-gray-800 md:block flex-shrink-0">
     <div class="py-4 text-gray-500 dark:text-gray-400 text-center">
         <a class="text-lg font-bold text-gray-800 dark:text-gray-200 text-center" href="#">
@@ -21,7 +23,6 @@
         </ul>
         <ul>
             <li class="relative px-6 py-3">
-
                 <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
                     href="{{ route('superadmin.peserta') }}">
                     <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round"
@@ -31,6 +32,16 @@
                         </path>
                     </svg>
                     <span class="ml-4">Employee</span>
+                </a>
+            </li>
+            <li class="relative px-6 py-3">
+                <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+                    href="{{ route('superadmin.user.index') }}">
+                    <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                    </svg>
+                    <span class="ml-4">User</span>
                 </a>
             </li>
             <li class="relative px-6 py-3">
