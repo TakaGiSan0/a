@@ -48,7 +48,7 @@
                 </li>
                 <!-- Profile menu -->
                 <li class="relative text-black">
-                    <button
+                    <div
                     class="align-middle rounded-full focus:shadow-outline-purple focus:outline-none"
                     @click="toggleProfileMenu"
                     @keydown.escape="closeProfileMenu"
@@ -61,7 +61,7 @@
                       alt=""
                       aria-hidden="true"
                     />
-                  </button>
+                  </div>
                 </li>
             </ul>
         </div>
