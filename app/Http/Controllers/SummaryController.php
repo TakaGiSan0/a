@@ -35,7 +35,7 @@ class SummaryController extends Controller
         $training_records = $training_records->get();
 
         // Ambil role pengguna saat ini
-        $userRole = auth()->user()->role; // Asumsikan 'role' adalah atribut di tabel users
+        $userRole = auth('')->user()->role; // Asumsikan 'role' adalah atribut di tabel users
 
         // Pilih view berdasarkan role
         switch ($userRole) {
@@ -43,7 +43,7 @@ class SummaryController extends Controller
                 $view = 'superadmin.summary';
                 break;
             case 'admin':
-                $view = 'admin.index'; // Ganti dengan view yang sesuai untuk admin
+                $view = 'admin.sumary'; // Ganti dengan view yang sesuai untuk admin
                 break;
             case 'user':
                 $view = 'user.summary'; // Ganti dengan view yang sesuai untuk user
@@ -145,9 +145,6 @@ class SummaryController extends Controller
             // Unduh file PDF
             return $pdf->download('training_summary.pdf');
         } catch (\Exception $e) {
-            // Log error jika terjadi masalah
-            \Log::error('PDF Generation Error: ' . $e->getMessage());
-            dd($e);
 
             // Redirect atau tampilkan pesan kesalahan
             return redirect()->route('superadmin.dashboard')->with('error', 'Terjadi kesalahan saat membuat PDF.');

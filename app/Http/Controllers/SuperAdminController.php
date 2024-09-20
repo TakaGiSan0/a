@@ -3,12 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Redis;
 use App\Models\training_record;
 use Illuminate\Http\Request;
 use App\Models\category;
 use App\Models\peserta;
-use Illuminate\Support\Facades\Log;
 use Barryvdh\DomPDF\Facade\pdf;
 
 class SuperAdminController extends Controller
@@ -31,6 +29,14 @@ class SuperAdminController extends Controller
 
     public function create()
     {
+        // Dapatkan role user yang sedang login
+        $userRole = auth('')->user()->role;
+
+        // Cek apakah role adalah 'superadmin' atau 'admin'
+        if (!in_array($userRole, ['superadmin', 'admin'])) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $categories = Cache::remember('categories', 60 * 60, function () {
             return category::all(); // Simpan di cache selama 1 jam
         });
@@ -120,8 +126,8 @@ class SuperAdminController extends Controller
         // Ambil data peserta jika form statusnya draft
         $participants =
             $trainingRecord->status === 'Pending'
-                ? session('pending_participants', []) // Ambil data dari session
-                : $trainingRecord->pesertas; // Jika bukan pending, ambil dari database
+            ? session('pending_participants', []) // Ambil data dari session
+            : $trainingRecord->pesertas; // Jika bukan pending, ambil dari database
 
         // Ambil semua categories
         $categories = Category::all();

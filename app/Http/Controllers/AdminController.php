@@ -25,7 +25,9 @@ class AdminController extends Controller
 
     public function create()
     {
-        return view('superadmin.form');
+        // Fungsi Create admin berada di app/Http/Controllers/SuperAdminController.php
+        // Bersamaan dengan Role SuperAdmin dikarenakan memiliki fungsi yang sama
+
     }
 
     /**
@@ -33,7 +35,8 @@ class AdminController extends Controller
      */
     public function store(Request $request)
     {
-        
+        // Fungsi Store admin berada di app/Http/Controllers/SuperAdminController.php
+        // Bersamaan dengan Role SuperAdmin dikarenakan memiliki fungsi yang sama
     }
 
     /**

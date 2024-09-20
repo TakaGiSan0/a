@@ -24,6 +24,11 @@ Route::get('/index', function () {
     return view('employee');
 });
 
+Route::get('/memory', function() {
+    echo 'Penggunaan Memori: ' . memory_get_usage() . ' bytes';
+});
+
+
 // Login Route
 Route::post('login', [AuthenticatedSessionController::class, 'store'])
 ->middleware('throttle:10,1')->name('login');
@@ -57,6 +62,9 @@ Route::middleware(['auth', 'role:super admin'])->group(function () {
     Route::get('/superadmin/user', [UserController::class, 'index'])->name('superadmin.user.index');
     Route::get('/superadmin/user/create', [UserController::class, 'create'])->name('superadmin.user.create');
     Route::post('/superadmin/user/create', [UserController::class, 'store'])->name('superadmin.user.store');
+    Route::delete('/superadmin/user/{id}', [UserController::class, 'delete'])->name('superadmin.user.destroy');
+    Route::get('/superadmin/user/edit/{user}', [UserController::class, 'edit'])->name('superadmin.user.edit');
+    Route::put('/superadmin/user/update/{user}', [UserController::class, 'update'])->name('superadmin.user.update');
 
 
 
@@ -76,8 +84,14 @@ Route::middleware(['auth', 'role:super admin'])->group(function () {
 // Admin Route
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/admin/summary', [SummaryController::class, 'index'])->name('admin.summary');
+    Route::get('/admin/employee', [EmployeeController::class, 'index'])->name('admin.employee');
+    Route::get('/admin/peserta', [PesertaController::class, 'index'])->name('admin.peserta');
+    Route::get('/admin/user', [UserController::class, 'index'])->name('admin.user');
 
-    Route::get('/admin/create', [AdminController::class, 'create'])->name('admin.create');
+
+
+    Route::get('/admin/dashboard/create', [SuperAdminController::class, 'create'])->name('admin.create');
 });
 
 
@@ -85,4 +99,5 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/user/employee', [EmployeeController::class, 'index'])->name('user.employee');
     Route::get('/user/summary', [SummaryController::class, 'index'])->name('user.summary');
+
 });

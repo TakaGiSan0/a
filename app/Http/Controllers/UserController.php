@@ -27,8 +27,23 @@ class UserController extends Controller
         // Ambil data user berdasarkan filter pencarian
         $user = $query->select('id', 'name', 'user', 'role')->paginate(10);
 
+        // Ambil role pengguna saat ini
+        $userRole = auth('')->user()->role; // Asumsikan 'role' adalah atribut di tabel users
+
+        // Pilih view berdasarkan role
+        switch ($userRole) {
+            case 'super admin':
+                $view = 'superadmin.user.index';
+                break;
+            case 'admin':
+                $view = 'admin.user.index'; // Ganti dengan view yang sesuai untuk admin
+                break;
+            default:
+                abort(403, 'Unauthorized action.'); // Atau arahkan ke view default atau error
+        }
+
         // Kembalikan view dengan data user dan pesan
-        return view('peserta.user.user', [
+        return view($view, [
             'user' => $user,
             'searchQuery' => $searchQuery, // Kirimkan pencarian ke view untuk mempertahankan nilai pencarian
             'message' => $user->isEmpty() ? 'No results found for your search.' : null,
@@ -40,7 +55,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('peserta.user.create');
+        return view('superadmin.user.create');
     }
 
     /**
@@ -101,6 +116,14 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $user = User::findOrFail($id);
+
+        // Menggunakan Policy untuk memeriksa izin
+        $this->authorize('delete', $user);
+
+        // Hapus data user
+        $user->delete();
+
+        return redirect()->route('superadmin.user.user')->with('success', 'Peserta berhasil dihapus.');
     }
 }

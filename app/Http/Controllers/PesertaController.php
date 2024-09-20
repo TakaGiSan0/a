@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\peserta;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+
 
 class PesertaController extends Controller
 {
@@ -26,8 +26,21 @@ class PesertaController extends Controller
         // Ambil data peserta berdasarkan filter pencarian
         $peserta = $query->select('id', 'badge_no', 'employee_name', 'dept', 'position')->paginate(10);
 
+        $userRole = auth('')->user()->role; // Asumsikan 'role' adalah atribut di tabel users
+
+        // Pilih view berdasarkan role
+        switch ($userRole) {
+            case 'super admin':
+                $view = 'superadmin.peserta.index';
+                break;
+            case 'admin':
+                $view = 'admin.peserta.index'; // Ganti dengan view yang sesuai untuk admin
+                break;
+            default:
+                abort(403, 'Unauthorized action.'); // Atau arahkan ke view default atau error
+        }
         // Kembalikan view dengan data peserta dan pesan
-        return view('peserta.index', [
+        return view($view, [
             'peserta' => $peserta,
             'searchQuery' => $searchQuery, // Kirimkan pencarian ke view untuk mempertahankan nilai pencarian
             'message' => $peserta->isEmpty() ? 'No results found for your search.' : null,
@@ -39,7 +52,7 @@ class PesertaController extends Controller
      */
     public function create()
     {
-        return view('peserta.create');
+        return view('superadmin.peserta.create');
     }
 
     /**
@@ -96,7 +109,7 @@ class PesertaController extends Controller
         $this->authorize('update', $peserta);
 
         // Kembalikan view dengan data peserta
-        return view('peserta.edit', compact('peserta'));
+        return view('superadmin.peserta.edit', compact('peserta'));
     }
 
     /**

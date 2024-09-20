@@ -3,67 +3,52 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\PesertaController;
 use App\Models\Peserta;
 use Illuminate\Support\Facades\Cache;
+
+
 
 class EmployeeController extends Controller
 {
     public function index(Request $request)
-{
-    // Ambil filter dan input pencarian dari request
-    $deptFilter = $request->input('dept', []); // Pastikan deptFilter adalah array
-    $searchQuery = $request->input('badge_no', '');
+    {
+        // Ambil filter dan input pencarian dari request
+        $deptFilter = $request->input('dept', []); // Pastikan deptFilter adalah array
+        $searchQuery = $request->input('badge_no', '');
 
-    // Pastikan deptFilter adalah array
-    if (is_string($deptFilter)) {
-        $deptFilter = explode(',', $deptFilter); // Ubah string menjadi array jika perlu
+        // Pastikan deptFilter adalah array
+        if (is_string($deptFilter)) {
+            $deptFilter = explode(',', $deptFilter); // Ubah string menjadi array jika perlu
+        }
+
+        // Dapatkan semua nilai dept unik dari tabel peserta
+        $uniqueDepts = Peserta::select('dept')->distinct()->pluck('dept')->toArray(); // Konversi ke array
+
+        // Mulai dengan query peserta
+        $query = Peserta::query();
+
+        // Terapkan filter berdasarkan dept jika ada
+        if (!empty($deptFilter) && is_array($deptFilter)) {
+            $query->whereIn('dept', $deptFilter);
+        }
+
+        // Terapkan filter pencarian jika ada
+        if (!empty($searchQuery)) {
+            $query->where('badge_no', 'like', '%' . $searchQuery . '%');
+        }
+
+        // Ambil data peserta dengan filter
+        $peserta_records = $query->paginate();
+
+        $userRole = auth('')->user()->role;
+
+        return view('superadmin.employee', [
+            'peserta_records' => $peserta_records,
+            'deptFilter' => $deptFilter, // Kirimkan filter ke view untuk mempertahankan nilai filter
+            'searchQuery' => $searchQuery, // Kirimkan pencarian ke view untuk mempertahankan nilai pencarian
+            'uniqueDepts' => $uniqueDepts, // Kirimkan nilai dept unik ke view
+        ]);
     }
-
-    // Dapatkan semua nilai dept unik dari tabel peserta
-    $uniqueDepts = Peserta::select('dept')->distinct()->pluck('dept')->toArray(); // Konversi ke array
-
-    // Mulai dengan query peserta
-    $query = Peserta::query();
-
-    // Terapkan filter berdasarkan dept jika ada
-    if (!empty($deptFilter) && is_array($deptFilter)) {
-        $query->whereIn('dept', $deptFilter);
-    }
-
-    // Terapkan filter pencarian jika ada
-    if (!empty($searchQuery)) {
-        $query->where('badge_no', 'like', '%' . $searchQuery . '%');
-    }
-
-    // Ambil data peserta dengan filter
-    $peserta_records = $query->paginate();
-
-    // Ambil role pengguna saat ini
-    $userRole = auth()->user()->role; // Asumsikan 'role' adalah atribut di tabel users
-
-    // Pilih view berdasarkan role
-    switch ($userRole) {
-        case 'super admin':
-            $view = 'superadmin.employee';
-            break;
-        case 'admin':
-            $view = 'admin.index'; // Ganti dengan view yang sesuai untuk admin
-            break;
-        case 'user':
-            $view = 'user.employee'; // Ganti dengan view yang sesuai untuk user
-            break;
-        default:
-            abort(403, 'Unauthorized action.'); // Atau arahkan ke view default atau error
-    }
-
-    return view($view, [
-        'peserta_records' => $peserta_records,
-        'deptFilter' => $deptFilter, // Kirimkan filter ke view untuk mempertahankan nilai filter
-        'searchQuery' => $searchQuery, // Kirimkan pencarian ke view untuk mempertahankan nilai pencarian
-        'uniqueDepts' => $uniqueDepts, // Kirimkan nilai dept unik ke view
-    ]);
-}
 
 
     public function show($id)

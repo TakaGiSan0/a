@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
 use App\Models\User;
 
 class AuthenticatedSessionController extends Controller
@@ -50,7 +49,7 @@ class AuthenticatedSessionController extends Controller
         } elseif ($user->role == 'super admin') {
             return redirect()->route('superadmin.dashboard');
         } else {
-            return redirect()->route('user.dashboard');
+            return redirect()->route('user.summary');
         }
     }
 
