@@ -50,7 +50,7 @@ Route::middleware(['auth', 'role:super admin'])->group(function () {
 
     // Dashboard Employee Training Record
     Route::get('/superadmin/employee', [EmployeeController::class, 'index'])->name('superadmin.employee');
-    Route::get('/superadmin/employee/{id}', [EmployeeController::class, 'show'])->name('superadmin.employee.show');
+    Route::get('employee/{id}', [EmployeeController::class, 'show'])->name('superadmin.employee.show');
 
     // Dashboard Summary Training Record
     Route::get('/superadmin/summary', [SummaryController::class, 'index'])->name('superadmin.summary');
@@ -84,12 +84,27 @@ Route::middleware(['auth', 'role:super admin'])->group(function () {
 // Admin Route
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+
+
     Route::get('/admin/summary', [SummaryController::class, 'index'])->name('admin.summary');
+
+
     Route::get('/admin/employee', [EmployeeController::class, 'index'])->name('admin.employee');
+    Route::get('employee/{id}', [EmployeeController::class, 'show'])->name('superadmin.employee.show');
+
+
+
     Route::get('/admin/peserta', [PesertaController::class, 'index'])->name('admin.peserta');
-    Route::get('/admin/user', [UserController::class, 'index'])->name('admin.user');
 
 
+    Route::get('/admin/user', [UserController::class, 'index'])->name('admin.user.index');
+    // Dashboard User
+    Route::get('/admin/user', [UserController::class, 'index'])->name('admin.user.index');
+    Route::get('/admin/user/create', [UserController::class, 'create'])->name('admin.user.create');
+    Route::post('/admin/user/create', [UserController::class, 'store'])->name('admin.user.store');
+    Route::delete('/admin/user/{id}', [UserController::class, 'delete'])->name('admin.user.destroy');
+    Route::get('/admin/user/edit/{user}', [UserController::class, 'edit'])->name('admin.user.edit');
+    Route::put('/admin/user/update/{user}', [UserController::class, 'update'])->name('admin.user.update');
 
     Route::get('/admin/dashboard/create', [SuperAdminController::class, 'create'])->name('admin.create');
 });
@@ -98,6 +113,11 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 // User Route
 Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/user/employee', [EmployeeController::class, 'index'])->name('user.employee');
+    Route::get('/employee/{id}', [EmployeeController::class, 'show'])->name('user.employee.show');
+
+
+
+
     Route::get('/user/summary', [SummaryController::class, 'index'])->name('user.summary');
 
 });

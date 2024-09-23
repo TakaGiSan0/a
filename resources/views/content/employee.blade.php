@@ -3,7 +3,13 @@
 @section('title', 'Dashboard')
 
 @section('sidebar')
-    @include('superadmin.sidebar.sidebar')
+    @if (auth()->user()->role == 'super admin')
+        @include('superadmin.sidebar.sidebar')
+    @elseif(auth()->user()->role == 'admin')
+        @include('admin.sidebar.sidebar')
+    @elseif(auth()->user()->role == 'user')
+        @include('user.sidebar.sidebar')
+    @endif
 @endsection
 
 @section('content')
@@ -214,7 +220,7 @@
             // Tutup modal sebelum membuka yang baru
             hideModal();
 
-            fetch(`/superadmin/employee/${id}`, {
+            fetch(`/employee/${id}`, {
                     signal: controller.signal
                 })
                 .then(response => response.json())
@@ -341,8 +347,6 @@
 
             }
         });
-
-
     </script>
 
 @endsection

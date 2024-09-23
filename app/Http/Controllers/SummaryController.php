@@ -34,25 +34,7 @@ class SummaryController extends Controller
 
         $training_records = $training_records->get();
 
-        // Ambil role pengguna saat ini
-        $userRole = auth('')->user()->role; // Asumsikan 'role' adalah atribut di tabel users
-
-        // Pilih view berdasarkan role
-        switch ($userRole) {
-            case 'super admin':
-                $view = 'superadmin.summary';
-                break;
-            case 'admin':
-                $view = 'admin.sumary'; // Ganti dengan view yang sesuai untuk admin
-                break;
-            case 'user':
-                $view = 'user.summary'; // Ganti dengan view yang sesuai untuk user
-                break;
-            default:
-                abort(403, 'Unauthorized action.'); // Atau arahkan ke view default atau error
-        }
-
-        return view($view, compact('training_records'));
+        return view('content.summary', compact('training_records'));
     }
 
     public function show($id)

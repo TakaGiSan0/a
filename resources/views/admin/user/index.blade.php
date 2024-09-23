@@ -27,7 +27,7 @@
                 <ul class="mt-6">
                     <li class="relative px-6 py-3">
                         <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                            href="{{ route('superadmin.dashboard') }}">
+                            href="{{ route('admin.dashboard') }}">
                             <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round"
                                 stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
                                 <path
@@ -41,7 +41,7 @@
                 <ul>
                     <li class="relative px-6 py-3">
                         <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                            href="{{ route('superadmin.peserta') }}">
+                            href="{{ route('admin.peserta') }}">
                             <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round"
                                 stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
                                 <path
@@ -55,7 +55,7 @@
                         <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
                             aria-hidden="true"></span>
                         <a class="inline-flex items-center w-full text-sm font-semibold text-gray-800 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-100"
-                            href="{{ route('superadmin.peserta') }}">
+                            href="{{ route('admin.peserta') }}">
                             <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round"
                                 stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
                                 <path
@@ -67,7 +67,7 @@
                     </li>
                     <li class="relative px-6 py-3">
                         <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                            href="{{ route('superadmin.summary') }}">
+                            href="{{ route('admin.summary') }}">
                             <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round"
                                 stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
                                 <path
@@ -79,7 +79,7 @@
                     </li>
                     <li class="relative px-6 py-3">
                         <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                            href="{{ route('superadmin.employee') }}">
+                            href="{{ route('admin.employee') }}">
                             <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round"
                                 stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
                                 <path d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path>
@@ -168,7 +168,7 @@
                                 <div
                                     class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                                     <div class="w-full md:w-1/2">
-                                        <form class="flex items-center" method="GET" action="{{ route('superadmin.peserta') }}">
+                                        <form class="flex items-center" method="GET" action="{{ route('admin.peserta') }}">
                                             <label for="simple-search" class="sr-only">Search</label>
                                             <div class="relative w-full">
                                                 <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -191,7 +191,7 @@
                                     </div>
                                     <div
                                         class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-                                        <a href="{{ route('superadmin.user.create') }}">
+                                        <a href="{{ route('admin.user.create') }}">
                                             <button type="button" id="createProductModalButton" data-modal-target="createProductModal"
                                                 data-modal-toggle="createProductModal"
                                                 class="flex items-center justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
@@ -235,7 +235,7 @@
                                                         <td class="px-4 py-3">{{ $p->name }}</td>
                                                         <td class="px-4 py-3">{{ $p->role }}</td>
                                                         <td class="px-4 py-3 flex items-center justify-center">
-                                                            <a href="{{ route('superadmin.peserta.edit', $p->id) }}">
+                                                            <a href="">
                                                                 <svg class="h-8 w-8 text-slate-500" width="24" height="24"
                                                                     viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
                                                                     fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -245,7 +245,7 @@
                                                                         y2="10.5" />
                                                                 </svg>
                                                             </a>
-                                                            <form action="{{ route('superadmin.peserta.destroy', $p->id) }}"
+                                                            <form action=""
                                                                 method="POST"
                                                                 onsubmit="return confirm('Apakah Anda yakin ingin menghapus peserta ini?');">
                                                                 @csrf

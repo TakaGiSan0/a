@@ -214,7 +214,7 @@
             // Tutup modal sebelum membuka yang baru
             hideModal();
 
-            fetch(`/superadmin/employee/${id}`, {
+            fetch(`/employee/${id}`, {
                     signal: controller.signal
                 })
                 .then(response => response.json())

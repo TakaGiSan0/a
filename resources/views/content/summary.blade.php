@@ -3,7 +3,13 @@
 @section('title', 'Dashboard')
 
 @section('sidebar')
-    @include('superadmin.sidebar.sidebar1')
+    @if (auth()->user()->role == 'super admin')
+        @include('superadmin.sidebar.sidebar')
+    @elseif(auth()->user()->role == 'admin')
+        @include('admin.sidebar.sidebar')
+    @elseif(auth()->user()->role == 'user')
+        @include('user.sidebar.sidebar')
+    @endif
 @endsection
 
 @section('content')
@@ -83,7 +89,8 @@
                     $n = 0; ?>
                     @foreach ($uniqueRecords as $rc)
                         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                            <thead class="text-xs text-center text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                            <thead
+                                class="text-xs text-center text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                 <tr>
                                     <th scope="col" class="px-4 py-4">No</th>
                                     <th scope="col" class="px-4 py-4">Doc. Ref</th>
@@ -231,16 +238,16 @@
                         <h4>Peserta:</h4>
                         <ul>
                             ${record.peserta.map(peserta => `
-                                                        <li>
-                                                            ${peserta.employee_name} (Badge No: ${peserta.badge_no}, Dept: ${peserta.dept}, Position: ${peserta.position})
-                                                            <ul>
-                                                                <li>Theory Result: ${peserta.pivot.theory_result || 'N/A'}</li>
-                                                                <li>Practical Result: ${peserta.pivot.practical_result || 'N/A'}</li>
-                                                                <li>Level : ${peserta.pivot.level || 'N/A'}</li>
-                                                                <li>Final Judgement: ${peserta.pivot.final_judgement || 'N/A'}</li>
-                                                            </ul>
-                                                        </li>
-                                                    `).join('')}
+                                                            <li>
+                                                                ${peserta.employee_name} (Badge No: ${peserta.badge_no}, Dept: ${peserta.dept}, Position: ${peserta.position})
+                                                                <ul>
+                                                                    <li>Theory Result: ${peserta.pivot.theory_result || 'N/A'}</li>
+                                                                    <li>Practical Result: ${peserta.pivot.practical_result || 'N/A'}</li>
+                                                                    <li>Level : ${peserta.pivot.level || 'N/A'}</li>
+                                                                    <li>Final Judgement: ${peserta.pivot.final_judgement || 'N/A'}</li>
+                                                                </ul>
+                                                            </li>
+                                                        `).join('')}
                         </ul>
                     </div>
                 `).join('');
