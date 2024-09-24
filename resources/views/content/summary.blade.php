@@ -118,6 +118,7 @@
                                     <td class="px-4 py-3">{{ $rc->training_date ?? 'N/A' }}</td>
                                     <td class="px-4 py-3">TR-0{{ $rc->id ?? 'N/A' }}</td>
                                     <td class="px-4 py-3 flex items-center justify-">
+                                        <a href="{{ route('download', $rc->id) }}">
                                         <button type="button" data-modal-target="updateProductModal"
                                             data-modal-toggle="updateProductModal"
                                             class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
@@ -127,10 +128,10 @@
                                                     d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
                                                 <path fill-rule="evenodd" clip-rule="evenodd"
                                                     d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
-                                            </svg><a href="{{ url('generator', $rc->id) }}">
-
-                                            </a>
+                                            </svg>
+                                                
                                         </button>
+                                    </a>
 
                                         <button type="button" data-modal-target="readProductModal"
                                             data-modal-toggle="readProductModal" onclick="openModal({{ $rc->id }})"

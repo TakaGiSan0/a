@@ -35,9 +35,29 @@ Route::post('login', [AuthenticatedSessionController::class, 'store'])
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 Route::get('/test-pdf', [SuperAdminController::class, 'generatePdf']);
 
+// Route AllRole
+Route::middleware(['auth:web'])->group(function () {
+    Route::get('employee/{id}', [EmployeeController::class, 'show'])->name('superadmin.employee.show');
+    
+    Route::get('/superadmin/summary/{id}', [SummaryController::class, 'show'])->name('superadmin.summary.show');
+    
+    Route::get('/participants/{badgeNo}', [PesertaController::class, 'getParticipantByBadgeNo']);
+
+    Route::post('/api/trainings/search', [SummaryController::class, 'search']);
+
+    Route::get('/generator/{id}', [SummaryController::class, 'downloadSummaryPdf'])->name('download');
+
+});
+
+// Super Admin Route
+Route::middleware(['auth', 'role:superadmin,admin'])->group(function () {
+    
+});
+
+
+
 // Super Admin Route
 Route::middleware(['auth', 'role:super admin'])->group(function () {
-
 
     // Dashboard Form
     Route::get('/superadmin/dashboard/', [SuperAdminController::class, 'index'])->name('superadmin.dashboard');
@@ -47,17 +67,13 @@ Route::middleware(['auth', 'role:super admin'])->group(function () {
     Route::delete('/superadmin/dashboard/{id}', [SuperAdminController::class, 'destroy'])->name('superadmin.destroy');
     Route::put('/superadmin/dashboard/update/{id}', [SuperAdminController::class, 'update'])->name('superadmin.update');
 
-
     // Dashboard Employee Training Record
     Route::get('/superadmin/employee', [EmployeeController::class, 'index'])->name('superadmin.employee');
-    Route::get('employee/{id}', [EmployeeController::class, 'show'])->name('superadmin.employee.show');
 
     // Dashboard Summary Training Record
     Route::get('/superadmin/summary', [SummaryController::class, 'index'])->name('superadmin.summary');
-    Route::get('/superadmin/summary/{id}', [SummaryController::class, 'show'])->name('superadmin.summary.show');
-    Route::post('/api/trainings/search', [SummaryController::class, 'search']);
-    Route::get('/generator/{id}', [SummaryController::class, 'downloadSummaryPdf'])->name('download');
-
+    
+    
     // Dashboard User
     Route::get('/superadmin/user', [UserController::class, 'index'])->name('superadmin.user.index');
     Route::get('/superadmin/user/create', [UserController::class, 'create'])->name('superadmin.user.create');
@@ -78,16 +94,12 @@ Route::middleware(['auth', 'role:super admin'])->group(function () {
     Route::post('/import', [ExcelController::class, 'import'])->name('import');
     Route::get('/users/export', [ExcelController::class, 'export'])->name('export');
 
-
-    Route::get('/participants/{badgeNo}', [PesertaController::class, 'getParticipantByBadgeNo']);
 });
 
 
 // Admin Route
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
-
-
 
     Route::get('/admin/summary', [SummaryController::class, 'index'])->name('admin.summary');
 
@@ -123,3 +135,6 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/user/summary', [SummaryController::class, 'index'])->name('user.summary');
 
 });
+
+
+

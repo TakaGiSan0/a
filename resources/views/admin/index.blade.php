@@ -91,7 +91,7 @@
                                         <td class="px-4 py-3">{{ $rc->trainer_name }}</td>
                                         <td class="px-4 py-3">{{ $rc->status }}</td>
                                         <td class="px-4 py-3 flex items-center justify-center">
-                                            <a href="{{ route('admin.edit', $rc->id) }}">
+                                            <a href="">
                                                 <svg class="h-8 w-8 text-slate-500" width="24" height="24"
                                                     viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
                                                     fill="none" stroke-linecap="round" stroke-linejoin="round">

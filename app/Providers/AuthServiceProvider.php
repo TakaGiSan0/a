@@ -14,8 +14,7 @@ class AuthServiceProvider extends ServiceProvider
      * Register services.
      */
     protected $policies = [
-        Peserta::class => PesertaPolicy::class,
-        training_record::class => TrainingRecordPolicy::class,
+       
     ];
     public function register(): void
     {
