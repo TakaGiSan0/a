@@ -77,6 +77,8 @@ Route::middleware(['auth', 'role:super admin'])->group(function () {
     Route::put('/superadmin/peserta/update/{peserta}', [PesertaController::class, 'update'])->name('superadmin.peserta.update');
     Route::post('/import', [ExcelController::class, 'import'])->name('import');
     Route::get('/users/export', [ExcelController::class, 'export'])->name('export');
+
+
     Route::get('/participants/{badgeNo}', [PesertaController::class, 'getParticipantByBadgeNo']);
 });
 
@@ -86,15 +88,16 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
 
 
+
     Route::get('/admin/summary', [SummaryController::class, 'index'])->name('admin.summary');
 
 
     Route::get('/admin/employee', [EmployeeController::class, 'index'])->name('admin.employee');
-    Route::get('employee/{id}', [EmployeeController::class, 'show'])->name('superadmin.employee.show');
-
+    
 
 
     Route::get('/admin/peserta', [PesertaController::class, 'index'])->name('admin.peserta');
+
 
 
     Route::get('/admin/user', [UserController::class, 'index'])->name('admin.user.index');
@@ -113,8 +116,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 // User Route
 Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/user/employee', [EmployeeController::class, 'index'])->name('user.employee');
-    Route::get('/employee/{id}', [EmployeeController::class, 'show'])->name('user.employee.show');
-
+    
 
 
 

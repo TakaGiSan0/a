@@ -53,7 +53,9 @@ class EmployeeController extends Controller
     public function show($id)
     {
         // Ambil data peserta berdasarkan ID
-        $peserta = Peserta::find($id);
+        $peserta = Peserta::with(['trainingRecords' => function ($query) {
+            $query->withPivot('level', 'final_judgement');
+        }])->findOrFail($id);
 
         if (!$peserta) {
             return response()->json(['error' => 'Peserta not found'], 404);

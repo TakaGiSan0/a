@@ -33,7 +33,7 @@ class SuperAdminController extends Controller
         $userRole = auth('')->user()->role;
 
         // Cek apakah role adalah 'superadmin' atau 'admin'
-        if (!in_array($userRole, ['superadmin', 'admin'])) {
+        if (!in_array($userRole, ['super admin', 'admin'])) {
             abort(403, 'Unauthorized action.');
         }
 

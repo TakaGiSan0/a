@@ -203,6 +203,7 @@
         </div>
     </div>
 
+    
     <script>
         function BukaModal(id) {
             const controller = new AbortController();
@@ -295,10 +296,10 @@
                                         ${training.training_date ?? '-'}
                                     </td>
                                     <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap text-center dark:text-white">
-                                        ${training.level ?? 'N/A'}
+                                        ${training.pivot.level ?? 'N/A'}
                                     </td>
                                     <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap text-center dark:text-white">
-                                        ${training.final_judgement ?? 'N/A'}
+                                        ${training.pivot.final_judgement ?? 'N/A'}
                                     </td>
                                 </tr>`;
                             });
@@ -347,6 +348,8 @@
 
             }
         });
+
+        
     </script>
 
 @endsection
