@@ -32,7 +32,7 @@ class SummaryController extends Controller
             $training_records = $training_records->where('training_name', 'like', '%' . $request->input('search') . '%');
         }
 
-        $training_records = $training_records->get();
+        $training_records = $training_records->paginate(10);
 
         return view('content.summary', compact('training_records'));
     }

@@ -48,13 +48,25 @@ class AuthenticatedSessionController extends Controller
             return redirect()->route('admin.dashboard');
         } elseif ($user->role == 'super admin') {
             return redirect()->route('superadmin.dashboard');
-        } else {
+        } elseif ($user->role == 'user') {
             return redirect()->route('user.summary');
+        }
+        // Jika role tidak ditemukan, kirim pesan error khusus
+        if (!$user) {
+            return back()
+                ->withErrors([
+                    'user' => 'Role user tidak ditemukan.',
+                ])
+                ->onlyInput('user');
         }
     }
 
     public function destroy(Request $request)
     {
+        // Hapus session user_name
+        session()->forget('user_name');
+
+        // Logout
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();

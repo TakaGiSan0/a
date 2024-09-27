@@ -16,8 +16,8 @@
     <div class="container mx-auto">
         <!-- Dashboard Header -->
         <!-- Start block -->
-        <section class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden antialiased">
-            <div class="mx-auto max-w-screen-xl px-4 lg:px-12 py-3">
+        <section class="bg-gray-100 dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden antialiased">
+            <div class="mx-auto max-w-screen-xl px-4 lg:px-12 py-5">
                 <!-- Start coding here -->
 
                 <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-lg">
@@ -80,76 +80,78 @@
                         <button type="submit" class="btn btn-primary">Cari</button>
                     </form>
                 </div>
+                <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden mt-5">
 
-                <div class="overflow-x-auto mt-4">
-                    @php
-                        $uniqueRecords = $training_records->unique('doc_ref');
-                    @endphp
-                    <?php $no = 0;
-                    $n = 0; ?>
-                    @foreach ($uniqueRecords as $rc)
-                        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                            <thead
-                                class="text-xs text-center text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                <tr>
-                                    <th scope="col" class="px-4 py-4">No</th>
-                                    <th scope="col" class="px-4 py-4">Doc. Ref</th>
-                                    <th scope="col" class="px-4 py-3">Training Category</th>
-                                    <th scope="col" class="px-4 py-3">Training Name</th>
-                                    <th scope="col" class="px-4 py-3">Dept</th>
-                                    <th scope="col" class="px-4 py-3">Station</th>
-                                    <th scope="col" class="px-4 py-3">Trainer Name</th>
-                                    <th scope="col" class="px-4 py-3">Training Date</th>
-                                    <th scope="col" class="px-4 py-3">Event Number</th>
-                                    <th scope="col" class="px-4 py-3">Action</th>
+                    <div class="overflow-x-auto mt-4">
+                        @php
+                            $uniqueRecords = $training_records->unique('doc_ref');
+                        @endphp
+                        <?php $no = ($training_records->currentPage() - 1) * $training_records->perPage(); ?>
+                        @foreach ($uniqueRecords as $rc)
+                            <table class="w-full text-sm text-center text-gray-500 dark:text-gray-400">
+                                <thead
+                                    class="text-xs text-center text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                    <tr>
+                                        <th scope="col" class="px-4 py-4">No</th>
+                                        <th scope="col" class="px-4 py-4">Doc. Ref</th>
+                                        <th scope="col" class="px-4 py-3">Training Category</th>
+                                        <th scope="col" class="px-4 py-3">Training Name</th>
+                                        <th scope="col" class="px-4 py-3">Dept</th>
+                                        <th scope="col" class="px-4 py-3">Station</th>
+                                        <th scope="col" class="px-4 py-3">Trainer Name</th>
+                                        <th scope="col" class="px-4 py-3">Training Date</th>
+                                        <th scope="col" class="px-4 py-3">Event Number</th>
+                                        <th scope="col" class="px-4 py-3">Action</th>
 
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="border-b dark:border-gray-700">
-                                    <td scope="row" class="px-4 py-3 ">
-                                        {{ ++$no }}</td>
-                                    <td class="px-4 py-3">{{ $rc->doc_ref }}</td>
-                                    <td class="px-4 py-3">{{ $rc->trainingCategory->name ?? 'N/A' }}</td>
-                                    <td class="px-4 py-3">{{ $rc->training_name }}</td>
-                                    <td class="px-4 py-3">{{ $rc->peserta->dept ?? 'N/A' }}</td>
-                                    <td class="px-4 py-3">{{ $rc->station }}</td>
-                                    <td class="px-4 py-3">{{ $rc->trainer_name ?? 'N/A' }}</td>
-                                    <td class="px-4 py-3">{{ $rc->training_date ?? 'N/A' }}</td>
-                                    <td class="px-4 py-3">TR-0{{ $rc->id ?? 'N/A' }}</td>
-                                    <td class="px-4 py-3 flex items-center justify-">
-                                        <a href="{{ route('download', $rc->id) }}">
-                                        <button type="button" data-modal-target="updateProductModal"
-                                            data-modal-toggle="updateProductModal"
-                                            class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
-                                            <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg"
-                                                viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                                <path
-                                                    d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
-                                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                                    d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
-                                            </svg>
-                                                
-                                        </button>
-                                    </a>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b dark:border-gray-700">
+                                        <td scope="row" class="px-4 py-3 ">
+                                            {{ ++$no }}</td>
+                                        <td class="px-4 py-3">{{ $rc->doc_ref }}</td>
+                                        <td class="px-4 py-3">{{ $rc->trainingCategory->name ?? 'N/A' }}</td>
+                                        <td class="px-4 py-3">{{ $rc->training_name }}</td>
+                                        <td class="px-4 py-3">{{ $rc->peserta->dept ?? 'N/A' }}</td>
+                                        <td class="px-4 py-3">{{ $rc->station }}</td>
+                                        <td class="px-4 py-3">{{ $rc->trainer_name ?? 'N/A' }}</td>
+                                        <td class="px-4 py-3">{{ $rc->training_date ?? 'N/A' }}</td>
+                                        <td class="px-4 py-3">TR-0{{ $rc->id ?? 'N/A' }}</td>
+                                        <td class="px-4 py-3 flex items-center justify-">
+                                            <a href="{{ route('download', $rc->id) }}">
+                                                <button type="button" data-modal-target="updateProductModal"
+                                                    data-modal-toggle="updateProductModal"
+                                                    class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
+                                                    <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg"
+                                                        viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                        <path
+                                                            d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                                            d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
+                                                    </svg>
 
-                                        <button type="button" data-modal-target="readProductModal"
-                                            data-modal-toggle="readProductModal" onclick="openModal({{ $rc->id }})"
-                                            class="flex w-full items-center justify-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
-                                            <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg"
-                                                viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                                    d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" />
-                                            </svg>
+                                                </button>
+                                            </a>
 
-                                        </button>
+                                            <button type="button" data-modal-target="readProductModal"
+                                                data-modal-toggle="readProductModal"
+                                                onclick="openModal({{ $rc->id }})"
+                                                class="flex w-full items-center justify-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
+                                                <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg"
+                                                    viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                                        d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" />
+                                                </svg>
 
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    @endforeach
+                                            </button>
+
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        @endforeach
+                    </div>
                 </div>
             </div>
         </section>
@@ -213,7 +215,7 @@
             // Hide the modal before opening a new one
             hideModal();
 
-            fetch(`/superadmin/summary/${id}`, {
+            fetch(`/summary/${id}`, {
                     signal: abortController.signal,
                 })
                 .then(response => {
@@ -239,16 +241,16 @@
                         <h4>Peserta:</h4>
                         <ul>
                             ${record.peserta.map(peserta => `
-                                                            <li>
-                                                                ${peserta.employee_name} (Badge No: ${peserta.badge_no}, Dept: ${peserta.dept}, Position: ${peserta.position})
-                                                                <ul>
-                                                                    <li>Theory Result: ${peserta.pivot.theory_result || 'N/A'}</li>
-                                                                    <li>Practical Result: ${peserta.pivot.practical_result || 'N/A'}</li>
-                                                                    <li>Level : ${peserta.pivot.level || 'N/A'}</li>
-                                                                    <li>Final Judgement: ${peserta.pivot.final_judgement || 'N/A'}</li>
-                                                                </ul>
-                                                            </li>
-                                                        `).join('')}
+                                                                <li>
+                                                                    ${peserta.employee_name} (Badge No: ${peserta.badge_no}, Dept: ${peserta.dept}, Position: ${peserta.position})
+                                                                    <ul>
+                                                                        <li>Theory Result: ${peserta.pivot.theory_result || 'N/A'}</li>
+                                                                        <li>Practical Result: ${peserta.pivot.practical_result || 'N/A'}</li>
+                                                                        <li>Level : ${peserta.pivot.level || 'N/A'}</li>
+                                                                        <li>Final Judgement: ${peserta.pivot.final_judgement || 'N/A'}</li>
+                                                                    </ul>
+                                                                </li>
+                                                            `).join('')}
                         </ul>
                     </div>
                 `).join('');

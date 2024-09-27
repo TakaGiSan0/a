@@ -16,8 +16,8 @@
     <div class="container mx-auto">
         <!-- Dashboard Header -->
         <!-- Start block -->
-        <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
-            <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
+        <section class="bg-gray-100 dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden antialiased">
+            <div class="mx-auto max-w-screen-xl px-4 lg:px-12 py-5">
                 <!-- Start coding here -->
                 <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
                     <div
@@ -104,7 +104,7 @@
                             @if ($peserta->isEmpty())
                                 <p>{{ $message }}</p>
                             @else
-                                <?php $no = 0; ?>
+                                <?php $no = ($peserta->currentPage() - 1) * $peserta->perPage(); ?>
                                 @foreach ($peserta as $p)
                                     <tbody>
                                         <tr class="border-b dark:border-gray-700">
@@ -116,7 +116,7 @@
                                             <td class="px-4 py-3">{{ $p->dept }}</td>
                                             <td class="px-4 py-3">{{ $p->position }}</td>
                                             <td class="px-4 py-3 flex items-center justify-center">
-                                                <a href="{{ route('superadmin.user.edit', $p->id) }}">
+                                                <a href="{{ route('superadmin.peserta.edit', $p->id) }}">
                                                     <svg class="h-8 w-8 text-slate-500" width="24" height="24"
                                                         viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
                                                         fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -125,7 +125,7 @@
                                                         <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
                                                     </svg>
                                                 </a>
-                                                <form action="{{ route('superadmin.user.destroy', $p->id) }}"
+                                                <form action="{{ route('superadmin.peserta.destroy', $p->id) }}"
                                                     method="POST"
                                                     onsubmit="return confirm('Apakah Anda yakin ingin menghapus peserta ini?');">
                                                     @csrf
@@ -147,6 +147,9 @@
                         @endif
                     </div>
                 </div>
+            </div>
+            <div class="mt-4">
+                {{ $peserta->links() }}
             </div>
         </section>
     </div>
@@ -193,7 +196,7 @@
                 <div class="border-t border-gray-200 pt-6 flex justify-between gap-4 mt-6">
                     <button type="button"
                         class="w-full px-4 py-2 rounded-lg text-gray-800 text-sm border-none outline-none tracking-wide bg-gray-200 hover:bg-gray-300 active:bg-gray-200 close-modal">Cancel</button>
-                    <button type="button"
+                    <button type="submit"
                         class="w-full px-4 py-2 rounded-lg text-white text-sm border-none outline-none tracking-wide bg-blue-600 hover:bg-blue-700 active:bg-blue-600">Import</button>
                 </div>
             </form>

@@ -38,7 +38,7 @@ class EmployeeController extends Controller
         }
 
         // Ambil data peserta dengan filter
-        $peserta_records = $query->paginate();
+        $peserta_records = $query->paginate(10);
 
         
         return view('content.employee', [

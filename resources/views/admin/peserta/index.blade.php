@@ -16,8 +16,8 @@
     <div class="container mx-auto">
         <!-- Dashboard Header -->
         <!-- Start block -->
-        <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
-            <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
+        <section class="bg-gray-100 dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden antialiased">
+            <div class="mx-auto max-w-screen-xl px-4 lg:px-12 py-5">
                 <!-- Start coding here -->
                 <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
                     <div
@@ -104,7 +104,7 @@
                             @if ($peserta->isEmpty())
                                 <p>{{ $message }}</p>
                             @else
-                                <?php $no = 0; ?>
+                                <?php $no = 0;?>
                                 @foreach ($peserta as $p)
                                     <tbody>
                                         <tr class="border-b dark:border-gray-700">
@@ -147,12 +147,15 @@
                     </div>
                 </div>
             </div>
+            <div class="mt-4">
+                {{ $peserta->links() }}
+            </div>
         </section>
     </div>
 
     <!-- Modal -->
     <div id="uploadModal"
-        class="hidden fixed inset-0 flex p-4 justify-center items-center w-full h-full z-50 overflow-auto font-[sans-serif]">
+        class="fixed inset-0 flex p-4 justify-center items-center w-full h-full z-50 overflow-auto font-[sans-serif]">
 
         <!-- Overlay (background hitam) -->
         <div class="fixed inset-0 bg-black bg-opacity-50"></div>

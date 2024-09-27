@@ -16,8 +16,8 @@
     <div class="container mx-auto">
         <!-- Dashboard Header -->
         <!-- Start block -->
-        <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
-            <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
+        <section class="bg-gray-100 dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden antialiased">
+            <div class="mx-auto max-w-screen-xl px-4 lg:px-12 py-5">
                 <!-- Start coding here -->
                 <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
                     <div
@@ -79,7 +79,7 @@
                             @if ($user->isEmpty())
                                 <p>{{ $message }}</p>
                             @else
-                                <?php $no = 0; ?>
+                                <?php $no = ($user->currentPage() - 1) * $user->perPage(); ?>
                                 @foreach ($user as $p)
                                     <tbody>
                                         <tr class="border-b dark:border-gray-700">
@@ -90,7 +90,7 @@
                                             <td class="px-4 py-3">{{ $p->name }}</td>
                                             <td class="px-4 py-3">{{ $p->role }}</td>
                                             <td class="px-4 py-3 flex items-center justify-center">
-                                                <a href="{{ route('superadmin.peserta.edit', $p->id) }}">
+                                                <a href="{{ route('superadmin.user.edit', $p->id) }}">
                                                     <svg class="h-8 w-8 text-slate-500" width="24" height="24"
                                                         viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
                                                         fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -99,7 +99,7 @@
                                                         <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
                                                     </svg>
                                                 </a>
-                                                <form action="{{ route('superadmin.peserta.destroy', $p->id) }}"
+                                                <form action="{{ route('superadmin.user.destroy', $p->id) }}"
                                                     method="POST"
                                                     onsubmit="return confirm('Apakah Anda yakin ingin menghapus peserta ini?');">
                                                     @csrf
@@ -121,6 +121,9 @@
                         @endif
                     </div>
                 </div>
+            </div>
+            <div class="mt-4">
+                {{ $user->links() }}
             </div>
         </section>
         <!-- End block -->

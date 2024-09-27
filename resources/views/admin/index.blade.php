@@ -42,7 +42,7 @@
                         </div>
                         <div
                             class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-                            <a href="{{ route('admin.create') }}">
+                            <a href="{{ route('dashboard.create') }}">
                                 <button type="button" id="createProductModalButton" data-modal-target="createProductModal"
                                     data-modal-toggle="createProductModal"
                                     class="flex items-center justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
@@ -57,7 +57,7 @@
                         </div>
                     </div>
                     <div class="overflow-x-auto">
-                        <?php $no = 0; ?>
+                        <?php $no = ($training_records->currentPage() - 1) * $training_records->perPage(); ?>
                         @foreach ($training_records as $rc)
                             <table class="w-full text-sm text-center text-gray-500 dark:text-gray-400">
                                 <thead
@@ -91,15 +91,17 @@
                                         <td class="px-4 py-3">{{ $rc->trainer_name }}</td>
                                         <td class="px-4 py-3">{{ $rc->status }}</td>
                                         <td class="px-4 py-3 flex items-center justify-center">
-                                            <a href="">
-                                                <svg class="h-8 w-8 text-slate-500" width="24" height="24"
-                                                    viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                    <path stroke="none" d="M0 0h24v24H0z" />
-                                                    <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
-                                                    <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
-                                                </svg>
-                                            </a>
+                                            @if ($rc->status == 'Pending')
+                                                <a href="">
+                                                    <svg class="h-8 w-8 text-slate-500" width="24" height="24"
+                                                        viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                                        fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                        <path stroke="none" d="M0 0h24v24H0z" />
+                                                        <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
+                                                        <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
+                                                    </svg>
+                                                </a>
+                                            @endif
                                         </td>
                                     </tr>
                                 </tbody>
@@ -107,6 +109,9 @@
                         @endforeach
                     </div>
                 </div>
+            </div>
+            <div class="mt-4">
+                {{ $training_records->links() }}
             </div>
         </section>
         <!-- End block -->

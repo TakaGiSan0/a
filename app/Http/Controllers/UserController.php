@@ -14,18 +14,9 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $searchQuery = $request->input('badge_no', '');
-
-        // Mulai dengan query peserta
-        $query = User::query();
-
-        // Terapkan filter pencarian jika ada
-        if (!empty($searchQuery)) {
-            $query->where('badge_no', 'like', '%' . $searchQuery . '%');
-        }
 
         // Ambil data user berdasarkan filter pencarian
-        $user = $query->select('id', 'name', 'user', 'role')->paginate(10);
+        $user = User::select('id', 'name', 'user', 'role')->paginate(10);
 
         // Ambil role pengguna saat ini
         $userRole = auth('')->user()->role; // Asumsikan 'role' adalah atribut di tabel users
@@ -42,11 +33,13 @@ class UserController extends Controller
                 abort(403, 'Unauthorized action.'); // Atau arahkan ke view default atau error
         }
 
+        // Pastikan $message selalu terdefinisi
+        $message = $user->isEmpty() ? 'No results found for your search.' : '';
+
         // Kembalikan view dengan data user dan pesan
         return view($view, [
             'user' => $user,
-            'searchQuery' => $searchQuery, // Kirimkan pencarian ke view untuk mempertahankan nilai pencarian
-            'message' => $user->isEmpty() ? 'No results found for your search.' : null,
+            'message' => $message,
         ]);
     }
 
@@ -55,7 +48,21 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('superadmin.user.create');
+        $userRole = auth('')->user()->role; // Asumsikan 'role' adalah atribut di tabel users
+
+        // Pilih view berdasarkan role
+        switch ($userRole) {
+            case 'super admin':
+                $view = 'superadmin.user.create';
+                break;
+            case 'admin':
+                $view = 'admin.user.create';
+                break;
+            default:
+                abort(403, 'Unauthorized action.'); // Atau arahkan ke view default atau error
+        }
+
+        return view($view);
     }
 
     /**
@@ -84,7 +91,20 @@ class UserController extends Controller
 
         $user->save();
 
-        return redirect()->route('superadmin.user.index')->with('success', 'Peserta berhasil ditambahkan.');
+        $userRole = auth('')->user()->role; // Asumsikan 'role' adalah atribut di tabel users
+
+        switch ($userRole) {
+            case 'super admin':
+                $view = 'superadmin.user.index';
+                break;
+            case 'admin':
+                $view = 'admin.user.index';
+                break;
+
+            default:
+                abort(403, 'Unauthorized action.');
+        }
+        return view($view)->with('success', 'User created successfully.');
     }
 
     /**
@@ -98,18 +118,45 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(user $user)
     {
-        //
+        // Cek otorisasi menggunakan policy
+        $this->authorize('update', $user);
+
+        // Kembalikan view dengan data user
+        return view('superadmin.user.edit', compact('user'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, user $user)
     {
-        //
+        // Validasi input dengan pengecualian untuk ID yang sedang diperbarui
+        $validated = $request->validate(
+            [
+                'user' => 'required|string|max:255',
+                'name' => 'required|string|max:255',
+                'role' => 'required|string|max:255',
+                'password' => 'nullable|string|max:255',
+            ],
+            [],
+        );
+
+        // Jika password diisi, hash dan simpan, jika tidak, abaikan
+        if (!empty($validated['password'])) {
+            $validated['password'] = bcrypt($validated['password']);
+        } else {
+            // Hapus field password agar tidak diupdate jika kosong
+            unset($validated['password']);
+        }
+        // Update data user
+
+        $user->update($validated);
+
+        return redirect()->route('superadmin.user.index')->with('success', 'User berhasil diperbarui.');
     }
+
 
     /**
      * Remove the specified resource from storage.

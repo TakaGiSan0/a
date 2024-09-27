@@ -17,10 +17,11 @@
     <div class="container mx-auto">
         <!-- Dashboard Header -->
         <!-- Start block -->
-        <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
-            <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
+        <section class="bg-gray-100 dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden antialiased">
+            <div class="mx-auto max-w-screen-xl px-4 lg:px-12 py-5">
                 <!-- Start coding here -->
-                <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
+                <div
+                    class="bg-white dark:bg-gray-800 relative shadow-lg sm:rounded-xl overflow-hidden border border-gray-200">
                     <div
                         class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                         <div class="w-full md:w-1/2">
@@ -43,7 +44,7 @@
                         </div>
                         <div
                             class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-                            <a href="{{ route('superadmin.create') }}">
+                            <a href="{{ route('dashboard.create') }}">
                                 <button type="button" id="createProductModalButton" data-modal-target="createProductModal"
                                     data-modal-toggle="createProductModal"
                                     class="flex items-center justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
@@ -58,41 +59,52 @@
                         </div>
                     </div>
                     <div class="overflow-x-auto">
-                        <?php $no = 0; ?>
-                        @foreach ($training_records as $rc)
-                            <table class="w-full text-sm text-center text-gray-500 dark:text-gray-400">
-                                <thead
-                                    class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                    <tr>
-                                        <th scope="col" class="px-4 py-4">No</th>
-                                        <th scope="col" class="px-4 py-4">Training Name</th>
-                                        <th scope="col" class="px-4 py-3">Training Date</th>
-                                        <th scope="col" class="px-4 py-3">Trainer Name</th>
-                                        <th scope="col" class="px-4 py-3">Status</th>
-                                        <th scope="col" class="px-4 py-3">Action</th>
-                                    </tr>
-                                </thead>
+                        <table class="w-full text-sm text-center text-gray-500 dark:text-gray-400">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                <tr>
+                                    <th scope="col" class="px-4 py-4">No</th>
+                                    <th scope="col" class="px-1 py-1"></th>
+                                    <th scope="col" class="px-4 py-4">Training Name</th>
+                                    <th scope="col" class="px-4 py-3">Training Date</th>
+                                    <th scope="col" class="px-4 py-3">Trainer Name</th>
+                                    <th scope="col" class="px-4 py-3">Status</th>
+                                    <th scope="col" class="px-4 py-3">Action</th>
+                                </tr>
+                            </thead>
+                            <?php $no = ($training_records->currentPage() - 1) * $training_records->perPage(); ?>
+                            @foreach ($training_records as $rc)
                                 <tbody>
                                     <tr class="border-b dark:border-gray-700">
+                                        <!-- Nomor -->
                                         <td class="px-4 py-3">{{ ++$no }}</td>
-                                        <th scope="row"
-                                            class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white flex justify-center">
-                                            <svg class="h-8 w-8 text-slate-500" width="24" height="24"
-                                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                                stroke-linecap="round" stroke-linejoin="round">
-                                                <path stroke="none" d="M0 0h24v24H0z" />
-                                                <polyline points="3 9 12 15 21 9 12 3 3 9" />
-                                                <path d="M21 9v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10" />
-                                                <line x1="3" y1="19" x2="9" y2="13" />
-                                                <line x1="15" y1="13" x2="21" y2="19" />
-                                            </svg>
-                                            <p class="text-center justify-center mx-4 py-2">{{ $rc->training_name }}</p>
-                                        </th>
-                                        <td class="px-4 py-3">{{ $rc->training_date }}</td>
-                                        <td class="px-4 py-3">{{ $rc->trainer_name }}</td>
-                                        <td class="px-4 py-3">{{ $rc->status }}</td>
-                                        <td class="px-4 py-3 flex items-center justify-center">
-                                            <a href="{{ route('superadmin.edit', $rc->id) }}">
+                                        <td class="px-4 py-3 items-center justify-center">
+                                            <svg class="h-8 w-8 text-slate-500 " width="24" height="24"
+                                            viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" />
+                                            <polyline points="3 9 12 15 21 9 12 3 3 9" />
+                                            <path d="M21 9v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10" />
+                                            <line x1="3" y1="19" x2="9" y2="13" />
+                                            <line x1="15" y1="13" x2="21" y2="19" />
+                                        </svg></td>
+
+                                        <!-- Logo dan Nama Training -->
+                                        <td>
+                                            <p class="px-4 py-3 text-center">{{ $rc->training_name }}</p>
+                                        </td>
+
+                                        <!-- Tanggal Training -->
+                                        <td class="px-4 py-3 text-center">{{ $rc->training_date }}</td>
+
+                                        <!-- Nama Trainer -->
+                                        <td class="px-4 py-3 text-center">{{ $rc->trainer_name }}</td>
+
+                                        <!-- Status -->
+                                        <td class="px-4 py-3 text-center">{{ $rc->status }}</td>
+
+                                        <!-- Edit dan Delete Actions -->
+                                        <td class="px-4 py-3 flex items-center justify-center space-x-4">
+                                            <a href="{{ route('dashboard.edit', $rc->id) }}">
                                                 <svg class="h-8 w-8 text-slate-500" width="24" height="24"
                                                     viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
                                                     fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -101,7 +113,7 @@
                                                     <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
                                                 </svg>
                                             </a>
-                                            <form action="{{ route('superadmin.destroy', $rc->id) }}" method="POST"
+                                            <form action="{{ route('dashboard.destroy', $rc->id) }}" method="POST"
                                                 onsubmit="return confirm('Apakah Anda yakin ingin menghapus peserta ini?');">
                                                 @csrf
                                                 @method('DELETE')
@@ -117,10 +129,13 @@
                                         </td>
                                     </tr>
                                 </tbody>
-                            </table>
-                        @endforeach
+                            @endforeach
+                        </table>
                     </div>
                 </div>
+            </div>
+            <div class="mt-4">
+                {{ $training_records->links() }}
             </div>
         </section>
         <!-- End block -->

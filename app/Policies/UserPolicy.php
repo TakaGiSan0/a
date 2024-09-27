@@ -2,12 +2,10 @@
 
 namespace App\Policies;
 
-use App\Models\Peserta;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
-
-class PesertaPolicy
+class UserPolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -20,7 +18,7 @@ class PesertaPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Peserta $peserta): void
+    public function view(User $user, User $model): void
     {
         //
     }
@@ -36,31 +34,23 @@ class PesertaPolicy
     /**
      * Determine whether the user can update the model.
      */
-    /**
-     * Determine whether the user can update the model.
-     *
-     * Hanya izinkan pengguna dengan role 'superadmin' untuk mengupdate
-     * peserta.
-     */
-    public function update(User $user, Peserta $peserta): bool
+    public function update(User $user, User $targetUser): bool
     {
-        return $user->role === 'super admin';
-        
+        return $user->role=== 'super admin';
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Peserta $peserta): bool
+    public function delete(User $user, User $model): void
     {
-        // Hanya izinkan pengguna dengan role 'superadmin' untuk menghapus
-        return $user->role === 'super admin';
+        //
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Peserta $peserta): void
+    public function restore(User $user, User $model): void
     {
         //
     }
@@ -68,7 +58,7 @@ class PesertaPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Peserta $peserta): void
+    public function forceDelete(User $user, User $model): void
     {
         //
     }

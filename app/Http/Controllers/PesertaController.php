@@ -36,8 +36,7 @@ class PesertaController extends Controller
             case 'admin':
                 $view = 'admin.peserta.index'; // Ganti dengan view yang sesuai untuk admin
                 break;
-            default:
-                abort(403, 'Unauthorized action.'); // Atau arahkan ke view default atau error
+            
         }
         // Kembalikan view dengan data peserta dan pesan
         return view($view, [

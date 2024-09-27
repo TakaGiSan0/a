@@ -16,10 +16,11 @@
     <div class="container mx-auto">
         <!-- Dashboard Header -->
         <!-- Start block -->
-        <section class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden antialiased">
+        <section class="bg-gray-100 dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden antialiased">
             <div class="mx-auto max-w-screen-xl px-4 lg:px-12 py-5">
                 <!-- Start coding here -->
-                <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
+                <div
+                    class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-xl overflow-hidden border border-gray-200">
                     <div
                         class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                         <div class="w-full md:w-1/2">
@@ -85,22 +86,21 @@
                         </div>
                     </div>
                     <div class="overflow-x-auto">
-                        <?php $no = 0; ?>
-                        @foreach ($peserta_records as $rc)
-                            <table class="w-full text-sm text-center text-gray-500 dark:text-gray-400">
-                                <thead
-                                    class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                    <tr>
-                                        <th scope="col" class="px-4 py-4 ">No</th>
-                                        <th scope="col" class="px-4 py-4">Badge No</th>
-                                        <th scope="col" class="px-4 py-3">Emp Name</th>
-                                        <th scope="col" class="px-4 py-3">Dept</th>
-                                        <th scope="col" class="px-4 py-3">Position</th>
-                                        <th scope="col" class="px-4 py-3">Action</th>
-                                    </tr>
-                                </thead>
+                        <table class="w-full text-sm text-center text-gray-500 dark:text-gray-400">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                <tr>
+                                    <th scope="col" class="px-4 py-4 ">No</th>
+                                    <th scope="col" class="px-4 py-4">Badge No</th>
+                                    <th scope="col" class="px-4 py-3">Emp Name</th>
+                                    <th scope="col" class="px-4 py-3">Dept</th>
+                                    <th scope="col" class="px-4 py-3">Position</th>
+                                    <th scope="col" class="px-4 py-3">Action</th>
+                                </tr>
+                            </thead>
+                            <?php $no = ($peserta_records->currentPage() - 1) * $peserta_records->perPage(); ?>
+                            @foreach ($peserta_records as $rc)
                                 <tbody>
-                                    <tr class="border-b dark:border-gray-700 text-center">
+                                    <tr class="border-b dark:border-gray-700">
                                         <th scope="row" name="id"
                                             class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                             {{ ++$no }}</th>
@@ -135,8 +135,9 @@
                                         </td>
                                     </tr>
                                 </tbody>
-                            </table>
-                        @endforeach
+                            @endforeach
+                        </table>
+                    </div>
                         <div class="mt-4">
                             {{ $peserta_records->links() }}
                         </div>
@@ -203,7 +204,7 @@
         </div>
     </div>
 
-    
+
     <script>
         function BukaModal(id) {
             const controller = new AbortController();
@@ -348,8 +349,6 @@
 
             }
         });
-
-        
     </script>
 
 @endsection
