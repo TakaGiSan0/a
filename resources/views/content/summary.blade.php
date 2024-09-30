@@ -161,12 +161,13 @@
     <!-- Read modal -->
     <div id="readProductModal" tabindex="-1" aria-hidden="true"
         class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-        <div class="relative p-4 w-full max-w-2xl max-h-full">
+        <div class="relative p-4 w-full max-w-6xl max-h-full">
             <!-- Modal content -->
             <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
                 <!-- Modal header -->
-                <div class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Form</h3>
+                <div class=" items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
+                    <h3 class="text-lg font-semibold text-gray-900 text-center dark:text-white">Summary Training Record
+                    </h3>
                     <button type="button"
                         class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
                         data-modal-target="createProductModal" data-modal-toggle="createProductModal">
@@ -227,10 +228,9 @@
                 })
                 .then(data => {
                     const trainingList = data.map(record => `
-                    <div>
+                    <div class="grid grid-cols-2">
                         <h3>Training Name: ${record.training_name}</h3>
                         <p>Doc Ref: ${record.doc_ref}</p>
-                        <p>License: ${record.license}</p>
                         <p>Job Skill: ${record.job_skill}</p>
                         <p>Trainer Name: ${record.trainer_name}</p>
                         <p>Rev: ${record.rev}</p>
@@ -238,21 +238,33 @@
                         <p>Skill Code: ${record.skill_code}</p>
                         <p>Training Date: ${record.training_date}</p>
                         ${record.status === 'Pending' ? '<p class="text-yellow-600">This training is pending. Please complete the requirements.</p>' : ''}
-                        <h4>Peserta:</h4>
-                        <ul>
-                            ${record.peserta.map(peserta => `
-                                                                <li>
-                                                                    ${peserta.employee_name} (Badge No: ${peserta.badge_no}, Dept: ${peserta.dept}, Position: ${peserta.position})
-                                                                    <ul>
-                                                                        <li>Theory Result: ${peserta.pivot.theory_result || 'N/A'}</li>
-                                                                        <li>Practical Result: ${peserta.pivot.practical_result || 'N/A'}</li>
-                                                                        <li>Level : ${peserta.pivot.level || 'N/A'}</li>
-                                                                        <li>Final Judgement: ${peserta.pivot.final_judgement || 'N/A'}</li>
-                                                                    </ul>
-                                                                </li>
-                                                            `).join('')}
-                        </ul>
                     </div>
+                        <h4>Peserta:</h4>
+                        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                <tr>
+                                    <th scope="col" class="px-4 py-3">Employee Name</th>
+                                    <th scope="col" class="px-4 py-3">Badge No</th>
+                                    <th scope="col" class="px-4 py-3">Dept</th>
+                                    <th scope="col" class="px-4 py-3">Position</th>
+                                    <th scope="col" class="px-4 py-3">Theory Result</th>
+                                    <th scope="col" class="px-4 py-3">Practical Result</th>
+                                    <th scope="col" class="px-4 py-3">Level</th>
+                                    <th scope="col" class="px-4 py-3">Final Judgement</th>
+                                </tr>
+                            </thead>
+                            ${record.peserta.map(peserta => `
+                                                            <tbody>
+                                                                <td scope="col" class="px-4 py-3">${peserta.employee_name}</td>
+                                                                <td scope="col" class="px-4 py-3">${peserta.badge_no}</td>
+                                                                <td scope="col" class="px-4 py-3">${peserta.dept}</td>
+                                                                <td scope="col" class="px-4 py-3">${peserta.position}</td>
+                                                                <td scope="col" class="px-4 py-3">${peserta.pivot.theory_result || 'N/A'}</td>
+                                                                <td scope="col" class="px-4 py-3">${peserta.pivot.practical_result || 'N/A'}</td>
+                                                                <td scope="col" class="px-4 py-3">${peserta.pivot.level || 'N/A'}</td>
+                                                                <td scope="col" class="px-4 py-3">${peserta.pivot.final_judgement || 'N/A'}</td>
+                                                            </tbody>                                                                                     `).join('')}
+                        
                 `).join('');
 
                     document.getElementById('modalBody').innerHTML = trainingList;
