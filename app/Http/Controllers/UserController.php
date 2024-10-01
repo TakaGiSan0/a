@@ -14,7 +14,6 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-
         // Ambil data user berdasarkan filter pencarian
         $user = User::select('id', 'name', 'user', 'role')->paginate(10);
 

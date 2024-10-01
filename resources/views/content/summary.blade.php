@@ -228,7 +228,7 @@
                 })
                 .then(data => {
                     const trainingList = data.map(record => `
-                    <div class="grid grid-cols-2">
+                    <div class="grid grid-cols-2 text-left px-9 m-5">
                         <h3>Training Name: ${record.training_name}</h3>
                         <p>Doc Ref: ${record.doc_ref}</p>
                         <p>Job Skill: ${record.job_skill}</p>
@@ -239,8 +239,8 @@
                         <p>Training Date: ${record.training_date}</p>
                         ${record.status === 'Pending' ? '<p class="text-yellow-600">This training is pending. Please complete the requirements.</p>' : ''}
                     </div>
-                        <h4>Peserta:</h4>
-                        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                        
+                        <table class="w-full text-sm text-center text-gray-500 dark:text-gray-400">
                             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                 <tr>
                                     <th scope="col" class="px-4 py-3">Employee Name</th>
@@ -254,16 +254,16 @@
                                 </tr>
                             </thead>
                             ${record.peserta.map(peserta => `
-                                                            <tbody>
-                                                                <td scope="col" class="px-4 py-3">${peserta.employee_name}</td>
-                                                                <td scope="col" class="px-4 py-3">${peserta.badge_no}</td>
-                                                                <td scope="col" class="px-4 py-3">${peserta.dept}</td>
-                                                                <td scope="col" class="px-4 py-3">${peserta.position}</td>
-                                                                <td scope="col" class="px-4 py-3">${peserta.pivot.theory_result || 'N/A'}</td>
-                                                                <td scope="col" class="px-4 py-3">${peserta.pivot.practical_result || 'N/A'}</td>
-                                                                <td scope="col" class="px-4 py-3">${peserta.pivot.level || 'N/A'}</td>
-                                                                <td scope="col" class="px-4 py-3">${peserta.pivot.final_judgement || 'N/A'}</td>
-                                                            </tbody>                                                                                     `).join('')}
+                                                                            <tbody class="text-center">
+                                                                                <td scope="col" class="px-4 py-3">${peserta.employee_name}</td>
+                                                                                <td scope="col" class="px-4 py-3">${peserta.badge_no}</td>
+                                                                                <td scope="col" class="px-4 py-3">${peserta.dept}</td>
+                                                                                <td scope="col" class="px-4 py-3">${peserta.position}</td>
+                                                                                <td scope="col" class="px-4 py-3">${peserta.pivot.theory_result || 'N/A'}</td>
+                                                                                <td scope="col" class="px-4 py-3">${peserta.pivot.practical_result || 'N/A'}</td>
+                                                                                <td scope="col" class="px-4 py-3">${peserta.pivot.level || 'N/A'}</td>
+                                                                                <td scope="col" class="px-4 py-3">${peserta.pivot.final_judgement || 'N/A'}</td>
+                                                                            </tbody>                                                                                     `).join('')}
                         
                 `).join('');
 

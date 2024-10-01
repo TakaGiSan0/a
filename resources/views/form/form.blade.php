@@ -195,110 +195,43 @@
                         </table>
                     </div>
                 </div>
-                {{-- <div id="participants-container">
-                            <div class="participant-row" id="participant_1">
-                                <div><label for="badge_no_1"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Badge
-                                        No</label>
-                                    <input type="text" name="participants[0][badge_no]" id="badge_no_1"
-                                        class="bg-gray-50 badge_no_input border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                </div>
-                                <div><label for="employee_name_1"
-                                        class="block mb-2 employee_name_input text-sm font-medium text-gray-900 dark:text-white">Emp
-                                        Name</label>
-                                    <input type="text" name="participants[0][employee_name]" id="employee_name_1"
-                                        class="bg-gray-50 border employee_name_input border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                        readonly placeholder="John Doe">
-                                </div>
+                <div class="flex items-center justify-center p-6 m-5">
+                    <button type="submit"
+                        class="text-white inline-flex justify-center items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mx-3">
+                        <svg class="mr-1 -ml-1 w-6 h-6" fill="currentColor" viewbox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        Submit
 
-                                <div><label for="category"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Dept</label>
-                                    <input type="text" name="participants[0][dept]" id="dept"
-                                        class="bg-gray-50 dept_input border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                        placeholder="John Doe" readonly>
-                                </div>
-                                <div><label for="category" name="position"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Position</label>
-                                    <input type="text" name="participants[0][position]" id="position"
-                                        class="bg-gray-50 position_input border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                        placeholder="John Doe" readonly>
-
-                                    <input type="hidden" name="participants[0][peserta_id]"
-                                        class="peserta_id_input">
-                                </div>
-                                <div><label for="theory_result_1"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Theory
-                                        Result</label><select id="category" name="participants[0][theory_result]"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                        <option name="Pass" value="Pass">Pass</option>
-                                        <option name="Fail" value="Fail">Fail</option>
-                                    </select></div>
-                                <div><label for="category"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Practical
-                                        Result</label><select id="category" name="participants[0][practical_result]"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                        <option name="Pass" value="Pass">Pass</option>
-                                        <option name="Fail" value="Fail">Fail</option>
-                                    </select></div>
-                                <div><label for="category"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Level
-                                    </label><select id="category" name="participants[0][level]"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                        <option name="Level 1" value="Level 1">Level 1</option>
-                                        <option name="Level 2" value="Level 2">Level 2</option>
-                                        <option name="Level 3" value="Level 3">Level 3</option>
-                                        <option name="Level 4" value="Level 4">Level 4</option>
-                                    </select></div>
-                                <div><label for="category"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Final
-                                        Judgement</label><select id="category"
-                                        name="participants[0][final_judgement]"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                        <option name="Attend " value="Attend ">Attend </option>
-                                        <option name="Competence" value="Competence">Competence</option>
-                                    </select></div>
-
-                                <div class="flex items-center mb-4">
-                                    <input type="hidden" name="participants[0][license]" value="0">
-                                    <input id="license-checkbox-${index}" name="participants[0][license]"
-                                        type="checkbox" value="1"
-                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                        {{ old('license', 0) ? 'checked' : '' }}>
-                                    <label for="license-checkbox"
-                                        class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-                                        License/Certification
-                                    </label>
-                                </div>
-                            </div>
-                            <input type="hidden" name="participant_count" value="1">
-                        </div> --}}
-                <button type="submit"
-                    class="text-white inline-flex justify-center items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                    <svg class="mr-1 -ml-1 w-6 h-6" fill="currentColor" viewbox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
-                            d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                            clip-rule="evenodd" />
-                    </svg>
-                    Submit
-                </button>
-                <button type="button" id="add-participant"
-                    class="text-white inline-flex justify-center items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                    <svg class="mr-1 -ml-1 w-6 h-6" fill="currentColor" viewbox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
-                            d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                            clip-rule="evenodd" />
-                    </svg>
-                    Tambahkan Peserta
-                </button>
-                @if (session('success'))
-                    <div class="alert alert-success">
-                        {{ session('success') }}
-                    </div>
-                @endif
-                <button type="submit" name="save_as_draft" value="1">Draft</button>
-
+                    </button>
+                    <button type="button" id="add-participant"
+                        class="text-white inline-flex justify-center items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mx-3">
+                        <svg class="mr-1 -ml-1 w-6 h-6" fill="currentColor" viewbox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        Tambahkan Peserta
+                    </button>
+                    @if (session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+                    <button type="submit" name="save_as_draft" value="1"
+                        class="text-white inline-flex justify-center items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mx-3">
+                        <svg class="mr-1 -ml-1 w-6 h-6" fill="currentColor" viewbox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        Draft</button>
+                </div>
             </form>
         </div>
     </div>

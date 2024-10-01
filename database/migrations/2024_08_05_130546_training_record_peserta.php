@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('peserta_id');
             $table->unsignedBigInteger('training_record_id');
-            $table->enum('theory_result', ['pass', 'fail']);
-            $table->enum('practical_result', ['pass', 'fail']);
-            $table->enum('level', ['level 1', 'level 2','level 3', 'level 4']);
+            $table->enum('theory_result', ['Pass', 'Fail']);
+            $table->enum('practical_result', ['Pass', 'Fail']);
+            $table->enum('level', ['Level 1', 'Level 2','Level 3', 'Level 4']);
             $table->enum('final_judgement', ['Competence', 'Attend']);
             $table->boolean('license')->default(0);
             $table->foreign('peserta_id')->references('id')->on('pesertas')->onDelete('cascade');
