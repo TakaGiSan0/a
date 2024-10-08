@@ -24,7 +24,9 @@ class PesertaController extends Controller
         }
 
         // Ambil data peserta berdasarkan filter pencarian
-        $peserta = $query->select('id', 'badge_no', 'employee_name', 'dept', 'position')->paginate(10);
+        $peserta = $query->select('id', 'badge_no', 'employee_name', 'dept', 'position')
+        ->orderBy('employee_name', 'asc')
+        ->paginate(10);
 
         $userRole = auth('')->user()->role; // Asumsikan 'role' adalah atribut di tabel users
 

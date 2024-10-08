@@ -31,14 +31,14 @@
                             Ref</label>
                         <input type="text" name="doc_ref" id="doc_ref"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            required="">
+                            required>
                     </div>
                     <div>
                         <label for="rev"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Rev</label>
                         <input type="text" name="rev" id="rev"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            required="">
+                            required>
                     </div>
                     <div id="trainingNameContainer">
                         <div class="training-name-input">
@@ -47,7 +47,7 @@
                                 Name</label>
                             <input type="text" name="training_name" id="training_name"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                required="">
+                                required>
                         </div>
                     </div>
 
@@ -55,13 +55,13 @@
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Station</label>
                         <input type="text" name="station" id="station"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            required="">
+                            required>
                     </div>
                     <div class="sm:col-span-2"><label for="description"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Job Skill</label>
-                        <textarea id="description" rows="4" name="job_skill"
-                            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="Write product description here"></textarea>
+                            <input type="text" name="job_skill" id="job_skill"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            required>
                     </div>
                     <div><label for="skill_code"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Skill
@@ -157,6 +157,7 @@
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                         <option name="Pass" value="Pass">Pass</option>
                                         <option name="Fail" value="Fail">Fail</option>
+                                        <option name="N/A" value="N/A">N/A</option>
                                     </select>
                                 </td>
                                 <td scope="col" class="px-1">
@@ -164,6 +165,7 @@
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                         <option name="Pass" value="Pass">Pass</option>
                                         <option name="Fail" value="Fail">Fail</option>
+                                        <option name="N/A" value="N/A">N/A</option>
                                     </select>
                                 </td>
                                 <td scope="col" class="px-1">
@@ -173,6 +175,7 @@
                                         <option name="Level 2" value="Level 2">Level 2</option>
                                         <option name="Level 3" value="Level 3">Level 3</option>
                                         <option name="Level 4" value="Level 4">Level 4</option>
+                                        <option name="N/A" value="N/A">N/A</option>
                                     </select>
                                 </td>
                                 <td scope="col" class="px-1">
@@ -180,6 +183,7 @@
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                         <option name="Attend " value="Attend ">Attend </option>
                                         <option name="Competence" value="Competence">Competence</option>
+                                        <option name="N/A" value="N/A">N/A</option>
                                     </select>
                                 </td>
                                 <td scope="col" class="px-1">
@@ -339,6 +343,8 @@
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                 <option name="Pass" value="Pass">Pass</option>
                                 <option name="Fail" value="Fail">Fail</option>
+                                <option name="N/A" value="N/A">N/A</option>
+
                             </select>
                         </td>
                         <td scope="col" class="px-1">
@@ -346,6 +352,8 @@
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                 <option name="Pass" value="Pass">Pass</option>
                                 <option name="Fail" value="Fail">Fail</option>
+                                <option name="N/A" value="N/A">N/A</option>
+
                             </select>
                         </td>
                         <td scope="col" class="px-1">
@@ -355,6 +363,7 @@
                                 <option name="Level 2" value="Level 2">Level 2</option>
                                 <option name="Level 3" value="Level 3">Level 3</option>
                                 <option name="Level 4" value="Level 4">Level 4</option>
+                                <option name="N/A" value="N/A">N/A</option>
                             </select>
                         </td>
                         <td scope="col" class="px-1">
@@ -362,6 +371,8 @@
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                 <option name="Attend " value="Attend ">Attend </option>
                                 <option name="Competence" value="Competence">Competence</option>
+                                <option name="N/A" value="N/A">N/A</option>
+
                             </select>
                         </td>
                         <td scope="col" class="px-1">

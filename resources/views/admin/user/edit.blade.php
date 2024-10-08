@@ -13,53 +13,47 @@
                 </ul>
             </div>
         @endif
-        <form action="{{ route('admin.user.store') }}"
+        <form action="{{ route('admin.user.update', $user->id) }}"
             class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 justify-center items-center" method="POST">
             @csrf
+            @method('PUT')
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
                     Username
                 </label>
                 <input
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="user" name="user" type="text" placeholder="Username">
+                    name="user" id="user" type="text" placeholder="{{ old('user', $user->user) }}">
             </div>
             <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
                     Name
                 </label>
                 <input
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="name" type="text" name="name" placeholder="Name">
+                    id="name" type="text" name="name" placeholder="{{ old('name', $user->name) }}">
             </div>
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
                     Role
                 </label>
-                <input
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="name" type="text" name="role" value="user" readonly>
+                <input id="role" name="role" value="user" class='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline' placeholder="{{ old('role', $user->role) }}" readonly>
             </div>
             <div class="mb-6">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
-                    Password
+                   New Password
                 </label>
                 <input
-                    class="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                    id="password" type="password" name="password" placeholder="Position">
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="password" type="password" name="password">
             </div>
             <div class="flex items-center justify-between">
                 <button
                     class="bg-blue-500  hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     type="submit">
-                    Tambah
+                    Edit 
                 </button>
-                @error('user')
-                    <span class="text-red-500 text-sm">{{ $message }}</span>
-                @enderror
-                @error('password')
-                    <span class="text-red-500 text-sm">{{ $message }}</span>
-                @enderror
+
             </div>
         </form>
         <p class="text-center text-gray-500 text-xs">

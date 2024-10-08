@@ -81,6 +81,8 @@ class UserController extends Controller
             ],
         );
 
+        
+
         $user = new User();
 
         $user->name = $validatedData['name'];
@@ -94,16 +96,16 @@ class UserController extends Controller
 
         switch ($userRole) {
             case 'super admin':
-                $view = 'superadmin.user.index';
+                $view = 'superadmin.dashboard';
                 break;
             case 'admin':
-                $view = 'admin.user.index';
+                $view = 'admin.dashboard';
                 break;
 
             default:
                 abort(403, 'Unauthorized action.');
         }
-        return view($view)->with('success', 'User created successfully.');
+        return redirect()->route($view)->with('success', 'User created successfully.');
     }
 
     /**
@@ -122,8 +124,23 @@ class UserController extends Controller
         // Cek otorisasi menggunakan policy
         $this->authorize('update', $user);
 
+        // Ambil role pengguna saat ini
+        $userRole = auth('')->user()->role; // Asumsikan 'role' adalah atribut di tabel users
+
+        // Pilih view berdasarkan role
+        switch ($userRole) {
+            case 'super admin':
+                $view = 'superadmin.user.edit';
+                break;
+            case 'admin':
+                $view = 'admin.user.edit';
+                break;
+            default:
+                abort(403, 'Unauthorized action.'); // Atau arahkan ke view default atau error
+        }
+
         // Kembalikan view dengan data user
-        return view('superadmin.user.edit', compact('user'));
+        return view($view, compact('user'));
     }
 
     /**

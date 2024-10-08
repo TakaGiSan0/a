@@ -118,20 +118,22 @@
                                         <td class="px-4 py-3">{{ $rc->training_date ?? 'N/A' }}</td>
                                         <td class="px-4 py-3">TR-0{{ $rc->id ?? 'N/A' }}</td>
                                         <td class="px-4 py-3 flex items-center justify-">
-                                            <a href="{{ route('download', $rc->id) }}">
-                                                <button type="button" data-modal-target="updateProductModal"
-                                                    data-modal-toggle="updateProductModal"
-                                                    class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
-                                                    <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg"
-                                                        viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                                        <path
-                                                            d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
-                                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                                            d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
-                                                    </svg>
+                                            @if (Auth::user()->role != 'user')
+                                                <a href="{{ route('download', $rc->id) }}">
+                                                    <button type="button" data-modal-target="updateProductModal"
+                                                        data-modal-toggle="updateProductModal"
+                                                        class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
+                                                        <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg"
+                                                            viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                            <path
+                                                                d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                                                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                                                d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
+                                                        </svg>
 
-                                                </button>
-                                            </a>
+                                                    </button>
+                                                </a>
+                                            @endif
 
                                             <button type="button" data-modal-target="readProductModal"
                                                 data-modal-toggle="readProductModal"
@@ -165,11 +167,12 @@
             <!-- Modal content -->
             <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
                 <!-- Modal header -->
-                <div class=" items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
-                    <h3 class="text-lg font-semibold text-gray-900 text-center dark:text-white">Summary Training Record
+                <div class="flex items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
+                    <h3 class="flex-grow text-lg font-semibold text-gray-900 text-center dark:text-white">Summary Training
+                        Record
                     </h3>
                     <button type="button"
-                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                        class="justify-end text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
                         data-modal-target="createProductModal" data-modal-toggle="createProductModal">
                         <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20"
                             xmlns="http://www.w3.org/2000/svg">
@@ -254,16 +257,16 @@
                                 </tr>
                             </thead>
                             ${record.peserta.map(peserta => `
-                                                                            <tbody class="text-center">
-                                                                                <td scope="col" class="px-4 py-3">${peserta.employee_name}</td>
-                                                                                <td scope="col" class="px-4 py-3">${peserta.badge_no}</td>
-                                                                                <td scope="col" class="px-4 py-3">${peserta.dept}</td>
-                                                                                <td scope="col" class="px-4 py-3">${peserta.position}</td>
-                                                                                <td scope="col" class="px-4 py-3">${peserta.pivot.theory_result || 'N/A'}</td>
-                                                                                <td scope="col" class="px-4 py-3">${peserta.pivot.practical_result || 'N/A'}</td>
-                                                                                <td scope="col" class="px-4 py-3">${peserta.pivot.level || 'N/A'}</td>
-                                                                                <td scope="col" class="px-4 py-3">${peserta.pivot.final_judgement || 'N/A'}</td>
-                                                                            </tbody>                                                                                     `).join('')}
+                                                                                <tbody class="text-center">
+                                                                                    <td scope="col" class="px-4 py-3">${peserta.employee_name}</td>
+                                                                                    <td scope="col" class="px-4 py-3">${peserta.badge_no}</td>
+                                                                                    <td scope="col" class="px-4 py-3">${peserta.dept}</td>
+                                                                                    <td scope="col" class="px-4 py-3">${peserta.position}</td>
+                                                                                    <td scope="col" class="px-4 py-3">${peserta.pivot.theory_result || 'N/A'}</td>
+                                                                                    <td scope="col" class="px-4 py-3">${peserta.pivot.practical_result || 'N/A'}</td>
+                                                                                    <td scope="col" class="px-4 py-3">${peserta.pivot.level || 'N/A'}</td>
+                                                                                    <td scope="col" class="px-4 py-3">${peserta.pivot.final_judgement || 'N/A'}</td>
+                                                                                </tbody>                                                                                     `).join('')}
                         
                 `).join('');
 

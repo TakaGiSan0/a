@@ -1,7 +1,6 @@
 <?php
 
 namespace Tests\Unit;
-
 use Tests\TestCase;
 use App\Models\Training_Record;
 use App\Models\Category;
@@ -13,15 +12,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Contracts\Auth\Authenticatable;
 
 
-class ExampleTest extends TestCase
+class Test extends TestCase
 {
 
     public function testIndex()
     {
         $user = User::factory()->create(['role' => 'super admin'])->first();
-        $this->actingAs($user);
-
-        $response = $this->get('/index');
+        
+        $response = $this->get('/form');
 
         $response->assertStatus(200);
         $response->assertViewIs('superadmin.index');
@@ -30,12 +28,11 @@ class ExampleTest extends TestCase
     public function testCreate()
     {
         $user = User::factory()->create(['role' => 'super admin']);
-        $this->actingAs($user);
-
+        
 
         Cache::shouldReceive('remember')->andReturn(Category::factory()->count(3)->create(), Peserta::factory()->count(3)->create());
 
-        $response = $this->get('/dashboard/create');
+        $response = $this->get('/form/create');
 
         $response->assertStatus(200);
         $response->assertViewIs('form.form');
@@ -44,7 +41,7 @@ class ExampleTest extends TestCase
     public function testStore()
     {
         $user = User::factory()->create(['role' => 'super admin']);
-        $this->actingAs($user);
+        
 
         $category = Category::factory()->create();
         $peserta = Peserta::factory()->create();
@@ -66,15 +63,15 @@ class ExampleTest extends TestCase
                     'dept' => $peserta->dept,
                     'position' => $peserta->position,
                     'level' => 'Level 1',
-                    'final_judgement' => 'Attend',
-                    'license' => '1',
+                    'final_judgement' => 'Pass',
+                    'license' => 'License 1',
                     'theory_result' => 'Pass',
                     'practical_result' => 'Pass',
                 ],
             ],
         ];
 
-        $response = $this->post('/dashboard/create', $data);
+        $response = $this->post('/form', $data);
 
         $response->assertRedirect(route('superadmin.dashboard'));
         $this->assertDatabaseHas('training_records', ['doc_ref' => 'DOC123']);
@@ -83,7 +80,7 @@ class ExampleTest extends TestCase
     public function testEdit()
     {
         $user = User::factory()->create(['role' => 'super admin']);
-        $this->actingAs($user);
+        
 
         $trainingRecord = Training_Record::factory()->create();
 
@@ -96,7 +93,7 @@ class ExampleTest extends TestCase
     public function testUpdate()
     {
         $user = User::factory()->create(['role' => 'super admin']);
-
+        
 
         $trainingRecord = Training_Record::factory()->create();
         $category = Category::factory()->create();
@@ -136,7 +133,7 @@ class ExampleTest extends TestCase
     public function testDestroy()
     {
         $user = User::factory()->create(['role' => 'super admin']);
-
+       
 
         $trainingRecord = Training_Record::factory()->create();
 

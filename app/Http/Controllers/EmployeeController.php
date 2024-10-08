@@ -25,7 +25,7 @@ class EmployeeController extends Controller
         $uniqueDepts = Peserta::select('dept')->distinct()->pluck('dept')->toArray(); // Konversi ke array
 
         // Mulai dengan query peserta
-        $query = Peserta::query();
+        $query = Peserta::select("id", "badge_no", "employee_name", "dept", "position")->orderBy('employee_name', 'asc');
 
         // Terapkan filter berdasarkan dept jika ada
         if (!empty($deptFilter) && is_array($deptFilter)) {

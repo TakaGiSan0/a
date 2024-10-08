@@ -18,7 +18,7 @@ Route::get('/', function () {
 });
 
 Route::get('/login', function () {
-    return view('login.login');
+    return view('login.login')->name("login");
 });
 
 Route::get('/index', function () {
@@ -97,8 +97,11 @@ Route::middleware(['auth', 'role:super admin'])->group(function () {
     Route::delete('/superadmin/peserta/{id}', [PesertaController::class, 'destroy'])->name('superadmin.peserta.destroy');
     Route::get('/superadmin/peserta/edit/{peserta}', [PesertaController::class, 'edit'])->name('superadmin.peserta.edit');
     Route::put('/superadmin/peserta/update/{peserta}', [PesertaController::class, 'update'])->name('superadmin.peserta.update');
-    Route::post('/import', [ExcelController::class, 'import'])->name('import');
-    Route::get('/users/export', [ExcelController::class, 'export'])->name('export');
+    Route::post('/users/import', [ExcelController::class, 'import_peserta'])->name('import.peserta');
+    Route::get('/users/expor', [ExcelController::class, 'export_peserta'])->name('export.peserta');
+    Route::post('/training/import', [ExcelController::class, 'import_training'])->name('import.training');
+    Route::get('/training/export', [ExcelController::class, 'export_training'])->name('export.training');
+
 
 });
 

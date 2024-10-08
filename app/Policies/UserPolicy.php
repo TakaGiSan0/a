@@ -36,7 +36,7 @@ class UserPolicy
      */
     public function update(User $user, User $targetUser): bool
     {
-        return $user->role=== 'super admin';
+        return in_array($user->role, ['super admin', 'admin']);
     }
 
     /**

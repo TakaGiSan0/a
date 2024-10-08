@@ -24,6 +24,7 @@ class FormController extends Controller
             ->when($searchQuery, function ($query, $searchQuery) {
                 $query->where('training_name', 'like', "%{$searchQuery}%");
             })
+            ->orderBy('training_date', 'asc')
             ->paginate(10);
 
         $userRole = auth('')->user()->role;
@@ -39,7 +40,7 @@ class FormController extends Controller
                 abort(403, 'Unauthorized action.'); // Atau arahkan ke view default atau error
         }
 
-        return view('superadmin.index', compact('training_records'));
+        return view($view, compact('training_records'));
     }
 
     /**

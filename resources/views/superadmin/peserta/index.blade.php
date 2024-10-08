@@ -59,7 +59,7 @@
                         </div>
                         <div
                             class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-                            <a href="{{ route('export') }}"
+                            <a href="{{ route('export.peserta') }}"
                                 class="flex items-center justify-center text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800">
                                 <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20"
                                     xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -156,8 +156,7 @@
 
     <!-- Modal -->
     <div id="uploadModal"
-        class="hidden fixed inset-0 flex p-4 justify-center items-center w-full h-full z-50 overflow-auto font-[sans-serif]">
-
+        class="hidden fixed inset-0 p-4 justify-center items-center w-full h-full z-50 overflow-auto font-[sans-serif]">
         <!-- Overlay (background hitam) -->
         <div class="fixed inset-0 bg-black bg-opacity-50"></div>
         <!-- Konten Modal -->
@@ -182,7 +181,7 @@
             </div>
 
             <!-- Konten Lainnya -->
-            <form action="{{ route('import') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('import.peserta') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class=" border-gray-200 border-dashed mt-6">
                     <!-- Konten Upload -->
@@ -215,6 +214,7 @@
         openModalButtons.forEach(button => {
             button.addEventListener('click', () => {
                 modal.classList.remove('hidden');
+                modal.classList.add('flex');
             });
         });
 
