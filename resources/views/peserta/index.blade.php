@@ -116,7 +116,17 @@
                                             <td class="px-4 py-3">{{ $p->dept }}</td>
                                             <td class="px-4 py-3">{{ $p->position }}</td>
                                             <td class="px-4 py-3 flex items-center justify-center">
-                                                <a href="{{ route('superadmin.peserta.edit', $p->id) }}">
+                                                @php
+                                                    $userRole = auth('')->user()->role;
+                                                    if ($userRole == 'admin') {
+                                                        $url = route('admin.peserta.edit', $p->id);
+                                                    } elseif ($userRole == "super admin") {
+                                                        $url = route('superadmin.peserta.edit', $p->id);
+                                                    } else {
+                                                        abort(403, 'Unauthorized action.');
+                                                    } 
+                                                @endphp
+                                                <a href="{{ $url }}">
                                                     <svg class="h-8 w-8 text-slate-500" width="24" height="24"
                                                         viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
                                                         fill="none" stroke-linecap="round" stroke-linejoin="round">

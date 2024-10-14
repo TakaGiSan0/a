@@ -18,7 +18,7 @@ Route::get('/', function () {
 });
 
 Route::get('/login', function () {
-    return view('login.login')->name("login");
+    return view('login.login');
 });
 
 Route::get('/index', function () {
@@ -56,9 +56,11 @@ Route::middleware(['auth:web'])->group(function () {
 // Super Admin Route
 Route::middleware(['auth', 'role:super admin,admin'])->group(function () {
     
+    Route::get('/index', [FormController::class, 'index'])->name('dashboard.index');
+    
     // Crud Form
     Route::get('/dashboard/create', [FormController::class, 'create'])->name('dashboard.create');
-    Route::post('/dashboard/create', [FormController::class, 'store'])->name('dashboard.store');
+    Route::post('/dashboard/create/store', [FormController::class, 'store'])->name('dashboard.store');
     Route::get('/dashboard/edit/{id}', [FormController::class, 'edit'])->name('dashboard.edit');
     Route::delete('/dashboard/{id}', [FormController::class, 'destroy'])->name('dashboard.destroy');
     Route::put('/dashboard/update/{id}', [FormController::class, 'update'])->name('dashboard.update');
@@ -76,15 +78,12 @@ Route::middleware(['auth', 'role:super admin,admin'])->group(function () {
 
 // Super Admin Route
 Route::middleware(['auth', 'role:super admin'])->group(function () {
-
-
-    Route::get('/index', [FormController::class, 'index'])->name('superadmin.dashboard');
-
+    
     // Dashboard User
     Route::get('/superadmin/user', [UserController::class, 'index'])->name('superadmin.user.index');
     Route::get('/superadmin/user/create', [UserController::class, 'create'])->name('superadmin.user.create');
     Route::post('/superadmin/user/create', [UserController::class, 'store'])->name('superadmin.user.store');
-    Route::delete('/superadmin/user/{id}', [UserController::class, 'delete'])->name('superadmin.user.destroy');
+    Route::delete('/superadmin/user/{id}', [UserController::class, 'destroy'])->name('superadmin.user.destroy');
     Route::get('/superadmin/user/edit/{user}', [UserController::class, 'edit'])->name('superadmin.user.edit');
     Route::put('/superadmin/user/update/{user}', [UserController::class, 'update'])->name('superadmin.user.update');
 
@@ -97,6 +96,7 @@ Route::middleware(['auth', 'role:super admin'])->group(function () {
     Route::delete('/superadmin/peserta/{id}', [PesertaController::class, 'destroy'])->name('superadmin.peserta.destroy');
     Route::get('/superadmin/peserta/edit/{peserta}', [PesertaController::class, 'edit'])->name('superadmin.peserta.edit');
     Route::put('/superadmin/peserta/update/{peserta}', [PesertaController::class, 'update'])->name('superadmin.peserta.update');
+
     Route::post('/users/import', [ExcelController::class, 'import_peserta'])->name('import.peserta');
     Route::get('/users/expor', [ExcelController::class, 'export_peserta'])->name('export.peserta');
     Route::post('/training/import', [ExcelController::class, 'import_training'])->name('import.training');
@@ -108,7 +108,6 @@ Route::middleware(['auth', 'role:super admin'])->group(function () {
 
 // Admin Route
 Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
 
     Route::get('/admin/summary', [SummaryController::class, 'index'])->name('admin.summary');
 
@@ -118,6 +117,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
 
     Route::get('/admin/peserta', [PesertaController::class, 'index'])->name('admin.peserta');
+    Route::get('/admin/peserta/edit/{peserta}', [PesertaController::class, 'edit'])->name('admin.peserta.edit');
 
     // Dashboard User
     Route::get('/admin/user', [UserController::class, 'index'])->name('admin.user.index');

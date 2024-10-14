@@ -126,19 +126,23 @@
                     <th>Practical Result</th>
                     <th>Level</th>
                     <th>Final Judgement</th>
+                    <th>License</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($participants as $participant)
                     <tr>
-                        <td>{{ $participant->employee_name }}</td>
-                        <td>{{ $participant->badge_no }}</td>
-                        <td>{{ $participant->dept }}</td>
-                        <td>{{ $participant->position }}</td>
-                        <td>--</td> <!-- Add theory result here if available -->
-                        <td>--</td> <!-- Add practical result here if available -->
-                        <td>--</td> <!-- Add level here if available -->
-                        <td>--</td> <!-- Add final judgement here if available -->
+                        <td>{{ $participant['employee_name'] }}</td>
+                        <td>{{ $participant['badge_no'] }}</td>
+                        <td>{{ $participant['dept'] }}</td>
+                        <td>{{ $participant['position'] }}</td>
+                        <td>{{ $participant['theory_result'] }}</td>
+                        <td>{{ $participant['practical_result'] }}</td>
+                        <td>{{ $participant['level'] }}</td>
+                        <td>{{ $participant['final_judgement'] }}</td>
+                        <td>
+                            <input type="checkbox" {{ $participant['license'] == 1 ? 'checked' : '' }} disabled>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>

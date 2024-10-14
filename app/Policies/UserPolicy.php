@@ -42,9 +42,10 @@ class UserPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, User $model): void
+    public function delete(User $user, User $model): bool
     {
-        //
+        return in_array($user->role, ['super admin', 'admin']);
+        
     }
 
     /**

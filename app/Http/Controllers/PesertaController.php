@@ -31,17 +31,8 @@ class PesertaController extends Controller
         $userRole = auth('')->user()->role; // Asumsikan 'role' adalah atribut di tabel users
 
         // Pilih view berdasarkan role
-        switch ($userRole) {
-            case 'super admin':
-                $view = 'superadmin.peserta.index';
-                break;
-            case 'admin':
-                $view = 'admin.peserta.index'; // Ganti dengan view yang sesuai untuk admin
-                break;
-            
-        }
         // Kembalikan view dengan data peserta dan pesan
-        return view($view, [
+        return view('peserta.index', [
             'peserta' => $peserta,
             'searchQuery' => $searchQuery, // Kirimkan pencarian ke view untuk mempertahankan nilai pencarian
             'message' => $peserta->isEmpty() ? 'No results found for your search.' : null,
@@ -122,7 +113,7 @@ class PesertaController extends Controller
         $validated = $request->validate(
             [
                 'badge_no' => 'required|string|max:255|regex:/^[A-Z0-9\-]+$/|unique:pesertas,badge_no,' . $peserta->id,
-                'employee_name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/|unique:pesertas,employee_name,' . $peserta->id,
+                'employee_name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
                 'dept' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
                 'position' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
             ],
@@ -130,7 +121,6 @@ class PesertaController extends Controller
                 'badge_no.regex' => 'Badge No hanya boleh berisi huruf besar, angka, dan tanda hubung.',
                 'employee_name.regex' => 'Nama hanya boleh berisi huruf',
                 'badge_no.unique' => 'Peserta dengan Badge No ini sudah ada.',
-                'employee_name.unique' => 'Peserta dengan Nama ini sudah ada.',
             ],
         );
 

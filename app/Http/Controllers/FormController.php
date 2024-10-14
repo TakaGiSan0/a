@@ -20,6 +20,12 @@ class FormController extends Controller
     {
         $searchQuery = $request->input('search');
 
+        // Ambil tahun unik dari kolom training_date
+        $years = Training_Record::selectRaw('YEAR(training_date) as year')
+            ->distinct()
+            ->orderBy('year', 'desc')
+            ->pluck('year');
+
         $training_records = training_record::query()
             ->when($searchQuery, function ($query, $searchQuery) {
                 $query->where('training_name', 'like', "%{$searchQuery}%");
@@ -29,18 +35,7 @@ class FormController extends Controller
 
         $userRole = auth('')->user()->role;
 
-        switch ($userRole) {
-            case 'super admin':
-                $view = 'superadmin.index';
-                break;
-            case 'admin':
-                $view = 'peserta.index'; // Ganti dengan view yang sesuai untuk admin
-                break;
-            default:
-                abort(403, 'Unauthorized action.'); // Atau arahkan ke view default atau error
-        }
-
-        return view($view, compact('training_records'));
+        return view("dashboard.index", compact('training_records', 'years', 'searchQuery'));
     }
 
     /**
@@ -71,69 +66,15 @@ class FormController extends Controller
      */
     public function store(Request $request)
     {
-        // Validasi data dengan pesan khusus untuk doc_ref yang sudah ada
-        $data = $request->validate(
-            [
-                'training_name' => 'required|string|max:255',
-                'doc_ref' => 'required|string|max:255|unique:training_records,doc_ref', // Validasi unik
-                'job_skill' => 'required|string|max:255',
-                'trainer_name' => 'required|string|max:255',
-                'rev' => 'required|string|max:255',
-                'station' => 'required|string|max:255',
-                'training_date' => 'required|date',
-                'skill_code' => 'required|string|max:255',
-                'category_id' => 'required|integer|exists:categories,id',
-                'participants.*.badge_no' => 'required|string|max:255',
-                'participants.*.employee_name' => 'required|string|max:255',
-                'participants.*.dept' => 'required|string|max:255',
-                'participants.*.position' => 'required|string|max:255',
-                'participants.*.level' => 'required|string|max:255',
-                'participants.*.final_judgement' => 'required|string|max:255',
-                'participants.*.license' => 'nullable|string|max:255',
-                'participants.*.theory_result' => 'required|string|max:255',
-                'participants.*.practical_result' => 'required|string|max:255',
-            ],
-            [
-                'doc_ref.unique' => 'Pelatihan sudah ada.', // Pesan khusus untuk doc_ref
-            ],
-        );
-
+        $data = $request->validate($this->validationRules(), $this->validationMessages());
         $status = $request->has('save_as_draft') ? 'pending' : 'completed';
 
-        // Simpan data pelatihan utama
-        $trainingRecord = Training_Record::create([
-            'training_name' => $data['training_name'],
-            'doc_ref' => $data['doc_ref'],
-            'job_skill' => $data['job_skill'],
-            'trainer_name' => $data['trainer_name'],
-            'rev' => $data['rev'],
-            'station' => $data['station'],
-            'training_date' => $data['training_date'],
-            'skill_code' => $data['skill_code'],
-            'category_id' => $data['category_id'],
-            'status' => $status,
-        ]);
+        $trainingRecord = $this->createTrainingRecord($data, $status);
+        $this->attachParticipants($trainingRecord, $data['participants'], $status);
 
-        if ($status === 'completed') {
-            $participantsToAttach = [];
-            foreach ($data['participants'] as $participant) {
-                $peserta = Peserta::where('badge_no', $participant['badge_no'])->first();
-                if ($peserta) {
-                    $participantsToAttach[$peserta->id] = [
-                        'level' => $participant['level'],
-                        'final_judgement' => $participant['final_judgement'],
-                        'license' => $participant['license'],
-                        'theory_result' => $participant['theory_result'],
-                        'practical_result' => $participant['practical_result'],
-                    ];
-                }
-            }
-        }
-
-        $trainingRecord->pesertas()->attach($participantsToAttach);
         session(['pending_participants' => $data['participants']]);
 
-        return redirect()->route('superadmin.dashboard')->with('success', 'Training records berhasil dibuat!');
+        return $this->redirectAfterSave(auth('')->user()->role);
     }
 
 
@@ -172,43 +113,16 @@ class FormController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $trainingRecords = training_record::with(['trainingCategory:id,name']);
         $data = $request->all();
         $status = $request->has('save_as_draft') ? 'pending' : 'completed';
 
         $trainingRecord = Training_Record::findOrFail($id);
-        $trainingRecord->update([
-            'training_name' => $data['training_name'],
-            'doc_ref' => $data['doc_ref'],
-            'job_skill' => $data['job_skill'],
-            'trainer_name' => $data['trainer_name'],
-            'rev' => $data['rev'],
-            'station' => $data['station'],
-            'training_date' => $data['training_date'],
-            'skill_code' => $data['skill_code'],
-            'category_id' => $data['category_id'],
-            'status' => $status,
-        ]);
-
-        if ($status === 'completed') {
-            // Update data peserta
-            $trainingRecord->pesertas()->detach();
-            foreach ($data['participants'] as $participant) {
-                $peserta = Peserta::where('badge_no', $participant['badge_no'])->first();
-                if ($peserta) {
-                    $trainingRecord->pesertas()->attach($peserta->id, [
-                        'level' => $participant['level'],
-                        'final_judgement' => $participant['final_judgement'],
-                        'license' => $participant['license'],
-                        'theory_result' => $participant['theory_result'],
-                        'practical_result' => $participant['practical_result'],
-                    ]);
-                }
-            }
-        }
+        $this->updateTrainingRecord($trainingRecord, $data, $status);
+        $this->attachParticipants($trainingRecord, $data['participants'], $status);
 
         return redirect()->route('superadmin.dashboard')->with('success', 'Training record berhasil diperbarui!');
     }
+
     /**
      * Remove the specified resource from storage.
      */
@@ -224,5 +138,102 @@ class FormController extends Controller
 
         // Redirect atau response dengan pesan sukses
         return redirect()->route('superadmin.dashboard')->with('success', 'Peserta berhasil dihapus.');
+    }
+
+    private function validationRules()
+    {
+        return [
+            'training_name' => 'required|string|max:255',
+            'doc_ref' => 'required|string|max:255|unique:training_records,doc_ref',
+            'job_skill' => 'required|string|max:255',
+            'trainer_name' => 'required|string|max:255',
+            'rev' => 'required|string|max:255',
+            'station' => 'required|string|max:255',
+            'training_date' => 'required|date',
+            'skill_code' => 'required|string|max:255',
+            'category_id' => 'required|integer|exists:categories,id',
+            'participants.*.badge_no' => 'max:255',
+            'participants.*.employee_name' => 'max:255',
+            'participants.*.dept' => 'max:255',
+            'participants.*.position' => 'max:255',
+            'participants.*.level' => 'max:255',
+            'participants.*.final_judgement' => 'max:255',
+            'participants.*.license' => 'nullable|max:255',
+            'participants.*.theory_result' => 'max:255',
+            'participants.*.practical_result' => 'max:255',
+        ];
+    }
+
+    private function validationMessages()
+    {
+        return [
+            'doc_ref.unique' => 'Pelatihan sudah ada.',
+        ];
+    }
+
+    private function createTrainingRecord(array $data, string $status)
+    {
+        return Training_Record::create([
+            'training_name' => $data['training_name'],
+            'doc_ref' => $data['doc_ref'],
+            'job_skill' => $data['job_skill'],
+            'trainer_name' => $data['trainer_name'],
+            'rev' => $data['rev'],
+            'station' => $data['station'],
+            'training_date' => $data['training_date'],
+            'skill_code' => $data['skill_code'],
+            'category_id' => $data['category_id'],
+            'status' => $status,
+        ]);
+    }
+
+    private function updateTrainingRecord($trainingRecord, array $data, string $status)
+    {
+        $trainingRecord->update([
+            'training_name' => $data['training_name'],
+            'doc_ref' => $data['doc_ref'],
+            'job_skill' => $data['job_skill'],
+            'trainer_name' => $data['trainer_name'],
+            'rev' => $data['rev'],
+            'station' => $data['station'],
+            'training_date' => $data['training_date'],
+            'skill_code' => $data['skill_code'],
+            'category_id' => $data['category_id'],
+            'status' => $status,
+        ]);
+    }
+
+    private function attachParticipants($trainingRecord, array $participants, string $status)
+    {
+        $participantsToAttach = [];
+
+        if ($status === 'completed') {
+            foreach ($participants as $participant) {
+                $peserta = Peserta::where('badge_no', $participant['badge_no'])->first();
+                if ($peserta) {
+                    $participantsToAttach[$peserta->id] = [
+                        'level' => $participant['level'],
+                        'final_judgement' => $participant['final_judgement'],
+                        'license' => $participant['license'],
+                        'theory_result' => $participant['theory_result'],
+                        'practical_result' => $participant['practical_result'],
+                    ];
+                }
+            }
+        }
+
+        $trainingRecord->pesertas()->attach($participantsToAttach);
+    }
+
+    private function redirectAfterSave(string $userRole)
+    {
+        switch ($userRole) {
+            case 'admin':
+                return redirect()->route('admin.dashboard')->with('success', 'Training records berhasil dibuat!');
+            case 'super admin':
+                return redirect()->route('superadmin.dashboard')->with('success', 'Training records berhasil dibuat!');
+            default:
+                abort(403, 'Unauthorized action.');
+        }
     }
 }

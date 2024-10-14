@@ -43,9 +43,9 @@ class TrainingRecordPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, training_record $trainingRecord): void
+    public function delete(User $user, training_record $trainingRecord): bool
     {
-        //
+        return in_array($user->role, ['super admin', 'admin']);
        
     }
 

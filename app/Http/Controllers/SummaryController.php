@@ -104,7 +104,7 @@ class SummaryController extends Controller
     public function downloadSummaryPdf($id)
     {
         // Ambil data summary berdasarkan id
-        $trainingRecord = Training_Record::findOrFail($id);
+        $trainingRecord = Training_Record::with('pesertas')->findOrFail($id);
 
         // Menyiapkan data untuk view PDF
         $data = [
@@ -117,15 +117,29 @@ class SummaryController extends Controller
             'training_date' => $trainingRecord->training_date,
             'skill_code' => $trainingRecord->skill_code,
             'status' => $trainingRecord->status,
-            'participants' => $trainingRecord->pesertas, // Mengambil relasi peserta jika ada
+            'participants' => $trainingRecord->pesertas->map(function ($peserta) {
+                return [
+                    'badge_no' => $peserta->badge_no,
+                    'employee_name' => $peserta->employee_name,
+                    'dept' => $peserta->dept,
+                    'position' => $peserta->position,
+                    'level' => $peserta->pivot->level,
+                    'final_judgement' => $peserta->pivot->final_judgement,
+                    'license' => $peserta->pivot->license,
+                    'theory_result' => $peserta->pivot->theory_result,
+                    'practical_result' => $peserta->pivot->practical_result,
+                ];
+            }),
         ];
 
         try {
             // Render view ke PDF
             $pdf = Pdf::loadView('pdf.training_summary', $data);
 
+            $formattedDate = \Carbon\Carbon::parse($trainingRecord->training_date)->format('Y-m-d');
+            $fileName = 'Training Summary ' . $formattedDate . '.pdf';
             // Unduh file PDF
-            return $pdf->download('training_summary.pdf');
+            return $pdf->download($fileName);
         } catch (\Exception $e) {
 
             // Redirect atau tampilkan pesan kesalahan

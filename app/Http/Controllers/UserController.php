@@ -20,23 +20,12 @@ class UserController extends Controller
         // Ambil role pengguna saat ini
         $userRole = auth('')->user()->role; // Asumsikan 'role' adalah atribut di tabel users
 
-        // Pilih view berdasarkan role
-        switch ($userRole) {
-            case 'super admin':
-                $view = 'superadmin.user.index';
-                break;
-            case 'admin':
-                $view = 'admin.user.index'; // Ganti dengan view yang sesuai untuk admin
-                break;
-            default:
-                abort(403, 'Unauthorized action.'); // Atau arahkan ke view default atau error
-        }
 
         // Pastikan $message selalu terdefinisi
         $message = $user->isEmpty() ? 'No results found for your search.' : '';
 
         // Kembalikan view dengan data user dan pesan
-        return view($view, [
+        return view('user.index', [
             'user' => $user,
             'message' => $message,
         ]);
@@ -50,18 +39,7 @@ class UserController extends Controller
         $userRole = auth('')->user()->role; // Asumsikan 'role' adalah atribut di tabel users
 
         // Pilih view berdasarkan role
-        switch ($userRole) {
-            case 'super admin':
-                $view = 'superadmin.user.create';
-                break;
-            case 'admin':
-                $view = 'admin.user.create';
-                break;
-            default:
-                abort(403, 'Unauthorized action.'); // Atau arahkan ke view default atau error
-        }
-
-        return view($view);
+        return view('user.create');
     }
 
     /**
@@ -96,7 +74,7 @@ class UserController extends Controller
 
         switch ($userRole) {
             case 'super admin':
-                $view = 'superadmin.dashboard';
+                $view = 'superadmin.user.index';
                 break;
             case 'admin':
                 $view = 'admin.dashboard';
@@ -187,6 +165,6 @@ class UserController extends Controller
         // Hapus data user
         $user->delete();
 
-        return redirect()->route('superadmin.user.user')->with('success', 'Peserta berhasil dihapus.');
+        return redirect()->route('superadmin.user.index')->with('success', 'Peserta berhasil dihapus.');
     }
 }

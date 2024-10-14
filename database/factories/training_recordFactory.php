@@ -16,14 +16,14 @@ class training_recordFactory extends Factory
     {
         return [
             'category_id' => Category::factory("id"),
-            'doc_ref' => $this->faker->sentence,
-            'station' => $this->faker->paragraph,
+            'doc_ref' => $this->faker->word,
+            'station' => $this->faker->word,
             'training_date' => $this->faker->date,
-            'training_name' => $this->faker->sentence,
-            'job_skill' => $this->faker->sentence,
-            'trainer_name' => $this->faker->sentence,
-            'rev' => $this->faker->sentence,
-            'skill_code' => $this->faker->sentence,
+            'training_name' => $this->faker->word,
+            'job_skill' => $this->faker->word,
+            'trainer_name' => $this->faker->word,
+            'rev' => $this->faker->word,
+            'skill_code' => $this->faker->word,
             'status' => true,
             
 

@@ -24,7 +24,9 @@ class ExcelController extends Controller
 
     public function export_peserta(Request $request)
     {
-        return Excel::download(new MasterDataExport(), 'users.xlsx');
+        $date = date('Y-m-d'); // Format tanggal: Tahun-Bulan-Hari
+        $fileName = 'Master Data - ' . $date . '.xlsx';
+        return Excel::download(new MasterDataExport(), $fileName);
     }
 
     public function import_training(Request $request)

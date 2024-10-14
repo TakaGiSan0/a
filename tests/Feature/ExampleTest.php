@@ -87,7 +87,7 @@ class ExampleTest extends TestCase
 
         $trainingRecord = Training_Record::factory()->create();
 
-        $response = $this->get("/form/{$trainingRecord->id}/edit");
+        $response = $this->get("/dashboard/edit/{$trainingRecord->id}");
 
         $response->assertStatus(200);
         $response->assertViewIs('superadmin.edit_completed');
@@ -96,7 +96,7 @@ class ExampleTest extends TestCase
     public function testUpdate()
     {
         $user = User::factory()->create(['role' => 'super admin']);
-
+        $this->actingAs($user);
 
         $trainingRecord = Training_Record::factory()->create();
         $category = Category::factory()->create();
@@ -119,15 +119,15 @@ class ExampleTest extends TestCase
                     'dept' => $peserta->dept,
                     'position' => $peserta->position,
                     'level' => 'Level 2',
-                    'final_judgement' => 'Pass',
-                    'license' => 'License 2',
+                    'final_judgement' => 'Attend',
+                    'license' => '0',
                     'theory_result' => 'Pass',
                     'practical_result' => 'Pass',
                 ],
             ],
         ];
 
-        $response = $this->put("/form/{$trainingRecord->id}", $data);
+        $response = $this->put("/dashboard/update/{$trainingRecord->id}", $data);
 
         $response->assertRedirect(route('superadmin.dashboard'));
         $this->assertDatabaseHas('training_records', ['doc_ref' => 'DOC123', 'training_name' => 'Updated Training']);
@@ -136,11 +136,12 @@ class ExampleTest extends TestCase
     public function testDestroy()
     {
         $user = User::factory()->create(['role' => 'super admin']);
+        $this->actingAs($user);
 
 
         $trainingRecord = Training_Record::factory()->create();
 
-        $response = $this->delete("/form/{$trainingRecord->id}");
+        $response = $this->delete("/dashboard/{$trainingRecord->id}");
 
         $response->assertRedirect(route('superadmin.dashboard'));
         $this->assertDatabaseMissing('training_records', ['id' => $trainingRecord->id]);

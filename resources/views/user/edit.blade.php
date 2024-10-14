@@ -13,16 +13,17 @@
                 </ul>
             </div>
         @endif
-        <form action="{{ route('superadmin.user.store') }}"
+        <form action="{{ route('superadmin.user.update', $user->id) }}"
             class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 justify-center items-center" method="POST">
             @csrf
+            @method('PUT')
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
                     Username
                 </label>
                 <input
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="user" name="user" type="text" placeholder="Username">
+                    name="user" id="user" type="text" placeholder="{{ old('user', $user->user) }}">
             </div>
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
@@ -30,7 +31,7 @@
                 </label>
                 <input
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="name" type="text" name="name" placeholder="Name">
+                    id="name" type="text" name="name" placeholder="{{ old('name', $user->name) }}">
             </div>
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
@@ -38,9 +39,13 @@
                 </label>
                 <select id="role" name="role"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                    <option name="super admin" value="super admin">Super Admin</option>
-                    <option name="admin" value="admin">Admin</option>
-                    <option name="user" value="user">User</option>
+                    @if (auth()->user()->role === 'super admin')
+                        <option value="super admin"
+                            {{ old('role', $user->role ?? '') === 'super admin' ? 'selected' : '' }}>Super Admin</option>
+                        <option value="admin" {{ old('role', $user->role ?? '') === 'admin' ? 'selected' : '' }}>Admin
+                        </option>
+                    @endif
+                    <option value="user" {{ old('role', $user->role ?? '') === 'user' ? 'selected' : '' }}>User</option>
                 </select>
             </div>
             <div class="mb-6">
@@ -49,20 +54,15 @@
                 </label>
                 <input
                     class="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                    id="password" type="password" name="password" placeholder="Position">
+                    id="password" type="password" name="password">
             </div>
             <div class="flex items-center justify-between">
                 <button
                     class="bg-blue-500  hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     type="submit">
-                    Tambah
+                    Edit
                 </button>
-                @error('user')
-                    <span class="text-red-500 text-sm">{{ $message }}</span>
-                @enderror
-                @error('password')
-                    <span class="text-red-500 text-sm">{{ $message }}</span>
-                @enderror
+
             </div>
         </form>
         <p class="text-center text-gray-500 text-xs">
