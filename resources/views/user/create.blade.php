@@ -44,7 +44,7 @@
                         <option value="admin" {{ old('role', $user->role ?? '') === 'admin' ? 'selected' : '' }}>Admin
                         </option>
                     @endif
-                    <option name="user" value="user">User</option>
+                    <option name="user">User</option>
                 </select>
             </div>
             <div class="mb-6">

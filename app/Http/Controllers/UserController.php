@@ -47,11 +47,11 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        // Validasi input tanpa 'role'
         $validatedData = $request->validate(
             [
                 'name' => 'required|string|max:255',
                 'user' => 'required|string|max:255|unique:users,user',
-                'role' => 'required|string|max:255',
                 'password' => 'required|string|min:8',
             ],
             [
@@ -59,31 +59,29 @@ class UserController extends Controller
             ],
         );
 
-        
-
         $user = new User();
 
         $user->name = $validatedData['name'];
         $user->user = $validatedData['user'];
-        $user->role = $validatedData['role'];
+
+        // Ambil role pengguna saat ini
+        $userRole = auth('')->user()->role;
+
+        // Jika role pengguna adalah admin, set role user baru menjadi 'user'
+        if ($userRole === 'admin') {
+            $user->role = 'user';
+        } elseif ($userRole === 'super admin') {
+            // Jika bukan admin, set role sesuai kebutuhan (misalnya dari input atau default)
+            $user->role = $request->input('role'); // Ganti 'default_role' dengan nilai default yang diinginkan
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
+
         $user->password = bcrypt($validatedData['password']);
 
         $user->save();
 
-        $userRole = auth('')->user()->role; // Asumsikan 'role' adalah atribut di tabel users
-
-        switch ($userRole) {
-            case 'super admin':
-                $view = 'superadmin.user.index';
-                break;
-            case 'admin':
-                $view = 'admin.dashboard';
-                break;
-
-            default:
-                abort(403, 'Unauthorized action.');
-        }
-        return redirect()->route($view)->with('success', 'User created successfully.');
+        return redirect()->route('user.index')->with('success', 'User created successfully.');
     }
 
     /**
@@ -105,20 +103,9 @@ class UserController extends Controller
         // Ambil role pengguna saat ini
         $userRole = auth('')->user()->role; // Asumsikan 'role' adalah atribut di tabel users
 
-        // Pilih view berdasarkan role
-        switch ($userRole) {
-            case 'super admin':
-                $view = 'superadmin.user.edit';
-                break;
-            case 'admin':
-                $view = 'admin.user.edit';
-                break;
-            default:
-                abort(403, 'Unauthorized action.'); // Atau arahkan ke view default atau error
-        }
 
         // Kembalikan view dengan data user
-        return view($view, compact('user'));
+        return view(('user.edit'), compact('user'));
     }
 
     /**

@@ -3,8 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Imports\TrainingRecordsImportImport;
 use App\Imports\MasterDataImport;
 use App\Exports\MasterDataExport;
+use App\Exports\TrainingRecordExport;
+use App\Exports\TrainingRecordExportExport;
+
+
 use Maatwebsite\Excel\Facades\Excel;
 
 class ExcelController extends Controller
@@ -44,15 +49,9 @@ class ExcelController extends Controller
 
     public function export_training(Request $request)
     {
-        // Validasi file yang diupload
-        $request->validate([
-            'file' => 'required|file|mimes:xlsx,xls',
-        ]);
-
-        // Jalankan import
-        Excel::import(new MasterDataImport, $request->file('file'));
-
-        return redirect()->back()->with('success', 'Data imported successfully!');
+        $date = date('Y-m-d'); // Format tanggal: Tahun-Bulan-Hari
+        $fileName = 'Training Record - ' . $date . '.xlsx';
+        return Excel::download(new TrainingRecordExport(), $fileName);
     }
 
 }

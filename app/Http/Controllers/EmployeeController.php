@@ -36,7 +36,6 @@ class EmployeeController extends Controller
         if (!empty($searchQuery)) {
             $query->where('badge_no', 'like', '%' . $searchQuery . '%');
         }
-
         // Ambil data peserta dengan filter
         $peserta_records = $query->paginate(10);
 
@@ -49,7 +48,12 @@ class EmployeeController extends Controller
         ]);
     }
 
-
+    /**
+     * Show the specified resource.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function show($id)
     {
         // Ambil data peserta berdasarkan ID
@@ -61,16 +65,11 @@ class EmployeeController extends Controller
             return response()->json(['error' => 'Peserta not found'], 404);
         }
 
-        // Key untuk caching
-        $cacheKey = "peserta_records:{$id}";
-
         // Ambil semua training_record yang terkait dengan peserta tersebut melalui relasi many-to-many
-        $all_records = Cache::remember($cacheKey, 3600, function () use ($peserta) {
-            return $peserta
-                ->trainingRecords() // Pastikan menggunakan relasi many-to-many dari model Peserta
-                ->with(['trainingCategory:id,name'])
-                ->get();
-        });
+        $all_records = $peserta
+            ->trainingRecords() // Pastikan menggunakan relasi many-to-many dari model Peserta
+            ->with(['trainingCategory:id,name'])
+            ->get();
 
         // Kelompokkan data berdasarkan category_id
         $grouped_records = $all_records->groupBy('category_id');

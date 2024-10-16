@@ -74,7 +74,7 @@
                             Name</label>
                         <input type="text" name="trainer_name"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="John Doe">
+                            >
                     </div>
                     <div><label for="category"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Training
@@ -97,106 +97,7 @@
                 </div>
                 <div id="participants-container" class="mt-0">
                     <div class="participant-row" id="participant_1">
-                        <table class="w-full text-sm text-center text-gray-500 dark:text-gray-400 mb-5">
-                            <thead
-                                class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                <td
-                                    class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                    <tr>
-                                        <th scope="col" class="px-6 py-3">
-                                            Badge No
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            Employee Name
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            Dept
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            Position
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            Theory Result
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            Practise Result
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            Level
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            Final Judgement
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            license
-                                        </th>
-                                    </tr>
-                            </thead>
-                            <tbody>
-                                <td scope="col" class="px-1">
-                                    <input type="text" name="participants[0][badge_no]" id="badge_no_1"
-                                        class="bg-gray-50 badge_no_input border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                </td>
-                                <td scope="col" class="px-1">
-                                    <input type="text" name="participants[0][employee_name]" id="employee_name_1"
-                                        class="bg-gray-50 border employee_name_input border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                        readonly>
-                                </td>
-                                <td scope="col" class="px-1">
-                                    <input type="text" name="participants[0][dept]" id="dept_1"
-                                        class="bg-gray-50 dept_input border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                </td>
-                                <td scope="col" class="px-1">
-                                    <input type="text" name="participants[0][position]" id="position_1"
-                                        class="bg-gray-50 border position_input border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                        readonly>
-                                </td>
-                                <input type="hidden" name="participants[0][peserta_id]" class="peserta_id_input">
-                                <td scope="col" class="px-1">
-                                    <select id="category" name="participants[0][theory_result]"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                        <option name="Pass" value="Pass">Pass</option>
-                                        <option name="Fail" value="Fail">Fail</option>
-                                        <option name="N/A" value="N/A">N/A</option>
-                                    </select>
-                                </td>
-                                <td scope="col" class="px-1">
-                                    <select id="category" name="participants[0][practical_result]"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                        <option name="Pass" value="Pass">Pass</option>
-                                        <option name="Fail" value="Fail">Fail</option>
-                                        <option name="N/A" value="N/A">N/A</option>
-                                    </select>
-                                </td>
-                                <td scope="col" class="px-1">
-                                    <select id="category" name="participants[0][level]"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                        <option name="Level 1" value="Level 1">Level 1</option>
-                                        <option name="Level 2" value="Level 2">Level 2</option>
-                                        <option name="Level 3" value="Level 3">Level 3</option>
-                                        <option name="Level 4" value="Level 4">Level 4</option>
-                                        <option name="N/A" value="N/A">N/A</option>
-                                    </select>
-                                </td>
-                                <td scope="col" class="px-1">
-                                    <select id="category" name="participants[0][final_judgement]"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                        <option name="Attend " value="Attend ">Attend </option>
-                                        <option name="Competence" value="Competence">Competence</option>
-                                        <option name="N/A" value="N/A">N/A</option>
-                                    </select>
-                                </td>
-                                <td scope="col" class="px-1">
-                                    <input type="hidden" name="participants[0][license]" value="0">
-                                    <input id="license-checkbox-${index}" name="participants[0][license]"
-                                        type="checkbox" value="1"
-                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                        {{ old('license', 0) ? 'checked' : '' }}>
-
-                                </td>
-                                <input type="hidden" name="participant_count" value="1">
-                            </tbody>
-                        </table>
+                        
                     </div>
                 </div>
                 <div class="flex items-center justify-center p-6 m-5">
@@ -287,7 +188,7 @@
 
 
             newRow.innerHTML = `
-            <table class="w-full text-sm text-center text-gray-500 dark:text-gray-400 mb-5">
+            <table class="w-full text-sm text-center text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <td class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
@@ -330,7 +231,7 @@
                         </td>
                         <td scope="col" class="px-1">
                             <input type="text" name="participants[${index}][dept]" id="dept_${index}"
-                                class="bg-gray-50 dept_input border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                class="bg-gray-50 dept_input border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" readonly>
                         </td>
                         <td scope="col" class="px-1">
                             <input type="text" name="participants[${index}][position]" id="position_${index}"

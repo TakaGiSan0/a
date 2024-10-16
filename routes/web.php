@@ -65,10 +65,16 @@ Route::middleware(['auth', 'role:super admin,admin'])->group(function () {
     Route::delete('/dashboard/{id}', [FormController::class, 'destroy'])->name('dashboard.destroy');
     Route::put('/dashboard/update/{id}', [FormController::class, 'update'])->name('dashboard.update');
     
-
+    
     // Route User
     Route::get('/user', [UserController::class, 'index'])->name('user.index');
- 
+    Route::post('/superadmin/user/create', [UserController::class, 'store'])->name('superadmin.user.store');
+    Route::get('/superadmin/user', [UserController::class, 'index'])->name('superadmin.user.index');
+    Route::get('/superadmin/user/create', [UserController::class, 'create'])->name('superadmin.user.create');
+    Route::delete('/superadmin/user/{id}', [UserController::class, 'destroy'])->name('superadmin.user.destroy');
+    Route::get('/superadmin/user/edit/{user}', [UserController::class, 'edit'])->name('superadmin.user.edit');
+    Route::put('/superadmin/user/update/{user}', [UserController::class, 'update'])->name('superadmin.user.update');
+    
 
     // API Search Peserta Form
     Route::get('/participants/{badgeNo}', [PesertaController::class, 'getParticipantByBadgeNo']);
@@ -80,12 +86,6 @@ Route::middleware(['auth', 'role:super admin,admin'])->group(function () {
 Route::middleware(['auth', 'role:super admin'])->group(function () {
     
     // Dashboard User
-    Route::get('/superadmin/user', [UserController::class, 'index'])->name('superadmin.user.index');
-    Route::get('/superadmin/user/create', [UserController::class, 'create'])->name('superadmin.user.create');
-    Route::post('/superadmin/user/create', [UserController::class, 'store'])->name('superadmin.user.store');
-    Route::delete('/superadmin/user/{id}', [UserController::class, 'destroy'])->name('superadmin.user.destroy');
-    Route::get('/superadmin/user/edit/{user}', [UserController::class, 'edit'])->name('superadmin.user.edit');
-    Route::put('/superadmin/user/update/{user}', [UserController::class, 'update'])->name('superadmin.user.update');
 
 
 

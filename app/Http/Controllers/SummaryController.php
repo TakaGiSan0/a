@@ -3,43 +3,38 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\training_record;
-use Barryvdh\DomPDF\Facade\pdf;
+use App\Models\Training_Record;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class SummaryController extends Controller
 {
     public function index(Request $request)
     {
-        $training_records = training_record::with(['trainingCategory:id,name']);
+        $trainingRecords = Training_Record::with(['trainingCategory:id,name']);
 
-        // Filter tanggal
         if ($request->has('tanggal')) {
-            $training_records = $training_records->whereDate('created_at', $request->input('tanggal'));
+            $trainingRecords->whereDate('created_at', $request->input('tanggal'));
         }
 
-        // Filter dept
         if ($request->has('station')) {
-            $training_records = $training_records->where('station', $request->input('station'));
+            $trainingRecords->where('station', $request->input('station'));
         }
 
-        // Filter training_category
         if ($request->has('training_category')) {
-            $training_records = $training_records->where('category_id', $request->input('training_category'));
+            $trainingRecords->where('category_id', $request->input('training_category'));
         }
 
-        // Search training_name
         if ($request->has('search')) {
-            $training_records = $training_records->where('training_name', 'like', '%' . $request->input('search') . '%');
+            $trainingRecords->where('training_name', 'like', '%' . $request->input('search') . '%');
         }
 
-        $training_records = $training_records->paginate(10);
+        $training_records = $trainingRecords->paginate(10);
 
         return view('content.summary', compact('training_records'));
     }
 
     public function show($id)
     {
-        // Ambil semua training records berdasarkan id
         $trainingRecords = Training_Record::with(['pesertas', 'trainingCategory'])
             ->where('id', $id)
             ->get();
@@ -48,11 +43,7 @@ class SummaryController extends Controller
             return response()->json(['error' => 'No records found'], 404);
         }
 
-        // Ambil data peserta untuk setiap training record
         $trainingWithPeserta = $trainingRecords->map(function ($record) {
-            // Ambil semua peserta untuk training record tertentu
-            $peserta = $record->pesertas()->get();
-
             return [
                 'id' => $record->id,
                 'doc_ref' => $record->doc_ref,
@@ -65,34 +56,35 @@ class SummaryController extends Controller
                 'skill_code' => $record->skill_code,
                 'training_date' => $record->training_date,
                 'status' => $record->status,
-                'peserta' => $peserta,
+                'peserta' => $record->pesertas,
             ];
         });
 
-        return response()->json($trainingWithPeserta)->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+        return response()->json($trainingWithPeserta)
+            ->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
     }
 
     public function search(Request $request)
     {
         $query = Training_Record::query();
 
-        if ($request->has('search') && $request->search != '') {
+        if ($request->filled('search')) {
             $query->where('training_name', 'like', '%' . $request->search . '%');
         }
 
-        if ($request->has('dept') && $request->dept != '') {
+        if ($request->filled('dept')) {
             $query->where('dept', $request->dept);
         }
 
-        if ($request->has('station') && $request->station != '') {
+        if ($request->filled('station')) {
             $query->where('station', $request->station);
         }
 
-        if ($request->has('training_date') && $request->training_date != '') {
+        if ($request->filled('training_date')) {
             $query->whereDate('training_date', $request->training_date);
         }
 
-        if ($request->has('training_category') && $request->training_category != '') {
+        if ($request->filled('training_category')) {
             $query->where('category_id', $request->training_category);
         }
 
@@ -103,10 +95,8 @@ class SummaryController extends Controller
 
     public function downloadSummaryPdf($id)
     {
-        // Ambil data summary berdasarkan id
         $trainingRecord = Training_Record::with('pesertas')->findOrFail($id);
 
-        // Menyiapkan data untuk view PDF
         $data = [
             'training_name' => $trainingRecord->training_name,
             'doc_ref' => $trainingRecord->doc_ref,
@@ -133,17 +123,13 @@ class SummaryController extends Controller
         ];
 
         try {
-            // Render view ke PDF
             $pdf = Pdf::loadView('pdf.training_summary', $data);
-
             $formattedDate = \Carbon\Carbon::parse($trainingRecord->training_date)->format('Y-m-d');
             $fileName = 'Training Summary ' . $formattedDate . '.pdf';
-            // Unduh file PDF
+
             return $pdf->download($fileName);
         } catch (\Exception $e) {
-
-            // Redirect atau tampilkan pesan kesalahan
-            return redirect()->route('superadmin.dashboard')->with('error', 'Terjadi kesalahan saat membuat PDF.');
+            return redirect()->route('dashboard.index')->with('error', 'Terjadi kesalahan saat membuat PDF.');
         }
     }
 }

@@ -9,6 +9,8 @@ use App\Models\training_record;
 use App\Models\category;
 use App\Models\peserta;
 use Barryvdh\DomPDF\Facade\pdf;
+use Illuminate\Support\Facades\Log;
+
 
 
 class FormController extends Controller
@@ -17,26 +19,36 @@ class FormController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-    {
-        $searchQuery = $request->input('search');
+{
+    // Ambil parameter pencarian (search) dan tahun dari request
+    $searchQuery = $request->input('search');
+    $selectedYear = $request->input('year'); // Ambil tahun yang dipilih dari request
 
-        // Ambil tahun unik dari kolom training_date
-        $years = Training_Record::selectRaw('YEAR(training_date) as year')
-            ->distinct()
-            ->orderBy('year', 'desc')
-            ->pluck('year');
+    // Ambil tahun unik dari kolom training_date
+    $years = Training_Record::selectRaw('YEAR(training_date) as year')
+        ->distinct()
+        ->orderBy('year', 'desc')
+        ->pluck('year');
 
-        $training_records = training_record::query()
-            ->when($searchQuery, function ($query, $searchQuery) {
-                $query->where('training_name', 'like', "%{$searchQuery}%");
-            })
-            ->orderBy('training_date', 'asc')
-            ->paginate(10);
+    // Query untuk mengambil data training dengan filter tahun dan pencarian
+    $training_records = Training_Record::query()
+        ->when($searchQuery, function ($query, $searchQuery) {
+            // Filter berdasarkan nama training
+            $query->where('training_name', 'like', "%{$searchQuery}%");
+        })
+        ->when($selectedYear, function ($query, $selectedYear) {
+            // Filter berdasarkan tahun training_date
+            $query->whereYear('training_date', $selectedYear);
+        })
+        ->orderBy('training_date', 'asc')
+        ->paginate(10);
 
-        $userRole = auth('')->user()->role;
+    $userRole = auth('')->user()->role;
 
-        return view("dashboard.index", compact('training_records', 'years', 'searchQuery'));
-    }
+    // Kembalikan ke view dengan data yang dibutuhkan
+    return view('dashboard.index', compact('training_records', 'years', 'searchQuery', 'selectedYear'));
+}
+
 
     /**
      * Show the form for creating a new resource.
@@ -51,12 +63,8 @@ class FormController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $categories = Cache::remember('categories', 60 * 60, function () {
-            return category::all(); // Simpan di cache selama 1 jam
-        });
-        $peserta = Cache::remember('peserta', 60 * 60, function () {
-            return peserta::all(); // Simpan di cache selama 1 jam
-        });
+        $categories = category::all();
+        $peserta = peserta::all();
 
         return view('form.form', compact('categories', 'peserta'));
     }
@@ -74,7 +82,7 @@ class FormController extends Controller
 
         session(['pending_participants' => $data['participants']]);
 
-        return $this->redirectAfterSave(auth('')->user()->role);
+        return redirect()->route('dashboard.index')->with('success', 'Peserta berhasil ditambahkan.');
     }
 
 
@@ -120,7 +128,7 @@ class FormController extends Controller
         $this->updateTrainingRecord($trainingRecord, $data, $status);
         $this->attachParticipants($trainingRecord, $data['participants'], $status);
 
-        return redirect()->route('superadmin.dashboard')->with('success', 'Training record berhasil diperbarui!');
+        return redirect()->route('dashboard.index')->with('success', 'Training record berhasil diperbarui!');
     }
 
     /**
@@ -137,7 +145,7 @@ class FormController extends Controller
         $trainingRecord->delete();
 
         // Redirect atau response dengan pesan sukses
-        return redirect()->route('superadmin.dashboard')->with('success', 'Peserta berhasil dihapus.');
+        return redirect()->route('dashboard.index')->with('success', 'Peserta berhasil dihapus.');
     }
 
     private function validationRules()
@@ -225,15 +233,5 @@ class FormController extends Controller
         $trainingRecord->pesertas()->attach($participantsToAttach);
     }
 
-    private function redirectAfterSave(string $userRole)
-    {
-        switch ($userRole) {
-            case 'admin':
-                return redirect()->route('admin.dashboard')->with('success', 'Training records berhasil dibuat!');
-            case 'super admin':
-                return redirect()->route('superadmin.dashboard')->with('success', 'Training records berhasil dibuat!');
-            default:
-                abort(403, 'Unauthorized action.');
-        }
-    }
+    
 }

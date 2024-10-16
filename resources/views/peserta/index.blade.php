@@ -4,11 +4,11 @@
 
 @section('sidebar')
     @if (auth()->user()->role == 'super admin')
-        @include('superadmin.sidebar.sidebar')
+        @include('sidebar.superadmin.sidebar')
     @elseif(auth()->user()->role == 'admin')
-        @include('admin.sidebar.sidebar')
+        @include('sidebar.admin.sidebar')
     @elseif(auth()->user()->role == 'user')
-        @include('user.sidebar.sidebar')
+        @include('sidebar.user.sidebar')
     @endif
 @endsection
 

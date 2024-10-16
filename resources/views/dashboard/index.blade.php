@@ -4,11 +4,11 @@
 
 @section('sidebar')
     @if (auth()->user()->role == 'super admin')
-        @include('superadmin.sidebar.sidebar')
+        @include('sidebar.superadmin.sidebar')
     @elseif(auth()->user()->role == 'admin')
-        @include('admin.sidebar.sidebar')
+        @include('sidebar.admin.sidebar')
     @elseif(auth()->user()->role == 'user')
-        @include('user.sidebar.sidebar')
+        @include('sidebar.user.sidebar')
     @endif
 @endsection
 
@@ -44,7 +44,7 @@
                         </div>
                         <div
                             class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-                            <fo action="{{ route('dashboard.index') }}" method="GET" class="flex items-center">
+                            <form action="{{ route('dashboard.index') }}" method="GET" class="flex items-center">
                                 <label for="year" class="sr-only">Year</label>
                                 <div class="relative">
                                     <select id="year" name="year"
