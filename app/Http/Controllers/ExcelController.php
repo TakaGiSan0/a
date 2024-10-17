@@ -3,13 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Imports\TrainingRecordsImportImport;
+use App\Imports\TrainingRecordsImport;
 use App\Imports\MasterDataImport;
 use App\Exports\MasterDataExport;
 use App\Exports\TrainingRecordExport;
-use App\Exports\TrainingRecordExportExport;
-
-
 use Maatwebsite\Excel\Facades\Excel;
 
 class ExcelController extends Controller
@@ -42,7 +39,7 @@ class ExcelController extends Controller
         ]);
 
         // Jalankan import
-        Excel::import(new MasterDataImport, $request->file('file'));
+        Excel::import(new TrainingRecordsImport, $request->file('file'));
 
         return redirect()->back()->with('success', 'Data imported successfully!');
     }

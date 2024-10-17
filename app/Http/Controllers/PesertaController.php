@@ -28,14 +28,13 @@ class PesertaController extends Controller
         ->orderBy('employee_name', 'asc')
         ->paginate(10);
 
-        $userRole = auth('')->user()->role; // Asumsikan 'role' adalah atribut di tabel users
 
         // Pilih view berdasarkan role
         // Kembalikan view dengan data peserta dan pesan
         return view('peserta.index', [
             'peserta' => $peserta,
             'searchQuery' => $searchQuery, // Kirimkan pencarian ke view untuk mempertahankan nilai pencarian
-            'message' => $peserta->isEmpty() ? 'No results found for your search.' : null,
+            'message' => $peserta->isEmpty()
         ]);
     }
 

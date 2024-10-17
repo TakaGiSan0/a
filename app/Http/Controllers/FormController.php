@@ -112,7 +112,7 @@ class FormController extends Controller
         $categories = Category::all();
 
         // Kirim data ke view
-        return view('superadmin.edit_completed', compact('trainingRecord', 'categories', 'participants'));
+        return view('form.edit_completed', compact('trainingRecord', 'categories', 'participants'));
     }
 
 
@@ -121,14 +121,41 @@ class FormController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $trainingRecords = training_record::with(['trainingCategory:id,name']);
         $data = $request->all();
         $status = $request->has('save_as_draft') ? 'pending' : 'completed';
-
         $trainingRecord = Training_Record::findOrFail($id);
-        $this->updateTrainingRecord($trainingRecord, $data, $status);
-        $this->attachParticipants($trainingRecord, $data['participants'], $status);
+        $trainingRecord->update([
+            'training_name' => $data['training_name'],
+            'doc_ref' => $data['doc_ref'],
+            'job_skill' => $data['job_skill'],
+            'trainer_name' => $data['trainer_name'],
+            'rev' => $data['rev'],
+            'station' => $data['station'],
+            'training_date' => $data['training_date'],
+            'skill_code' => $data['skill_code'],
+            'category_id' => $data['category_id'],
+            'status' => $status,
+        ]);
+        if ($status === 'completed') {
+            // Update data peserta
+            $trainingRecord->pesertas()->detach();
+            foreach ($data['participants'] as $participant) {
+                $peserta = Peserta::where('badge_no', $participant['badge_no'])->first();
+                if ($peserta) {
+                    $trainingRecord->pesertas()->attach($peserta->id, [
+                        'level' => $participant['level'],
+                        'final_judgement' => $participant['final_judgement'],
+                        'license' => $participant['license'],
+                        'theory_result' => $participant['theory_result'],
+                        'practical_result' => $participant['practical_result'],
+                    ]);
+                }
+            }
+        }
 
-        return redirect()->route('dashboard.index')->with('success', 'Training record berhasil diperbarui!');
+        // Redirect atau response dengan pesan sukses
+        return redirect()->route('dashboard.index')->with('success', 'Peserta berhasil diperbarui.');
     }
 
     /**

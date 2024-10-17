@@ -85,10 +85,6 @@ Route::middleware(['auth', 'role:super admin,admin'])->group(function () {
 // Super Admin Route
 Route::middleware(['auth', 'role:super admin'])->group(function () {
     
-    // Dashboard User
-
-
-
     // Dashboard Menambah Peserta
     Route::get('/superadmin/peserta/', [PesertaController::class, 'index'])->name('superadmin.peserta');
     Route::get('/superadmin/peserta/create/', [PesertaController::class, 'create'])->name('superadmin.peserta.create');

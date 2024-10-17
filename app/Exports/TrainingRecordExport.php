@@ -16,33 +16,42 @@ class TrainingRecordExport implements FromCollection, WithHeadings
      */
     public function collection()
     {
-        return DB::table('training_records')
-        ->join('hasil_peserta', 'training_record.id', '=', 'hasil_peserta.training_record_id')
-        ->join('pesertas', 'hasil_peserta.peserta_id', '=', 'pesertas.peserta.id')
+        // Ambil data dari database tanpa ROW_NUMBER()
+        $data = DB::table('training_records')
+            ->join('hasil_peserta', 'training_records.id', '=', 'hasil_peserta.training_record_id')
+            ->join('pesertas', 'hasil_peserta.peserta_id', '=', 'pesertas.id')
+            ->join('categories', 'training_records.category_id', '=', 'categories.id')  // Join ke tabel categories
             ->select(
-                'doc_ref', 
-                'training_name', 
-                'job_skill', 
-                'trainer_name',
+                'doc_ref',
                 'rev',
+                'training_name',
                 'station',
-                'training_date',
+                'job_skill',
                 'skill_code',
-
                 'badge_no',
                 'employee_name',
                 'dept',
                 'position',
-
+                'training_date',
+                'trainer_name',
                 'theory_result',
                 'practical_result',
                 'level',
                 'final_judgement',
+                'categories.name as category_name',  // Ambil nama kategori
                 'license'
-
             )
             ->get();
+
+        // Menambahkan nomor urut di posisi pertama
+        $data = $data->map(function ($item, $key) {
+            // Ubah $item menjadi array dan gabungkan dengan 'No' di awal array
+            return array_merge(['No' => $key + 1], (array) $item);
+        });
+
+        return $data;
     }
+
 
     /**
      * Fungsi untuk menambahkan header di Excel.
@@ -52,6 +61,7 @@ class TrainingRecordExport implements FromCollection, WithHeadings
     public function headings(): array
     {
         return [
+            'No',
             'DOC. REF',
             'REV',
             'Training Name',
@@ -68,8 +78,8 @@ class TrainingRecordExport implements FromCollection, WithHeadings
             'Practical Result',
             'Level',
             'Final Judgement',
+            'Category',
             'License',
-
         ];
     }
 }

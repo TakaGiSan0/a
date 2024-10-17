@@ -5,9 +5,15 @@ namespace App\Imports;
 use App\Models\Peserta;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Concerns\WithStartRow;
 
-class MasterDataImport implements ToModel
+class MasterDataImport implements ToModel, WithStartRow
 {
+
+    public function startRow(): int
+    {
+        return 2; // Mulai dari baris ke-2 (baris pertama adalah header)
+    }
     /**
     * @param array $row
     *
