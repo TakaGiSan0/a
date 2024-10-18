@@ -30,16 +30,21 @@ class TrainingRecordsImport implements ToModel, WithStartRow
         // Cek atau tambahkan kategori berdasarkan nama kategori
         $category = Category::firstOrCreate(['name' => $row[17]], ['id' => $this->getCategoryId($row[17])]);
 
-        // Ubah format tanggal dari Excel ke MySQL
-        $trainingDate = DateTime::createFromFormat('d-M-y', $row[11]);
-
-        if ($trainingDate) {
-            // Jika parsing berhasil, format tanggal
+        if (is_numeric($row[11])) {
+            // Excel date serial number to Unix timestamp conversion
+            $trainingDate = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[11]);
             $formattedTrainingDate = $trainingDate->format('Y-m-d');
         } else {
-            // Jika gagal, gunakan tanggal default atau log error
-            $formattedTrainingDate = '1970-01-01'; // atau '1970-01-01' jika Anda ingin default
+            // Jika tidak numeric, parsing seperti biasa
+            $trainingDate = DateTime::createFromFormat('d/m/Y', $row[11]);
+            
+            if ($trainingDate) {
+                $formattedTrainingDate = $trainingDate->format('Y-m-d');
+            } else {
+                $formattedTrainingDate = '1970-01-01'; // default jika parsing gagal
+            }
         }
+        
 
 
         // Cek apakah peserta sudah ada berdasarkan badge_no

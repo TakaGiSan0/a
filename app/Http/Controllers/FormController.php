@@ -40,7 +40,7 @@ class FormController extends Controller
             // Filter berdasarkan tahun training_date
             $query->whereYear('training_date', $selectedYear);
         })
-        ->orderBy('training_date', 'asc')
+        ->orderBy('training_date', 'desc')
         ->paginate(10);
 
     $userRole = auth('')->user()->role;
@@ -77,10 +77,36 @@ class FormController extends Controller
         $data = $request->validate($this->validationRules(), $this->validationMessages());
         $status = $request->has('save_as_draft') ? 'pending' : 'completed';
 
-        $trainingRecord = $this->createTrainingRecord($data, $status);
-        $this->attachParticipants($trainingRecord, $data['participants'], $status);
+        // Simpan data pelatihan utama
+        $trainingRecord = Training_Record::create([
+            'training_name' => $data['training_name'],
+            'doc_ref' => $data['doc_ref'],
+            'job_skill' => $data['job_skill'],
+            'trainer_name' => $data['trainer_name'],
+            'rev' => $data['rev'],
+            'station' => $data['station'],
+            'training_date' => $data['training_date'],
+            'skill_code' => $data['skill_code'],
+            'category_id' => $data['category_id'],
+            'status' => $status,
+        ]);
+        if ($status === 'completed') {
+            $participantsToAttach = [];
+            foreach ($data['participants'] as $participant) {
+                $peserta = Peserta::where('badge_no', $participant['badge_no'])->first();
+                if ($peserta) {
+                    $participantsToAttach[$peserta->id] = [
+                        'level' => $participant['level'],
+                        'final_judgement' => $participant['final_judgement'],
+                        'license' => $participant['license'],
+                        'theory_result' => $participant['theory_result'],
+                        'practical_result' => $participant['practical_result'],
+                    ];
+                }
+            }
+        }
 
-        session(['pending_participants' => $data['participants']]);
+        $trainingRecord->pesertas()->attach($participantsToAttach);
 
         return redirect()->route('dashboard.index')->with('success', 'Peserta berhasil ditambahkan.');
     }
@@ -121,7 +147,7 @@ class FormController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $trainingRecords = training_record::with(['trainingCategory:id,name']);
+
         $data = $request->all();
         $status = $request->has('save_as_draft') ? 'pending' : 'completed';
         $trainingRecord = Training_Record::findOrFail($id);

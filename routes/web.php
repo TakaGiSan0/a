@@ -50,7 +50,9 @@ Route::middleware(['auth:web'])->group(function () {
     Route::post('/api/trainings/search', [SummaryController::class, 'search']);
     
     // API download pdf summary
-    Route::get('/generator/{id}', [SummaryController::class, 'downloadSummaryPdf'])->name('download');
+    Route::get('/generator/{id}', [SummaryController::class, 'downloadSummaryPdf'])->name('download.summary');
+    Route::get('/generator/{id}', [EmployeeController::class, 'downloadPdf'])->name('download.employee');
+
 });
 
 // Super Admin Route

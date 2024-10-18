@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Peserta;
 use Illuminate\Support\Facades\Cache;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 
 
@@ -83,5 +84,39 @@ class EmployeeController extends Controller
             'peserta' => $peserta,
             'grouped_records' => $grouped_records,
         ]);
+    }
+    public function downloadPdf($id)
+    {
+        // Ambil data peserta berdasarkan ID
+        $peserta = Peserta::with(['trainingRecords' => function ($query) {
+            $query->withPivot('level', 'final_judgement');
+        }])->findOrFail($id);
+
+        if (!$peserta) {
+            return response()->json(['error' => 'Peserta not found'], 404);
+        }
+
+        // Ambil semua training_record yang terkait dengan peserta tersebut melalui relasi many-to-many
+        $all_records = $peserta
+            ->trainingRecords() // Pastikan menggunakan relasi many-to-many dari model Peserta
+            ->with(['trainingCategory:id,name'])
+            ->get();
+
+        // Kelompokkan data berdasarkan category_id
+        $grouped_records = $all_records->groupBy('category_id');
+
+        // Jika tidak ada data pelatihan, set grouped_records ke null
+        if ($all_records->isEmpty()) {
+            $grouped_records = null;
+        }
+
+        // Generate PDF
+        $pdf = PDF::loadView('pdf.training_employee', [
+            'peserta' => $peserta,
+            'grouped_records' => $grouped_records,
+        ]);
+
+        // Download PDF
+        return $pdf->download('peserta_' . $peserta->id . '_training.pdf');
     }
 }

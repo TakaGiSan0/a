@@ -10,7 +10,8 @@ class SummaryController extends Controller
 {
     public function index(Request $request)
     {
-        $trainingRecords = Training_Record::with(['trainingCategory:id,name']);
+        $trainingRecords = Training_Record::with(['trainingCategory:id,name'])
+            ->orderBy('training_date', 'desc');
 
         if ($request->has('tanggal')) {
             $trainingRecords->whereDate('created_at', $request->input('tanggal'));
@@ -29,6 +30,7 @@ class SummaryController extends Controller
         }
 
         $training_records = $trainingRecords->paginate(10);
+
 
         return view('content.summary', compact('training_records'));
     }

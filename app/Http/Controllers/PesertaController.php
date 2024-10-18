@@ -43,7 +43,7 @@ class PesertaController extends Controller
      */
     public function create()
     {
-        return view('superadmin.peserta.create');
+        return view('peserta.create');
     }
 
     /**
@@ -100,7 +100,7 @@ class PesertaController extends Controller
         $this->authorize('update', $peserta);
 
         // Kembalikan view dengan data peserta
-        return view('superadmin.peserta.edit', compact('peserta'));
+        return view('peserta.edit', compact('peserta'));
     }
 
     /**

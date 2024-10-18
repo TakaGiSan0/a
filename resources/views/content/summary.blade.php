@@ -119,7 +119,7 @@
                                         <td class="px-4 py-3">TR-0{{ $rc->id ?? 'N/A' }}</td>
                                         <td class="px-4 py-3 flex items-center justify-center">
                                             @if (Auth::user()->role != 'user')
-                                                <a href="{{ route('download', $rc->id) }}">
+                                                <a href="{{ route('download.summary', $rc->id) }}">
                                                     <button type="button" data-modal-target="updateProductModal"
                                                         data-modal-toggle="updateProductModal"
                                                         class="flex items-center justify-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
@@ -151,6 +151,9 @@
                                 </tbody>
                             </table>
                         @endforeach
+                    </div>
+                    <div class="mt-4">
+                        {{ $training_records->links() }}
                     </div>
                 </div>
             </div>

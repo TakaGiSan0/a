@@ -118,15 +118,16 @@
                                         <td class="px-4 py-3">
                                             {{ $rc->position ?? 'N/A' }}
                                         </td>
-                                        
+
                                         <td class="px-4 py-3 flex items-center justify-center">
                                             @if (in_array(Auth::user()->role, ['super admin', 'admin']))
-                                                <a href="{{ route('download', $rc->id) }}">
+                                                <a href="{{ route('download.employee', $rc->id) }}">
                                                     <button type="button" data-modal-target="updateProductModal"
                                                         data-modal-toggle="updateProductModal"
                                                         class="flex items-center justify-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
-                                                        <svg class="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg"
-                                                            viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                        <svg class="w-5 h-5 flex-shrink-0"
+                                                            xmlns="http://www.w3.org/2000/svg" viewbox="0 0 20 20"
+                                                            fill="currentColor" aria-hidden="true">
                                                             <path
                                                                 d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
                                                             <path fill-rule="evenodd" clip-rule="evenodd"
@@ -135,7 +136,7 @@
                                                     </button>
                                                 </a>
                                             @endif
-                                        
+
                                             <button type="button" data-modal-target="readProductModal"
                                                 data-modal-toggle="readProductModal"
                                                 onclick="BukaModal({{ $rc->id }})"
@@ -167,7 +168,7 @@
 
     <!-- Read modal -->
     <div id="readProductModal" tabindex="-1" aria-hidden="true"
-    class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
         <div class="relative p-4 w-full max-w-6xl max-h-full">
             <!-- Modal content -->
             <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
@@ -303,8 +304,8 @@
                             records.forEach(training => {
                                 trainingRecordsContent += `
                                 <tr class="border-b dark:border-gray-700">
-                                    <th scope="row" class="px-4 py-3 font-medium text-gray-900 text-center whitespace-nowrap dark:text-white">
-                                        ${training.training_name ?? '-'}
+                                    <th scope="row" class="px-4 py-3 font-medium text-gray-900 text-center whitespace-normal break-words dark:text-white overflow-hidden max-w-xs">
+                                    ${training.training_name ?? '-'}
                                     </th>
                                     <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap text-center dark:text-white">
                                         ${training.trainer_name ?? '-'}

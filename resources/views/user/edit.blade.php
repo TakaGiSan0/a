@@ -3,7 +3,8 @@
 @section('title', 'Dashboard')
 
 @section('content')
-    <div class="w-full max-w-xs">
+    <div class="w-full max-w-xs mx-auto">
+
         @if ($errors->any())
             <div class="alert alert-danger">
                 <ul>
@@ -68,5 +69,5 @@
         <p class="text-center text-gray-500 text-xs">
             &copy;2020 Acme Corp. All rights reserved.
         </p>
-    </div>
-@endsection
+        </di>
+    @endsection
