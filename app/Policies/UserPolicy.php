@@ -28,7 +28,7 @@ class UserPolicy
      */
     public function create(User $user): bool
     {
-        return in_array($user->role, ['super admin', 'admin']);
+        return in_array($user->role, ['Super Admin', 'Admin']);
     }
 
     /**
@@ -36,7 +36,7 @@ class UserPolicy
      */
     public function update(User $user, User $targetUser): bool
     {
-        return in_array($user->role, ['super admin', 'admin']);
+        return in_array($user->role, ['Super Admin', 'Admin']);
     }
 
     /**
@@ -44,7 +44,7 @@ class UserPolicy
      */
     public function delete(User $user, User $model): bool
     {
-        return in_array($user->role, ['super admin', 'admin']);
+        return in_array($user->role, ['Super Admin', 'Admin']);
         
     }
 

@@ -3,9 +3,9 @@
 @section('title', 'Dashboard')
 
 @section('sidebar')
-    @if (auth()->user()->role == 'super admin')
+    @if (auth()->user()->role == 'Super Admin')
         @include('sidebar.superadmin.sidebar')
-    @elseif(auth()->user()->role == 'admin')
+    @elseif(auth()->user()->role == 'Admin')
         @include('sidebar.admin.sidebar')
     @elseif(auth()->user()->role == 'user')
         @include('sidebar.user.sidebar')

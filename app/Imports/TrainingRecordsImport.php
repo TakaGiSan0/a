@@ -7,10 +7,10 @@ use App\Models\Peserta;
 use App\Models\Category;
 use App\Models\Hasil_Peserta;
 use Maatwebsite\Excel\Concerns\ToModel;
-use Maatwebsite\Excel\Concerns\WithStartRow;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use DateTime;
 
-class TrainingRecordsImport implements ToModel, WithStartRow
+class TrainingRecordsImport implements ToModel, WithHeadingRow
 {
     // Fungsi untuk memulai dari baris ke-2 karena baris pertama adalah header
     public function startRow(): int
@@ -27,28 +27,29 @@ class TrainingRecordsImport implements ToModel, WithStartRow
      */
     public function model(array $row)
     {
+       
         // Cek atau tambahkan kategori berdasarkan nama kategori
-        $category = Category::firstOrCreate(['name' => $row[17]], ['id' => $this->getCategoryId($row[17])]);
+        $category = Category::firstOrCreate(['name' => $row['training_category']], ['id' => $this->getCategoryId($row['training_category'])]);
 
-        if (is_numeric($row[11])) {
+        if (is_numeric($row['training_date'])) {
             // Excel date serial number to Unix timestamp conversion
-            $trainingDate = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[11]);
+            $trainingDate = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['training_date']);
             $formattedTrainingDate = $trainingDate->format('Y-m-d');
         } else {
             // Jika tidak numeric, parsing seperti biasa
-            $trainingDate = DateTime::createFromFormat('d/m/Y', $row[11]);
-            
+            $trainingDate = DateTime::createFromFormat('d/m/Y', $row['Training Date']);
+
             if ($trainingDate) {
                 $formattedTrainingDate = $trainingDate->format('Y-m-d');
             } else {
                 $formattedTrainingDate = '1970-01-01'; // default jika parsing gagal
             }
         }
-        
+
 
 
         // Cek apakah peserta sudah ada berdasarkan badge_no
-        $peserta = Peserta::where('badge_no', $row[7])->first();
+        $peserta = Peserta::where('badge_no', $row["badge_no"])->first();
 
         // Jika peserta tidak ditemukan, abaikan
         if (!$peserta) {
@@ -58,14 +59,14 @@ class TrainingRecordsImport implements ToModel, WithStartRow
 
         // Tambahkan data training_record jika belum ada
         $trainingRecord = Training_Record::firstOrCreate([
-            'doc_ref' => $row[1],
-            'rev' => $row[2],
-            'training_name' => $row[3],
-            'station' => $row[4],
-            'job_skill' => $row[5],
-            'skill_code' => $row[6],
+            'doc_ref' => $row['doc_ref'],
+            'rev' => $row['rev'],
+            'training_name' => $row['training_name'],
+            'station' => $row['station'],
+            'job_skill' => $row['job_skill'],
+            'skill_code' => $row['skill_code'],
             'training_date' => $formattedTrainingDate,
-            'trainer_name' => $row[12],
+            'trainer_name' => $row['trainer_name'],
             'category_id' => $category->id,
 
         ]);
@@ -75,10 +76,10 @@ class TrainingRecordsImport implements ToModel, WithStartRow
         Hasil_Peserta::create([
             'training_record_id' => $trainingRecord->id,
             'peserta_id' => $peserta->id,
-            'theory_result' => $row[13],
-            'practical_result' => $row[14],
-            'level' => $row[15],
-            'final_judgement' => $row[16],
+            'theory_result' => $row['theory_result'],
+            'practical_result' => $row['practical_result'],
+            'level' => $row['level'],
+            'final_judgement' => $row['final_judgement'],
         ]);
     }
 
@@ -95,10 +96,10 @@ class TrainingRecordsImport implements ToModel, WithStartRow
                 return 1; // Jika category adalah 'NEO', maka category_id adalah 1
             case 'PROJECT':
                 return 2;
-                case 'INTERNAL':
-                    return 3;
-                    case 'EXTERNAL':
-                        return 4;
+            case 'INTERNAL':
+                return 3;
+            case 'EXTERNAL':
+                return 4;
             default:
                 return Category::firstOrCreate(['name' => $categoryName])->id; // Tambahkan jika belum ada
         }

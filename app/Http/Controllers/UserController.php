@@ -68,9 +68,9 @@ class UserController extends Controller
         $userRole = auth('')->user()->role;
 
         // Jika role pengguna adalah admin, set role user baru menjadi 'user'
-        if ($userRole === 'admin') {
+        if ($userRole === 'Admin') {
             $user->role = 'user';
-        } elseif ($userRole === 'super admin') {
+        } elseif ($userRole === 'Super Admin') {
             // Jika bukan admin, set role sesuai kebutuhan (misalnya dari input atau default)
             $user->role = $request->input('role'); // Ganti 'default_role' dengan nilai default yang diinginkan
         } else {
@@ -135,7 +135,7 @@ class UserController extends Controller
 
         $user->update($validated);
 
-        return redirect()->route('superadmin.user.index')->with('success', 'User berhasil diperbarui.');
+        return redirect()->route('user.index')->with('success', 'User berhasil diperbarui.');
     }
 
 
@@ -152,6 +152,6 @@ class UserController extends Controller
         // Hapus data user
         $user->delete();
 
-        return redirect()->route('superadmin.user.index')->with('success', 'Peserta berhasil dihapus.');
+        return redirect()->route('user.index')->with('success', 'Peserta berhasil dihapus.');
     }
 }

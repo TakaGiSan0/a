@@ -44,9 +44,9 @@ class AuthenticatedSessionController extends Controller
         $user = Auth::user();
         session(['user_name' => $user->name]);
 
-        if ($user->role == 'admin' || $user->role == 'super admin') {
+        if ($user->role == 'Admin' || $user->role == 'Super Admin') {
             return redirect()->route('dashboard.index');
-        } elseif ($user->role == 'user') {
+        } elseif ($user->role == 'User') {
             return redirect()->route('user.summary');
         }
         // Jika role tidak ditemukan, kirim pesan error khusus

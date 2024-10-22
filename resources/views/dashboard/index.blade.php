@@ -3,9 +3,9 @@
 @section('title', 'Dashboard')
 
 @section('sidebar')
-    @if (auth()->user()->role == 'super admin')
+    @if (auth()->user()->role == 'Super Admin')
         @include('sidebar.superadmin.sidebar')
-    @elseif(auth()->user()->role == 'admin')
+    @elseif(auth()->user()->role == 'Admin')
         @include('sidebar.admin.sidebar')
     @elseif(auth()->user()->role == 'user')
         @include('sidebar.user.sidebar')
@@ -38,7 +38,7 @@
                                     </div>
                                     <input type="text" id="simple-search" name="search" id="search"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                        placeholder="Search">
+                                        placeholder="Training Name" value="{{ request('searchQuery') }}">
                                 </div>
                             </form>
                         </div>
@@ -61,7 +61,7 @@
                                     class="ml-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Filter</button>
                                 </form>
                         </div>
-                        @if (auth()->user()->role == 'super admin')
+                        @if (auth()->user()->role == 'Super Admin')
                             <div
                                 class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
                                 <button

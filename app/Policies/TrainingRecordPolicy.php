@@ -45,7 +45,7 @@ class TrainingRecordPolicy
      */
     public function delete(User $user, training_record $trainingRecord): bool
     {
-        return in_array($user->role, ['super admin', 'admin']);
+        return in_array($user->role, ['Super Admin', 'Admin']);
        
     }
 

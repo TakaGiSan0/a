@@ -54,16 +54,14 @@ class PesertaController extends Controller
         // Validasi input
         $validatedData = $request->validate(
             [
-                'badge_no' => 'required|string|max:255|regex:/^[A-Z0-9\-]+$/|unique:pesertas,badge_no',
-                'employee_name' => 'required|string|max:255|regex:/^[a-zA-Z\- ]+$/|unique:pesertas,employee_name',
+                'badge_no' => 'required|string|max:255|unique:pesertas,badge_no',
+                'employee_name' => 'required|string|max:255|unique:pesertas,employee_name',
                 'dept' => 'required|string|max:255',
                 'position' => 'required|string|max:255',
             ],
             [
                 'employee_name.unique' => 'Peserta dengan Nama ini sudah ada.',
                 'badge_no.unique' => 'Peserta dengan Badge No ini sudah ada.',
-                'badge_no.regex' => 'Badge No hanya boleh berisi huruf besar, angka, dan tanda hubung.',
-                'employee_name.regex' => 'Nama hanya boleh berisi huruf',
             ],
         );
 
@@ -80,7 +78,7 @@ class PesertaController extends Controller
         $peserta->save();
 
         // Mengembalikan response atau redirect
-        return redirect()->route('superadmin.peserta')->with('success', 'Peserta berhasil ditambahkan.');
+        return redirect()->route('dashboard.peserta')->with('success', 'Peserta berhasil ditambahkan.');
     }
 
     /**
@@ -126,7 +124,7 @@ class PesertaController extends Controller
         // Update data peserta
         $peserta->update($validated);
 
-        return redirect()->route('superadmin.peserta')->with('success', 'Peserta berhasil diperbarui.');
+        return redirect()->route('dashboard.peserta')->with('success', 'Peserta berhasil diperbarui.');
     }
 
     /**
@@ -145,7 +143,7 @@ class PesertaController extends Controller
         $peserta->delete();
 
         // Redirect atau response dengan pesan sukses
-        return redirect()->route('superadmin.peserta')->with('success', 'Peserta berhasil dihapus.');
+        return redirect()->route('dashboard.peserta')->with('success', 'Peserta berhasil dihapus.');
     }
 
     public function getParticipantByBadgeNo($badge_no)

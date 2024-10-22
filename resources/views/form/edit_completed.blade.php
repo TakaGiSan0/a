@@ -171,18 +171,18 @@
                                     <select id="category" name="participants[{{ $index }}][theory_result]"
                                         value="{{ $participant->pivot->theory_result ?? '' }}"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                        <option name="Pass" value="Pass">Pass</option>
-                                        <option name="Fail" value="Fail">Fail</option>
-                                        <option name="N/A" value="N/A">N/A</option>
+                                        <option value="Pass" @selected($participant->pivot->theory_result == 'Pass')>Pass</option>
+                                        <option value="Fail" @selected($participant->pivot->theory_result == 'Fail')>Fail</option>
+                                        <option value="N/A" @selected($participant->pivot->theory_result == 'N/A')>N/A</option>
                                     </select>
                                 </td>
                                 <td scope="col" class="px-1">
                                     <select id="category" name="participants[{{ $index }}][practical_result]"
-                                        value="{{ $participant->pivot->theory_result ?? '' }}"
+                                        value="{{ old($participant->pivot->theory_result ?? '') }}"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                        <option name="Pass" value="Pass">Pass</option>
-                                        <option name="Fail" value="Fail">Fail</option>
-                                        <option name="N/A" value="N/A">N/A</option>
+                                        <option value="Pass" @selected($participant->pivot->theory_result == 'Pass')>Pass</option>
+                                        <option value="Fail" @selected($participant->pivot->theory_result == 'Fail')>Fail</option>
+                                        <option value="N/A" @selected($participant->pivot->theory_result == 'N/A')>N/A</option>
 
                                     </select>
                                 </td>
@@ -190,31 +190,31 @@
                                     <select id="category" name="participants[{{ $index }}][level] "
                                         value="{{ $participant->pivot->theory_result ?? '' }}"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                        <option name="Level 1" value="Level 1">Level 1</option>
-                                        <option name="Level 2" value="Level 2">Level 2</option>
-                                        <option name="Level 3" value="Level 3">Level 3</option>
-                                        <option name="Level 4" value="Level 4">Level 4</option>
-                                        <option name="N/A" value="N/A">N/A</option>
+                                        <option name="Level 1" value="Level 1" @selected($participant->pivot->level == 'Level 1')>Level 1</option>
+                                        <option name="Level 2" value="Level 2" @selected($participant->pivot->level == 'Level 2')>Level 2</option>
+                                        <option name="Level 3" value="Level 3" @selected($participant->pivot->level == 'Level 3')>Level 3</option>
+                                        <option name="Level 4" value="Level 4" @selected($participant->pivot->level == 'Level 4')>Level 4</option>
+                                        <option name="N/A" value="N/A" @selected($participant->pivot->level == 'N/A')>N/A</option>
                                     </select>
                                 </td>
                                 <td scope="col" class="px-1">
                                     <select id="category" name="participants[{{ $index }}][final_judgement]"
                                         value="{{ $participant->pivot->theory_result ?? '' }}"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                        <option name="Attend " value="Attend ">Attend </option>
-                                        <option name="Competence" value="Competence">Competence</option>
-                                        <option name="N/A" value="N/A">N/A</option>
+                                        <option name="Attend " value="Attend" @selected($participant->pivot->final_judgement == 'Attend ')>Attend </option>
+                                        <option name="Competence" value="Competence" @selected($participant->pivot->final_judgement == 'Competence')>Competence</option>
+                                        <option name="N/A" value="N/A" @selected($participant->pivot->final_judgement == 'N/A')>N/A</option>
 
                                     </select>
                                 </td>
                                 <td scope="col" class="px-1">
                                     <input type="hidden" name="participants[{{ $index }}][license]"
                                         value="0">
-                                    <input id="license-checkbox-${index}"
+                                        <input id="license-checkbox-{{ $index }}"
                                         name="participants[{{ $index }}][license]" type="checkbox"
-                                        value="{{ $participant->pivot->theory_result ?? '' }}" value="1"
+                                        value="1"
                                         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                        {{ old('license', 0) ? 'checked' : '' }}>
+                                        {{ old("participants.$index.license", $participant->pivot->license ?? 0) == 1 ? 'checked' : '' }}>
                                 </td>
                                 <input type="hidden" name="participant_count" value="1">
                             </tbody>

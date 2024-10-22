@@ -12,7 +12,7 @@
                     <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
                         aria-hidden="true"></span>
                 @endif
-                <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 {{ request()->routeIs('admin.dashboard') ? 'text-gray-800 dark:text-gray-100' : 'hover:text-gray-800 dark:hover:text-gray-200' }}"
+                <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 {{ request()->routeIs('dashboard.index') ? 'text-gray-800 dark:text-gray-100' : 'hover:text-gray-800 dark:hover:text-gray-200' }}"
                     href="{{ route('dashboard.index') }}">
                     <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
@@ -26,12 +26,12 @@
         </ul>
         <ul>
             <li class="relative px-6 py-3">
-                @if (request()->routeIs('admin.peserta'))
+                @if (request()->routeIs('dashboard.peserta'))
                     <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
                         aria-hidden="true"></span>
                 @endif
-                <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 {{ request()->routeIs('admin.peserta') ? 'text-gray-800 dark:text-gray-100' : 'hover:text-gray-800 dark:hover:text-gray-200' }}"
-                    href="{{ route('admin.peserta') }}">
+                <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 {{ request()->routeIs('dashboard.peserta') ? 'text-gray-800 dark:text-gray-100' : 'hover:text-gray-800 dark:hover:text-gray-200' }}"
+                    href="{{ route('dashboard.peserta') }}">
                     <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
                         <path
@@ -42,12 +42,12 @@
                 </a>
             </li>
             <li class="relative px-6 py-3">
-                @if (request()->routeIs('admin.user.index'))
+                @if (request()->routeIs('user.index'))
                     <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
                         aria-hidden="true"></span>
                 @endif
-                <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 {{ request()->routeIs('admin.user.index') ? 'text-gray-800 dark:text-gray-100' : 'hover:text-gray-800 dark:hover:text-gray-200' }}"
-                    href="{{ route('admin.user.index') }}">
+                <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 {{ request()->routeIs('user.index') ? 'text-gray-800 dark:text-gray-100' : 'hover:text-gray-800 dark:hover:text-gray-200' }}"
+                    href="{{ route('user.index') }}">
                     <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -57,12 +57,12 @@
                 </a>
             </li>
             <li class="relative px-6 py-3">
-                @if (request()->routeIs('admin.summary'))
+                @if (request()->routeIs('dashboard.summary'))
                     <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
                         aria-hidden="true"></span>
                 @endif
-                <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 {{ request()->routeIs('admin.summary') ? 'text-gray-800 dark:text-gray-100' : 'hover:text-gray-800 dark:hover:text-gray-200' }}"
-                    href="{{ route('admin.summary') }}">
+                <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 {{ request()->routeIs('dashboard.summary') ? 'text-gray-800 dark:text-gray-100' : 'hover:text-gray-800 dark:hover:text-gray-200' }}"
+                    href="{{ route('dashboard.summary') }}">
                     <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
                         <path
@@ -73,12 +73,12 @@
                 </a>
             </li>
             <li class="relative px-6 py-3">
-                @if (request()->routeIs('admin.employee'))
+                @if (request()->routeIs('dashboard.employee'))
                     <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
                         aria-hidden="true"></span>
                 @endif
-                <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 {{ request()->routeIs('admin.employee') ? 'text-gray-800 dark:text-gray-100' : 'hover:text-gray-800 dark:hover:text-gray-200' }}"
-                    href="{{ route('admin.employee') }}">
+                <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 {{ request()->routeIs('dashboard.employee') ? 'text-gray-800 dark:text-gray-100' : 'hover:text-gray-800 dark:hover:text-gray-200' }}"
+                    href="{{ route('dashboard.employee') }}">
                 
                     <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">

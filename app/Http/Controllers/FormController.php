@@ -59,7 +59,7 @@ class FormController extends Controller
         $userRole = auth('')->user()->role;
 
         // Cek apakah role adalah 'superadmin' atau 'admin'
-        if (!in_array($userRole, ['super admin', 'admin'])) {
+        if (!in_array($userRole, ['Super Admin', 'Admin'])) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -102,11 +102,11 @@ class FormController extends Controller
                         'theory_result' => $participant['theory_result'],
                         'practical_result' => $participant['practical_result'],
                     ];
+                    $trainingRecord->pesertas()->attach($participantsToAttach);
                 }
             }
         }
 
-        $trainingRecord->pesertas()->attach($participantsToAttach);
 
         return redirect()->route('dashboard.index')->with('success', 'Peserta berhasil ditambahkan.');
     }
@@ -126,7 +126,9 @@ class FormController extends Controller
     public function edit($id)
     {
         // Ambil data training record berdasarkan ID
-        $trainingRecord = Training_Record::findOrFail($id);
+        // Ambil training record beserta data peserta dan pivot
+        $trainingRecord = Training_Record::with('pesertas')->findOrFail($id);
+
 
         // Ambil data peserta jika form statusnya draft
         $participants =

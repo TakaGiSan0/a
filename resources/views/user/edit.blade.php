@@ -40,9 +40,9 @@
                 </label>
                 <select id="role" name="role"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                    @if (auth()->user()->role === 'super admin')
-                        <option value="super admin"
-                            {{ old('role', $user->role ?? '') === 'super admin' ? 'selected' : '' }}>Super Admin</option>
+                    @if (auth()->user()->role === 'Super Admin')
+                        <option value="Super Admin"
+                            {{ old('role', $user->role ?? '') === 'Super Admin' ? 'selected' : '' }}>Super Admin</option>
                         <option value="admin" {{ old('role', $user->role ?? '') === 'admin' ? 'selected' : '' }}>Admin
                         </option>
                     @endif

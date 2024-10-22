@@ -18,7 +18,7 @@ class ExampleTest extends TestCase
 
     public function testIndex()
     {
-        $user = User::factory()->create(['role' => 'super admin'])->first();
+        $user = User::factory()->create(['role' => 'Super Admin'])->first();
         $this->actingAs($user);
 
         $response = $this->get('/index');
@@ -29,7 +29,7 @@ class ExampleTest extends TestCase
 
     public function testCreate()
     {
-        $user = User::factory()->create(['role' => 'super admin']);
+        $user = User::factory()->create(['role' => 'Super Admin']);
         $this->actingAs($user);
 
 
@@ -43,7 +43,7 @@ class ExampleTest extends TestCase
 
     public function testStore()
     {
-        $user = User::factory()->create(['role' => 'super admin']);
+        $user = User::factory()->create(['role' => 'Super Admin']);
         $this->actingAs($user);
 
         $category = Category::factory()->create();
@@ -82,7 +82,7 @@ class ExampleTest extends TestCase
 
     public function testEdit()
     {
-        $user = User::factory()->create(['role' => 'super admin']);
+        $user = User::factory()->create(['role' => 'Super Admin']);
         $this->actingAs($user);
 
         $trainingRecord = Training_Record::factory()->create();
@@ -95,7 +95,7 @@ class ExampleTest extends TestCase
 
     public function testUpdate()
     {
-        $user = User::factory()->create(['role' => 'super admin']);
+        $user = User::factory()->create(['role' => 'Super Admin']);
         $this->actingAs($user);
 
         $trainingRecord = Training_Record::factory()->create();
@@ -135,7 +135,7 @@ class ExampleTest extends TestCase
 
     public function testDestroy()
     {
-        $user = User::factory()->create(['role' => 'super admin']);
+        $user = User::factory()->create(['role' => 'Super Admin']);
         $this->actingAs($user);
 
 

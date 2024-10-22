@@ -13,8 +13,7 @@ class MasterDataImport implements ToModel, WithStartRow
     public function startRow(): int
     {
         return 2; // Mulai dari baris ke-2 (baris pertama adalah header)
-    }
-    /**
+    }    /**
     * @param array $row
     *
     * @return \Illuminate\Database\Eloquent\Model|null

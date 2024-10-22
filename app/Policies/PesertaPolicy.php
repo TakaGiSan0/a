@@ -28,9 +28,9 @@ class PesertaPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): void
+    public function create(User $user): bool
     {
-        //
+        return in_array($user->role, ['Super Admin', 'Admin']);
     }
 
     /**
@@ -44,7 +44,7 @@ class PesertaPolicy
      */
     public function update(User $user, Peserta $peserta): bool
     {
-        return $user->role === 'super admin';
+        return in_array($user->role, ['Super Admin', 'Admin']);
         
     }
 
@@ -53,8 +53,7 @@ class PesertaPolicy
      */
     public function delete(User $user, Peserta $peserta): bool
     {
-        // Hanya izinkan pengguna dengan role 'superadmin' untuk menghapus
-        return $user->role === 'super admin';
+        return in_array($user->role, ['Super Admin', 'Admin']);
     }
 
     /**

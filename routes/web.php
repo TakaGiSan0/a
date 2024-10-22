@@ -39,40 +39,57 @@ Route::get('/test-pdf', [SuperAdminController::class, 'generatePdf']);
 // Route AllRole
 Route::middleware(['auth:web'])->group(function () {
     // Dashboard Employee Training Record
-    Route::get('/EmployeeTrainingRecord_list', [EmployeeController::class, 'index'])->name('superadmin.employee');
-    Route::get('employee/{id}', [EmployeeController::class, 'show'])->name('superadmin.employee.show');
+    Route::get('/EmployeeTrainingRecord_list', [EmployeeController::class, 'index'])->name('dashboard.employee');
+    Route::get('employee/{id}', [EmployeeController::class, 'show'])->name('employee.show');
     
     // Dashboard Summary Training Record
-    Route::get('/SummaryTrainingRecord_list', [SummaryController::class, 'index'])->name('superadmin.summary');
-    Route::get('summary/{id}', [SummaryController::class, 'show'])->name('superadmin.summary.show');
+    Route::get('/SummaryTrainingRecord_list', [SummaryController::class, 'index'])->name('dashboard.summary');
+    Route::get('summary/{id}', [SummaryController::class, 'show'])->name('summary.show');
 
     // Search SummaryTraining Record
     Route::post('/api/trainings/search', [SummaryController::class, 'search']);
     
     // API download pdf summary
-    Route::get('/generator/{id}', [SummaryController::class, 'downloadSummaryPdf'])->name('download.summary');
-    Route::get('/generator/{id}', [EmployeeController::class, 'downloadPdf'])->name('download.employee');
+    Route::get('/summary/download/{id}', [SummaryController::class, 'downloadSummaryPdf'])->name('download.summary');
+    Route::get('/employee/download/{id}', [EmployeeController::class, 'downloadPdf'])->name('download.employee');
 
 });
 
 // Super Admin Route
-Route::middleware(['auth', 'role:super admin,admin'])->group(function () {
+Route::middleware(['auth', 'role:Super Admin,Admin'])->group(function () {
     
     Route::get('/index', [FormController::class, 'index'])->name('dashboard.index');
     
     // Crud Form
-    Route::get('/dashboard/create', [FormController::class, 'create'])->name('dashboard.create');
-    Route::post('/dashboard/create/store', [FormController::class, 'store'])->name('dashboard.store');
-    Route::get('/dashboard/edit/{id}', [FormController::class, 'edit'])->name('dashboard.edit');
-    Route::delete('/dashboard/{id}', [FormController::class, 'destroy'])->name('dashboard.destroy');
-    Route::put('/dashboard/update/{id}', [FormController::class, 'update'])->name('dashboard.update');
+    Route::get('/index/create', [FormController::class, 'create'])->name('dashboard.create');
+    Route::post('/index/create/store', [FormController::class, 'store'])->name('dashboard.store');
+    Route::get('/index/edit/{id}', [FormController::class, 'edit'])->name('dashboard.edit');
+    Route::delete('/index/{id}', [FormController::class, 'destroy'])->name('dashboard.destroy');
+    Route::put('/index/update/{id}', [FormController::class, 'update'])->name('dashboard.update');
     
     
+    Route::get('/peserta/dashboard', [PesertaController::class, 'index'])->name('dashboard.peserta');
+    Route::get('/peserta/create/', [PesertaController::class, 'create'])->name('peserta.create');
+    Route::post('/peserta/create/store', [PesertaController::class, 'store'])->name('peserta.store');
+    Route::get('/peserta/edit/{peserta}', [PesertaController::class, 'edit'])->name('peserta.edit');
+    Route::put('/peserta/update/{peserta}', [PesertaController::class, 'update'])->name('peserta.update');
+    Route::delete('/peserta/delete/{id}', [PesertaController::class, 'destroy'])->name('superadmin.peserta.destroy');
+
+
+
+
+
+
     // Route User
-    Route::get('/user', [UserController::class, 'index'])->name('user.index');
+    Route::get('/user/dashboard', [UserController::class, 'index'])->name('user.index');
+    Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
+  
+  
+  
+  
+  
     Route::post('/superadmin/user/create', [UserController::class, 'store'])->name('superadmin.user.store');
     Route::get('/superadmin/user', [UserController::class, 'index'])->name('superadmin.user.index');
-    Route::get('/superadmin/user/create', [UserController::class, 'create'])->name('superadmin.user.create');
     Route::delete('/superadmin/user/{id}', [UserController::class, 'destroy'])->name('superadmin.user.destroy');
     Route::get('/superadmin/user/edit/{user}', [UserController::class, 'edit'])->name('superadmin.user.edit');
     Route::put('/superadmin/user/update/{user}', [UserController::class, 'update'])->name('superadmin.user.update');
@@ -85,15 +102,10 @@ Route::middleware(['auth', 'role:super admin,admin'])->group(function () {
 
 
 // Super Admin Route
-Route::middleware(['auth', 'role:super admin'])->group(function () {
+Route::middleware(['auth', 'role:Super Admin'])->group(function () {
     
     // Dashboard Menambah Peserta
-    Route::get('/superadmin/peserta/', [PesertaController::class, 'index'])->name('superadmin.peserta');
-    Route::get('/superadmin/peserta/create/', [PesertaController::class, 'create'])->name('superadmin.peserta.create');
-    Route::post('/superadmin/peserta/create/', [PesertaController::class, 'store'])->name('superadmin.peserta.store');
-    Route::delete('/superadmin/peserta/{id}', [PesertaController::class, 'destroy'])->name('superadmin.peserta.destroy');
     Route::get('/superadmin/peserta/edit/{peserta}', [PesertaController::class, 'edit'])->name('superadmin.peserta.edit');
-    Route::put('/superadmin/peserta/update/{peserta}', [PesertaController::class, 'update'])->name('superadmin.peserta.update');
 
     Route::post('/users/import', [ExcelController::class, 'import_peserta'])->name('import.peserta');
     Route::get('/users/expor', [ExcelController::class, 'export_peserta'])->name('export.peserta');
@@ -105,17 +117,10 @@ Route::middleware(['auth', 'role:super admin'])->group(function () {
 
 
 // Admin Route
-Route::middleware(['auth', 'role:admin'])->group(function () {
-
-    Route::get('/admin/summary', [SummaryController::class, 'index'])->name('admin.summary');
-
-
-    Route::get('/admin/employee', [EmployeeController::class, 'index'])->name('admin.employee');
-    
+Route::middleware(['auth', 'role:Admin'])->group(function () {
 
 
     Route::get('/admin/peserta', [PesertaController::class, 'index'])->name('admin.peserta');
-    Route::get('/admin/peserta/edit/{peserta}', [PesertaController::class, 'edit'])->name('admin.peserta.edit');
 
     // Dashboard User
     Route::get('/admin/user', [UserController::class, 'index'])->name('admin.user.index');

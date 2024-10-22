@@ -3,9 +3,9 @@
 @section('title', 'Dashboard')
 
 @section('sidebar')
-    @if (auth()->user()->role == 'super admin')
+    @if (auth()->user()->role == 'Super Admin')
         @include('sidebar.superadmin.sidebar')
-    @elseif(auth()->user()->role == 'admin')
+    @elseif(auth()->user()->role == 'Admin')
         @include('sidebar.admin.sidebar')
     @elseif(auth()->user()->role == 'user')
         @include('sidebar.user.sidebar')
@@ -37,7 +37,7 @@
                                     </div>
                                     <input type="text" id="simple-search"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                        placeholder="Search" value="{{ request('badge_no') }}" name="badge_no">
+                                        placeholder="Badge No" value="{{ request('badge_no') }}" name="badge_no">
                                 </div>
                             </form>
                         </div>
@@ -120,7 +120,7 @@
                                         </td>
 
                                         <td class="px-4 py-3 flex items-center justify-center">
-                                            @if (in_array(Auth::user()->role, ['super admin', 'admin']))
+                                            @if (in_array(Auth::user()->role, ['Super Admin', 'Admin']))
                                                 <a href="{{ route('download.employee', $rc->id) }}">
                                                     <button type="button" data-modal-target="updateProductModal"
                                                         data-modal-toggle="updateProductModal"
@@ -193,7 +193,7 @@
                 </div>
                 <!-- Modal body -->
                 <div id="modalBody">
-                    <div class="grid gap-4 mb-4 sm:grid-cols-2">
+                    <div class="grid gap-4 mb-4 sm:grid-cols-2 text-center">
                         <span id="id" hidden>N/A</span>
                         <div><label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Emp
@@ -260,15 +260,15 @@
                         },
                         {
                             id: 2,
-                            name: 'Internal Training'
+                            name: 'Project Training'
                         },
                         {
                             id: 3,
-                            name: 'External Training'
+                            name: 'Internal Training'
                         },
                         {
                             id: 4,
-                            name: 'Project Training'
+                            name: 'External Training'
                         }
                     ];
 
