@@ -13,30 +13,29 @@ class PesertaController extends Controller
      */
     public function index(Request $request)
     {
-        $searchQuery = $request->input('badge_no', '');
+        $searchQuery = $request->input('badge_no');
 
         // Mulai dengan query peserta
         $query = Peserta::query();
 
         // Terapkan filter pencarian jika ada
         if (!empty($searchQuery)) {
-            $query->where('badge_no', 'like', '%' . $searchQuery . '%');
+            $query->where('badge_no', 'like', "%{$searchQuery}%");
         }
 
-        // Ambil data peserta berdasarkan filter pencarian
+        // Ambil data peserta berdasarkan filter pencarian atau seluruh peserta
         $peserta = $query->select('id', 'badge_no', 'employee_name', 'dept', 'position')
-        ->orderBy('employee_name', 'asc')
-        ->paginate(10);
+            ->orderBy('employee_name', 'asc')
+            ->paginate(10);
 
-
-        // Pilih view berdasarkan role
-        // Kembalikan view dengan data peserta dan pesan
+        // Kembalikan view dengan data peserta dan status pesan
         return view('peserta.index', [
             'peserta' => $peserta,
             'searchQuery' => $searchQuery, // Kirimkan pencarian ke view untuk mempertahankan nilai pencarian
-            'message' => $peserta->isEmpty()
+            'message' => $peserta->isEmpty() ? 'Tidak ada data yang ditemukan.' : ''
         ]);
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -78,7 +77,7 @@ class PesertaController extends Controller
         $peserta->save();
 
         // Mengembalikan response atau redirect
-        return redirect()->route('dashboard.peserta')->with('success', 'Peserta berhasil ditambahkan.');
+        return redirect()->route('dashboard.peserta')->with('success', 'Employee succesfully created.');
     }
 
     /**
@@ -124,7 +123,7 @@ class PesertaController extends Controller
         // Update data peserta
         $peserta->update($validated);
 
-        return redirect()->route('dashboard.peserta')->with('success', 'Peserta berhasil diperbarui.');
+        return redirect()->route('dashboard.peserta')->with('success', 'Employee succesfully updated.');
     }
 
     /**
@@ -143,7 +142,7 @@ class PesertaController extends Controller
         $peserta->delete();
 
         // Redirect atau response dengan pesan sukses
-        return redirect()->route('dashboard.peserta')->with('success', 'Peserta berhasil dihapus.');
+        return redirect()->route('dashboard.peserta')->with('success', 'Employee succesfully deleted.');
     }
 
     public function getParticipantByBadgeNo($badge_no)

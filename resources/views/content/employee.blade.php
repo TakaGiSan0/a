@@ -7,7 +7,7 @@
         @include('sidebar.superadmin.sidebar')
     @elseif(auth()->user()->role == 'Admin')
         @include('sidebar.admin.sidebar')
-    @elseif(auth()->user()->role == 'user')
+    @elseif(auth()->user()->role == 'User')
         @include('sidebar.user.sidebar')
     @endif
 @endsection

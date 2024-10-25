@@ -28,6 +28,7 @@ class TrainingRecordsImport implements ToModel, WithHeadingRow
     public function model(array $row)
     {
        
+        
         // Cek atau tambahkan kategori berdasarkan nama kategori
         $category = Category::firstOrCreate(['name' => $row['training_category']], ['id' => $this->getCategoryId($row['training_category'])]);
 

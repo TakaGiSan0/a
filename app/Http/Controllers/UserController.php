@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
-
 class UserController extends Controller
 {
     /**
@@ -20,15 +19,14 @@ class UserController extends Controller
         // Ambil role pengguna saat ini
         $userRole = auth('')->user()->role; // Asumsikan 'role' adalah atribut di tabel users
 
-
         // Pastikan $message selalu terdefinisi
         $message = $user->isEmpty() ? 'No results found for your search.' : '';
 
         // Kembalikan view dengan data user dan pesan
-        return view('user.index', [
+        return response()->view('user.index', [
             'user' => $user,
             'message' => $message,
-        ]);
+        ], 200);
     }
 
     /**
@@ -39,7 +37,7 @@ class UserController extends Controller
         $userRole = auth('')->user()->role; // Asumsikan 'role' adalah atribut di tabel users
 
         // Pilih view berdasarkan role
-        return view('user.create');
+        return response()->view('user.create', [], 200);
     }
 
     /**
@@ -81,7 +79,7 @@ class UserController extends Controller
 
         $user->save();
 
-        return redirect()->route('user.index')->with('success', 'User created successfully.');
+        return redirect()->route('user.index')->with('success', 'User created successfully.')->setStatusCode(201);
     }
 
     /**
@@ -89,13 +87,14 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        //
+        // Implementasi fungsi show jika diperlukan
+        return response()->json([], 200);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(user $user)
+    public function edit(User $user)
     {
         // Cek otorisasi menggunakan policy
         $this->authorize('update', $user);
@@ -103,15 +102,14 @@ class UserController extends Controller
         // Ambil role pengguna saat ini
         $userRole = auth('')->user()->role; // Asumsikan 'role' adalah atribut di tabel users
 
-
         // Kembalikan view dengan data user
-        return view(('user.edit'), compact('user'));
+        return response()->view('user.edit', compact('user'), 200);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, user $user)
+    public function update(Request $request, User $user)
     {
         // Validasi input dengan pengecualian untuk ID yang sedang diperbarui
         $validated = $request->validate(
@@ -132,12 +130,10 @@ class UserController extends Controller
             unset($validated['password']);
         }
         // Update data user
-
         $user->update($validated);
 
-        return redirect()->route('user.index')->with('success', 'User berhasil diperbarui.');
+        return redirect()->route('user.index')->with('success', 'User successfully updated.')->setStatusCode(200);
     }
-
 
     /**
      * Remove the specified resource from storage.
@@ -152,6 +148,6 @@ class UserController extends Controller
         // Hapus data user
         $user->delete();
 
-        return redirect()->route('user.index')->with('success', 'Peserta berhasil dihapus.');
+        return redirect()->route('user.index')->with('success', 'User successfully deleted.')->setStatusCode(200);
     }
 }

@@ -108,7 +108,7 @@ class FormController extends Controller
         }
 
 
-        return redirect()->route('dashboard.index')->with('success', 'Peserta berhasil ditambahkan.');
+        return redirect()->route('dashboard.index')->with('success', 'Training succesfully created.');
     }
 
 
@@ -183,7 +183,7 @@ class FormController extends Controller
         }
 
         // Redirect atau response dengan pesan sukses
-        return redirect()->route('dashboard.index')->with('success', 'Peserta berhasil diperbarui.');
+        return redirect()->route('dashboard.index')->with('success', 'Training succesfully updated.');
     }
 
     /**
@@ -200,7 +200,7 @@ class FormController extends Controller
         $trainingRecord->delete();
 
         // Redirect atau response dengan pesan sukses
-        return redirect()->route('dashboard.index')->with('success', 'Peserta berhasil dihapus.');
+        return redirect()->route('dashboard.index')->with('success', 'Training succesfully deleted.');
     }
 
     private function validationRules()

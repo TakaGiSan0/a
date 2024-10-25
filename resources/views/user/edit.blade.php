@@ -14,7 +14,7 @@
                 </ul>
             </div>
         @endif
-        <form action="{{ route('superadmin.user.update', $user->id) }}"
+        <form action="{{ route('user.update', $user->id) }}"
             class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 justify-center items-center" method="POST">
             @csrf
             @method('PUT')
@@ -24,7 +24,7 @@
                 </label>
                 <input
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    name="user" id="user" type="text" placeholder="{{ old('user', $user->user) }}">
+                    name="user" id="user" type="text" value="{{ old('user', $user->user) }}">
             </div>
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
@@ -32,7 +32,7 @@
                 </label>
                 <input
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="name" type="text" name="name" placeholder="{{ old('name', $user->name) }}">
+                    id="name" type="text" name="name" value="{{ old('name', $user->name) }}">
             </div>
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="username">

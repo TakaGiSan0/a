@@ -2,38 +2,40 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\category;
+use App\Models\peserta;
 use Illuminate\Http\Request;
 use App\Models\Training_Record;
+
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class SummaryController extends Controller
 {
     public function index(Request $request)
     {
+        $stations = $request->input('station');
+        $depts = $request->input('dept');
+        $training_date = $request->input('training_date');
+        $search = $request->input('search');
+
         $trainingRecords = Training_Record::with(['trainingCategory:id,name'])
-            ->orderBy('training_date', 'desc');
+            ->when($search, function ($query, $search) {
+                $query->where('training_name', 'like', '%' . $search . '%');
+            })
+            ->when($training_date, function ($query, $training_date) {
+                $query->whereDate('training_date', $training_date);
+            })
+            ->when(request('category'), function ($query, $category) {
+                $query->where('category_id', $category);
+            })
+            ->orderBy('training_date', 'desc')
+            ->paginate(10);
 
-        if ($request->has('tanggal')) {
-            $trainingRecords->whereDate('created_at', $request->input('tanggal'));
-        }
+        $training_categories = Category::all();
 
-        if ($request->has('station')) {
-            $trainingRecords->where('station', $request->input('station'));
-        }
-
-        if ($request->has('training_category')) {
-            $trainingRecords->where('category_id', $request->input('training_category'));
-        }
-
-        if ($request->has('search')) {
-            $trainingRecords->where('training_name', 'like', '%' . $request->input('search') . '%');
-        }
-
-        $training_records = $trainingRecords->paginate(10);
-
-
-        return view('content.summary', compact('training_records'));
+        return view('content.summary', compact('trainingRecords', 'training_categories', 'training_date', 'search'));
     }
+
 
     public function show($id)
     {
@@ -109,8 +111,9 @@ class SummaryController extends Controller
             'training_date' => $trainingRecord->training_date,
             'skill_code' => $trainingRecord->skill_code,
             'status' => $trainingRecord->status,
-            'participants' => $trainingRecord->pesertas->map(function ($peserta) {
+            'participants' => $trainingRecord->pesertas->map(function ($peserta, $no) {
                 return [
+                    'event_number' => $no + 1,
                     'badge_no' => $peserta->badge_no,
                     'employee_name' => $peserta->employee_name,
                     'dept' => $peserta->dept,

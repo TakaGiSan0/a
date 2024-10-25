@@ -5,6 +5,7 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
+            font-size: 12px;
         }
         .table {
             width: 100%;
@@ -27,7 +28,7 @@
     <p><strong>Department:</strong> {{ $peserta->dept }}</p>
     <p><strong>Position:</strong> {{ $peserta->position }}</p>
 
-    <h2>Training Records</h2>
+    <h2 style="text-align: center">Training Records</h2>
 
     @if($grouped_records && $grouped_records->count())
         @foreach($grouped_records as $category_id => $records)

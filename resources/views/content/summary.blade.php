@@ -7,7 +7,7 @@
         @include('sidebar.superadmin.sidebar')
     @elseif(auth()->user()->role == 'Admin')
         @include('sidebar.admin.sidebar')
-    @elseif(auth()->user()->role == 'user')
+    @elseif(auth()->user()->role == 'User')
         @include('sidebar.user.sidebar')
     @endif
 @endsection
@@ -21,7 +21,7 @@
                 <!-- Start coding here -->
 
                 <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-lg">
-                    <form action="">
+                    <form method="GET" action="{{ route('dashboard.summary') }}">
                         <div class="relative mb-10 w-full flex  items-center justify-between rounded-md">
                             <svg class="absolute left-2 block h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg"
                                 width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -31,80 +31,73 @@
                             </svg>
                             <input type="text" name="search" id="search"
                                 class="h-12 w-full cursor-text rounded-md border border-gray-100 bg-gray-100 py-4 pr-40 pl-12 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                                placeholder="Training Name" />
+                                placeholder="Training Name" value="{{ request('search') }}" />
                         </div>
+
+                        <form method="GET" action="{{ route('dashboard.summary') }}"
+                            class="p-6 bg-white rounded-lg shadow-md">
+                            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
+                                <div class="flex flex-col">
+                                    <label for="training_date" class="text-sm font-medium text-gray-700">Training
+                                        Date</label>
+                                    <input type="date" id="training_date" name="training_date"
+                                        value="{{ request('training_date') }}"
+                                        class="mt-2 block w-full cursor-pointer rounded-md border border-gray-300 bg-gray-50 px-3 py-2 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" />
+                                </div>
+                                <div class="flex flex-col">
+                                    <label for="training_category" class="text-sm font-medium text-gray-700">Training
+                                        Category</label>
+                                    <select id="category" name="category"
+                                        class="mt-2 block w-full rounded-md border border-gray-300 bg-gray-50 px-3 py-2 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                                        <option value="">All Categories</option>
+                                        @foreach ($training_categories as $category)
+                                            <option value="{{ $category->id }}"
+                                                {{ request('category') == $category->id ? 'selected' : '' }}>
+                                                {{ $category->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="flex justify-end">
+                                <button type="submit"
+                                    class="mt-4 inline-flex h-10 w-50 items-center justify-center rounded-lg bg-blue-600 py-2 px-4 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300">
+                                    Filter
+                                </button>
+                            </div>
+                        </form>
+
                     </form>
-                    <form id="filterForm" method="get" class="">
 
-                        <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4">
-                            <div class="flex flex-col">
-                                <label for="manufacturer" class="text-sm font-medium text-stone-600">Dept</label>
-
-                                <select name="manufacturer" id="dept"
-                                    class="mt-2 block w-full rounded-md border border-gray-100 bg-gray-100 px-2 py-2 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                    <option>N/A</option>
-                                    <option>N/A</option>
-                                    <option>N/A</option>
-                                </select>
-                            </div>
-
-                            <div class="flex flex-col">
-                                <label for="manufacturer" class="text-sm font-medium text-stone-600">Station</label>
-
-                                <select name="station" id="station"
-                                    class="mt-2 block w-full rounded-md border border-gray-100 bg-gray-100 px-2 py-2 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                    @foreach ($training_records as $rc)
-                                        <option value="{{ $rc->station }}">{{ $rc->station }}</option>
-                                    @endforeach
-
-                                </select>
-                            </div>
-
-                            <div class="flex flex-col">
-                                <label for="date" class="text-sm font-medium text-stone-600">Training Date</label>
-                                <input type="date" id="tanggal" name="tanggal"
-                                    class="mt-2 block w-full cursor-pointer rounded-md border border-gray-100 bg-gray-100 px-2 py-2 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" />
-                            </div>
-
-                            <div class="flex flex-col">
-                                <label for="status" class="text-sm font-medium text-stone-600">Training Category</label>
-
-                                <select name="training_category" id="training_category"
-                                    class="mt-2 block w-full cursor-pointer rounded-md border border-gray-100 bg-gray-100 px-2 py-2 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                    @foreach ($training_records as $training_category)
-                                        <option value="{{ $training_category->id }}">{{ $training_category->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Cari</button>
-                    </form>
                 </div>
-                <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden mt-5">
+            </div>
+            <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden mt-5">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-center text-gray-500 dark:text-gray-400">
+                        <thead
+                            class="text-xs text-center text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                            <tr>
+                                <th scope="col" class="px-4 py-4">No</th>
+                                <th scope="col" class="px-4 py-4">Doc. Ref</th>
+                                <th scope="col" class="px-4 py-3">Training Category</th>
+                                <th scope="col" class="px-4 py-3">Training Name</th>
+                                <th scope="col" class="px-4 py-3">Dept</th>
+                                <th scope="col" class="px-4 py-3">Station</th>
+                                <th scope="col" class="px-4 py-3">Trainer Name</th>
+                                <th scope="col" class="px-4 py-3">Training Date</th>
+                                <th scope="col" class="px-4 py-3">Event Number</th>
+                                <th scope="col" class="px-4 py-3">Action</th>
 
-                    <div class="overflow-x-auto mt-4">
+                            </tr>
+                        </thead>
                         @php
-                            $uniqueRecords = $training_records->unique('doc_ref');
+                            $uniqueRecords = $trainingRecords->unique('doc_ref');
                         @endphp
-                        <?php $no = ($training_records->currentPage() - 1) * $training_records->perPage(); ?>
-                        @foreach ($uniqueRecords as $rc)
-                            <table class="w-full text-sm text-center text-gray-500 dark:text-gray-400">
-                                <thead
-                                    class="text-xs text-center text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                    <tr>
-                                        <th scope="col" class="px-4 py-4">No</th>
-                                        <th scope="col" class="px-4 py-4">Doc. Ref</th>
-                                        <th scope="col" class="px-4 py-3">Training Category</th>
-                                        <th scope="col" class="px-4 py-3">Training Name</th>
-                                        <th scope="col" class="px-4 py-3">Dept</th>
-                                        <th scope="col" class="px-4 py-3">Station</th>
-                                        <th scope="col" class="px-4 py-3">Trainer Name</th>
-                                        <th scope="col" class="px-4 py-3">Training Date</th>
-                                        <th scope="col" class="px-4 py-3">Event Number</th>
-                                        <th scope="col" class="px-4 py-3">Action</th>
 
-                                    </tr>
-                                </thead>
+                        <?php $no = ($trainingRecords->currentPage() - 1) * $trainingRecords->perPage(); ?>
+                        <?php $no = 0; ?>
+                        @if ($trainingRecords->isNotEmpty())
+                            @foreach ($uniqueRecords as $rc)
                                 <tbody>
                                     <tr class="border-b dark:border-gray-700">
                                         <td scope="row" class="px-4 py-3 ">
@@ -116,15 +109,16 @@
                                         <td class="px-4 py-3">{{ $rc->station }}</td>
                                         <td class="px-4 py-3">{{ $rc->trainer_name ?? 'N/A' }}</td>
                                         <td class="px-4 py-3">{{ $rc->training_date ?? 'N/A' }}</td>
-                                        <td class="px-4 py-3">TR-0{{ $rc->id ?? 'N/A' }}</td>
+                                        <td class="px-4 py-3">TR-{{ str_pad(+$no, 3, '0', STR_PAD_LEFT) }}</td>
                                         <td class="px-4 py-3 flex items-center justify-center">
-                                            @if (Auth::user()->role != 'user')
+                                            @if (in_array(Auth::user()->role, ['Super Admin', 'Admin']))
                                                 <a href="{{ route('download.summary', $rc->id) }}">
                                                     <button type="button" data-modal-target="updateProductModal"
                                                         data-modal-toggle="updateProductModal"
                                                         class="flex items-center justify-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
-                                                        <svg class="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg"
-                                                            viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                        <svg class="w-5 h-5 flex-shrink-0"
+                                                            xmlns="http://www.w3.org/2000/svg" viewbox="0 0 20 20"
+                                                            fill="currentColor" aria-hidden="true">
                                                             <path
                                                                 d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
                                                             <path fill-rule="evenodd" clip-rule="evenodd"
@@ -133,7 +127,7 @@
                                                     </button>
                                                 </a>
                                             @endif
-                                        
+
                                             <button type="button" data-modal-target="readProductModal"
                                                 data-modal-toggle="readProductModal"
                                                 onclick="openModal({{ $rc->id }})"
@@ -146,18 +140,23 @@
                                                 </svg>
                                             </button>
                                         </td>
-                                        
                                     </tr>
                                 </tbody>
-                            </table>
-                        @endforeach
-                    </div>
-                    <div class="mt-4">
-                        {{ $training_records->links() }}
-                    </div>
+                            @endforeach
+                        @else
+                            <tr>
+                                <td colspan="10" class="px-4 py-3 text-center">Tidak ada training records ditemukan.
+                                </td>
+                            </tr>
+                        @endif
+                    </table>
+                </div>
+                <div class="mt-4">
+                    {{ $trainingRecords->links() }}
                 </div>
             </div>
-        </section>
+    </div>
+    </section>
     </div>
 
 
@@ -258,16 +257,16 @@
                                 </tr>
                             </thead>
                             ${record.peserta.map(peserta => `
-                                                                                        <tbody class="text-center">
-                                                                                            <td scope="col" class="px-4 py-3">${peserta.employee_name}</td>
-                                                                                            <td scope="col" class="px-4 py-3">${peserta.badge_no}</td>
-                                                                                            <td scope="col" class="px-4 py-3">${peserta.dept}</td>
-                                                                                            <td scope="col" class="px-4 py-3">${peserta.position}</td>
-                                                                                            <td scope="col" class="px-4 py-3">${peserta.pivot.theory_result || 'N/A'}</td>
-                                                                                            <td scope="col" class="px-4 py-3">${peserta.pivot.practical_result || 'N/A'}</td>
-                                                                                            <td scope="col" class="px-4 py-3">${peserta.pivot.level || 'N/A'}</td>
-                                                                                            <td scope="col" class="px-4 py-3">${peserta.pivot.final_judgement || 'N/A'}</td>
-                                                                                        </tbody>                                                                                     `).join('')}
+                                                                                                                                                                                    <tbody class="text-center">
+                                                                                                                                                                                        <td scope="col" class="px-4 py-3">${peserta.employee_name}</td>
+                                                                                                                                                                                        <td scope="col" class="px-4 py-3">${peserta.badge_no}</td>
+                                                                                                                                                                                        <td scope="col" class="px-4 py-3">${peserta.dept}</td>
+                                                                                                                                                                                        <td scope="col" class="px-4 py-3">${peserta.position}</td>
+                                                                                                                                                                                        <td scope="col" class="px-4 py-3">${peserta.pivot.theory_result || 'N/A'}</td>
+                                                                                                                                                                                        <td scope="col" class="px-4 py-3">${peserta.pivot.practical_result || 'N/A'}</td>
+                                                                                                                                                                                        <td scope="col" class="px-4 py-3">${peserta.pivot.level || 'N/A'}</td>
+                                                                                                                                                                                        <td scope="col" class="px-4 py-3">${peserta.pivot.final_judgement || 'N/A'}</td>
+                                                                                                                                                                                    </tbody>                                                                                     `).join('')}
                         
                 `).join('');
 
@@ -283,6 +282,22 @@
 
         function hideModal() {
             document.getElementById('modalBody').style.display = 'none';
+        }
+
+        // Toggle untuk membuka/menutup dropdown
+        function toggleDropdown() {
+            var dropdown = document.getElementById("filterDropdown");
+            dropdown.classList.toggle("hidden");
+        }
+
+        // Tutup dropdown saat mengklik di luar elemen
+        window.onclick = function(event) {
+            var dropdown = document.getElementById("filterDropdown");
+            var button = document.getElementById("filterDropdownButton");
+
+            if (!button.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.classList.add("hidden");
+            }
         }
     </script>
 

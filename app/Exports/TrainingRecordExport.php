@@ -18,9 +18,10 @@ class TrainingRecordExport implements FromCollection, WithHeadings
     {
         // Ambil data dari database tanpa ROW_NUMBER()
         $data = DB::table('training_records')
-            ->join('hasil_peserta', 'training_records.id', '=', 'hasil_peserta.training_record_id')
-            ->join('pesertas', 'hasil_peserta.peserta_id', '=', 'pesertas.id')
-            ->join('categories', 'training_records.category_id', '=', 'categories.id')  // Join ke tabel categories
+        ->join('hasil_peserta', 'training_records.id', '=', 'hasil_peserta.training_record_id')
+        ->join('pesertas', 'hasil_peserta.peserta_id', '=', 'pesertas.id')
+        ->join('categories', 'training_records.category_id', '=', 'categories.id')  // Join ke tabel categories
+            ->orderBy('training_date', 'desc')
             ->select(
                 'doc_ref',
                 'rev',
@@ -41,7 +42,13 @@ class TrainingRecordExport implements FromCollection, WithHeadings
                 'categories.name as category_name',  // Ambil nama kategori
                 'license'
             )
-            ->get();
+            
+            ->get()
+            ->map(function ($item) {
+                // Ganti license dengan checkbox unicode
+                $item->license = $item->license == 1 ? '☑' : '☐';
+                return $item;
+            });
 
         // Menambahkan nomor urut di posisi pertama
         $data = $data->map(function ($item, $key) {

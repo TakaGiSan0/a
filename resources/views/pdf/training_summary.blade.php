@@ -12,22 +12,26 @@
         }
 
         .header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px; /* Jarak bawah header */
+    }
+
+        .header h1 {
+        flex-grow: 1; /* Agar judul tetap di tengah */
+        text-align: center;
+        margin: 0; /* Hilangkan margin default */
+    }
 
         .content {
-            margin-top: 20px;
-        }
+        width: 100%;
+    }
 
         /* Flexbox styling untuk summary section */
         .summary-section {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            /* Membuat kolom kiri dan kanan */
-            margin-bottom: 20px;
-        }
+        margin-bottom: 20px;
+        border-collapse: collapse;
+    }
 
         .summary-item {
             width: 48%;
@@ -49,12 +53,16 @@
             /* Konten kanan berada di kanan */
         }
 
-        /* Styling untuk tabel participants */
         table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
+        width: 100%;
+        border-collapse: collapse; /* Menghilangkan garis antar sel */
+    }
+
+    td, th {
+        text-align: left; /* Mengatur teks agar berada di kiri */
+        padding: 8px; /* Menambahkan padding untuk spasi antar teks */
+        border: none; /* Menghilangkan garis tabel */
+    }
 
         table th,
         table td {
@@ -66,54 +74,43 @@
         table th {
             background-color: #f0f0f0;
         }
+
+        .event-number {
+       text-align: center
+        font-size: 14px; /* Ukuran teks event number */
+    }
     </style>
 </head>
 
 <body>
     <div class="header">
+        
         <h1>Summary Training Record</h1>
+        <div class="event-number" style="text-align: center; font-size: 14px;">
+            Event Number : TR-
+        </div>
+        
     </div>
 
     <div class="content">
         <!-- Summary Section tanpa table, dengan teks justify -->
-        <div class="summary-section">
-            <!-- Kolom Kiri (Training Name, Job Skill, Station, dll.) -->
-            <div class="summary-item">
-                <strong>Training Name:</strong>
-                <span>{{ $training_name }}</span>
-            </div>
-            <div class="summary-item">
-                <strong>Job Skill:</strong>
-                <span>{{ $job_skill }}</span>
-            </div>
-            <div class="summary-item">
-                <strong>Station:</strong>
-                <span>{{ $station }}</span>
-            </div>
-            <div class="summary-item">
-                <strong>Skill Code:</strong>
-                <span>{{ $skill_code }}</span>
-            </div>
-
-            <!-- Kolom Kanan (Rev, Trainer Name, Training Date, dll.) -->
-            <div class="summary-item">
-                <strong>Rev:</strong>
-                <span>{{ $rev }}</span>
-            </div>
-            <div class="summary-item">
-                <strong>Trainer Name:</strong>
-                <span>{{ $trainer_name }}</span>
-            </div>
-            <div class="summary-item">
-                <strong>Training Date:</strong>
-                <span>{{ $training_date }}</span>
-            </div>
-            <div class="summary-item">
-                <strong>Doc Ref:</strong>
-                <span>{{ $doc_ref }}</span>
-            </div>
-        </div>
-
+        <table class="summary-section">
+            <tr>
+                <td width="50%">
+                    <strong>Training Name:</strong> {{ $training_name }} <br>
+                    <strong>Job Skill:</strong> {{ $job_skill }} <br>
+                    <strong>Station:</strong> {{ $station }} <br>
+                    <strong>Skill Code:</strong> {{ $skill_code }} <br>
+                </td>
+                <td width="50%">
+                    <strong>Rev:</strong> {{ $rev }} <br>
+                    <strong>Trainer Name:</strong> {{ $trainer_name }} <br>
+                    <strong>Training Date:</strong> {{ $training_date }} <br>
+                    <strong>Doc Ref:</strong> {{ $doc_ref }} <br>
+                </td>
+            </tr>
+        </table>
+    
         <!-- Table untuk Participants -->
         <table>
             <thead>

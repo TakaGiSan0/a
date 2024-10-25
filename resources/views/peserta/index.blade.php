@@ -39,37 +39,35 @@
                                         placeholder="Search" value="{{ old('badge_no', $searchQuery) }}" name="badge_no">
                                 </div>
                             </form>
-                            @if ($message)
-                                <p>{{ $message }}</p>
-                            @endif
+
 
                         </div>
                         @if (auth()->user()->role == 'Super Admin')
-                        <div
-                            class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-                            <button
-                                class="open-modal flex items-center justify-center text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800"
-                                type="button">
+                            <div
+                                class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+                                <button
+                                    class="open-modal flex items-center justify-center text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800"
+                                    type="button">
 
-                                <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20"
-                                    xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                    <path clip-rule="evenodd" fill-rule="evenodd"
-                                        d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
-                                </svg>Import Excel
-                            </button>
-                        </div>
-                        <div
-                            class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-                            <a href="{{ route('export.peserta') }}"
-                                class="flex items-center justify-center text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800">
-                                <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20"
-                                    xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                    <path clip-rule="evenodd" fill-rule="evenodd"
-                                        d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
-                                </svg>
-                                <input type="file" name="file" class="hidden" accept=".xlsx,.xls">Export Excel
-                            </a>
-                        </div>
+                                    <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20"
+                                        xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <path clip-rule="evenodd" fill-rule="evenodd"
+                                            d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
+                                    </svg>Import Excel
+                                </button>
+                            </div>
+                            <div
+                                class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+                                <a href="{{ route('export.peserta') }}"
+                                    class="flex items-center justify-center text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800">
+                                    <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20"
+                                        xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <path clip-rule="evenodd" fill-rule="evenodd"
+                                            d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
+                                    </svg>
+                                    <input type="file" name="file" class="hidden" accept=".xlsx,.xls">Export Excel
+                                </a>
+                            </div>
                         @endif
                         <div
                             class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
@@ -87,14 +85,16 @@
                         </div>
                     </div>
                     @if (session('success'))
-                        <div class="alert alert-success">
+                        <div class="alert alert-success ml-4">
                             {{ session('success') }}
                         </div>
                     @endif
                     <div class="overflow-x-auto">
+
                         <table class="w-full text-sm text-center text-gray-500 dark:text-gray-400">
                             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                 <tr>
+
                                     <th scope="col" class="px-4 py-4">No</th>
                                     <th scope="col" class="px-4 py-4">Badge No</th>
                                     <th scope="col" class="px-4 py-3">Employee Name</th>
@@ -103,12 +103,17 @@
                                     <th scope="col" class="px-4 py-3">Action</th>
                                 </tr>
                             </thead>
-                            @if ($peserta->isEmpty())
-                                <p>{{ $message }}</p>
-                            @else
-                                <?php $no = ($peserta->currentPage() - 1) * $peserta->perPage(); ?>
+
+                            <?php $no = ($peserta->currentPage() - 1) * $peserta->perPage(); ?>
+                            <tbody>
+                                @if ($peserta->isEmpty())
+                                <tr class="border-b dark:border-gray-700">
+                                    <td colspan="6" class="px-4 py-3 text-center">
+                                        {{ $message }}
+                                    </td>
+                                </tr>
+                                @else
                                 @foreach ($peserta as $p)
-                                    <tbody>
                                         <tr class="border-b dark:border-gray-700">
                                             <th scope="row" name="id"
                                                 class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -124,11 +129,11 @@
                                                         fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                         <path stroke="none" d="M0 0h24v24H0z" />
                                                         <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
-                                                        <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
+                                                        <line x1="13.5" y1="6.5" x2="17.5"
+                                                            y2="10.5" />
                                                     </svg>
                                                 </a>
-                                                <form action="{{ route('superadmin.peserta.destroy', $p->id) }}"
-                                                    method="POST"
+                                                <form action="{{ route('peserta.destroy', $p->id) }}" method="POST"
                                                     onsubmit="return confirm('Apakah Anda yakin ingin menghapus peserta ini?');">
                                                     @csrf
                                                     @method('DELETE')
@@ -143,10 +148,12 @@
                                                 </form>
                                             </td>
                                         </tr>
-                                    </tbody>
-                                @endforeach
+                                        @endforeach
+                                    @endif
+                                </tbody>
+
                         </table>
-                        @endif
+
                     </div>
                 </div>
             </div>
