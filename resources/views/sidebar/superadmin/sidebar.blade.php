@@ -1,5 +1,6 @@
 {{-- Sidebar Element Employee --}}
-<aside class="z-20 hidden w-64 overflow-y-auto bg-white dark:bg-gray-800 md:block flex-shrink-0">
+<aside :class="isOpen ? 'translate-x-0' : '-translate-x-full'"
+class="z-20 w-64 h-full bg-white dark:bg-gray-800 overflow-y-auto transition-transform duration-300 ease-in-out flex inset-y-0 left-0 transform">
     <div class="py-4 text-gray-500 dark:text-gray-400 text-center">
         <a class="text-lg font-bold text-gray-800 dark:text-gray-200 text-center" href="#">
             @auth
@@ -38,7 +39,7 @@
                             d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01">
                         </path>
                     </svg>
-                    <span class="ml-4">Master Data Employee</span>
+                    <span class="ml-4">Employee</span>
                 </a>
             </li>
             <li class="relative px-6 py-3">

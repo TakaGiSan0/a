@@ -117,6 +117,6 @@ class EmployeeController extends Controller
         ]);
 
         // Download PDF
-        return $pdf->download('peserta_' . $peserta->id . '_training.pdf');
+        return $pdf->download($peserta->employee_name  . ' Training Record.pdf');
     }
 }

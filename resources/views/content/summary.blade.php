@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('title', 'Dashboard')
-
 @section('sidebar')
     @if (auth()->user()->role == 'Super Admin')
         @include('sidebar.superadmin.sidebar')
@@ -11,6 +10,7 @@
         @include('sidebar.user.sidebar')
     @endif
 @endsection
+
 
 @section('content')
     <div class="container mx-auto">

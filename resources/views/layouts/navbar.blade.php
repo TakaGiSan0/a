@@ -1,9 +1,12 @@
 
-    <header class="z-10 py-4 bg-white shadow-md dark:bg-gray-800">
-        
-        <div class="container flex items-center justify-between px-6 mx-auto text-purple-600 dark:text-purple-300">
-            <button id="toggleSidebar" class="text-black">Toggle Sidebar</button>
-            <!-- Mobile hamburger -->
+<header class="z-10 py-4 bg-white shadow-md dark:bg-gray-800">
+    
+    <div x-data="{ isOpen: false }" class="container flex items-center justify-between px-6 mx-auto text-purple-600 dark:text-purple-300">
+        <!-- Mobile hamburger -->
+        <button @click="isOpen = !isOpen" class="text-black p-4">
+            Toggle Sidebar
+        </button>
+    
             <button class="p-1 mr-5 -ml-1 rounded-md md:hidden focus:outline-none focus:shadow-outline-purple"
                 @click="toggleSideMenu" aria-label="Menu">
                 <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
@@ -26,9 +29,9 @@
                 <!-- Theme toggler -->
                 <li class="flex">
                     <button class="rounded-md focus:outline-none focus:shadow-outline-purple" @click="toggleTheme"
-                        aria-label="Toggle color mode">
-                        <template x-if="!dark">
-                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
+                    aria-label="Toggle color mode">
+                    <template x-if="!dark">
+                        <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
                             </svg>
                         </template>
@@ -56,14 +59,14 @@
                     @keydown.escape="closeProfileMenu"
                     aria-label="Account"
                     aria-haspopup="true"
-                  >
+                    >
                     <img
-                      class="object-cover w-8 h-8 rounded-full"
-                      src="https://images.unsplash.com/photo-1502378735452-bc7d86632805?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&s=aa3a807e1bbdfd4364d1f449eaa96d82"
-                      alt=""
-                      aria-hidden="true"
+                    class="object-cover w-8 h-8 rounded-full"
+                    src="https://images.unsplash.com/photo-1502378735452-bc7d86632805?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&s=aa3a807e1bbdfd4364d1f449eaa96d82"
+                    alt=""
+                    aria-hidden="true"
                     />
-                  </div>
+                </div>
                 </li>
             </ul>
         </div>
