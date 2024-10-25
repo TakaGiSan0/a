@@ -34,38 +34,40 @@
                                 placeholder="Training Name" value="{{ request('search') }}" />
                         </div>
 
-                        <form method="GET" action="{{ route('dashboard.summary') }}"
-                            class="p-6 bg-white rounded-lg shadow-md">
-                            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
-                                <div class="flex flex-col">
-                                    <label for="training_date" class="text-sm font-medium text-gray-700">Training
-                                        Date</label>
-                                    <input type="date" id="training_date" name="training_date"
-                                        value="{{ request('training_date') }}"
-                                        class="mt-2 block w-full cursor-pointer rounded-md border border-gray-300 bg-gray-50 px-3 py-2 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" />
-                                </div>
-                                <div class="flex flex-col">
-                                    <label for="training_category" class="text-sm font-medium text-gray-700">Training
-                                        Category</label>
-                                    <select id="category" name="category"
-                                        class="mt-2 block w-full rounded-md border border-gray-300 bg-gray-50 px-3 py-2 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                        <option value="">All Categories</option>
-                                        @foreach ($training_categories as $category)
-                                            <option value="{{ $category->id }}"
-                                                {{ request('category') == $category->id ? 'selected' : '' }}>
-                                                {{ $category->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                        <div
+                            class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 p-6 bg-white rounded-lg shadow-md">
+                            <div class="flex flex-col">
+                                <label for="training_date" class="text-sm font-medium text-gray-700">Training
+                                    Date</label>
+                                <input type="date" id="training_date" name="training_date"
+                                    value="{{ request('training_date') }}"
+                                    class="mt-2 block w-full cursor-pointer rounded-md border border-gray-300 bg-gray-50 px-3 py-2 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" />
                             </div>
-                            <div class="flex justify-end">
-                                <button type="submit"
-                                    class="mt-4 inline-flex h-10 w-50 items-center justify-center rounded-lg bg-blue-600 py-2 px-4 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300">
-                                    Filter
-                                </button>
+                            <div class="flex flex-col">
+                                <label for="training_category" class="text-sm font-medium text-gray-700">Training
+                                    Category</label>
+                                <select id="category" name="category"
+                                    class="mt-2 block w-full rounded-md border border-gray-300 bg-gray-50 px-3 py-2 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                                    <option value="">All Categories</option>
+                                    @foreach ($training_categories as $category)
+                                        <option value="{{ $category->id }}"
+                                            {{ request('category') == $category->id ? 'selected' : '' }}>
+                                            {{ $category->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
-                        </form>
+                        </div>
+                        <div class="flex justify-end">
+                            <button type="submit"
+                                class="mt-4 mx-3 inline-flex h-10 w-50 items-center justify-center rounded-lg bg-blue-600 py-2 px-4 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300">
+                                Filter
+                            </button>
+                            <a href="{{ route('dashboard.summary') }}"
+                                class="mt-4 mx-3 inline-flex h-10 w-50 items-center justify-center rounded-lg bg-red-600 py-2 px-4 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-300">
+                                Clear
+                            </a>
+                        </div>
 
                     </form>
 
@@ -257,16 +259,16 @@
                                 </tr>
                             </thead>
                             ${record.peserta.map(peserta => `
-                                                                                                                                                                                    <tbody class="text-center">
-                                                                                                                                                                                        <td scope="col" class="px-4 py-3">${peserta.employee_name}</td>
-                                                                                                                                                                                        <td scope="col" class="px-4 py-3">${peserta.badge_no}</td>
-                                                                                                                                                                                        <td scope="col" class="px-4 py-3">${peserta.dept}</td>
-                                                                                                                                                                                        <td scope="col" class="px-4 py-3">${peserta.position}</td>
-                                                                                                                                                                                        <td scope="col" class="px-4 py-3">${peserta.pivot.theory_result || 'N/A'}</td>
-                                                                                                                                                                                        <td scope="col" class="px-4 py-3">${peserta.pivot.practical_result || 'N/A'}</td>
-                                                                                                                                                                                        <td scope="col" class="px-4 py-3">${peserta.pivot.level || 'N/A'}</td>
-                                                                                                                                                                                        <td scope="col" class="px-4 py-3">${peserta.pivot.final_judgement || 'N/A'}</td>
-                                                                                                                                                                                    </tbody>                                                                                     `).join('')}
+                                                                                                                                                                                                <tbody class="text-center">
+                                                                                                                                                                                                    <td scope="col" class="px-4 py-3">${peserta.employee_name}</td>
+                                                                                                                                                                                                    <td scope="col" class="px-4 py-3">${peserta.badge_no}</td>
+                                                                                                                                                                                                    <td scope="col" class="px-4 py-3">${peserta.dept}</td>
+                                                                                                                                                                                                    <td scope="col" class="px-4 py-3">${peserta.position}</td>
+                                                                                                                                                                                                    <td scope="col" class="px-4 py-3">${peserta.pivot.theory_result || 'N/A'}</td>
+                                                                                                                                                                                                    <td scope="col" class="px-4 py-3">${peserta.pivot.practical_result || 'N/A'}</td>
+                                                                                                                                                                                                    <td scope="col" class="px-4 py-3">${peserta.pivot.level || 'N/A'}</td>
+                                                                                                                                                                                                    <td scope="col" class="px-4 py-3">${peserta.pivot.final_judgement || 'N/A'}</td>
+                                                                                                                                                                                                </tbody>                                                                                     `).join('')}
                         
                 `).join('');
 

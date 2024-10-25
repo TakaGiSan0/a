@@ -87,7 +87,7 @@
         
         <h1>Summary Training Record</h1>
         <div class="event-number" style="text-align: center; font-size: 14px;">
-            Event Number : TR-
+            Event Number : TR-{{ $no }}
         </div>
         
     </div>

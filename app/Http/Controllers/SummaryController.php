@@ -100,6 +100,7 @@ class SummaryController extends Controller
     public function downloadSummaryPdf($id)
     {
         $trainingRecord = Training_Record::with('pesertas')->findOrFail($id);
+        $no = 0;
 
         $data = [
             'training_name' => $trainingRecord->training_name,
@@ -111,9 +112,9 @@ class SummaryController extends Controller
             'training_date' => $trainingRecord->training_date,
             'skill_code' => $trainingRecord->skill_code,
             'status' => $trainingRecord->status,
-            'participants' => $trainingRecord->pesertas->map(function ($peserta, $no) {
+            'event_number' => $no + 1,
+            'participants' => $trainingRecord->pesertas->map(function ($peserta) {
                 return [
-                    'event_number' => $no + 1,
                     'badge_no' => $peserta->badge_no,
                     'employee_name' => $peserta->employee_name,
                     'dept' => $peserta->dept,
