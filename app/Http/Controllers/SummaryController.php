@@ -13,8 +13,6 @@ class SummaryController extends Controller
 {
     public function index(Request $request)
     {
-        $stations = $request->input('station');
-        $depts = $request->input('dept');
         $training_date = $request->input('training_date');
         $search = $request->input('search');
 

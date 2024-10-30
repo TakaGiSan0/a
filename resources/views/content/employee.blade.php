@@ -16,7 +16,8 @@
     <div class="container mx-auto">
         <!-- Dashboard Header -->
         <!-- Start block -->
-        <section class="bg-gray-100 dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden antialiased">
+        <section
+            class="bg-gray-100 dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden antialiased min-h-[300px]">
             <div class="mx-auto max-w-screen-xl px-4 lg:px-12 py-5">
                 <!-- Start coding here -->
                 <div
@@ -42,7 +43,7 @@
                             </form>
                         </div>
                         <div
-                            class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+                            class="w-full relative md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
 
                             <div class="relative inline-block text-left">
                                 <div>
@@ -59,8 +60,8 @@
                                 </div>
 
                                 <div id="filterDropdown"
-                                    class="fixed right-0 mt-2 w-56 origin-top-right rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none hidden overflow-auto max-h-96"
-                                    role="menu" aria-orientation="vertical" aria-labelledby="filterDropdownButton">
+                                    class="absolute right-0 mt-2 w-56 origin-top-right rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 overflow-auto max-h-96 hidden"
+                                    style="z-index: 9999;">
                                     <form method="GET" action="{{ url()->current() }}">
                                         <div class="p-4">
                                             <div>
@@ -81,7 +82,6 @@
                                         </div>
                                     </form>
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -156,7 +156,7 @@
                         </table>
                     </div>
                     <div class="mt-4">
-                        {{ $peserta_records->links() }}
+                        {{ $peserta_records->appends(['dept' => request('dept')])->links() }}
                     </div>
                 </div>
             </div>
@@ -357,13 +357,15 @@
 
         document.getElementById('filterDropdownButton').addEventListener('click', function() {
             const dropdown = document.getElementById('filterDropdown');
-            dropdown.classList.toggle('hidden');
+            dropdown.classList.toggle('hidden'); // Toggle visibility
         });
 
-        // Close dropdown when clicking outside
-        window.addEventListener('click', function(event) {
-            if (!event.target.closest('#filterDropdownButton')) {
-
+        // Optional: Close the dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('filterDropdown');
+            const button = document.getElementById('filterDropdownButton');
+            if (!button.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.classList.add('hidden');
             }
         });
     </script>

@@ -176,7 +176,7 @@
                 </div>
             </div>
             <div class="mt-4">
-                {{ $training_records->links() }}
+                {{ $training_records->appends(['year' => request('year')])->links() }}
             </div>
         </section>
     </div>

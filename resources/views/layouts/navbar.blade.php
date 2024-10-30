@@ -3,9 +3,6 @@
     
     <div x-data="{ isOpen: false }" class="container flex items-center justify-between px-6 mx-auto text-purple-600 dark:text-purple-300">
         <!-- Mobile hamburger -->
-        <button @click="isOpen = !isOpen" class="text-black p-4">
-            Toggle Sidebar
-        </button>
     
             <button class="p-1 mr-5 -ml-1 rounded-md md:hidden focus:outline-none focus:shadow-outline-purple"
                 @click="toggleSideMenu" aria-label="Menu">

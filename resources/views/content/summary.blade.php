@@ -83,7 +83,7 @@
                                 <th scope="col" class="px-4 py-4">Doc. Ref</th>
                                 <th scope="col" class="px-4 py-3">Training Category</th>
                                 <th scope="col" class="px-4 py-3">Training Name</th>
-                                <th scope="col" class="px-4 py-3">Dept</th>
+                                <th scope="col" class="px-4 py-3">Rev</th>
                                 <th scope="col" class="px-4 py-3">Station</th>
                                 <th scope="col" class="px-4 py-3">Trainer Name</th>
                                 <th scope="col" class="px-4 py-3">Training Date</th>
@@ -99,7 +99,7 @@
                         <?php $no = ($trainingRecords->currentPage() - 1) * $trainingRecords->perPage(); ?>
                         <?php $no = 0; ?>
                         @if ($trainingRecords->isNotEmpty())
-                            @foreach ($uniqueRecords as $rc)
+                            @foreach ($trainingRecords as $rc)
                                 <tbody>
                                     <tr class="border-b dark:border-gray-700">
                                         <td scope="row" class="px-4 py-3 ">
@@ -107,7 +107,7 @@
                                         <td class="px-4 py-3">{{ $rc->doc_ref }}</td>
                                         <td class="px-4 py-3">{{ $rc->trainingCategory->name ?? 'N/A' }}</td>
                                         <td class="px-4 py-3">{{ $rc->training_name }}</td>
-                                        <td class="px-4 py-3">{{ $rc->peserta->dept ?? 'N/A' }}</td>
+                                        <td class="px-4 py-3">{{ $rc->rev }}</td>
                                         <td class="px-4 py-3">{{ $rc->station }}</td>
                                         <td class="px-4 py-3">{{ $rc->trainer_name ?? 'N/A' }}</td>
                                         <td class="px-4 py-3">{{ $rc->training_date ?? 'N/A' }}</td>
@@ -154,7 +154,7 @@
                     </table>
                 </div>
                 <div class="mt-4">
-                    {{ $trainingRecords->links() }}
+                    {{ $trainingRecords->appends(['training_date' => request('training_date'), 'category' => request('category')])->links() }}
                 </div>
             </div>
     </div>

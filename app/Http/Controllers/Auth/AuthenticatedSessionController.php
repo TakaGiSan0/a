@@ -16,9 +16,8 @@ class AuthenticatedSessionController extends Controller
             'password' => ['required'],
         ]);
 
-        // Cari user berdasarkan username terlebih dahulu
-        $user = User::where('user', $request->user)->first();
-
+        $user = User::whereRaw('BINARY user = ?', [$request->user])->first();
+        
         // Jika user tidak ditemukan, kirim pesan error khusus
         if (!$user) {
             return back()

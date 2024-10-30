@@ -26,24 +26,25 @@ class TrainingRecordsImport implements ToModel, WithHeadingRow
      * @return \Illuminate\Database\Eloquent\Model|null
      */
     public function model(array $row)
-    {
-       
-        
-        // Cek atau tambahkan kategori berdasarkan nama kategori
-        $category = Category::firstOrCreate(['name' => $row['training_category']], ['id' => $this->getCategoryId($row['training_category'])]);
-
+    {   
+        if (!empty($row['training_category'])) {
+            $category = Category::firstOrCreate(['name' => $row['training_category']], ['id' => $this->getCategoryId($row['training_category'])]);
+        } else {
+            // Set default category jika kosong
+            $category = Category::firstOrCreate(['name' => 'N/A']);
+        }
         if (is_numeric($row['training_date'])) {
             // Excel date serial number to Unix timestamp conversion
             $trainingDate = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['training_date']);
             $formattedTrainingDate = $trainingDate->format('Y-m-d');
         } else {
             // Jika tidak numeric, parsing seperti biasa
-            $trainingDate = DateTime::createFromFormat('d/m/Y', $row['Training Date']);
+            $trainingDate = DateTime::createFromFormat('d/m/Y', $row['training_date']);
 
             if ($trainingDate) {
                 $formattedTrainingDate = $trainingDate->format('Y-m-d');
             } else {
-                $formattedTrainingDate = '1970-01-01'; // default jika parsing gagal
+                $formattedTrainingDate = '1970-01-01';
             }
         }
 
@@ -74,14 +75,16 @@ class TrainingRecordsImport implements ToModel, WithHeadingRow
 
         // Tambahkan data ke tabel pivot hasil_peserta
         // Buat record di tabel pivot hasil_peserta
-        Hasil_Peserta::create([
-            'training_record_id' => $trainingRecord->id,
-            'peserta_id' => $peserta->id,
-            'theory_result' => $row['theory_result'],
-            'practical_result' => $row['practical_result'],
-            'level' => $row['level'],
-            'final_judgement' => $row['final_judgement'],
-        ]);
+            Hasil_Peserta::create([
+                'training_record_id' => $trainingRecord->id,
+                'peserta_id' => $peserta->id,
+                'theory_result' => $row['theory_result'],
+                'practical_result' => $row['practical_result'],
+                'level' => $row['level'],
+                'final_judgement' => $row['final_judgement'],
+                'license' => (!empty($row['license']) && $row['license'] == ['✔', '☑']) ? 1 : 0,
+
+            ]);
     }
 
     /**

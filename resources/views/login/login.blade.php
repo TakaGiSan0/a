@@ -74,6 +74,11 @@
                 @error('password')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
+                @if (session('message'))
+                    <div class="alert alert-warning">
+                        {{ session('message') }}
+                    </div>
+                @endif
             </form>
 
             <p class="mt-10 text-center text-sm text-gray-500">
