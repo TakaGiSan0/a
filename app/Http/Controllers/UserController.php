@@ -79,7 +79,7 @@ class UserController extends Controller
 
         $user->save();
 
-        return redirect()->route('user.index')->with('success', 'User created successfully.')->setStatusCode(201);
+        return redirect()->route('user.index')->with('success', 'User created successfully.');
     }
 
     /**
@@ -132,7 +132,7 @@ class UserController extends Controller
         // Update data user
         $user->update($validated);
 
-        return redirect()->route('user.index')->with('success', 'User successfully updated.')->setStatusCode(200);
+        return redirect()->route('user.index')->with('success', 'User successfully updated.');
     }
 
     /**
@@ -148,6 +148,6 @@ class UserController extends Controller
         // Hapus data user
         $user->delete();
 
-        return redirect()->route('user.index')->with('success', 'User successfully deleted.')->setStatusCode(200);
+        return redirect()->route('user.index')->with('success', 'User successfully deleted.');
     }
 }

@@ -97,7 +97,6 @@
                         @endphp
 
                         <?php $no = ($trainingRecords->currentPage() - 1) * $trainingRecords->perPage(); ?>
-                        <?php $no = 0; ?>
                         @if ($trainingRecords->isNotEmpty())
                             @foreach ($trainingRecords as $rc)
                                 <tbody>

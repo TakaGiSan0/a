@@ -150,7 +150,7 @@ class FormController extends Controller
     public function update(Request $request, $id)
     {
 
-        $data = $request->all();
+        $data = $request->validate($this->validationRules());
         $status = $request->has('save_as_draft') ? 'pending' : 'completed';
         $trainingRecord = Training_Record::findOrFail($id);
         $trainingRecord->update([
@@ -207,7 +207,7 @@ class FormController extends Controller
     {
         return [
             'training_name' => 'required|string|max:255',
-            'doc_ref' => 'required|string|max:255|unique:training_records,doc_ref',
+            'doc_ref' => 'required|string|max:255',
             'job_skill' => 'required|string|max:255',
             'trainer_name' => 'required|string|max:255',
             'rev' => 'required|string|max:255',

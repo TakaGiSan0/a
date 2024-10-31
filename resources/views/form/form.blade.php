@@ -59,7 +59,7 @@
                     </div>
                     <div class="sm:col-span-2"><label for="description"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Training Name</label>
-                            <input type="text" name="training_name" id="training_name"
+                        <input type="text" name="training_name" id="training_name"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             required>
                     </div>
@@ -73,8 +73,7 @@
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Trainer
                             Name</label>
                         <input type="text" name="trainer_name"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            >
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     </div>
                     <div><label for="category"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Training
@@ -97,7 +96,47 @@
                 </div>
                 <div id="participants-container" class="mt-0">
                     <div class="participant-row" id="participant_1">
-                        
+                        <table
+                            class="w-full text-sm text-center text-gray-500 dark:text-gray-400 mb-5 bg-gray-50 dark:bg-gray-700 ">
+                            <thead
+                                class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                <td
+                                    class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3">
+                                            Badge No
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Employee Name
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Dept
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Position
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Theory Result
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Practise Result
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Level
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Final Judgement
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            license
+                                        </th>
+                                    </tr>
+                                </td>
+                            </thead>
+                            <tbody id="tableBody">
+
+                            </tbody>
+                        </table>
                     </div>
                 </div>
                 <div class="flex items-center justify-center p-6 m-5">
@@ -181,45 +220,13 @@
         });
 
         document.getElementById('add-participant').addEventListener('click', function() {
-            const container = document.getElementById('participants-container');
+            const container = document.getElementById('tableBody');
             const index = container.children.length;
-            const newRow = document.createElement('div');
+            const newRow = document.createElement('tr');
             newRow.classList.add('participant-row');
 
 
-            newRow.innerHTML = `
-            <table class="w-full text-sm text-center text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                        <td class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                            <tr>
-                                <th scope="col" class="px-6 py-3">
-                                    Badge No
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Employee Name
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Dept
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Position
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Theory Result
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Practise Result
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Level
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Final Judgement
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    license
-                                </th>
-                            </tr>
+            newRow.innerHTML = `            
                         <td scope="col" class="px-1">
                             <input type="text" name="participants[${index}][badge_no]" id="badge_no_${index}"
                                 class="bg-gray-50 badge_no_input border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -285,9 +292,6 @@
 
                         </td>
                         <input type="hidden" name="participant_count" value="1">
-                    </thead>
-                </table>        
-                
     `;
             container.appendChild(newRow);
             hiddenInput.value = checkbox.checked ? "1" : "0";
