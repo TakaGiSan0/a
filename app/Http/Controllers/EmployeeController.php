@@ -15,7 +15,7 @@ class EmployeeController extends Controller
     {
         // Ambil filter dan input pencarian dari request
         $deptFilter = $request->input('dept', []); // Pastikan deptFilter adalah array
-        $searchQuery = $request->input('badge_no', '');
+        $searchQuery = $request->input('searchQuery');
 
         // Pastikan deptFilter adalah array
         if (is_string($deptFilter)) {
@@ -26,21 +26,23 @@ class EmployeeController extends Controller
         $uniqueDepts = Peserta::select('dept')->distinct()->pluck('dept')->toArray(); // Konversi ke array
 
         // Mulai dengan query peserta
-        $query = Peserta::select("id", "badge_no", "employee_name", "dept", "position")->orderBy('employee_name', 'asc');
+        $query = Peserta::select("id", "badge_no", "employee_name", "dept", "position")
+        ->when($searchQuery, function ($query, $searchQuery) {
+            $query->where('badge_no', 'like', '%' . $searchQuery . '%')
+                  ->orWhere('employee_name', 'like', '%' . $searchQuery . '%');
+        })
+        ->orderBy('employee_name', 'asc');
 
         // Terapkan filter berdasarkan dept jika ada
         if (!empty($deptFilter) && is_array($deptFilter)) {
             $query->whereIn('dept', $deptFilter);
         }
 
-        // Terapkan filter pencarian jika ada
-        if (!empty($searchQuery)) {
-            $query->where('badge_no', 'like', '%' . $searchQuery . '%');
-        }
+
         // Ambil data peserta dengan filter
         $peserta_records = $query->paginate(10);
 
-        
+
         return view('content.employee', [
             'peserta_records' => $peserta_records,
             'deptFilter' => $deptFilter, // Kirimkan filter ke view untuk mempertahankan nilai filter

@@ -15,6 +15,7 @@ class SummaryController extends Controller
     {
         $training_date = $request->input('training_date');
         $search = $request->input('search');
+         $station = $request->input('station');
 
         $trainingRecords = Training_Record::with(['trainingCategory:id,name'])
             ->when($search, function ($query, $search) {
@@ -26,12 +27,16 @@ class SummaryController extends Controller
             ->when(request('category'), function ($query, $category) {
                 $query->where('category_id', $category);
             })
+            ->when($station, function ($query, $station) {
+                $query->where('station', $station);
+            })
             ->orderBy('training_date', 'desc')
             ->paginate(10);
 
         $training_categories = Category::all();
+        $station = training_record::select('station')->distinct()->get();
 
-        return view('content.summary', compact('trainingRecords', 'training_categories', 'training_date', 'search'));
+        return view('content.summary', compact('trainingRecords', 'training_categories', 'training_date', 'search', 'station'));
     }
 
 
@@ -98,7 +103,7 @@ class SummaryController extends Controller
     public function downloadSummaryPdf($id)
     {
         $trainingRecord = Training_Record::with('pesertas')->findOrFail($id);
-        $no = 0;
+        
 
         $data = [
             'training_name' => $trainingRecord->training_name,
@@ -110,9 +115,10 @@ class SummaryController extends Controller
             'training_date' => $trainingRecord->training_date,
             'skill_code' => $trainingRecord->skill_code,
             'status' => $trainingRecord->status,
-            'event_number' => $no + 1,
+            
             'participants' => $trainingRecord->pesertas->map(function ($peserta) {
                 return [
+                    
                     'badge_no' => $peserta->badge_no,
                     'employee_name' => $peserta->employee_name,
                     'dept' => $peserta->dept,
