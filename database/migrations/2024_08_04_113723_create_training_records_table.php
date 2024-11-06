@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('skill_code', length: 50);
             $table->enum('status', ['Completed', 'Pending'])->default('Completed');
             $table->date('training_date');
+            $table->string('comment')->nullable();
             $table->unsignedBigInteger('category_id');
             $table->foreign('category_id')->references('id')->on('categories');
 

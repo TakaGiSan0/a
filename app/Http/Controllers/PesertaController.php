@@ -24,7 +24,7 @@ class PesertaController extends Controller
         }
 
         // Ambil data peserta berdasarkan filter pencarian atau seluruh peserta
-        $peserta = $query->select('id', 'badge_no', 'employee_name', 'dept', 'position')
+        $peserta = $query->select('id', 'badge_no', 'employee_name', 'dept', 'position', 'join_date', 'status', 'category_level')
             ->orderBy('employee_name', 'asc')
             ->paginate(10);
 
