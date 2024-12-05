@@ -2,7 +2,7 @@
 
 namespace App\Imports;
 
-use App\Models\Peserta;
+use App\Models\peserta;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\WithStartRow;

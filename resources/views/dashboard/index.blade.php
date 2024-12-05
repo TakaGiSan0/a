@@ -123,7 +123,7 @@
                             <?php $no = ($training_records->currentPage() - 1) * $training_records->perPage(); ?>
                             @foreach ($training_records as $rc)
                                 <tbody>
-                                    <tr class="border-b dark:border-gray-700">
+                                    <tr class="border-b">
                                         <!-- Nomor -->
                                         <td class="px-4 py-3">{{ ++$no }}</td>
                                         <td>

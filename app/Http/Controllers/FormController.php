@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Escape;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use App\Models\training_record;
-use App\Models\category;
-use App\Models\peserta;
+use App\Models\Training_Record;
+use App\Models\Category;
+use App\Models\Peserta;
 use Barryvdh\DomPDF\Facade\pdf;
 use Illuminate\Support\Facades\Log;
 

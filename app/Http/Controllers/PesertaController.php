@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\peserta;
+use App\Models\Peserta;
 use Illuminate\Http\Request;
 
 

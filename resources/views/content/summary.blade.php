@@ -114,7 +114,7 @@
                         @if ($trainingRecords->isNotEmpty())
                             @foreach ($trainingRecords as $rc)
                                 <tbody>
-                                    <tr class="border-b dark:border-gray-700">
+                                    <tr class="border-b ">
                                         <td scope="row" class="px-4 py-3 ">
                                             {{ ++$no }}</td>
                                         <td class="px-4 py-3">{{ $rc->doc_ref }}</td>
