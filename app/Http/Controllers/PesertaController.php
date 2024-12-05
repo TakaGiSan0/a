@@ -80,6 +80,7 @@ class PesertaController extends Controller
         return redirect()->route('dashboard.peserta')->with('success', 'Employee succesfully created.');
     }
 
+    
     /**
      * Display the specified resource.
      */
