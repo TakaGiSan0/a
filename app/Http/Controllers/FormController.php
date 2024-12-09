@@ -75,9 +75,16 @@ class FormController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate($this->validationRules(), $this->validationMessages());
-        $status = $request->has('save_as_draft') ? 'pending' : 'completed';
+        $status = $request->has('save_as_draft') ? 'Pending' : 'Completed';
+        
+        $approval = null; // Default
 
-        // Simpan data pelatihan utama
+        if (auth()->guard()->user()->role === 'Super Admin') {
+            $approval = $data['approval'];
+        } elseif (auth()->guard()->user()->role === 'Admin') {
+            $approval = $request->has('send') ? 'Pending' : 'Completed';
+        }
+
         $trainingRecord = Training_Record::create([
             'training_name' => $data['training_name'],
             'doc_ref' => $data['doc_ref'],
@@ -89,6 +96,7 @@ class FormController extends Controller
             'skill_code' => $data['skill_code'],
             'category_id' => $data['category_id'],
             'status' => $status,
+            'approval' => $approval,
         ]);
         if ($status === 'completed') {
             $participantsToAttach = [];
@@ -102,12 +110,10 @@ class FormController extends Controller
                         'theory_result' => $participant['theory_result'],
                         'practical_result' => $participant['practical_result'],
                     ];
-                    $trainingRecord->pesertas()->attach($participantsToAttach);
                 }
             }
+            $trainingRecord->pesertas()->attach($participantsToAttach);
         }
-
-
         return redirect()->route('dashboard.index')->with('success', 'Training succesfully created.');
     }
 
@@ -215,6 +221,7 @@ class FormController extends Controller
             'training_date' => 'required|date',
             'skill_code' => 'required|string|max:255',
             'category_id' => 'required|integer|exists:categories,id',
+            'approval' => auth()->guard()->user()->role === 'Super Admin' ? 'required|string|max:255' : '',
             'participants.*.badge_no' => 'max:255',
             'participants.*.employee_name' => 'max:255',
             'participants.*.dept' => 'max:255',

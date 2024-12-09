@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Peserta;
 use Illuminate\Support\Facades\Cache;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
 
 
 
@@ -63,6 +64,7 @@ class EmployeeController extends Controller
         $peserta = Peserta::with(['trainingRecords' => function ($query) {
             $query->withPivot('level', 'final_judgement');
         }])->findOrFail($id);
+
 
         if (!$peserta) {
             return response()->json(['error' => 'Peserta not found'], 404);

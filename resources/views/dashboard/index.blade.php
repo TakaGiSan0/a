@@ -142,7 +142,7 @@
                                         <!-- Status -->
                                         <td class="px-4 py-3 text-center">{{ $rc->status }}</td>
 
-                                        <td class="px-4 py-3 text-center">{{ $rc->status }}</td>
+                                        <td class="px-4 py-3 text-center"> {{ $rc->approval }}</td>
 
                                         <!-- Edit dan Delete Actions -->
                                         <td class="px-4 py-3 flex items-center justify-center space-x-4">

@@ -16,7 +16,7 @@ class Peserta extends Model
 
     public function trainingRecords()
     {
-        return $this->belongsToMany(Training_Record::class, 'hasil_peserta')
+        return $this->belongsToMany(Training_Record::class, 'hasil_peserta', 'peserta_id','training_record_id')
                     ->withPivot('theory_result', 'practical_result', 'level', 'final_judgement', 'license');
     }
 }
