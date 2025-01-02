@@ -62,6 +62,10 @@ Route::middleware(['auth', 'role:Super Admin,Admin'])->group(function () {
     Route::post('/index/create/store', [FormController::class, 'store'])->name('dashboard.store');
     Route::get('/index/edit/{id}', [FormController::class, 'edit'])->name('dashboard.edit');
     Route::put('/index/update/{id}', [FormController::class, 'update'])->name('dashboard.update');
+    Route::get('/training-record/{id}/comment', [FormController::class, 'show'])->name('dashboard.show');
+    Route::post('/training-record/{id}/comment', [FormController::class, 'updateComment'])->name('training-record.update-comment');
+
+
     
     
     Route::get('/Employee/dashboard', [PesertaController::class, 'index'])->name('dashboard.peserta');

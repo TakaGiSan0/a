@@ -15,17 +15,19 @@ class training_recordFactory extends Factory
     public function definition()
     {
         return [
-            'category_id' => Category::factory("id"),
-            'doc_ref' => $this->faker->word,
+            'category_id' => Category::inRandomOrder()->first()?->id,
+            'doc_ref' => $this->faker->numerify('DOC-####'),
             'station' => $this->faker->word,
             'training_date' => $this->faker->date,
-            'training_name' => $this->faker->word,
+            'training_name' => $this->faker->name,
             'job_skill' => $this->faker->word,
-            'trainer_name' => $this->faker->word,
-            'rev' => $this->faker->word,
-            'skill_code' => $this->faker->word,
-            'status' => true,
-            
+            'trainer_name' => $this->faker->name,
+            'rev' => $this->faker->randomDigitNotNull,
+            'skill_code' => $this->faker->bothify('SK-####'),
+            'status' => $this->faker->randomElement(['Completed', 'Pending']),
+            'approval' => $this->faker->randomElement(['Approved', 'Pending', 'Reject']),
+            'comment' => $this->faker->sentence
+
 
         ];
     }

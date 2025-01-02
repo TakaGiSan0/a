@@ -123,9 +123,11 @@ class FormController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show()
+    public function show($id)
     {
-        //
+        $comment = training_record::select('comment')->where('id', $id)->first();
+
+        return response()->json(['comment' => $comment->comment]);
     }
 
     /**
@@ -198,6 +200,22 @@ class FormController extends Controller
                 }
             }
         }
+
+        // Redirect atau response dengan pesan sukses
+        return redirect()->route('dashboard.index')->with('success', 'Training succesfully updated.');
+    }
+
+    public function updateComment(Request $request, $id)
+    {
+        $data = $request->validate([
+            'comment' => 'required|string',
+        ]);
+
+        $trainingRecord = Training_Record::findOrFail($id);
+
+        $trainingRecord->update([
+            'comment'=> $data['comment'],
+            ]);
 
         // Redirect atau response dengan pesan sukses
         return redirect()->route('dashboard.index')->with('success', 'Training succesfully updated.');

@@ -255,7 +255,6 @@
                         <p>Station: ${record.station}</p>
                         <p>Skill Code: ${record.skill_code}</p>
                         <p>Training Date: ${record.training_date}</p>
-                        ${record.status === 'Pending' ? '<p class="text-yellow-600">This training is pending. Please complete the requirements.</p>' : ''}
                     </div>
                         
                         <table class="w-full text-sm text-center text-gray-500 dark:text-gray-400">

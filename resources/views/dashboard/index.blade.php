@@ -171,8 +171,8 @@
                                                 </form>
                                             @endif
                                             <button type="button" data-modal-target="readProductModal"
-                                                data-modal-toggle="readProductModal"
-                                                onclick="BukaModal({{ $rc->id }})"
+                                                data-modal-toggle="readProductModal" id="commentModal"
+                                                data-id="{{ $rc->id }}"
                                                 class="items-center justify-center over:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
                                                 <svg class="w-8 h-8 flex-shrink-0 text-slate-500"
                                                     xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"
@@ -266,20 +266,24 @@
                     </button>
                 </div>
                 <!-- Modal body -->
-                <div class="p-6 space-y-6">
-                    <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                        Komentar
-                    </p>
-                    @php
-                        $isSuperAdmin = auth()->user()->role === 'Super Admin'; // Sesuaikan field role sesuai kebutuhan
-                    @endphp
+                <form action="{{ route('import.training') }}" method="POST" enctype="multipart/form-data">
+                    <div class="p-6 space-y-6">
+                        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                            Komentar
+                        </p>
+                        @php
+                            $isSuperAdmin = auth()->user()->role === 'Super Admin'; //
+                        @endphp
 
-                    <textarea name="comment" id="comment" cols="30" rows="10"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500 focus:border-blue-500 
+                        <textarea name="comment" id="comment" cols="30" rows="10"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500 focus:border-blue-500 
                         @if (!$isSuperAdmin) text-gray-400 @endif"
-                        @if (!$isSuperAdmin) readonly @endif>{{ !$isSuperAdmin ? 'Tunggu komentar dari super admin' : old('comment', $comment ?? '') }}</textarea>
+                            @if (!$isSuperAdmin) readonly @endif>{{ !$isSuperAdmin ? 'Tunggu komentar dari super admin' : old('comment', $comment ?? '') }}</textarea>
 
-                </div>
+                        <button type="submit" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded">Update</button>
+
+                    </div>
+                </form>
                 <!-- Modal footer -->
                 <div class="flex items-center justify-end p-4 border-t border-gray-200 rounded-b dark:border-gray-600">
                     <button data-modal-hide="readProductModal" type="button"
@@ -294,37 +298,49 @@
 @endsection
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const modal = document.getElementById('uploadModal');
-        const openModalButtons = document.querySelectorAll(
-            '.open-modal'); // Sesuaikan tombol untuk membuka modal
-        const closeModalButtons = document.querySelectorAll('.close-modal');
-
-        // Fungsi untuk membuka modal
-        openModalButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
-            });
-        });
-
-        // Fungsi untuk menutup modal
-        closeModalButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                modal.classList.add('hidden');
-            });
+    document.querySelectorAll('#commentModal').forEach(button => {
+        button.addEventListener('click', function() {
+            const trainingId = this.dataset.id; // Ambil ID dari data-id tombol
+            fetch(`/training-record/${trainingId}/comment`) // Fetch data dari backend
+                .then(response => response.json())
+                .then(data => {
+                    const commentField = document.getElementById('comment');
+                    commentField.value = data.comment || 'Tunggu komentar dari super admin';
+                })
+                .catch(error => console.error('Error:', error));
         });
     });
 
-    function BukaModal(id) {
-        const modal = document.getElementById('readProductModal');
-        modal.classList.remove('hidden');
-    }
-
-    document.querySelectorAll('[data-modal-hide]').forEach(button => {
-        button.addEventListener('click', () => {
-            const modal = button.closest('.fixed');
+    // Menutup modal
+    document.querySelectorAll('[data-modal-hide="readProductModal"]').forEach(button => {
+        button.addEventListener('click', function() {
+            const modal = document.getElementById('readProductModal');
             modal.classList.add('hidden');
         });
+    });
+
+    document.querySelector('form[action="{{ route('import.training') }}"]').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const trainingId = document.querySelector('#commentModal').dataset.id;
+        const comment = document.getElementById('comment').value;
+
+        fetch(`/training-record/${trainingId}/comment`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                        'content'),
+                },
+                body: JSON.stringify({
+                    comment
+                }),
+            })
+            .then(response => response.json())
+            .then(result => {
+                alert(result.message);
+                document.getElementById('readProductModal').classList.add('hidden');
+            })
+            .catch(error => console.error('Error:', error));
     });
 </script>
