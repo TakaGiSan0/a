@@ -13,10 +13,14 @@ class PesertaFactory extends Factory
     public function definition()
     {
         return [
-            'badge_no' => $this->faker->name,
-            'employee_name' => $this->faker->unique()->safeEmail,
-            'dept' => $this->faker->phoneNumber,
-            'position' => $this->faker->address,
+            'badge_no' => $this->faker->regexify('(P|C)-[0-9]{4}-[0-9]{2}'),
+            'employee_name' => $this->faker->name,
+            'dept' => $this->faker->randomElement(['Purchasing', 'Spray Paint', 'Molding 1']),
+            'position' => $this->faker->randomElement(['Purchasing Senior Officer', 'Senior Supervisor', 'Production Molding Manager']),
+            'created_at' => now(),
+            'join_date' => $this->faker->date,
+            'status' => $this->faker->randomElement(['Active', 'Non Active']),
+            'category_level' => $this->faker->randomElement(['Contractor', 'Permanent']),
         ];
     }
 }

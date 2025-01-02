@@ -69,6 +69,19 @@
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:pPlaceholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             required="">
                     </div>
+                    @if (Auth::user()->role == 'Super Admin')
+                        <div>
+                            <label for="category"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Approval</label>
+                            <select id="approval" name="approval" id="approval_1"
+                            value="{{ $trainingRecord->approval }}"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                <option value="Approved">Approved</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Reject">Reject</option>
+                            </select>
+                        </div>
+                    @endif
                     <div><label for="skill_code"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Skill
                             Code</label>

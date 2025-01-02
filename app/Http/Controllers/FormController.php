@@ -159,8 +159,16 @@ class FormController extends Controller
     {
 
         $data = $request->validate($this->validationRules());
+
         $status = $request->has('save_as_draft') ? 'pending' : 'completed';
+
+        if (auth()->guard()->user()->role === 'Super Admin') {
+            $approval = $data['approval'];
+        } elseif (auth()->guard()->user()->role === 'Admin') {
+            $approval = $request->has('send') ? 'Pending' : 'Completed';
+        }
         $trainingRecord = Training_Record::findOrFail($id);
+
         $trainingRecord->update([
             'training_name' => $data['training_name'],
             'doc_ref' => $data['doc_ref'],
@@ -172,9 +180,10 @@ class FormController extends Controller
             'skill_code' => $data['skill_code'],
             'category_id' => $data['category_id'],
             'status' => $status,
+            'approval' => $approval,
         ]);
         if ($status === 'completed') {
-            // Update data peserta
+
             $trainingRecord->pesertas()->detach();
             foreach ($data['participants'] as $participant) {
                 $peserta = Peserta::where('badge_no', $participant['badge_no'])->first();

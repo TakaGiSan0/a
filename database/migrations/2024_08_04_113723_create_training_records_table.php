@@ -21,11 +21,12 @@ return new class extends Migration
             $table->string('station', length: 50);
             $table->string('skill_code', length: 50);
             $table->enum('status', ['Completed', 'Pending'])->default('Completed');
-            $table->enum('approval', ['Completed', 'Pending']);
+            $table->enum('approval', ['Approved', 'Pending', 'Reject'])->default('Pending');
             $table->date('training_date');
             $table->unsignedBigInteger('category_id');
-            $table->foreign('category_id')->references('id')->on('categories');
-
+            $table->foreign('category_id')->references('id')->on
+            ('categories');
+            $table->string('comment')->nullable();
             $table->timestamps();
         });
     }

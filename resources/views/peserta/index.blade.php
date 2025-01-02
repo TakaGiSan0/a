@@ -100,6 +100,9 @@
                                     <th scope="col" class="px-4 py-3">Employee Name</th>
                                     <th scope="col" class="px-4 py-3">Dept</th>
                                     <th scope="col" class="px-4 py-3">Position</th>
+                                    <th scope="col" class="px-4 py-3">Join Date</th>
+                                    <th scope="col" class="px-4 py-3">Status</th>
+                                    <th scope="col" class="px-4 py-3">Category Level</th>
                                     <th scope="col" class="px-4 py-3">Action</th>
                                 </tr>
                             </thead>
@@ -122,6 +125,9 @@
                                             <td class="px-4 py-3">{{ $p->employee_name }}</td>
                                             <td class="px-4 py-3">{{ $p->dept }}</td>
                                             <td class="px-4 py-3">{{ $p->position }}</td>
+                                            <td class="px-4 py-3">{{ $p->join_date }}</td>
+                                            <td class="px-4 py-3">{{ $p->status }}</td>
+                                            <td class="px-4 py-3">{{ $p->category_level }}</td>
                                             <td class="px-4 py-3 flex items-center justify-center">
                                                 <a href="{{ route('peserta.edit', $p->id) }}">
                                                     <svg class="h-8 w-8 text-slate-500" width="24" height="24"

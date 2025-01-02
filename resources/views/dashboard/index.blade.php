@@ -156,20 +156,32 @@
                                                 </svg>
                                             </a>
                                             @if (Auth::user()->role == 'Super Admin')
-                                            <form action="{{ route('dashboard.destroy', $rc->id) }}" method="POST"
-                                                onsubmit="return confirm('Apakah Anda yakin ingin menghapus peserta ini?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger">
-                                                    <svg class="h-8 w-8 text-slate-500" fill="none"
-                                                        viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            stroke-width="2"
-                                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                                    </svg>
-                                                </button>
-                                            </form>
+                                                <form action="{{ route('dashboard.destroy', $rc->id) }}" method="POST"
+                                                    onsubmit="return confirm('Apakah Anda yakin ingin menghapus peserta ini?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger">
+                                                        <svg class="h-8 w-8 text-slate-500" fill="none"
+                                                            viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                        </svg>
+                                                    </button>
+                                                </form>
                                             @endif
+                                            <button type="button" data-modal-target="readProductModal"
+                                                data-modal-toggle="readProductModal"
+                                                onclick="BukaModal({{ $rc->id }})"
+                                                class="items-center justify-center over:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
+                                                <svg class="w-8 h-8 flex-shrink-0 text-slate-500"
+                                                    xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"
+                                                    fill="currentColor" aria-hidden="true">
+                                                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                                        d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" />
+                                                </svg>
+                                            </button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -232,6 +244,53 @@
             </form>
         </div>
     </div>
+
+    <div id="readProductModal" tabindex="-1" aria-hidden="true"
+        class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full bg-black bg-opacity-50">
+        <div class="relative w-full max-w-2xl max-h-full mx-auto">
+            <!-- Modal content -->
+            <div class="bg-white rounded-lg shadow dark:bg-gray-700">
+                <!-- Modal header -->
+                <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                        Detail Produk
+                    </h3>
+                    <button type="button" data-modal-hide="readProductModal"
+                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                        aria-label="Close">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+                </div>
+                <!-- Modal body -->
+                <div class="p-6 space-y-6">
+                    <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                        Komentar
+                    </p>
+                    @php
+                        $isSuperAdmin = auth()->user()->role === 'Super Admin'; // Sesuaikan field role sesuai kebutuhan
+                    @endphp
+
+                    <textarea name="comment" id="comment" cols="30" rows="10"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500 focus:border-blue-500 
+                        @if (!$isSuperAdmin) text-gray-400 @endif"
+                        @if (!$isSuperAdmin) readonly @endif>{{ !$isSuperAdmin ? 'Tunggu komentar dari super admin' : old('comment', $comment ?? '') }}</textarea>
+
+                </div>
+                <!-- Modal footer -->
+                <div class="flex items-center justify-end p-4 border-t border-gray-200 rounded-b dark:border-gray-600">
+                    <button data-modal-hide="readProductModal" type="button"
+                        class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:bg-gray-600 dark:hover:text-white">
+                        Tutup
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 <script>
@@ -254,6 +313,18 @@
             button.addEventListener('click', () => {
                 modal.classList.add('hidden');
             });
+        });
+    });
+
+    function BukaModal(id) {
+        const modal = document.getElementById('readProductModal');
+        modal.classList.remove('hidden');
+    }
+
+    document.querySelectorAll('[data-modal-hide]').forEach(button => {
+        button.addEventListener('click', () => {
+            const modal = button.closest('.fixed');
+            modal.classList.add('hidden');
         });
     });
 </script>
