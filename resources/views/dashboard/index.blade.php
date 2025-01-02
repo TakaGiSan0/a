@@ -170,12 +170,11 @@
                                                     </button>
                                                 </form>
                                             @endif
-                                            <button type="button" data-modal-target="readProductModal"
-                                                data-modal-toggle="readProductModal" id="commentModal"
-                                                data-id="{{ $rc->id }}"
+                                            <button type="button" onclick="show({{ $rc->id }})"
+                                                data-modal-target="readProductModal" data-modal-toggle="readProductModal"
                                                 class="items-center justify-center over:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
                                                 <svg class="w-8 h-8 flex-shrink-0 text-slate-500"
-                                                    xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"
+                                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                                                     fill="currentColor" aria-hidden="true">
                                                     <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
                                                     <path fill-rule="evenodd" clip-rule="evenodd"
@@ -266,9 +265,11 @@
                     </button>
                 </div>
                 <!-- Modal body -->
-                <form action="{{ route('import.training') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('update.comment', $rc->id) }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
                     <div class="p-6 space-y-6">
-                        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400" id="modal-content">
                             Komentar
                         </p>
                         @php
@@ -279,18 +280,17 @@
                             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500 focus:border-blue-500 
                         @if (!$isSuperAdmin) text-gray-400 @endif"
                             @if (!$isSuperAdmin) readonly @endif>{{ !$isSuperAdmin ? 'Tunggu komentar dari super admin' : old('comment', $comment ?? '') }}</textarea>
+                    </div>
+                    <!-- Modal footer -->
 
+                    <div class="flex items-center justify-end p-4 border-t border-gray-200 rounded-b dark:border-gray-600">
                         <button type="submit" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded">Update</button>
-
+                        <button data-modal-hide="readProductModal" type="button"
+                            class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:bg-gray-600 dark:hover:text-white">
+                            Tutup
+                        </button>
                     </div>
                 </form>
-                <!-- Modal footer -->
-                <div class="flex items-center justify-end p-4 border-t border-gray-200 rounded-b dark:border-gray-600">
-                    <button data-modal-hide="readProductModal" type="button"
-                        class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:bg-gray-600 dark:hover:text-white">
-                        Tutup
-                    </button>
-                </div>
             </div>
         </div>
     </div>
@@ -298,18 +298,29 @@
 @endsection
 
 <script>
-    document.querySelectorAll('#commentModal').forEach(button => {
-        button.addEventListener('click', function() {
-            const trainingId = this.dataset.id; // Ambil ID dari data-id tombol
-            fetch(`/training-record/${trainingId}/comment`) // Fetch data dari backend
-                .then(response => response.json())
-                .then(data => {
-                    const commentField = document.getElementById('comment');
-                    commentField.value = data.comment || 'Tunggu komentar dari super admin';
-                })
-                .catch(error => console.error('Error:', error));
-        });
-    });
+    function show(id) {
+        // Mengambil data komentar berdasarkan ID
+        fetch('/training-record/' + id)
+            .then(response => response.json())
+            .then(data => {
+                // Masukkan komentar ke dalam textarea modal
+                document.getElementById('comment').value = data.comment;
+                setTimeout(() => {
+
+                    // Menunggu beberapa detik sebelum menampilkan modal
+                    // Tampilkan modal setelah beberapa detik
+                    document.getElementById('readProductModal').classList.remove('hidden');
+                }, 500); // Waktu jeda 1 detik (1000 milidetik)
+            })
+            .catch(error => {
+                console.error('Terjadi kesalahan:', error);
+            });
+    }
+
+    function closeModal() {
+        // Menutup modal
+        document.getElementById('readProductModal').classList.add('hidden');
+    }
 
     // Menutup modal
     document.querySelectorAll('[data-modal-hide="readProductModal"]').forEach(button => {
@@ -317,30 +328,5 @@
             const modal = document.getElementById('readProductModal');
             modal.classList.add('hidden');
         });
-    });
-
-    document.querySelector('form[action="{{ route('import.training') }}"]').addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        const trainingId = document.querySelector('#commentModal').dataset.id;
-        const comment = document.getElementById('comment').value;
-
-        fetch(`/training-record/${trainingId}/comment`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
-                        'content'),
-                },
-                body: JSON.stringify({
-                    comment
-                }),
-            })
-            .then(response => response.json())
-            .then(result => {
-                alert(result.message);
-                document.getElementById('readProductModal').classList.add('hidden');
-            })
-            .catch(error => console.error('Error:', error));
     });
 </script>

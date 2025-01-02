@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Log;
 
 
 
+
 class FormController extends Controller
 {
     /**
@@ -124,11 +125,19 @@ class FormController extends Controller
      * Display the specified resource.
      */
     public function show($id)
-    {
-        $comment = training_record::select('comment')->where('id', $id)->first();
+{
+    $comment = training_record::select('comment')->where('id', $id)->first();
 
-        return response()->json(['comment' => $comment->comment]);
+    if (!$comment) {
+        Log::info('Data tidak ditemukan untuk ID: ' . $id);
+        return response()->json(['message' => 'Data tidak ditemukan'], 404);
     }
+
+    Log::info('Comment fetched:', ['comment' => $comment->comment]);
+    return response()->json(['comment' => $comment->comment]);
+}
+
+
 
     /**
      * Show the form for editing the specified resource.
@@ -205,7 +214,7 @@ class FormController extends Controller
         return redirect()->route('dashboard.index')->with('success', 'Training succesfully updated.');
     }
 
-    public function updateComment(Request $request, $id)
+    public function updateComment(request $request, $id)
     {
         $data = $request->validate([
             'comment' => 'required|string',
