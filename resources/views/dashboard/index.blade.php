@@ -170,17 +170,19 @@
                                                     </button>
                                                 </form>
                                             @endif
-                                            <button type="button" onclick="show({{ $rc->id }})"
-                                                data-modal-target="readProductModal" data-modal-toggle="readProductModal"
-                                                class="items-center justify-center over:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
+                                            <button type="button" data-modal-target="readProductModal"
+                                                data-modal-toggle="readProductModal" data-id="{{ $rc->id }}"
+                                                data-comment="{{ $rc->comment }}" data-approval="{{ $rc->approval }}"
+                                                class="trigger-modal items-center justify-center over:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
                                                 <svg class="w-8 h-8 flex-shrink-0 text-slate-500"
-                                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                    xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"
                                                     fill="currentColor" aria-hidden="true">
                                                     <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
                                                     <path fill-rule="evenodd" clip-rule="evenodd"
                                                         d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" />
                                                 </svg>
                                             </button>
+
                                         </td>
                                     </tr>
                                 </tbody>
@@ -265,7 +267,7 @@
                     </button>
                 </div>
                 <!-- Modal body -->
-                <form action="{{ route('update.comment', $rc->id) }}" method="POST" enctype="multipart/form-data">
+                <form id="commentForm" action="" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="p-6 space-y-6">
@@ -281,6 +283,36 @@
                         @if (!$isSuperAdmin) text-gray-400 @endif"
                             @if (!$isSuperAdmin) readonly @endif>{{ !$isSuperAdmin ? 'Tunggu komentar dari super admin' : old('comment', $comment ?? '') }}</textarea>
                     </div>
+                    @if (Auth::user()->role == 'Super Admin')
+                        <div>
+                            <label for="category"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Approval</label>
+                            <select id="approval" name="approval" id="approval_1"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                <option value="Pending"
+                                    {{ old('approval', $approval ?? '') == 'Pending' ? 'selected' : '' }}>Pending
+                                </option>
+                                <option value="Approved"
+                                    {{ old('approval', $approval ?? '') == 'Approved' ? 'selected' : '' }}>Approved
+                                </option>
+                                <option value="Reject"
+                                    {{ old('approval', $approval ?? '') == 'Reject' ? 'selected' : '' }}>Reject</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="category"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
+                            <select id="approval" name="approval" id="approval_1"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                <option value="Pending" {{ old('status', $status ?? '') == 'Pending' ? 'selected' : '' }}>
+                                    Pending
+                                </option>
+                                <option value="Completed"
+                                    {{ old('status', $status ?? '') == 'Completed' ? 'selected' : '' }}>Completed
+                                </option>
+                            </select>
+                        </div>
+                    @endif
                     <!-- Modal footer -->
 
                     <div class="flex items-center justify-end p-4 border-t border-gray-200 rounded-b dark:border-gray-600">
@@ -298,24 +330,60 @@
 @endsection
 
 <script>
-    function show(id) {
-        // Mengambil data komentar berdasarkan ID
-        fetch('/training-record/' + id)
-            .then(response => response.json())
-            .then(data => {
-                // Masukkan komentar ke dalam textarea modal
-                document.getElementById('comment').value = data.comment;
-                setTimeout(() => {
-
-                    // Menunggu beberapa detik sebelum menampilkan modal
-                    // Tampilkan modal setelah beberapa detik
-                    document.getElementById('readProductModal').classList.remove('hidden');
-                }, 500); // Waktu jeda 1 detik (1000 milidetik)
-            })
-            .catch(error => {
-                console.error('Terjadi kesalahan:', error);
+    document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById('uploadModal');
+        const openModalButtons = document.querySelectorAll(
+            '.open-modal'); // Sesuaikan tombol untuk membuka modal
+        const closeModalButtons = document.querySelectorAll('.close-modal');
+        // Fungsi untuk membuka modal
+        openModalButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
             });
-    }
+        });
+        // Fungsi untuk menutup modal
+        closeModalButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                modal.classList.add('hidden');
+            });
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const modal = document.getElementById('readProductModal');
+        const commentForm = modal.querySelector('form');
+        const commentField = modal.querySelector('#comment');
+        const approvalField = modal.querySelector('#approval');
+        const editButtons = document.querySelectorAll('.trigger-modal');
+
+        editButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const recordId = button.getAttribute('data-id');
+                const currentComment = button.getAttribute('data-comment');
+                const currentApproval = button.getAttribute('data-approval');
+
+                // Set form action
+                commentForm.action = `/training-record/${recordId}/comment`;
+
+                // Set comment field value
+                commentField.value = currentComment;
+                approvalField.value = currentApproval;
+
+                // Show modal
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            });
+        });
+
+        // Close modal
+        const closeButton = modal.querySelector('[data-modal-hide]');
+        closeButton.addEventListener('click', () => {
+            modal.classList.add('hidden');
+        });
+    });
+
+
 
     function closeModal() {
         // Menutup modal

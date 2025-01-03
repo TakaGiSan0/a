@@ -20,35 +20,35 @@ class FormController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-{
-    // Ambil parameter pencarian (search) dan tahun dari request
-    $searchQuery = $request->input('search');
-    $selectedYear = $request->input('year'); // Ambil tahun yang dipilih dari request
+    {
+        // Ambil parameter pencarian (search) dan tahun dari request
+        $searchQuery = $request->input('search');
+        $selectedYear = $request->input('year'); // Ambil tahun yang dipilih dari request
 
-    // Ambil tahun unik dari kolom training_date
-    $years = Training_Record::selectRaw('YEAR(training_date) as year')
-        ->distinct()
-        ->orderBy('year', 'desc')
-        ->pluck('year');
+        // Ambil tahun unik dari kolom training_date
+        $years = Training_Record::selectRaw('YEAR(training_date) as year')
+            ->distinct()
+            ->orderBy('year', 'desc')
+            ->pluck('year');
 
-    // Query untuk mengambil data training dengan filter tahun dan pencarian
-    $training_records = Training_Record::query()
-        ->when($searchQuery, function ($query, $searchQuery) {
-            // Filter berdasarkan nama training
-            $query->where('training_name', 'like', "%{$searchQuery}%");
-        })
-        ->when($selectedYear, function ($query, $selectedYear) {
-            // Filter berdasarkan tahun training_date
-            $query->whereYear('training_date', $selectedYear);
-        })
-        ->orderBy('training_date', 'desc')
-        ->paginate(10);
+        // Query untuk mengambil data training dengan filter tahun dan pencarian
+        $training_records = Training_Record::query()
+            ->when($searchQuery, function ($query, $searchQuery) {
+                // Filter berdasarkan nama training
+                $query->where('training_name', 'like', "%{$searchQuery}%");
+            })
+            ->when($selectedYear, function ($query, $selectedYear) {
+                // Filter berdasarkan tahun training_date
+                $query->whereYear('training_date', $selectedYear);
+            })
+            ->orderBy('training_date', 'desc')
+            ->paginate(10);
 
-    $userRole = auth('')->user()->role;
+        $userRole = auth('')->user()->role;
 
-    // Kembalikan ke view dengan data yang dibutuhkan
-    return view('dashboard.index', compact('training_records', 'years', 'searchQuery', 'selectedYear'));
-}
+        // Kembalikan ke view dengan data yang dibutuhkan
+        return view('dashboard.index', compact('training_records', 'years', 'searchQuery', 'selectedYear'));
+    }
 
 
     /**
@@ -76,14 +76,8 @@ class FormController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate($this->validationRules(), $this->validationMessages());
-        $status = $request->has('save_as_draft') || $request->has('send') ? 'pending' : 'completed';
-        $approval = null; // Default
+        $status = $request->has('save_as_draft') || $request->has('send') || $request->has('submit') ? 'pending' : 'completed';
 
-        if (auth()->guard()->user()->role === 'Super Admin') {
-            $approval = $data['approval'];
-        } elseif (auth()->guard()->user()->role === 'Admin') {
-            $approval = $request->has('send') ? 'Pending' : 'Completed';
-        }
 
         // Simpan data pelatihan utama
         $trainingRecord = Training_Record::create([
@@ -97,24 +91,21 @@ class FormController extends Controller
             'skill_code' => $data['skill_code'],
             'category_id' => $data['category_id'],
             'status' => $status,
-            'approval' => $approval,
+
         ]);
-        if ($status === 'completed') {
-            $participantsToAttach = [];
-            foreach ($data['participants'] as $participant) {
-                $peserta = Peserta::where('badge_no', $participant['badge_no'])->first();
-                if ($peserta) {
-                    $participantsToAttach[$peserta->id] = [
-                        'level' => $participant['level'],
-                        'final_judgement' => $participant['final_judgement'],
-                        'license' => $participant['license'],
-                        'theory_result' => $participant['theory_result'],
-                        'practical_result' => $participant['practical_result'],
-                    ];
-                    $trainingRecord->pesertas()->attach($participantsToAttach);
-                }
+        foreach ($data['participants'] as $participant) {
+            $peserta = Peserta::where('badge_no', $participant['badge_no'])->first();
+            if ($peserta) {
+                $trainingRecord->pesertas()->attach($peserta->id, [
+                    'level' => $participant['level'],
+                    'final_judgement' => $participant['final_judgement'],
+                    'license' => $participant['license'],
+                    'theory_result' => $participant['theory_result'],
+                    'practical_result' => $participant['practical_result'],
+                ]);
             }
         }
+        
 
 
         return redirect()->route('dashboard.index')->with('success', 'Training succesfully created.');
@@ -125,17 +116,16 @@ class FormController extends Controller
      * Display the specified resource.
      */
     public function show($id)
-{
-    $comment = training_record::select('comment')->where('id', $id)->first();
+    {
+        $comment = training_record::select('comment', 'approval', 'status')->where('id', $id)->first();
 
-    if (!$comment) {
-        Log::info('Data tidak ditemukan untuk ID: ' . $id);
-        return response()->json(['message' => 'Data tidak ditemukan'], 404);
+        if (!$comment) {
+            Log::info('Data tidak ditemukan untuk ID: ' . $id);
+            return response()->json(['message' => 'Data tidak ditemukan'], 404);
+        }
+
+        return response()->json(['comment' => $comment->comment, 'approval' => $comment->approval, 'status' => $comment->status]);
     }
-
-    Log::info('Comment fetched:', ['comment' => $comment->comment]);
-    return response()->json(['comment' => $comment->comment]);
-}
 
 
 
@@ -216,18 +206,20 @@ class FormController extends Controller
 
     public function updateComment(request $request, $id)
     {
-        $data = $request->validate([
-            'comment' => 'required|string',
+
+        $validated = $request->validate([
+            'comment' => 'required|string|max:255',
+            'approval' => 'required|string|max:255',
+            'status' => 'required|string|max:255',
         ]);
 
-        $trainingRecord = Training_Record::findOrFail($id);
+        $record = Training_Record::findOrFail($id);
+        $record->comment = $validated['comment'];
+        $record->approval = $validated['approval'];
+        $record->status = $validated['status'];
+        $record->save();
 
-        $trainingRecord->update([
-            'comment'=> $data['comment'],
-            ]);
-
-        // Redirect atau response dengan pesan sukses
-        return redirect()->route('dashboard.index')->with('success', 'Training succesfully updated.');
+        return redirect()->back()->with('success', 'Komentar berhasil diperbarui.');
     }
 
     /**
@@ -332,6 +324,4 @@ class FormController extends Controller
 
         $trainingRecord->pesertas()->attach($participantsToAttach);
     }
-
-    
 }

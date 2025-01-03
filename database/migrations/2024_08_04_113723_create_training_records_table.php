@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('rev', length: 50);
             $table->string('station', length: 50);
             $table->string('skill_code', length: 50);
-            $table->enum('status', ['Completed', 'Pending'])->default('Completed');
+            $table->enum('status', ['Completed', 'Pending'])->default('Pending');
             $table->enum('approval', ['Approved', 'Pending', 'Reject'])->default('Pending');
             $table->date('training_date');
             $table->unsignedBigInteger('category_id');
