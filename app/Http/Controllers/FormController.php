@@ -10,6 +10,7 @@ use App\Models\category;
 use App\Models\peserta;
 use Barryvdh\DomPDF\Facade\pdf;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 
 
@@ -75,8 +76,19 @@ class FormController extends Controller
      */
     public function store(Request $request)
     {
+
         $data = $request->validate($this->validationRules(), $this->validationMessages());
-        $status = $request->has('save_as_draft') || $request->has('send') || $request->has('submit') ? 'pending' : 'completed';
+
+        // Mengambil file PDF
+        if ($request->hasFile('attachment')) {
+            // Menyimpan file dengan nama yang unik
+            $pdfFile = $request->file('attachment');
+            $filePath = $pdfFile->store('attachments', 'public'); // menyimpan di storage/app/public/attachments
+
+            // Menyimpan path file di session atau variabel lain jika diperlukan
+            session()->put('pdf_file_path', $filePath);
+        }
+
 
 
         // Simpan data pelatihan utama
@@ -90,8 +102,6 @@ class FormController extends Controller
             'training_date' => $data['training_date'],
             'skill_code' => $data['skill_code'],
             'category_id' => $data['category_id'],
-            'status' => $status,
-
         ]);
         foreach ($data['participants'] as $participant) {
             $peserta = Peserta::where('badge_no', $participant['badge_no'])->first();
@@ -105,7 +115,7 @@ class FormController extends Controller
                 ]);
             }
         }
-        
+
 
 
         return redirect()->route('dashboard.index')->with('success', 'Training succesfully created.');
@@ -217,6 +227,7 @@ class FormController extends Controller
         $record->comment = $validated['comment'];
         $record->approval = $validated['approval'];
         $record->status = $validated['status'];
+  
         $record->save();
 
         return redirect()->back()->with('success', 'Komentar berhasil diperbarui.');
@@ -250,7 +261,7 @@ class FormController extends Controller
             'station' => 'required|string|max:255',
             'training_date' => 'required|date',
             'skill_code' => 'required|string|max:255',
-            'approval' => 'string|max:255',
+            'attachment' => 'required|max:10240',
             'category_id' => 'required|integer|exists:categories,id',
             'participants.*.badge_no' => 'max:255',
             'participants.*.employee_name' => 'max:255',
