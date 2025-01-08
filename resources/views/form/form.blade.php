@@ -14,7 +14,7 @@
 
     <div class="bg-gray-100 dark:bg-gray-800 transition-colors duration-300">
         <div class="container mx-auto p-4">
-            <form id="autoSaveForm" class="space-y-4" action="{{ route('dashboard.store') }}" method="POST">
+            <form id="autoSaveForm" class="space-y-4" action="{{ route('dashboard.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @if ($errors->any())
                     <div class="alert alert-danger">

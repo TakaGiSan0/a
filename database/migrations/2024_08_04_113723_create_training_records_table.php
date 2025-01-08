@@ -27,6 +27,8 @@ return new class extends Migration
             $table->foreign('category_id')->references('id')->on
             ('categories');
             $table->string('comment')->nullable();
+            $table->string('attachment')->nullable();
+
             $table->timestamps();
         });
     }

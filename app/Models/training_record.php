@@ -23,6 +23,8 @@ class training_record extends Model
         'training_date',
         'status',
         'approval',
+        'comment',
+        'attachment',
     ];
 
     public function trainingCategory()

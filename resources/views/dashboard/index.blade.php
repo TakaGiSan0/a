@@ -173,7 +173,7 @@
                                             <button type="button" data-modal-target="readProductModal"
                                                 data-modal-toggle="readProductModal" data-id="{{ $rc->id }}"
                                                 data-comment="{{ $rc->comment }}" data-approval="{{ $rc->approval }}"
-                                                
+                                                data-status="{{ $rc->status }}"
                                                 class="trigger-modal items-center justify-center over:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
                                                 <svg class="w-8 h-8 flex-shrink-0 text-slate-500"
                                                     xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"
@@ -288,7 +288,7 @@
                         <div>
                             <label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Approval</label>
-                            <select id="approval" name="approval" id="approval_1"
+                            <select id="approval" name="approval" 
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                 <option value="Pending"
                                     {{ old('approval', $approval ?? '') == 'Pending' ? 'selected' : '' }}>Pending
@@ -303,7 +303,7 @@
                         <div>
                             <label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
-                            <select id="status" name="status" id="status_1"
+                            <select id="status" name="status" 
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                 <option value="Pending"
                                     {{ old('status', $status ?? '') == 'Pending' ? 'selected' : '' }}>Pending
@@ -356,6 +356,7 @@
         const commentForm = modal.querySelector('form');
         const commentField = modal.querySelector('#comment');
         const approvalField = modal.querySelector('#approval');
+        const statusField = modal.querySelector('#status');
 
         const editButtons = document.querySelectorAll('.trigger-modal');
 
@@ -364,6 +365,7 @@
                 const recordId = button.getAttribute('data-id');
                 const currentComment = button.getAttribute('data-comment');
                 const currentApproval = button.getAttribute('data-approval');
+                const currentStatus = button.getAttribute('data-status');
 
 
                 // Set form action
@@ -372,6 +374,7 @@
                 // Set comment field value
                 commentField.value = currentComment;
                 approvalField.value = currentApproval;
+                statusField.value = currentStatus;
    
 
                 // Show modal

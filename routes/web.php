@@ -31,8 +31,8 @@ Route::get('/memory', function() {
 Route::post('login', [AuthenticatedSessionController::class, 'store'])
 ->middleware('throttle:10,1')->name('login');
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
-Route::get('/test-pdf', [SuperAdminController::class, 'generatePdf']);
-
+Route::get('/test-pdf', [FormController::class, 'showpdf']);
+Route::post('/test-pdf', [FormController::class, 'testpdf'])->name('testpdf');
 // Route AllRole
 Route::middleware(['auth:web'])->group(function () {
     // Dashboard Employee Training Record

@@ -7,10 +7,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use App\Models\training_record;
 use App\Models\category;
+use App\Models\attachments;
 use App\Models\peserta;
 use Barryvdh\DomPDF\Facade\pdf;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+
 
 
 
@@ -76,20 +78,23 @@ class FormController extends Controller
      */
     public function store(Request $request)
     {
-
         $data = $request->validate($this->validationRules(), $this->validationMessages());
 
-        // Mengambil file PDF
+        $filePath = null; // Inisialisasi path file untuk penyimpanan
         if ($request->hasFile('attachment')) {
-            // Menyimpan file dengan nama yang unik
             $pdfFile = $request->file('attachment');
-            $filePath = $pdfFile->store('attachments', 'public'); // menyimpan di storage/app/public/attachments
 
-            // Menyimpan path file di session atau variabel lain jika diperlukan
-            session()->put('pdf_file_path', $filePath);
+            // Buat nama file unik untuk menghindari konflik
+            $fileName = uniqid() . '_' . $pdfFile->getClientOriginalName();
+
+            try {
+                $filePath = $pdfFile->storeAs('attachments', $fileName, 'public');
+                Log::info('File berhasil disimpan: ' . $filePath);
+            } catch (\Exception $e) {
+                Log::error('File upload error: ' . $e->getMessage());
+                return redirect()->back()->with('error', 'Gagal mengunggah file. Silakan coba lagi.');
+            }
         }
-
-
 
         // Simpan data pelatihan utama
         $trainingRecord = Training_Record::create([
@@ -102,7 +107,9 @@ class FormController extends Controller
             'training_date' => $data['training_date'],
             'skill_code' => $data['skill_code'],
             'category_id' => $data['category_id'],
+            'attachment' => $filePath,
         ]);
+
         foreach ($data['participants'] as $participant) {
             $peserta = Peserta::where('badge_no', $participant['badge_no'])->first();
             if ($peserta) {
@@ -115,12 +122,49 @@ class FormController extends Controller
                 ]);
             }
         }
+        dd($filePath);
 
-
-
-        return redirect()->route('dashboard.index')->with('success', 'Training succesfully created.');
+        return redirect()->route('dashboard.index')->with('success', 'Training successfully created.');
     }
 
+    public function testpdf(Request $request)
+    {
+        // Validasi input
+        $data = $request->validate([
+            'attachment' => 'required|file|mimes:pdf|max:2048',
+        ]);
+
+        $filePath = null; // Inisialisasi path file untuk penyimpanan
+
+        if ($request->hasFile('attachment')) {
+            $pdfFile = $request->file('attachment');
+
+            // Buat nama file unik untuk menghindari konflik
+            $fileName = uniqid() . '_' . $pdfFile->getClientOriginalName();
+
+            try {
+                $filePath = $pdfFile->storeAs('attachments', $fileName, 'public');
+                Log::info('File berhasil disimpan: ' . $filePath);
+            } catch (\Exception $e) {
+                Log::error('File upload error: ' . $e->getMessage());
+                return redirect()->back()->with('error', 'Gagal mengunggah file. Silakan coba lagi.');
+            }
+
+            // Simpan data ke database
+            $training = attachments::create([
+                'attachment' => $filePath,
+            ]);
+
+            return redirect()->route('dashboard.index')->with('success', 'Training successfully created.');
+        }
+
+        return redirect()->back()->with('error', 'Tidak ada file yang diunggah.');
+    }
+
+    public function showpdf()
+    {
+        return view('form.showpdf');
+    }
 
     /**
      * Display the specified resource.
@@ -128,13 +172,19 @@ class FormController extends Controller
     public function show($id)
     {
         $comment = training_record::select('comment', 'approval', 'status')->where('id', $id)->first();
+        $pdfPath = $comment->attachment;
 
         if (!$comment) {
             Log::info('Data tidak ditemukan untuk ID: ' . $id);
             return response()->json(['message' => 'Data tidak ditemukan'], 404);
         }
 
-        return response()->json(['comment' => $comment->comment, 'approval' => $comment->approval, 'status' => $comment->status]);
+        return response()->json([
+            'comment' => $comment->comment, 
+            'approval' => $comment->approval, 
+            'status' => $comment->status,
+            'attachment' => asset("storage/attachment/{$pdfPath}"),
+            ]);
     }
 
 
@@ -227,7 +277,7 @@ class FormController extends Controller
         $record->comment = $validated['comment'];
         $record->approval = $validated['approval'];
         $record->status = $validated['status'];
-  
+
         $record->save();
 
         return redirect()->back()->with('success', 'Komentar berhasil diperbarui.');
@@ -261,7 +311,7 @@ class FormController extends Controller
             'station' => 'required|string|max:255',
             'training_date' => 'required|date',
             'skill_code' => 'required|string|max:255',
-            'attachment' => 'required|max:10240',
+            'attachment' => 'required|file|mimes:pdf|max:2048',
             'category_id' => 'required|integer|exists:categories,id',
             'participants.*.badge_no' => 'max:255',
             'participants.*.employee_name' => 'max:255',
