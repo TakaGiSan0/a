@@ -283,12 +283,16 @@
                             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500 focus:border-blue-500 
                         @if (!$isSuperAdmin) text-gray-400 @endif"
                             @if (!$isSuperAdmin) readonly @endif>{{ !$isSuperAdmin ? 'Tunggu komentar dari super admin' : old('comment', $comment ?? '') }}</textarea>
+                        <div class="mt-4">
+                            <iframe id="modal-attachment" class="w-full h-96" src="" frameborder="0"></iframe>
+                        </div>
+
                     </div>
                     @if (Auth::user()->role == 'Super Admin')
                         <div>
                             <label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Approval</label>
-                            <select id="approval" name="approval" 
+                            <select id="approval" name="approval"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                 <option value="Pending"
                                     {{ old('approval', $approval ?? '') == 'Pending' ? 'selected' : '' }}>Pending
@@ -303,10 +307,10 @@
                         <div>
                             <label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
-                            <select id="status" name="status" 
+                            <select id="status" name="status"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                <option value="Pending"
-                                    {{ old('status', $status ?? '') == 'Pending' ? 'selected' : '' }}>Pending
+                                <option value="Pending" {{ old('status', $status ?? '') == 'Pending' ? 'selected' : '' }}>
+                                    Pending
                                 </option>
                                 <option value="Completed"
                                     {{ old('status', $status ?? '') == 'Completed' ? 'selected' : '' }}>Completed
@@ -357,29 +361,48 @@
         const commentField = modal.querySelector('#comment');
         const approvalField = modal.querySelector('#approval');
         const statusField = modal.querySelector('#status');
+        const attachmentFrame = modal.querySelector('#modal-attachment');
 
         const editButtons = document.querySelectorAll('.trigger-modal');
 
         editButtons.forEach(button => {
             button.addEventListener('click', () => {
                 const recordId = button.getAttribute('data-id');
-                const currentComment = button.getAttribute('data-comment');
-                const currentApproval = button.getAttribute('data-approval');
-                const currentStatus = button.getAttribute('data-status');
 
+                // Fetch data dari server
+                fetch(`/training-record/${recordId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.message) {
+                            alert(data.message); // Jika ada pesan error
+                            return;
+                        }
 
-                // Set form action
-                commentForm.action = `/training-record/${recordId}/comment`;
+                        // Set form action
+                        commentForm.action = `/training-record/${recordId}/comment`;
 
-                // Set comment field value
-                commentField.value = currentComment;
-                approvalField.value = currentApproval;
-                statusField.value = currentStatus;
-   
+                        // Set field values
+                        commentField.value = data.comment || '';
+                        approvalField.value = data.approval || '';
+                        statusField.value = data.status || '';
 
-                // Show modal
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
+                        // Set attachment (PDF)
+                        if (data.attachment) {
+                            attachmentFrame.src = data.attachment;
+                        } else {
+                            attachmentFrame.src = '';
+                            alert('Attachment tidak tersedia.');
+                        }
+
+                        // Show modal
+                        modal.classList.remove('hidden');
+                        modal.classList.add('flex');
+                    })
+                    .catch(error => {
+                        console.error('Error fetching data:', error);
+                        alert('Terjadi kesalahan saat mengambil data.');
+                    });
+                    console.log(data.attachment);
             });
         });
 
@@ -389,7 +412,6 @@
             modal.classList.add('hidden');
         });
     });
-
 
 
     function closeModal() {
