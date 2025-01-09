@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('peserta_id');
             $table->unsignedBigInteger('training_record_id');
-            $table->enum('theory_result', ['Pass', 'Fail', 'N/A']);
-            $table->enum('practical_result', ['Pass', 'Fail', 'N/A']);
-            $table->enum('level', ['Level 1', 'Level 2','Level 3', 'Level 4' , 'N/A']);
-            $table->enum('final_judgement', ['Competence', 'Attend', 'N/A']);
+            $table->enum('theory_result', ['Pass', 'Fail', 'NA'])->nullable();
+            $table->enum('practical_result', ['Pass', 'Fail', 'NA'])->nullable();
+            $table->enum('level', ['Level 1', 'Level 2','Level 3', 'Level 4' , 'NA'])->nullable();
+            $table->enum('final_judgement', ['Competence', 'Attend', 'NA'])->nullable();
             $table->boolean('license')->default(0);
             $table->foreign('peserta_id')->references('id')->on('pesertas')->onDelete('cascade');
             $table->foreign('training_record_id')->references('id')->on('training_records')->onDelete('cascade');

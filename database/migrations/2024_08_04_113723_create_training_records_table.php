@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('doc_ref');
             $table->string('training_name', length: 200);
-            $table->string('job_skill', length: 50);
+            $table->string('job_skill', length: 50)->nullable();
             $table->string('trainer_name', length: 50);
-            $table->string('rev', length: 50);
-            $table->string('station', length: 50);
-            $table->string('skill_code', length: 50);
+            $table->string('rev', length: 50)->nullable();
+            $table->string('station', length: 50)->nullable();
+            $table->string('skill_code', length: 50)->nullable();
             $table->enum('status', ['Completed', 'Pending'])->default('Pending');
             $table->enum('approval', ['Approved', 'Pending', 'Reject'])->default('Pending');
             $table->date('training_date');

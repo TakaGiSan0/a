@@ -18,6 +18,7 @@ class ExcelController extends Controller
             'file' => 'required|file|mimes:xlsx,xls',
         ]);
 
+        
         // Jalankan import
         Excel::import(new MasterDataImport, $request->file('file'));
 

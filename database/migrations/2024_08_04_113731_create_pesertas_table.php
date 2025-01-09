@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('position');
             $table->date('join_date');
             $table->enum('status', ['Active', 'Non Active'])->default('Active');
-            $table->enum('category_level', ['Contractor', 'Permanent'])->default('Contractor');
+            $table->string('category_level');
             $table->timestamps();
         });
     }

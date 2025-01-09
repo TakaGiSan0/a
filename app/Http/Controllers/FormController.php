@@ -122,7 +122,6 @@ class FormController extends Controller
                 ]);
             }
         }
-        dd($filePath);
 
         return redirect()->route('dashboard.index')->with('success', 'Training successfully created.');
     }
@@ -172,22 +171,22 @@ class FormController extends Controller
     public function show($id)
     {
         $comment = training_record::select('comment', 'approval', 'status', 'attachment')->where('id', $id)->first();
- 
+
         if (!$comment) {
             Log::info('Data tidak ditemukan untuk ID: ' . $id);
             return response()->json(['message' => 'Data tidak ditemukan'], 404);
         }
 
-        $attachmentUrl = $comment->attachment 
-        ? asset("storage/" . urlencode($comment->attachment))
-        : null;
+        $attachmentUrl = $comment->attachment
+            ? asset("storage/" . urlencode($comment->attachment))
+            : null;
 
         return response()->json([
-            'comment' => $comment->comment, 
-            'approval' => $comment->approval, 
+            'comment' => $comment->comment,
+            'approval' => $comment->approval,
             'status' => $comment->status,
-            'attachment' => $attachmentUrl ,
-            ]);
+            'attachment' => $attachmentUrl,
+        ]);
     }
 
 

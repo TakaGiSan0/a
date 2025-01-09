@@ -48,8 +48,7 @@ class TrainingRecordsImport implements ToModel, WithHeadingRow
             }
         }
 
-
-
+        
         // Cek apakah peserta sudah ada berdasarkan badge_no
         $peserta = Peserta::where('badge_no', $row["badge_no"])->first();
 
@@ -70,6 +69,8 @@ class TrainingRecordsImport implements ToModel, WithHeadingRow
             'training_date' => $formattedTrainingDate,
             'trainer_name' => $row['trainer_name'],
             'category_id' => $category->id,
+            'status' => 'completed',
+            'approval' => 'Approved',
 
         ]);
 
