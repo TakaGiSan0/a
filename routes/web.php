@@ -31,7 +31,7 @@ Route::get('/memory', function() {
 Route::post('login', [AuthenticatedSessionController::class, 'store'])
 ->middleware('throttle:10,1')->name('login');
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
-Route::get('/test-pdf', [FormController::class, 'showpdf']);
+Route::get('/test-pdf', [FormController::class, 'showpdf'])->name('show.pdf');
 Route::post('/test-pdf', [FormController::class, 'testpdf'])->name('testpdf');
 // Route AllRole
 Route::middleware(['auth:web'])->group(function () {

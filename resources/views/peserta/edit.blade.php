@@ -48,6 +48,33 @@
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     id="position" type="text" name="position" value="{{ old('position', $peserta->position) }}">
             </div>
+            <div class="mb-6">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="position">
+                    Join Date
+                </label>
+                <input
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="join_date" name="join_date" type="date" value="{{ old('join_date', $peserta->join_date) }}">
+            </div>
+            <div class="mb-6">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="status">
+                    Status
+                </label>
+                <select
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="status" name="status">
+                    <option value="Active" {{ old('status', $peserta->status) == 'Active' ? 'selected' : '' }}>Active</option>
+                    <option value="Non Active" {{ old('status', $peserta->status) == 'Non Active' ? 'selected' : '' }}>Non Active</option>
+                </select>
+            </div>
+            <div class="mb-6">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="position">
+                    Category Level
+                </label>
+                <input
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="category_level" name="category_level" type="text" value="{{ old('category_level', $peserta->category_level) }}">
+            </div>
             <div class="flex items-center justify-center">
                 <button
                     class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"

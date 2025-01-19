@@ -126,45 +126,6 @@ class FormController extends Controller
         return redirect()->route('dashboard.index')->with('success', 'Training successfully created.');
     }
 
-    public function testpdf(Request $request)
-    {
-        // Validasi input
-        $data = $request->validate([
-            'attachment' => 'required|file|mimes:pdf|max:2048',
-        ]);
-
-        $filePath = null; // Inisialisasi path file untuk penyimpanan
-
-        if ($request->hasFile('attachment')) {
-            $pdfFile = $request->file('attachment');
-
-            // Buat nama file unik untuk menghindari konflik
-            $fileName = uniqid() . '_' . $pdfFile->getClientOriginalName();
-
-            try {
-                $filePath = $pdfFile->storeAs('attachments', $fileName, 'public');
-                Log::info('File berhasil disimpan: ' . $filePath);
-            } catch (\Exception $e) {
-                Log::error('File upload error: ' . $e->getMessage());
-                return redirect()->back()->with('error', 'Gagal mengunggah file. Silakan coba lagi.');
-            }
-
-            // Simpan data ke database
-            $training = attachments::create([
-                'attachment' => $filePath,
-            ]);
-
-            return redirect()->route('dashboard.index')->with('success', 'Training successfully created.');
-        }
-
-        return redirect()->back()->with('error', 'Tidak ada file yang diunggah.');
-    }
-
-    public function showpdf()
-    {
-        return view('form.showpdf');
-    }
-
     /**
      * Display the specified resource.
      */
@@ -196,8 +157,6 @@ class FormController extends Controller
      */
     public function edit($id)
     {
-        // Ambil data training record berdasarkan ID
-        // Ambil training record beserta data peserta dan pivot
         $trainingRecord = Training_Record::with('pesertas')->findOrFail($id);
 
 
@@ -225,11 +184,6 @@ class FormController extends Controller
 
         $status = $request->has('save_as_draft') ? 'pending' : 'completed';
 
-        if (auth()->guard()->user()->role === 'Super Admin') {
-            $approval = $data['approval'];
-        } elseif (auth()->guard()->user()->role === 'Admin') {
-            $approval = $request->has('send') ? 'Pending' : 'Completed';
-        }
         $trainingRecord = Training_Record::findOrFail($id);
 
         $trainingRecord->update([
@@ -243,7 +197,6 @@ class FormController extends Controller
             'skill_code' => $data['skill_code'],
             'category_id' => $data['category_id'],
             'status' => $status,
-            'approval' => $approval,
         ]);
         if ($status === 'completed') {
 
@@ -313,7 +266,7 @@ class FormController extends Controller
             'station' => 'required|string|max:255',
             'training_date' => 'required|date',
             'skill_code' => 'required|string|max:255',
-            'attachment' => 'required|file|mimes:pdf|max:2048',
+            'attachment' => 'file|mimes:pdf|max:2048',
             'category_id' => 'required|integer|exists:categories,id',
             'participants.*.badge_no' => 'max:255',
             'participants.*.employee_name' => 'max:255',

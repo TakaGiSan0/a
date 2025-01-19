@@ -100,7 +100,7 @@
                             <?php $no = ($peserta_records->currentPage() - 1) * $peserta_records->perPage(); ?>
                             @foreach ($peserta_records as $rc)
                                 <tbody>
-                                    <tr class="border-b dark:border-gray-700">
+                                    <tr class=>
                                         <th scope="row" name="id"
                                             class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                             {{ ++$no }}</th>

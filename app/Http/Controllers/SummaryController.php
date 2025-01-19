@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Training_Record;
 
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Log;
 
 class SummaryController extends Controller
 {
@@ -15,10 +16,10 @@ class SummaryController extends Controller
     {
         $training_date = $request->input('training_date');
         $search = $request->input('search');
-         $station = $request->input('station');
+        $station = $request->input('station');
 
         $trainingRecords = Training_Record::with(['trainingCategory:id,name'])
-        ->where('status', 'Completed')
+            ->where('status', 'Completed')
             ->when($search, function ($query, $search) {
                 $query->where('training_name', 'like', '%' . $search . '%');
             })
@@ -103,7 +104,7 @@ class SummaryController extends Controller
     public function downloadSummaryPdf($id)
     {
         $trainingRecord = Training_Record::with('pesertas')->findOrFail($id);
-        $no = 0;
+
 
         $data = [
             'training_name' => $trainingRecord->training_name,
@@ -115,7 +116,7 @@ class SummaryController extends Controller
             'training_date' => $trainingRecord->training_date,
             'skill_code' => $trainingRecord->skill_code,
             'status' => $trainingRecord->status,
-            'event_number' => $no + 1,
+            'no' => $trainingRecord->id,
             'participants' => $trainingRecord->pesertas->map(function ($peserta) {
                 return [
                     'badge_no' => $peserta->badge_no,
@@ -138,7 +139,10 @@ class SummaryController extends Controller
 
             return $pdf->download($fileName);
         } catch (\Exception $e) {
-            return redirect()->route('dashboard.index')->with('error', 'Terjadi kesalahan saat membuat PDF.');
+            \Log::error('Error saat membuat PDF: ' . $e->getMessage());
+            \Log::info('Data untuk PDF: ', $data);
+
+            return redirect()->route('dashboard.summary')->with('error', 'Terjadi kesalahan saat membuat PDF.');
         }
     }
 }

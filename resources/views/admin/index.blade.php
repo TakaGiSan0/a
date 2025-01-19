@@ -72,7 +72,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr class="border-b dark:border-gray-700">
+                                    <tr class=>
                                         <td class="px-4 py-3">{{ ++$no }}</td>
                                         <th scope="row"
                                             class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white flex justify-center">

@@ -49,9 +49,12 @@
             New Employee Induction (NEO)
             @elseif ($category->name === 'Project')
                 Project Training
-            @else
+            @elseif ($category->name === 'N/A')
                 Unknown Training
-            @endif</h2>
+            @else
+                Unknown Training    
+            @endif
+            </h2>
             <table class="table">
                 <thead>
                     <tr>

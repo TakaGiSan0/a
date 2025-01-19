@@ -114,7 +114,7 @@
                         @if ($trainingRecords->isNotEmpty())
                             @foreach ($trainingRecords as $rc)
                                 <tbody>
-                                    <tr class="border-b dark:border-gray-700">
+                                    <tr class=>
                                         <td scope="row" class="px-4 py-3 ">
                                             {{ ++$no }}</td>
                                         <td class="px-4 py-3">{{ $rc->doc_ref }}</td>
@@ -124,7 +124,7 @@
                                         <td class="px-4 py-3">{{ $rc->station }}</td>
                                         <td class="px-4 py-3">{{ $rc->trainer_name ?? 'N/A' }}</td>
                                         <td class="px-4 py-3">{{ $rc->training_date ?? 'N/A' }}</td>
-                                        <td class="px-4 py-3">TR-{{ str_pad(+$no, 3, '0', STR_PAD_LEFT) }}</td>
+                                        <td class="px-4 py-3">TR-{{ $rc->id }}</td>
                                         <td class="px-4 py-3 flex items-center justify-center">
                                             @if (in_array(Auth::user()->role, ['Super Admin', 'Admin']))
                                                 <a href="{{ route('download.summary', $rc->id) }}">
