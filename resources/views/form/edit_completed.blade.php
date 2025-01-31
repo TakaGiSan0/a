@@ -86,9 +86,17 @@
                     </div>
                     <div><label for="category"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Training
-                            Date</label>
-                        <input type="date" name="training_date" id="training_date"
-                            value="{{ $trainingRecord->training_date }}"
+                            Start</label>
+                        <input type="date" name="date_start" id="date_start"
+                            value="{{ $trainingRecord->date_start }}"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="17 Desember 2021">
+                    </div>
+                    <div><label for="category"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Training
+                            End</label>
+                        <input type="date" name="date_end" id="date_end"
+                            value="{{ $trainingRecord->date_end }}"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="17 Desember 2021">
                     </div>

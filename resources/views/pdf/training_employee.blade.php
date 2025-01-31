@@ -76,7 +76,7 @@
                             <tr>
                                 <td>{{ $record->training_name }}</td>
                                 <td>{{ $record->trainer_name }}</td>
-                                <td>{{ $record->training_date }}</td>
+                                <td>{{ $record->date_start }} - {{ $record->date_end }}</td>
                                 <td>{{ $record->pivot->level }}</td>
                                 <td>{{ $record->pivot->final_judgement }}</td>
                             </tr>

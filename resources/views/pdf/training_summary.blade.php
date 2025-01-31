@@ -105,7 +105,7 @@
                 <td width="50%">
                     <strong>Rev:</strong> {{ $rev }} <br>
                     <strong>Trainer Name:</strong> {{ $trainer_name }} <br>
-                    <strong>Training Date:</strong> {{ $training_date }} <br>
+                    <strong>Training Date:</strong> {{ $date_start }} - {{ $date_end }} <br>
                     <strong>Doc Ref:</strong> {{ $doc_ref }} <br>
                 </td>
             </tr>

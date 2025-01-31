@@ -14,7 +14,7 @@ class SummaryController extends Controller
 {
     public function index(Request $request)
     {
-        $training_date = $request->input('training_date');
+        $date_start = $request->input('date_start');
         $search = $request->input('search');
         $station = $request->input('station');
 
@@ -23,8 +23,8 @@ class SummaryController extends Controller
             ->when($search, function ($query, $search) {
                 $query->where('training_name', 'like', '%' . $search . '%');
             })
-            ->when($training_date, function ($query, $training_date) {
-                $query->whereDate('training_date', $training_date);
+            ->when($date_start, function ($query, $date_start) {
+                $query->whereDate('date_start', $date_start);
             })
             ->when(request('category'), function ($query, $category) {
                 $query->where('category_id', $category);
@@ -32,13 +32,13 @@ class SummaryController extends Controller
             ->when($station, function ($query, $station) {
                 $query->where('station', $station);
             })
-            ->orderBy('training_date', 'desc')
+            ->orderBy('date_start', 'desc')
             ->paginate(10);
 
         $training_categories = Category::all();
         $station = training_record::select('station')->distinct()->get();
 
-        return view('content.summary', compact('trainingRecords', 'training_categories', 'training_date', 'search', 'station'));
+        return view('content.summary', compact('trainingRecords', 'training_categories', 'date_start', 'search', 'station'));
     }
 
     public function show($id)
@@ -62,7 +62,8 @@ class SummaryController extends Controller
                 'rev' => $record->rev,
                 'station' => $record->station,
                 'skill_code' => $record->skill_code,
-                'training_date' => $record->training_date,
+                'date_start' => $record->date_start,
+                'date_end' => $record->date_end,
                 'status' => $record->status,
                 'peserta' => $record->pesertas,
             ];
@@ -88,8 +89,8 @@ class SummaryController extends Controller
             $query->where('station', $request->station);
         }
 
-        if ($request->filled('training_date')) {
-            $query->whereDate('training_date', $request->training_date);
+        if ($request->filled('date_start')) {
+            $query->whereDate('date_start', $request->date_start);
         }
 
         if ($request->filled('training_category')) {
@@ -113,7 +114,8 @@ class SummaryController extends Controller
             'trainer_name' => $trainingRecord->trainer_name,
             'rev' => $trainingRecord->rev,
             'station' => $trainingRecord->station,
-            'training_date' => $trainingRecord->training_date,
+            'date_start' => $trainingRecord->date_start,
+            'date_end' => $trainingRecord->date_end,
             'skill_code' => $trainingRecord->skill_code,
             'status' => $trainingRecord->status,
             'no' => $trainingRecord->id,
@@ -139,8 +141,6 @@ class SummaryController extends Controller
 
             return $pdf->download($fileName);
         } catch (\Exception $e) {
-            \Log::error('Error saat membuat PDF: ' . $e->getMessage());
-            \Log::info('Data untuk PDF: ', $data);
 
             return redirect()->route('dashboard.summary')->with('error', 'Terjadi kesalahan saat membuat PDF.');
         }

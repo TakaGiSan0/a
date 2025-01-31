@@ -134,7 +134,7 @@
                                             <p class="px-4 py-3 text-center">{{ $rc->training_name }}</p>
                                         </td>
                                         <!-- Tanggal Training -->
-                                        <td class="px-4 py-3 text-center">{{ $rc->training_date }}</td>
+                                        <td class="px-4 py-3 text-center">{{ $rc->date_start }} - {{ $rc->date_end }}</td>
 
                                         <!-- Nama Trainer -->
                                         <td class="px-4 py-3 text-center">{{ $rc->trainer_name }}</td>
@@ -335,7 +335,7 @@
 
                     <div class="flex items-center justify-end p-4 border-t border-gray-200 rounded-b dark:border-gray-600">
                         @if (Auth::user()->role == 'Super Admin')
-                        <button type="submit" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded">Update</button>
+                            <button type="submit" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded">Update</button>
                         @endif
                         <button data-modal-hide="readProductModal" type="button"
                             class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:bg-gray-600 dark:hover:text-white">
@@ -398,16 +398,17 @@
 
                         // Set field values
                         if (data.comment) {
-                        commentField.value = data.comment;
-                    } else if (userRole !== 'Super Admin') {
-                        commentField.value = "Tunggu komentar dari Super Admin";
-                    } else {
-                        commentField.value = ""; // Kosongkan untuk Super Admin jika tidak ada komentar
-                    }
+                            commentField.value = data.comment;
+                        } else if (userRole !== 'Super Admin') {
+                            commentField.value = "Tunggu komentar dari Super Admin";
+                        } else {
+                            commentField.value =
+                            ""; // Kosongkan untuk Super Admin jika tidak ada komentar
+                        }
                         if (userRole === 'Super Admin') {
-                        approvalField.value = data.approval;
-                        statusField.value = data.status;
-                    }
+                            approvalField.value = data.approval;
+                            statusField.value = data.status;
+                        }
                         // Set attachment (PDF)
                         if (data.attachment) {
                             attachmentFrame.href = data.attachment;

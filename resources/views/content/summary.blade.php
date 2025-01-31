@@ -53,8 +53,7 @@
                             <div class="flex flex-col">
                                 <label for="training_date" class="text-sm font-medium text-gray-700">Training
                                     Date</label>
-                                <input type="date" id="training_date" name="training_date"
-                                    value="{{ request('training_date') }}"
+                                <input type="date" id="date_start" name="date_start" value="{{ request('date_start') }}"
                                     class="mt-2 block w-full cursor-pointer rounded-md border border-gray-300 bg-gray-50 px-3 py-2 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" />
                             </div>
                             <div class="flex flex-col">
@@ -123,7 +122,8 @@
                                         <td class="px-4 py-3">{{ $rc->rev }}</td>
                                         <td class="px-4 py-3">{{ $rc->station }}</td>
                                         <td class="px-4 py-3">{{ $rc->trainer_name ?? 'N/A' }}</td>
-                                        <td class="px-4 py-3">{{ $rc->training_date ?? 'N/A' }}</td>
+                                        <td class="px-4 py-3">{{ $rc->date_start ?? 'N/A' }} -
+                                            {{ $rc->date_end ?? 'N/A' }}</td>
                                         <td class="px-4 py-3">TR-{{ $rc->id }}</td>
                                         <td class="px-4 py-3 flex items-center justify-center">
                                             @if (in_array(Auth::user()->role, ['Super Admin', 'Admin']))
@@ -167,7 +167,7 @@
                     </table>
                 </div>
                 <div class="mt-4">
-                    {{ $trainingRecords->appends(['training_date' => request('training_date'), 'category' => request('category')])->links() }}
+                    {{ $trainingRecords->appends(['date_start' => request('date_start'), 'category' => request('category'), 'station' => request('station'), 'search' => request('search')])->links() }}
                 </div>
             </div>
     </div>
@@ -254,7 +254,7 @@
                         <p>Rev: ${record.rev}</p>
                         <p>Station: ${record.station}</p>
                         <p>Skill Code: ${record.skill_code}</p>
-                        <p>Training Date: ${record.training_date}</p>
+                        <p>Training Date: ${record.date_start} - ${record.date_end}</p>
                     </div>
                         
                         <table class="w-full text-sm text-center text-gray-500 dark:text-gray-400">
@@ -271,16 +271,16 @@
                                 </tr>
                             </thead>
                             ${record.peserta.map(peserta => `
-                                                                                                                                                                                                <tbody class="text-center">
-                                                                                                                                                                                                    <td scope="col" class="px-4 py-3">${peserta.employee_name}</td>
-                                                                                                                                                                                                    <td scope="col" class="px-4 py-3">${peserta.badge_no}</td>
-                                                                                                                                                                                                    <td scope="col" class="px-4 py-3">${peserta.dept}</td>
-                                                                                                                                                                                                    <td scope="col" class="px-4 py-3">${peserta.position}</td>
-                                                                                                                                                                                                    <td scope="col" class="px-4 py-3">${peserta.pivot.theory_result || 'N/A'}</td>
-                                                                                                                                                                                                    <td scope="col" class="px-4 py-3">${peserta.pivot.practical_result || 'N/A'}</td>
-                                                                                                                                                                                                    <td scope="col" class="px-4 py-3">${peserta.pivot.level || 'N/A'}</td>
-                                                                                                                                                                                                    <td scope="col" class="px-4 py-3">${peserta.pivot.final_judgement || 'N/A'}</td>
-                                                                                                                                                                                                </tbody>                                                                                     `).join('')}
+                                                                                                                                                                                                    <tbody class="text-center">
+                                                                                                                                                                                                        <td scope="col" class="px-4 py-3">${peserta.employee_name}</td>
+                                                                                                                                                                                                        <td scope="col" class="px-4 py-3">${peserta.badge_no}</td>
+                                                                                                                                                                                                        <td scope="col" class="px-4 py-3">${peserta.dept}</td>
+                                                                                                                                                                                                        <td scope="col" class="px-4 py-3">${peserta.position}</td>
+                                                                                                                                                                                                        <td scope="col" class="px-4 py-3">${peserta.pivot.theory_result || 'N/A'}</td>
+                                                                                                                                                                                                        <td scope="col" class="px-4 py-3">${peserta.pivot.practical_result || 'N/A'}</td>
+                                                                                                                                                                                                        <td scope="col" class="px-4 py-3">${peserta.pivot.level || 'N/A'}</td>
+                                                                                                                                                                                                        <td scope="col" class="px-4 py-3">${peserta.pivot.final_judgement || 'N/A'}</td>
+                                                                                                                                                                                                    </tbody>                                                                                     `).join('')}
                         
                 `).join('');
 

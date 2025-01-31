@@ -14,7 +14,8 @@
 
     <div class="bg-gray-100 dark:bg-gray-800 transition-colors duration-300">
         <div class="container mx-auto p-4">
-            <form id="autoSaveForm" class="space-y-4" action="{{ route('dashboard.store') }}" method="POST" enctype="multipart/form-data">
+            <form id="autoSaveForm" class="space-y-4" action="{{ route('dashboard.store') }}" method="POST"
+                enctype="multipart/form-data">
                 @csrf
                 @if ($errors->any())
                     <div class="alert alert-danger">
@@ -78,10 +79,17 @@
                     </div>
                     <div><label for="category"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Training
-                            Date</label>
-                        <input type="date" name="training_date"
+                            Start</label>
+                        <input type="date" name="date_start"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="17 Desember 2021">
+                            >
+                    </div>
+                    <div><label for="category"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Training
+                            End</label>
+                        <input type="date" name="date_end"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        >
                     </div>
                     <div><label for="category"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Training
@@ -96,7 +104,8 @@
                     <div><label for="category"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Attachment</label>
                         <input type="file" name="attachment" id="attachment" accept=".pdf"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            required>
                     </div>
 
                 </div>

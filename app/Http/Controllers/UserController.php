@@ -14,7 +14,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
         // Ambil data user berdasarkan filter pencarian
-        $user = User::select('id', 'name', 'user', 'role')->paginate(10);
+        $user = User::select('id', 'name', 'user', 'role', 'department')->paginate(10);
 
         // Ambil role pengguna saat ini
         $userRole = auth('')->user()->role; // Asumsikan 'role' adalah atribut di tabel users
@@ -51,6 +51,7 @@ class UserController extends Controller
                 'name' => 'required|string|max:255',
                 'user' => 'required|string|max:255|unique:users,user',
                 'password' => 'required|string|min:8',
+                'department' => 'required|string',
             ],
             [
                 'user.unique' => 'User dengan Nama ini sudah ada.',
@@ -117,6 +118,7 @@ class UserController extends Controller
                 'user' => 'required|string|max:255',
                 'name' => 'required|string|max:255',
                 'role' => 'required|string|max:255',
+                'department' => 'required|string|max:255',
                 'password' => 'nullable|string|max:255',
             ],
             [],

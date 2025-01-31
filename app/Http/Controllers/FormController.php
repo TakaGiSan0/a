@@ -29,7 +29,7 @@ class FormController extends Controller
         $selectedYear = $request->input('year'); // Ambil tahun yang dipilih dari request
 
         // Ambil tahun unik dari kolom training_date
-        $years = Training_Record::selectRaw('YEAR(training_date) as year')
+        $years = Training_Record::selectRaw('YEAR(date_start) as year')
             ->distinct()
             ->orderBy('year', 'desc')
             ->pluck('year');
@@ -42,9 +42,9 @@ class FormController extends Controller
             })
             ->when($selectedYear, function ($query, $selectedYear) {
                 // Filter berdasarkan tahun training_date
-                $query->whereYear('training_date', $selectedYear);
+                $query->whereYear('date_start', $selectedYear);
             })
-            ->orderBy('training_date', 'desc')
+            ->orderBy('date_start', 'desc')
             ->paginate(10);
 
         $userRole = auth('')->user()->role;
@@ -95,7 +95,7 @@ class FormController extends Controller
                 return redirect()->back()->with('error', 'Gagal mengunggah file. Silakan coba lagi.');
             }
         }
-
+        
         // Simpan data pelatihan utama
         $trainingRecord = Training_Record::create([
             'training_name' => $data['training_name'],
@@ -104,7 +104,8 @@ class FormController extends Controller
             'trainer_name' => $data['trainer_name'],
             'rev' => $data['rev'],
             'station' => $data['station'],
-            'training_date' => $data['training_date'],
+            'date_start' => $data['date_start'],
+            'date_end' => $data['date_end'],
             'skill_code' => $data['skill_code'],
             'category_id' => $data['category_id'],
             'attachment' => $filePath,
@@ -193,7 +194,8 @@ class FormController extends Controller
             'trainer_name' => $data['trainer_name'],
             'rev' => $data['rev'],
             'station' => $data['station'],
-            'training_date' => $data['training_date'],
+            'date_start' => $data['date_start'],
+            'date_end' => $data['date_end'],
             'skill_code' => $data['skill_code'],
             'category_id' => $data['category_id'],
             'status' => $status,
@@ -264,7 +266,8 @@ class FormController extends Controller
             'trainer_name' => 'required|string|max:255',
             'rev' => 'required|string|max:255',
             'station' => 'required|string|max:255',
-            'training_date' => 'required|date',
+            'date_start' => 'required|date',
+            'date_end' => 'required|date',
             'skill_code' => 'required|string|max:255',
             'attachment' => 'file|mimes:pdf|max:2048',
             'category_id' => 'required|integer|exists:categories,id',
@@ -287,57 +290,5 @@ class FormController extends Controller
         ];
     }
 
-    private function createTrainingRecord(array $data, string $status)
-    {
-        return Training_Record::create([
-            'training_name' => $data['training_name'],
-            'doc_ref' => $data['doc_ref'],
-            'job_skill' => $data['job_skill'],
-            'trainer_name' => $data['trainer_name'],
-            'rev' => $data['rev'],
-            'station' => $data['station'],
-            'training_date' => $data['training_date'],
-            'skill_code' => $data['skill_code'],
-            'category_id' => $data['category_id'],
-            'status' => $status,
-        ]);
-    }
-
-    private function updateTrainingRecord($trainingRecord, array $data, string $status)
-    {
-        $trainingRecord->update([
-            'training_name' => $data['training_name'],
-            'doc_ref' => $data['doc_ref'],
-            'job_skill' => $data['job_skill'],
-            'trainer_name' => $data['trainer_name'],
-            'rev' => $data['rev'],
-            'station' => $data['station'],
-            'training_date' => $data['training_date'],
-            'skill_code' => $data['skill_code'],
-            'category_id' => $data['category_id'],
-            'status' => $status,
-        ]);
-    }
-
-    private function attachParticipants($trainingRecord, array $participants, string $status)
-    {
-        $participantsToAttach = [];
-
-        if ($status === 'completed') {
-            foreach ($participants as $participant) {
-                $peserta = Peserta::where('badge_no', $participant['badge_no'])->first();
-                if ($peserta) {
-                    $participantsToAttach[$peserta->id] = [
-                        'level' => $participant['level'],
-                        'final_judgement' => $participant['final_judgement'],
-                        'license' => $participant['license'],
-                        'theory_result' => $participant['theory_result'],
-                        'practical_result' => $participant['practical_result'],
-                    ];
-                }
-            }
-        }
-
-        $trainingRecord->pesertas()->attach($participantsToAttach);
-    }
+   
 }

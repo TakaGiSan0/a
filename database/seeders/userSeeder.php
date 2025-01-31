@@ -15,9 +15,9 @@ class userSeeder extends Seeder
     public function run(): void
     {
         DB::table('users')->insert([
-            ['user' => 'Super Admin','name' => 'santoso','role' => 'Super Admin', 'password' => bcrypt('superadmin'), 'created_at' => now(), 'updated_at' => now()],
-            ['user' => 'Admin','name' => 'ahmadi','role' => 'Admin', 'password' => bcrypt('admin'), 'created_at' => now(), 'updated_at' => now()],
-            ['user' => 'user','name' => 'budianto','role' => 'user', 'password' => bcrypt('user') , 'created_at' => now(), 'updated_at' => now()],
+            ['user' => 'Super Admin','name' => 'santoso','role' => 'Super Admin', 'password' => bcrypt('superadmin'), 'department' => 'IT', 'created_at' => now(), 'updated_at' => now()],
+            ['user' => 'Admin','name' => 'ahmadi','role' => 'Admin', 'password' => bcrypt('admin'),'department' => 'Tooling' , 'created_at' => now(), 'updated_at' => now()],
+            ['user' => 'user','name' => 'budianto','role' => 'user', 'password' => bcrypt('user') ,'department' => 'Quality' , 'created_at' => now(), 'updated_at' => now()],
         ]);
     }
 }

@@ -70,6 +70,7 @@
                                     <th scope="col" class="px-4 py-4">Username</th>
                                     <th scope="col" class="px-4 py-3">Name</th>
                                     <th scope="col" class="px-4 py-3">Role</th>
+                                    <th scope="col" class="px-4 py-3">Department</th>
                                     <th scope="col" class="px-4 py-3">Action</th>
                                 </tr>
                             </thead>
@@ -86,6 +87,8 @@
                                             <td class="px-4 py-3">{{ $p->user }}</td>
                                             <td class="px-4 py-3">{{ $p->name }}</td>
                                             <td class="px-4 py-3">{{ $p->role }}</td>
+                                            <td class="px-4 py-3">{{ $p->department }}</td>
+
                                             <td class="px-4 py-3 flex items-center justify-center">
                                                 <a href="{{ route('user.edit', $p->id) }}">
                                                     <svg class="h-8 w-8 text-slate-500" width="24" height="24"

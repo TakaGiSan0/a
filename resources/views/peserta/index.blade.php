@@ -99,7 +99,7 @@
                                     <th scope="col" class="px-4 py-4">Badge No</th>
                                     <th scope="col" class="px-4 py-3">Employee Name</th>
                                     <th scope="col" class="px-4 py-3">Dept</th>
-                                    <th scope="col" class="px-4 py-3">Position</th>
+                                    <th scope="col" class="px-4 py-3">Position\EFF</th>
                                     <th scope="col" class="px-4 py-3">Join Date</th>
                                     <th scope="col" class="px-4 py-3">Status</th>
                                     <th scope="col" class="px-4 py-3">Category Level</th>
@@ -110,7 +110,7 @@
                             <?php $no = ($peserta->currentPage() - 1) * $peserta->perPage(); ?>
                             <tbody>
                                 @if ($peserta->isEmpty())
-                                <tr class="border-b dark:border-gray-700">
+                                <tr class="">
                                     <td colspan="6" class="px-4 py-3 text-center">
                                         {{ $message }}
                                     </td>

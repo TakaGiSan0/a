@@ -303,7 +303,7 @@
                         if (records.length > 0) {
                             records.forEach(training => {
                                 trainingRecordsContent += `
-                                <tr class="border-b dark:border-gray-700">
+                                <tr class="">
                                     <th scope="row" class="px-4 py-3 font-medium text-gray-900 text-center whitespace-normal break-words dark:text-white overflow-hidden max-w-xs">
                                     ${training.training_name ?? '-'}
                                     </th>
@@ -311,7 +311,7 @@
                                         ${training.trainer_name ?? '-'}
                                     </td>
                                     <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap text-center dark:text-white">
-                                        ${training.training_date ?? '-'}
+                                        ${training.date_start ?? '-'} - ${training.date_end ?? '-'}
                                     </td>
                                     <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap text-center dark:text-white">
                                         ${training.pivot.level ?? 'N/A'}

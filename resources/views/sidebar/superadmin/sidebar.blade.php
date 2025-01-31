@@ -1,6 +1,6 @@
 {{-- Sidebar Element Employee --}}
 <aside :class="isOpen ? 'translate-x-0' : '-translate-x-full'"
-class="z-20 w-64 h-full bg-white dark:bg-gray-800 overflow-y-auto transition-transform duration-300 ease-in-out flex inset-y-0 left-0 transform">
+    class="z-20 w-64 h-full bg-white dark:bg-gray-800 overflow-y-auto transition-transform duration-300 ease-in-out flex inset-y-0 left-0 transform">
     <div class="py-4 text-gray-500 dark:text-gray-400 text-center">
         <a class="text-lg font-bold text-gray-800 dark:text-gray-200 text-center" href="#">
             @auth
@@ -80,13 +80,47 @@ class="z-20 w-64 h-full bg-white dark:bg-gray-800 overflow-y-auto transition-tra
                 @endif
                 <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 {{ request()->routeIs('dashboard.employee') ? 'text-gray-800 dark:text-gray-100' : 'hover:text-gray-800 dark:hover:text-gray-200' }}"
                     href="{{ route('dashboard.employee') }}">
-                
+
                     <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
                         <path d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path>
                         <path d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path>
                     </svg>
                     <span class="ml-4">Employee Training Record</span>
+                </a>
+            </li>
+            <li class="relative px-6 py-3">
+                @if (request()->routeIs('matrix.index'))
+                    <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
+                        aria-hidden="true"></span>
+                @endif
+                <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 {{ request()->routeIs('matrix.index') ? 'text-gray-800 dark:text-gray-100' : 'hover:text-gray-800 dark:hover:text-gray-200' }}"
+                    href="{{ route('matrix.index') }}">
+                    <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke="none" d="M0 0h24v24H0z" />
+                        <path
+                            d="M15 21h-9a3 3 0 0 1 -3 -3v-1h10v2a2 2 0 0 0 4 0v-14a2 2 0 1 1 2 2h-2m2 -4h-11a3 3 0 0 0 -3 3v11" />
+                        <line x1="9" y1="7" x2="13" y2="7" />
+                        <line x1="9" y1="11" x2="13" y2="11" />
+                    </svg>
+                    <span class="ml-4">Training Matrix</span>
+                </a>
+            </li>
+                 <li class="relative px-6 py-3">
+                @if (request()->routeIs('dashboard.summary'))
+                    <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
+                        aria-hidden="true"></span>
+                @endif
+                <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 {{ request()->routeIs('dashboard.summary') ? 'text-gray-800 dark:text-gray-100' : 'hover:text-gray-800 dark:hover:text-gray-200' }}"
+                    href="{{ route('dashboard.summary') }}">
+                    <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round"
+                    stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke="none" d="M0 0h24v24H0z" />
+                        <circle cx="12" cy="12" r="9" />
+                        <path d="M9 12l2 2l4 -4" />
+                    </svg>
+                    <span class="ml-4">Production Matrix Skill</span>
                 </a>
             </li>
 

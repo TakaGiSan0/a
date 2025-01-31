@@ -43,21 +43,7 @@ class="z-20 w-64 h-full bg-white dark:bg-gray-800 overflow-y-auto transition-tra
                         <span class="ml-4">Master Data Employee</span>
                     </a>
                 </li>
-                <li class="relative px-6 py-3">
-                    @if (request()->routeIs('user.index'))
-                        <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
-                            aria-hidden="true"></span>
-                    @endif
-                    <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 {{ request()->routeIs('user.index') ? 'text-gray-800 dark:text-gray-100' : 'hover:text-gray-800 dark:hover:text-gray-200' }}"
-                        href="{{ route('user.index') }}">
-                        <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round"
-                            stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                        </svg>
-                        <span class="ml-4">User</span>
-                    </a>
-                </li>
+                
                 <li class="relative px-6 py-3">
                     @if (request()->routeIs('dashboard.summary'))
                         <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
