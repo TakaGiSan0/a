@@ -65,8 +65,8 @@
                                     <th scope="col" class="px-4 py-3">Action</th>
                                 </tr>
                             </thead>
+                            <?php $no = 0; ?>
                             @foreach ($matrix as $item)
-                                @php $no = 0; @endphp
                                 <tbody>
                                     <tr class=>
                                         <th scope="row" name="id"
@@ -90,24 +90,27 @@
 
                                         </td>
                                         <td class="px-4 py-3">
-                                            {{ $item->trainingrecord->date_start ?? '-' }} - 
+                                            {{ $item->trainingrecord->date_start ?? '-' }} -
                                             {{ $item->trainingrecord->date_end ?? '-' }}
 
                                         </td>
                                         <td class="px-4 py-3">
-
+                                            {{ $item->certificate ?? '-' }}
                                         </td>
                                         <td class="px-4 py-3">
-
+                                            {{ $item->expired_date ?? '-' }}
                                         </td>
                                         <td class="px-4 py-3">
-
+                                            {{ $item->category ?? '-' }}
                                         </td>
                                         <td class="px-4 py-3">
 
                                         </td>
                                         <td class="px-4 py-3 flex items-center justify-center space-x-4">
-                                            <a href="">
+                                            <button type="button" data-modal-target="readProductModal"
+                                                data-modal-toggle="readProductModal"
+                                                data-id="{{ $item->id }}"
+                                                class="trigger-modal items-center justify-center over:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
                                                 <svg class="h-8 w-8 text-slate-500" width="24" height="24"
                                                     viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
                                                     fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -115,10 +118,8 @@
                                                     <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
                                                     <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
                                                 </svg>
-                                            </a>
-
+                                            </button>
                                         </td>
-
                                     </tr>
                                 </tbody>
                             @endforeach
@@ -137,57 +138,132 @@
 
     <!-- Read modal -->
     <div id="readProductModal" tabindex="-1" aria-hidden="true"
-        class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-        <div class="relative p-4 w-full max-w-6xl max-h-full">
+        class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full bg-black bg-opacity-50">
+        <div class="relative w-full max-w-2xl max-h-full mx-auto">
             <!-- Modal content -->
-            <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+            <div class="bg-white rounded-lg shadow dark:bg-gray-700">
                 <!-- Modal header -->
-                <div class="flex justify-between mb-4 rounded-t sm:mb-5">
-                    <div class="text-lg text-gray-900 md:text-xl dark:text-white">
-                        Detail Training Record
-                    </div>
-                    <div>
-                        <button type="button"
-                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 inline-flex dark:hover:bg-gray-600 dark:hover:text-white"
-                            data-modal-toggle="readProductModal" onclick="closeModal()">
-                            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd"
-                                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                            <span class="sr-only">Close modal</span>
-                        </button>
-                    </div>
+                <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                        Training Matrix
+                    </h3>
+                    <button type="button" data-modal-hide="readProductModal"
+                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                        aria-label="Close">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
                 </div>
                 <!-- Modal body -->
-                <div id="modalBody">
-                    <div class="grid gap-4 mb-4 sm:grid-cols-2 text-center">
-                        <span id="id" hidden>N/A</span>
-                        <div><label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Emp
-                                Name:</label>
-                            <span id="employeeName">N/A</span>
+                <form id="commentForm" action="" method="POST" enctype="multipart/form-data">
+                    <div class="p-6 space-y-6">
+                        @csrf
+                        @method('PUT')
+                        <div><label for="category"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Certificate No
+                            </label>
+                            <input type="text" name="certificate" id="certificate"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         </div>
                         <div><label for="category"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Dept:</label>
-                            <span id="dept">N/A</span>
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Expired Date
+                            </label>
+                            <input type="date" name="expired_date" id='expired_date'
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         </div>
                         <div><label for="category"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Badge No:</label>
-                            <span id="badgeNo">N/A</span>
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category
+                            </label>
+                            <input type="text" name="category" id='category'
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         </div>
-                        <div><label for="category"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Position:</label>
-                            <span id="position">N/A</span>
-                        </div>
+
                     </div>
-                    <div id="trainingCategories">
-                        <!-- Training categories and tables will be filled by JavaScript -->
+                    <!-- Modal footer -->
+
+                    <div class="flex items-center justify-end p-4 border-t border-gray-200 rounded-b dark:border-gray-600">
+                        
+                            <button type="submit" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded">Update</button>
+                        
+                        <button data-modal-hide="readProductModal" type="button"
+                            class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:bg-gray-600 dark:hover:text-white">
+                            Tutup
+                        </button>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>
 
 
 @endsection
+
+<script>
+
+document.addEventListener('DOMContentLoaded', () => {
+        const modal = document.getElementById('readProductModal');
+        const commentForm = modal.querySelector('form');
+        const certificateField = modal.querySelector('#certificate');
+        const expiredField = modal.querySelector('#expired_date');
+        const categoryField = modal.querySelector('#category');
+        const editButtons = document.querySelectorAll('.trigger-modal');
+
+        editButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const recordId = button.getAttribute('data-id');
+
+                // Fetch data dari server
+                fetch(`/matrix/${recordId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.message) {
+                            alert(data.message); // Jika ada pesan error
+                            return;
+                        }
+
+                        // Set form action
+                        commentForm.action = `/matrix/update/${recordId}`;
+
+                        certificateField.value = data.certificate;
+                        expiredField.value = data.expired_date;
+                        categoryField.value = data.category;
+
+                        // Show modal
+                        modal.classList.remove('hidden');
+                        modal.classList.add('flex');
+
+                        console.log(data);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching data:', error);
+                        alert('Terjadi kesalahan saat mengambil data.');
+                    });
+            });
+        });
+
+        // Close modal
+        const closeButton = modal.querySelector('[data-modal-hide]');
+        closeButton.addEventListener('click', () => {
+            modal.classList.add('hidden');
+        });
+    });
+
+
+    function closeModal() {
+        // Menutup modal
+        document.getElementById('readProductModal').classList.add('hidden');
+    }
+
+    // Menutup modal
+    document.querySelectorAll('[data-modal-hide="readProductModal"]').forEach(button => {
+        button.addEventListener('click', function() {
+            const modal = document.getElementById('readProductModal');
+            modal.classList.add('hidden');
+        });
+    });
+
+
+</script>

@@ -172,8 +172,6 @@
                                             @endif
                                             <button type="button" data-modal-target="readProductModal"
                                                 data-modal-toggle="readProductModal" data-id="{{ $rc->id }}"
-                                                data-comment="{{ $rc->comment }}" data-approval="{{ $rc->approval }}"
-                                                data-status="{{ $rc->status }}"
                                                 class="trigger-modal items-center justify-center over:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
                                                 <svg class="w-8 h-8 flex-shrink-0 text-slate-500"
                                                     xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"
@@ -403,7 +401,7 @@
                             commentField.value = "Tunggu komentar dari Super Admin";
                         } else {
                             commentField.value =
-                            ""; // Kosongkan untuk Super Admin jika tidak ada komentar
+                                ""; // Kosongkan untuk Super Admin jika tidak ada komentar
                         }
                         if (userRole === 'Super Admin') {
                             approvalField.value = data.approval;

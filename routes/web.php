@@ -62,10 +62,8 @@ Route::middleware(['auth', 'role:Super Admin,Admin'])->group(function () {
     Route::post('/index/create/store', [FormController::class, 'store'])->name('dashboard.store');
     Route::get('/index/edit/{id}', [FormController::class, 'edit'])->name('dashboard.edit');
     Route::put('/index/update/{id}', [FormController::class, 'update'])->name('dashboard.update');
-    Route::get('/training-record/{id}', [FormController::class, 'show'])->name('dashboard.show');
-    Route::put('/training-record/{id}/comment', [FormController::class, 'updateComment'])->name('update.comment');
-
-
+    
+    
     // Crud Peserta
     Route::get('/Employee/dashboard', [PesertaController::class, 'index'])->name('dashboard.peserta');
     Route::get('/Employee/New_Employee/', [PesertaController::class, 'create'])->name('peserta.create');
@@ -75,14 +73,7 @@ Route::middleware(['auth', 'role:Super Admin,Admin'])->group(function () {
     Route::delete('/Employee/delete/{id}', [PesertaController::class, 'destroy'])->name('peserta.destroy');
 
 
-    // Route User
-    Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
-    Route::post('/User/New_User', [UserController::class, 'store'])->name('user.store');
-    Route::get('/User/dashboard', [UserController::class, 'index'])->name('user.index');
-    Route::delete('/user/{id}', [UserController::class, 'destroy'])->name('user.destroy');
-    Route::get('/user/edit/{user}', [UserController::class, 'edit'])->name('user.edit');
-    Route::put('/user/update/{user}', [UserController::class, 'update'])->name('user.update');
-
+    
 
     // API Search Peserta Form
     Route::get('/participants/{badgeNo}', [PesertaController::class, 'getParticipantByBadgeNo']);
@@ -98,12 +89,27 @@ Route::middleware(['auth', 'role:Super Admin'])->group(function () {
     Route::get('/users/expor', [ExcelController::class, 'export_peserta'])->name('export.peserta');
     Route::post('/training/import', [ExcelController::class, 'import_training'])->name('import.training');
     Route::get('/training/export', [ExcelController::class, 'export_training'])->name('export.training');
-
+    
+    
     Route::delete('/index/{id}', [FormController::class, 'destroy'])->name('dashboard.destroy');
-
+    Route::get('/training-record/{id}', [FormController::class, 'show'])->name('dashboard.show');
+    
     // Route Matrix
     Route::get('/matrix/dashboard', [MatrixController::class, 'index'])->name('matrix.index');
+    Route::get('/matrix/{id}', [MatrixController::class, 'show'])->name('matrix.show');
+    Route::put('/matrix/update/{id}', [MatrixController::class, 'updateLicense'])->name('matrix.update');
+
+    
+    // Route User
+    Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
+    Route::post('/User/New_User', [UserController::class, 'store'])->name('user.store');
+    Route::get('/User/dashboard', [UserController::class, 'index'])->name('user.index');
+    Route::delete('/user/{id}', [UserController::class, 'destroy'])->name('user.destroy');
+    Route::get('/user/edit/{user}', [UserController::class, 'edit'])->name('user.edit');
+    Route::put('/user/update/{user}', [UserController::class, 'update'])->name('user.update');
 
     // Route Training Matrix
     Route::get('/training-matrix/dashboard', [TrainingMatrixController::class, 'index'])->name('training-matrix.index');
+
+    Route::put('/training-record/{id}/comment', [FormController::class, 'updateComment'])->name('update.comment');
 });
