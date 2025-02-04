@@ -122,8 +122,7 @@
                                         <td class="px-4 py-3">{{ $rc->rev }}</td>
                                         <td class="px-4 py-3">{{ $rc->station }}</td>
                                         <td class="px-4 py-3">{{ $rc->trainer_name ?? 'N/A' }}</td>
-                                        <td class="px-4 py-3">{{ $rc->date_start ?? 'N/A' }} -
-                                            {{ $rc->date_end ?? 'N/A' }}</td>
+                                        <td class="px-4 py-3">{{ $rc->formatted_date_range ?? 'N/A' }}</td>
                                         <td class="px-4 py-3">TR-{{ $rc->id }}</td>
                                         <td class="px-4 py-3 flex items-center justify-center">
                                             @if (in_array(Auth::user()->role, ['Super Admin', 'Admin']))
@@ -254,7 +253,7 @@
                         <p>Rev: ${record.rev}</p>
                         <p>Station: ${record.station}</p>
                         <p>Skill Code: ${record.skill_code}</p>
-                        <p>Training Date: ${record.date_start} - ${record.date_end}</p>
+                        <p>Training Date: ${record.date_formatted ?? '-'}</p>
                     </div>
                         
                         <table class="w-full text-sm text-center text-gray-500 dark:text-gray-400">

@@ -30,12 +30,13 @@ class AuthenticatedSessionController extends Controller
         // Jika username ditemukan, cek apakah password benar
         if (!Auth::attempt(['user' => $request->user, 'password' => $request->password], $request->filled('remember'))) {
             return back()
-                ->withErrors([
-                    'password' => 'Password salah.',
+            
+            ->withErrors([
+                'password' => 'Password salah.',
                 ])
                 ->onlyInput('user');
-        }
-
+            }
+            
         // Jika autentikasi berhasil, regenerasi session dan redirect
         $request->session()->regenerate();
 

@@ -44,7 +44,9 @@ class FormController extends Controller
                 // Filter berdasarkan tahun training_date
                 $query->whereYear('date_start', $selectedYear);
             })
+            ->orderByRaw("CASE WHEN status = 'Pending' THEN 0 ELSE 1 END")
             ->orderBy('date_start', 'desc')
+
             ->paginate(10);
 
         $userRole = auth('')->user()->role;
@@ -60,6 +62,7 @@ class FormController extends Controller
     public function create()
     {
         // Dapatkan role user yang sedang login
+
         $userRole = auth('')->user()->role;
 
         // Cek apakah role adalah 'superadmin' atau 'admin'
@@ -95,7 +98,9 @@ class FormController extends Controller
                 return redirect()->back()->with('error', 'Gagal mengunggah file. Silakan coba lagi.');
             }
         }
-        
+
+
+
         // Simpan data pelatihan utama
         $trainingRecord = Training_Record::create([
             'training_name' => $data['training_name'],
@@ -109,6 +114,7 @@ class FormController extends Controller
             'skill_code' => $data['skill_code'],
             'category_id' => $data['category_id'],
             'attachment' => $filePath,
+            'user_id' => auth()->id(),
         ]);
 
         foreach ($data['participants'] as $participant) {
@@ -289,6 +295,4 @@ class FormController extends Controller
             'doc_ref.unique' => 'Pelatihan sudah ada.',
         ];
     }
-
-   
 }

@@ -134,7 +134,8 @@
                                             <p class="px-4 py-3 text-center">{{ $rc->training_name }}</p>
                                         </td>
                                         <!-- Tanggal Training -->
-                                        <td class="px-4 py-3 text-center">{{ $rc->date_start }} - {{ $rc->date_end }}</td>
+                                        <td class="px-4 py-3 text-center">{{ $rc->formatted_date_range }}
+                                        </td>
 
                                         <!-- Nama Trainer -->
                                         <td class="px-4 py-3 text-center">{{ $rc->trainer_name }}</td>
@@ -143,9 +144,10 @@
 
                                         <!-- Status -->
                                         <td class="px-4 py-3 text-center">{{ $rc->status }}</td>
-
+                                        
                                         <!-- Edit dan Delete Actions -->
                                         <td class="px-4 py-3 flex items-center justify-center space-x-4">
+                                            @if(auth()->user()->department === $rc->user?->department)
                                             <a href="{{ route('dashboard.edit', $rc->id) }}">
                                                 <svg class="h-8 w-8 text-slate-500" width="24" height="24"
                                                     viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
@@ -155,6 +157,7 @@
                                                     <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
                                                 </svg>
                                             </a>
+                                            @endif
                                             @if (Auth::user()->role == 'Super Admin')
                                                 <form action="{{ route('dashboard.destroy', $rc->id) }}" method="POST"
                                                     onsubmit="return confirm('Apakah Anda yakin ingin menghapus peserta ini?');">

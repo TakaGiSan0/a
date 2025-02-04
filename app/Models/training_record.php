@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class training_record extends Model
 {
@@ -26,6 +27,7 @@ class training_record extends Model
         'approval',
         'comment',
         'attachment',
+        'user_id',
     ];
 
     public function trainingCategory()
@@ -41,6 +43,19 @@ class training_record extends Model
     {
         return $this->belongsToMany(Peserta::class, 'hasil_peserta')
                     ->withPivot('level', 'final_judgement', 'license', 'theory_result', 'practical_result');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function getFormattedDateRangeAttribute()
+    {
+        $start = Carbon::parse($this->date_start)->format('d');
+        $end = Carbon::parse($this->date_end)->format('d F Y');
+
+        return "{$start} - {$end}";
     }
 
 

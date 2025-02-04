@@ -8,7 +8,7 @@ class TrainingMatrixController extends Controller
 {
     public function index()
     {
-        return view('training_matrix');
+        return view('content.training_matrix');
     }
 
     

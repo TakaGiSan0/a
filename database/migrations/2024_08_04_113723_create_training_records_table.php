@@ -24,11 +24,13 @@ return new class extends Migration
             $table->enum('approval', ['Approved', 'Pending', 'Reject'])->default('Pending');
             $table->date('date_start');
             $table->date('date_end');
-            $table->unsignedBigInteger('category_id');
-            $table->foreign('category_id')->references('id')->on
-            ('categories');
             $table->string('comment')->nullable();
             $table->string('attachment')->nullable();
+            $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('category_id')->references('id')->on
+            ('categories');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
             $table->timestamps();
         });

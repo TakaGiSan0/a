@@ -300,35 +300,40 @@
                             </thead>
                             <tbody>`;
 
-                        if (records.length > 0) {
-                            records.forEach(training => {
-                                trainingRecordsContent += `
-                                <tr class="">
-                                    <th scope="row" class="px-4 py-3 font-medium text-gray-900 text-center whitespace-normal break-words dark:text-white overflow-hidden max-w-xs">
-                                    ${training.training_name ?? '-'}
-                                    </th>
-                                    <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap text-center dark:text-white">
-                                        ${training.trainer_name ?? '-'}
-                                    </td>
-                                    <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap text-center dark:text-white">
-                                        ${training.date_start ?? '-'} - ${training.date_end ?? '-'}
-                                    </td>
-                                    <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap text-center dark:text-white">
-                                        ${training.pivot.level ?? 'N/A'}
-                                    </td>
-                                    <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap text-center dark:text-white">
-                                        ${training.pivot.final_judgement ?? 'N/A'}
-                                    </td>
-                                </tr>`;
-                            });
-                        } else {
-                            trainingRecordsContent += `
-                            <tr>
-                                <td colspan="5" class="px-4 py-3 text-center text-gray-500 dark:text-gray-400">
-                                    No training records available for this category.
-                                </td>
-                            </tr>`;
-                        }
+                                if (records.length > 0) {
+    records.forEach(training => {
+        // Memastikan pivot ada sebelum mengakses level dan final_judgement
+        const level = training.pivot ? training.pivot.level : 'N/A';
+        const finalJudgement = training.pivot ? training.pivot.final_judgement : 'N/A';
+
+        trainingRecordsContent += `
+        <tr class="">
+            <th scope="row" class="px-4 py-3 font-medium text-gray-900 text-center whitespace-normal break-words dark:text-white overflow-hidden max-w-xs">
+                ${training.training_name ?? '-'}
+            </th>
+            <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap text-center dark:text-white">
+                ${training.trainer_name ?? '-'}
+            </td>
+            <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap text-center dark:text-white">
+                ${training.date_formatted ?? '-'}
+            </td>
+            <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap text-center dark:text-white">
+                ${level}
+            </td>
+            <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap text-center dark:text-white">
+                ${finalJudgement}
+            </td>
+        </tr>`;
+    });
+} else {
+    trainingRecordsContent += `
+    <tr>
+        <td colspan="5" class="px-4 py-3 text-center text-gray-500 dark:text-gray-400">
+            No training records available for this category.
+        </td>
+    </tr>`;
+}
+
 
                         trainingRecordsContent += `
                             </tbody>

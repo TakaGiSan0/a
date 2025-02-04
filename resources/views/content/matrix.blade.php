@@ -90,8 +90,7 @@
 
                                         </td>
                                         <td class="px-4 py-3">
-                                            {{ $item->trainingrecord->date_start ?? '-' }} -
-                                            {{ $item->trainingrecord->date_end ?? '-' }}
+                                            {{ $item->trainingrecord->formatted_date_range ?? '-' }}        
 
                                         </td>
                                         <td class="px-4 py-3">
@@ -104,7 +103,7 @@
                                             {{ $item->category ?? '-' }}
                                         </td>
                                         <td class="px-4 py-3">
-
+                                            {{ $item->status }}
                                         </td>
                                         <td class="px-4 py-3 flex items-center justify-center space-x-4">
                                             <button type="button" data-modal-target="readProductModal"

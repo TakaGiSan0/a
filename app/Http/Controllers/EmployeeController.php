@@ -27,11 +27,11 @@ class EmployeeController extends Controller
 
         // Mulai dengan query peserta
         $query = Peserta::select("id", "badge_no", "employee_name", "dept", "position")
-        ->when($searchQuery, function ($query, $searchQuery) {
-            $query->where('badge_no', 'like', '%' . $searchQuery . '%')
-                  ->orWhere('employee_name', 'like', '%' . $searchQuery . '%');
-        })
-        ->orderBy('employee_name', 'asc');
+            ->when($searchQuery, function ($query, $searchQuery) {
+                $query->where('badge_no', 'like', '%' . $searchQuery . '%')
+                    ->orWhere('employee_name', 'like', '%' . $searchQuery . '%');
+            })
+            ->orderBy('employee_name', 'asc');
 
         // Terapkan filter berdasarkan dept jika ada
         if (!empty($deptFilter) && is_array($deptFilter)) {
@@ -72,7 +72,23 @@ class EmployeeController extends Controller
         $all_records = $peserta
             ->trainingRecords() // Pastikan menggunakan relasi many-to-many dari model Peserta
             ->with(['trainingCategory:id,name'])
-            ->get();
+            ->get()
+            ->map(function ($record) {
+                return [
+                    'training_name' => $record->training_name,
+                    'doc_ref' => $record->doc_ref,
+                    'job_skill' => $record->job_skill,
+                    'trainer_name' => $record->trainer_name,
+                    'rev' => $record->rev,
+                    'station' => $record->station,
+                    'skill_code' => $record->skill_code,
+                    'date_formatted' => $record->formatted_date_range, // Gunakan accessor
+                    'category_id' => $record->category_id,
+                    'level' => $record->pivot->level,
+                    'final_judgement' => $record->pivot->final_judgement,
+                    'training_category' => $record->trainingCategory ? $record->trainingCategory->name : null,
+                ];
+            });
 
         // Kelompokkan data berdasarkan category_id
         $grouped_records = $all_records->groupBy('category_id');
@@ -87,6 +103,7 @@ class EmployeeController extends Controller
             'grouped_records' => $grouped_records,
         ]);
     }
+
     public function downloadPdf($id)
     {
         // Ambil data peserta berdasarkan ID
