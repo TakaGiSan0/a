@@ -32,8 +32,7 @@
                     <div>
                         <label for="doc_ref" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Doc.
                             Ref</label>
-                        <input type="text" id="doc_ref" name="doc_ref" value="{{ $trainingRecord->doc_ref }}"
-                            required
+                        <input type="text" id="doc_ref" name="doc_ref" value="{{ $trainingRecord->doc_ref }}" required
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             required="">
                     </div>
@@ -49,8 +48,8 @@
                             <label for="training_name"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Job Skill
                             </label>
-                            <input type="text" id="job_skill" name="job_skill"
-                                value="{{ $trainingRecord->job_skill }}" required
+                            <input type="text" id="job_skill" name="job_skill" value="{{ $trainingRecord->job_skill }}"
+                                required
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 required="">
                         </div>
@@ -72,8 +71,7 @@
                     <div><label for="skill_code"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Skill
                             Code</label>
-                        <input type="text" name="skill_code" id="skill_code"
-                            value="{{ $trainingRecord->skill_code }}"
+                        <input type="text" name="skill_code" id="skill_code" value="{{ $trainingRecord->skill_code }}"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     </div>
                     <div><label for="category"
@@ -87,16 +85,14 @@
                     <div><label for="category"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Training
                             Start</label>
-                        <input type="date" name="date_start" id="date_start"
-                            value="{{ $trainingRecord->date_start }}"
+                        <input type="date" name="date_start" id="date_start" value="{{ $trainingRecord->date_start }}"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="17 Desember 2021">
                     </div>
                     <div><label for="category"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Training
                             End</label>
-                        <input type="date" name="date_end" id="date_end"
-                            value="{{ $trainingRecord->date_end }}"
+                        <input type="date" name="date_end" id="date_end" value="{{ $trainingRecord->date_end }}"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="17 Desember 2021">
                     </div>
@@ -106,8 +102,7 @@
                         <select id="category" name="category_id" id="category_id_1"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                             @foreach ($categories as $category)
-                                <option value="{{ $category->id }}"
-                                    {{ $trainingRecord->category_id == $category->id ? 'selected' : '' }}>
+                                <option value="{{ $category->id }}" {{ $trainingRecord->category_id == $category->id ? 'selected' : '' }}>
                                     {{ $category->name }} <!-- Sesuaikan dengan nama kolom yang diinginkan -->
                                 </option>
                             @endforeach
@@ -166,81 +161,61 @@
                                             placeholder="John Doe" readonly>
                                     </td>
                                     <td scope="col" class="px-1">
-                                        <input type="text" name="participants[{{ $index }}][dept]"
-                                            id="dept" value="{{ $participant['dept'] }}"
+                                        <input type="text" name="participants[{{ $index }}][dept]" id="dept"
+                                            value="{{ $participant['dept'] }}"
                                             class="bg-gray-50 dept_input border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             placeholder="John Doe" readonly>
                                     </td>
                                     <td scope="col" class="px-1">
-                                        <input type="text" name="participants[{{ $index }}][position]"
-                                            id="position" value="{{ $participant['position'] }}"
+                                        <input type="text" name="participants[{{ $index }}][position]" id="position"
+                                            value="{{ $participant['position'] }}"
                                             class="bg-gray-50 position_input border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             placeholder="John Doe" readonly>
                                     </td>
-                                    <input type="hidden" name="participants[0][peserta_id]"
-                                        class="peserta_id_input">
+                                    <input type="hidden" name="participants[0][peserta_id]" class="peserta_id_input">
                                     <td scope="col" class="px-1">
-                                        <select id="category"
-                                            name="participants[{{ $index }}][theory_result]"
+                                        <select id="category" name="participants[{{ $index }}][theory_result]"
                                             value="{{ $participant->pivot->theory_result ?? '' }}"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                            <option value="Pass" @selected($participant->pivot->theory_result == 'Pass')>Pass</option>
-                                            <option value="Fail" @selected($participant->pivot->theory_result == 'Fail')>Fail</option>
-                                            <option value="N/A" @selected($participant->pivot->theory_result == 'N/A')>N/A</option>
+                                            <option value="Pass" @selected(old("participants.$index.theory_result", $participant->pivot->theory_result) == 'Pass')>Pass</option>
+                                            <option value="Fail" @selected(old("participants.$index.theory_result", $participant->pivot->theory_result) == 'Fail')>Fail</option>
+                                            <option value="N/A" @selected(old("participants.$index.theory_result", $participant->pivot->theory_result) == 'N/A')>N/A</option>
                                         </select>
                                     </td>
                                     <td scope="col" class="px-1">
-                                        <select id="category"
-                                            name="participants[{{ $index }}][practical_result]"
-                                            value="{{ old($participant->pivot->theory_result ?? '') }}"
+                                        <select id="category" name="participants[{{ $index }}][practical_result]"
+                                            value="{{ old($participant->pivot->practical_result ?? '') }}"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                            <option value="Pass" @selected($participant->pivot->theory_result == 'Pass')>Pass</option>
-                                            <option value="Fail" @selected($participant->pivot->theory_result == 'Fail')>Fail</option>
-                                            <option value="N/A" @selected($participant->pivot->theory_result == 'N/A')>N/A</option>
+                                            <option value="Pass" @selected(old("participants.$index.practical_result", $participant->pivot->practical_result) == 'Pass')>Pass</option>
+                                            <option value="Fail" @selected(old("participants.$index.practical_result", $participant->pivot->practical_result) == 'Fail')>Fail</option>
+                                            <option value="N/A" @selected(old("participants.$index.practical_result", $participant->pivot->practical_result) == 'N/A')>N/A</option>
 
                                         </select>
                                     </td>
                                     <td scope="col" class="px-1">
                                         <select id="category" name="participants[{{ $index }}][level] "
-                                            value="{{ $participant->pivot->theory_result ?? '' }}"
+                                            value="{{ old($participant->pivot->level ?? '') }}"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                            <option name="Level 1" value="Level 1" @selected($participant->pivot->level == 'Level 1')>Level
-                                                1
-                                            </option>
-                                            <option name="Level 2" value="Level 2" @selected($participant->pivot->level == 'Level 2')>Level
-                                                2
-                                            </option>
-                                            <option name="Level 3" value="Level 3" @selected($participant->pivot->level == 'Level 3')>Level
-                                                3
-                                            </option>
-                                            <option name="Level 4" value="Level 4" @selected($participant->pivot->level == 'Level 4')>Level
-                                                4
-                                            </option>
-                                            <option name="N/A" value="N/A" @selected($participant->pivot->level == 'N/A')>N/A
-                                            </option>
+                                            <option value="1" @selected(old("participants.$index.level", $participant->pivot->level) == '1')>1</option>
+                                            <option value="2" @selected(old("participants.$index.level", $participant->pivot->level) == '2')>2</option>
+                                            <option value="3" @selected(old("participants.$index.level", $participant->pivot->level) == '3')>3</option>
+                                            <option value="4" @selected(old("participants.$index.level", $participant->pivot->level) == '4')>4</option>
                                         </select>
                                     </td>
                                     <td scope="col" class="px-1">
-                                        <select id="category"
-                                            name="participants[{{ $index }}][final_judgement]"
-                                            value="{{ $participant->pivot->theory_result ?? '' }}"
+                                        <select id="category" name="participants[{{ $index }}][final_judgement]"
+                                            value="{{ old($participant->pivot->final_judgement ?? '') }}"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                            <option name="Attend " value="Attend" @selected($participant->pivot->final_judgement == 'Attend ')>Attend
-                                            </option>
-                                            <option name="Competence" value="Competence"
-                                                @selected($participant->pivot->final_judgement == 'Competence')>
-                                                Competence</option>
-                                            <option name="N/A" value="N/A" @selected($participant->pivot->final_judgement == 'N/A')>N/A
-                                            </option>
+                                            <option value="Attend" @selected(old("participants.$index.final_judgement", $participant->pivot->final_judgement) == 'Attend')>Attend</option>
+                                            <option value="Competence" @selected(old("participants.$index.final_judgement", $participant->pivot->final_judgement) == 'Competence')>Competence</option>
+                                            <option value="N/A" @selected(old("participants.$index.final_judgement", $participant->pivot->final_judgement) == 'N/A')>N/A</option>
 
                                         </select>
                                     </td>
                                     <td scope="col" class="px-1">
-                                        <input type="hidden" name="participants[{{ $index }}][license]"
-                                            value="0">
-                                        <input id="license-checkbox-{{ $index }}"
-                                            name="participants[{{ $index }}][license]" type="checkbox"
-                                            value="1"
+                                        <input type="hidden" name="participants[{{ $index }}][license]" value="0">
+                                        <input id="license-checkbox-{{ $index }}" name="participants[{{ $index }}][license]"
+                                            type="checkbox" value="1"
                                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                                             {{ old("participants.$index.license", $participant->pivot->license ?? 0) == 1 ? 'checked' : '' }}>
                                     </td>
@@ -299,16 +274,16 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             // Mencegah form submit saat Enter ditekan di dalam form
-            $('form').on('keypress', function(e) {
+            $('form').on('keypress', function (e) {
                 if (e.which == 13) {
                     e.preventDefault(); // Mencegah form submit
                 }
             });
 
             // Menggunakan delegated event listener untuk input badge_no dinamis
-            $(document).on('keypress', '.badge_no_input', function(e) {
+            $(document).on('keypress', '.badge_no_input', function (e) {
                 if (e.which == 13) {
                     e.preventDefault(); // Mencegah submit form
 
@@ -317,7 +292,7 @@
                     $.ajax({
                         url: '/participants/' + badgeNo, // URL untuk mengambil data peserta
                         type: 'GET',
-                        success: function(data) {
+                        success: function (data) {
                             // Temukan parent row dari input yang di-trigger
                             let parentRow = $(e.target).closest('.participant-row');
 
@@ -327,7 +302,7 @@
                             parentRow.find('.dept_input').val(data.dept);
                             // Mengisi nilai peserta_id
                         },
-                        error: function() {
+                        error: function () {
                             alert('Participant not found'); // Jika peserta tidak ditemukan
                         }
                     });
@@ -335,7 +310,7 @@
             })
         });
 
-        document.getElementById('add-participant').addEventListener('click', function() {
+        document.getElementById('add-participant').addEventListener('click', function () {
             const container = document.getElementById('tableBody');
             const index = container.children.length;
             const newRow = document.createElement('tr');

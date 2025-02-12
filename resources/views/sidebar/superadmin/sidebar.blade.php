@@ -120,7 +120,7 @@
                         <circle cx="12" cy="12" r="9" />
                         <path d="M9 12l2 2l4 -4" />
                     </svg>
-                    <span class="ml-4">Production Matrix Skill</span>
+                    <span class="">Production Competency Matrix</span>
                 </a>
             </li>
 

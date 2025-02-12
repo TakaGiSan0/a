@@ -1,16 +1,14 @@
 <?php
 
-
 namespace Database\Factories;
 
-use App\Models\training_record;
+use App\Models\Training_Record;
 use App\Models\Category;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-
-class training_recordFactory extends Factory
+class Training_RecordFactory extends Factory
 {
-    protected $model = training_record::class;
+    protected $model = Training_Record::class;
 
     public function definition()
     {
@@ -25,11 +23,9 @@ class training_recordFactory extends Factory
             'trainer_name' => $this->faker->name,
             'rev' => $this->faker->randomDigitNotNull,
             'skill_code' => $this->faker->bothify('SK-####'),
-            'status' => $this->faker->randomElement(['Pending']),
-            'approval' => $this->faker->randomElement(['Pending']),
-            'comment' => $this->faker->sentence
-
-
+            'status' => 'Pending',
+            'approval' => 'Pending',
+            'comment' => $this->faker->sentence,
         ];
     }
 }

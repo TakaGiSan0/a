@@ -19,20 +19,31 @@
     }
 </style>
 
-<body>
-    <div class="flex h-screen bg-gray-50 dark:bg-gray-900">
-        @yield('sidebar')
+<body class="h-screen flex flex-col">
+    <div class="relative flex-1 flex bg-white dark:bg-gray-900 w-full">
+        <!-- Wrapper utama -->
+        <div class="flex h-full min-w-full">
+            <!-- Sidebar (Tetap Fixed dan Tidak Mengecil) -->
+            <aside class="w-64 shrink-0">
+                @yield('sidebar')
+            </aside>
 
-        <div class="flex flex-col flex-1 w-full">
-            @include('layouts.navbar')
+            <!-- Main Content -->
+            <div class="flex flex-col flex-1 w-full">
+                @include('layouts.navbar')
 
-            <div class="flex-1 p-4">
-                @yield('content')
+                <div class="flex-1 p-4">
+                    <!-- Wrapper agar hanya tabel yang bisa di-scroll -->
+                    <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+                        @yield('content')
+                    </div>
+                </div>
             </div>
-
         </div>
-
     </div>
+
+    <!-- Footer -->
+    @yield('footer')
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.4.1/dist/flowbite.min.js"></script>
 </body>

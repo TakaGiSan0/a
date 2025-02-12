@@ -147,7 +147,7 @@
                                         
                                         <!-- Edit dan Delete Actions -->
                                         <td class="px-4 py-3 flex items-center justify-center space-x-4">
-                                            @if(auth()->user()->department === $rc->user?->department)
+                                            @if(auth()->user()->role === 'Super Admin' || auth()->user()->department === $rc->user?->department)
                                             <a href="{{ route('dashboard.edit', $rc->id) }}">
                                                 <svg class="h-8 w-8 text-slate-500" width="24" height="24"
                                                     viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"

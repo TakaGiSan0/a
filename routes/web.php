@@ -73,8 +73,6 @@ Route::middleware(['auth', 'role:Super Admin,Admin'])->group(function () {
     Route::delete('/Employee/delete/{id}', [PesertaController::class, 'destroy'])->name('peserta.destroy');
 
 
-    
-
     // API Search Peserta Form
     Route::get('/participants/{badgeNo}', [PesertaController::class, 'getParticipantByBadgeNo']);
 });

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('training_record_id');
             $table->enum('theory_result', ['Pass', 'Fail', 'NA'])->nullable();
             $table->enum('practical_result', ['Pass', 'Fail', 'NA'])->nullable();
-            $table->enum('level', ['Level 1', 'Level 2','Level 3', 'Level 4' , 'NA'])->nullable();
+            $table->enum('level', ['1', '2','3', '4' , 'NA'])->nullable();
             $table->enum('final_judgement', ['Competence', 'Attend', 'NA'])->nullable();
             $table->boolean('license')->default(0);
             $table->string('certificate')->nullable();

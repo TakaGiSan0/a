@@ -3,77 +3,147 @@
 @section('title', 'Dashboard')
 
 @section('sidebar')
-    @if (auth()->user()->role == 'Super Admin')
-        @include('sidebar.superadmin.sidebar')
-    @elseif(auth()->user()->role == 'Admin')
-        @include('sidebar.admin.sidebar')
-    @elseif(auth()->user()->role == 'User')
-        @include('sidebar.user.sidebar')
-    @endif
+@if (auth()->user()->role == 'Super Admin')
+    @include('sidebar.superadmin.sidebar')
+@elseif(auth()->user()->role == 'Admin')
+    @include('sidebar.admin.sidebar')
+@elseif(auth()->user()->role == 'User')
+    @include('sidebar.user.sidebar')
+@endif
 @endsection
 
 @section('content')
-    <div class="container mx-auto">
-        <!-- Dashboard Header -->
-        <!-- Start block -->
-        <section
-            class="bg-gray-100 dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden antialiased min-h-[300px]">
-            <div class="mx-auto max-w-screen-xl px-4 lg:px-12 py-5">
-                <!-- Start coding here -->
+<div class="container mx-auto p-4 bg-gray-100">
+    <!-- Dashboard Header -->
+
+    <div class="mx-auto max-w-screen-xl px-4 py-5">
+        <div class="bg-white dark:bg-gray-800 shadow-md sm:rounded-xl border border-gray-200">
+            <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
+                <div class="w-full md:w-1/2">
+                    <form class="flex items-center">
+                        <label for="simple-search" class="sr-only">Search</label>
+                        <div class="relative w-full">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400"
+                                    fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd"
+                                        d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <input type="text" id="simple-search"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="Badge No/Employee Name" value="" name="searchQuery">
+                        </div>
+                    </form>
+                </div>
                 <div
-                    class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-xl overflow-hidden border border-gray-200">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm text-center text-gray-500 dark:text-gray-400">
-                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                <tr>
-                                    <th scope="col" class="px-4 py-4 ">No</th>
-                                    <th scope="col" class="px-4 py-4">Badge No</th>
-                                    <th scope="col" class="px-4 py-3">Emp Name</th>
-                                    <th scope="col" class="px-4 py-3">Dept</th>
-                                    <th scope="col" class="px-4 py-3">Position</th>
-                                    <th scope="col" class="px-4 py-3">Action</th>
-                                </tr>
-                            </thead>
-                           
-                                <tbody>
-                                    <tr class=>
-                                        <th scope="row" name="id"
-                                            class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                           </th>
-                                        <td class="px-4 py-3">
-                                           
-                                        </td>
-                                        <td class="px-4 py-3">
-                                           
+                    class="w-full relative md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
 
-                                        </td>
-                                        <td class="px-4 py-3">
-                                    
+                    <div class="relative inline-block text-left">
+                        <div>
+                            <button id="filterDropdownButton" type="button"
+                                class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                                aria-haspopup="true" aria-expanded="true">
+                                Dept
+                                <svg class="-mr-1 ml-1.5 w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                                    xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path clip-rule="evenodd" fill-rule="evenodd"
+                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                                </svg>
+                            </button>
+                        </div>
 
-                                        </td>
-                                        <td class="px-4 py-3">
-                                           
-                                        </td>
+                        <div id="filterDropdown"
+                            class="absolute right-0 mt-2 w-56 origin-top-right rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 overflow-auto max-h-96 hidden"
+                            style="z-index: 9999;">
+                            <form method="GET" action="{{ url()->current() }}">
+                                <div class="p-4">
+                                    <div>
 
-                                        <td class="px-4 py-3 flex items-center justify-center">
-                                          
-                                         
-                                        </td>
+                                        <div class="flex items-center">
+                                            <input type="checkbox" name="dept[]" value=""
+                                                class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700">
+                                            <label for=""
+                                                class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"></label>
+                                        </div>
 
-                                    </tr>
-                                </tbody>
-                    
-                        </table>
-                    </div>
-                    <div class="mt-4">
-                     
+                                    </div>
+
+                                    <button type="submit"
+                                        class="mt-4 w-full inline-flex items-center justify-center py-2 px-4 text-sm font-medium text-white bg-blue-600 bg-primary-600 rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-4 focus:ring-primary-300">Filter</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-    </div>
-    </section>
-    <!-- End block -->
+            <div class="overflow-x-auto">
+                <table class="min-w-full border-collapse sm:rounded-xl">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th rowspan="2" class="px-4 py-4 border border-gray-300">No</th>
+                            <th rowspan="2" class="px-4 py-4 border border-gray-300">Badge No</th>
+                            <th rowspan="2" class="px-4 py-4 border border-gray-300">Emp Name</th>
+                            <th rowspan="2" class="px-4 py-4 border border-gray-300">Date of Join</th>
+                            <th rowspan="2" class="px-4 py-4 border border-gray-300">Dept</th>
+                            <th colspan="{{ count($stations) }}" class="px-4 py-2 text-center border border-gray-300">
+                                Station</th>
+                            <th colspan="{{ count($skillCodes) }}" class="px-4 py-2 text-center border border-gray-300">
+                                Skill Code</th>
+                        </tr>
+                        <tr>
+                            @foreach($stations as $station)
+                                <th class="px-4 py-2 text-center border border-gray-300">{{ $station }}</th>
+                            @endforeach
+                            @foreach($skillCodes as $skill)
+                                <th class="px-4 py-2 text-center border border-gray-300">{{ $skill }}</th>
+                            @endforeach
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php $no = 0; @endphp
+                        @foreach ($pesertas as $peserta)
+                                            <tr class="border-t">
+                                                <td class="px-4 py-3 border border-gray-300">{{ ++$no }}</td>
+                                                <td class="px-4 py-3 border border-gray-300">{{ $peserta->badge_no }}</td>
+                                                <td class="px-4 py-3 border border-gray-300">{{ $peserta->employee_name }}</td>
+                                                <td class="px-4 py-3 border border-gray-300">{{ $peserta->join_date }}</td>
+                                                <td class="px-4 py-3 border border-gray-300">{{ $peserta->dept }}</td>
 
+                                                @foreach ($stations as $station)
+                                                                        <td class="px-4 py-2 text-center border border-gray-300">
+                                                                            @php
+                                                                                $hasil = $peserta->trainingRecords->firstWhere(function ($training) use ($station) {
+                                                                                    return in_array($station, explode(', ', $training->station));
+                                                                                });
+                                                                            @endphp
+                                                                            {{ $hasil ? $hasil->pivot->level : '-' }}
+                                                                        </td>
+                                                @endforeach
+
+                                                {{-- Data untuk Skill Code --}}
+                                                @foreach ($skillCodes as $skill)
+                                                                        <td class="px-4 py-2 text-center border border-gray-300">
+                                                                            @php
+                                                                                $hasTraining = $peserta->trainingRecords->contains(function ($training) use ($skill) {
+                                                                                    return $training->skill_code == $skill;
+                                                                                });
+                                                                            @endphp
+                                                                            {!! $hasTraining ? '<span class="text-green-500">✔</span>' : '-' !!}
+                                                                        </td>
+                                                @endforeach
+                                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
     </div>
 
+</div>
+@endsection
+@section('footer')
+    @include('layouts.footer')
 @endsection
