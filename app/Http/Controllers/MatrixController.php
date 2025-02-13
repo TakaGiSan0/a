@@ -9,8 +9,10 @@ class MatrixController extends Controller
 {
     public function index()
     {
-
         $matrix = hasil_peserta::where('license', 1)
+            ->whereHas('trainingrecord', function ($query) {
+                $query->where('status', 'completed');
+            })
             ->with('pesertas', 'trainingrecord')
             ->get();
         return view('content.matrix', compact('matrix'));

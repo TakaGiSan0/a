@@ -81,15 +81,22 @@
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Training
                             Start</label>
                         <input type="date" name="date_start"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            >
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     </div>
                     <div><label for="category"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Training
                             End</label>
                         <input type="date" name="date_end"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        >
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    </div>
+                    <div><label for="training_duration"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Training
+                            Duration (Minute)</label>
+                        <input type="number" id="duration_minutes" name="duration_minutes" min="0"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 
+                            focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 
+                            dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter minutes">
+                        <input type="hidden" id="training_duration" name="training_duration">
                     </div>
                     <div><label for="category"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Training
@@ -201,16 +208,16 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             // Mencegah form submit saat Enter ditekan di dalam form
-            $('form').on('keypress', function(e) {
+            $('form').on('keypress', function (e) {
                 if (e.which == 13) {
                     e.preventDefault(); // Mencegah form submit
                 }
             });
 
             // Menggunakan delegated event listener untuk input badge_no dinamis
-            $(document).on('keypress', '.badge_no_input', function(e) {
+            $(document).on('keypress', '.badge_no_input', function (e) {
                 if (e.which == 13) {
                     e.preventDefault(); // Mencegah submit form
 
@@ -219,7 +226,7 @@
                     $.ajax({
                         url: '/participants/' + badgeNo, // URL untuk mengambil data peserta
                         type: 'GET',
-                        success: function(data) {
+                        success: function (data) {
                             // Temukan parent row dari input yang di-trigger
                             let parentRow = $(e.target).closest('.participant-row');
 
@@ -229,7 +236,7 @@
                             parentRow.find('.dept_input').val(data.dept);
                             // Mengisi nilai peserta_id
                         },
-                        error: function() {
+                        error: function () {
                             alert('Participant not found'); // Jika peserta tidak ditemukan
                         }
                     });
@@ -237,7 +244,7 @@
             })
         });
 
-        document.getElementById('add-participant').addEventListener('click', function() {
+        document.getElementById('add-participant').addEventListener('click', function () {
             const container = document.getElementById('tableBody');
             const index = container.children.length;
             const newRow = document.createElement('tr');
@@ -285,10 +292,10 @@
                         <td scope="col" class="px-1">
                             <select id="category" name="participants[${index}][level]"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                <option name="Level 1" value="Level 1">Level 1</option>
-                                <option name="Level 2" value="Level 2">Level 2</option>
-                                <option name="Level 3" value="Level 3">Level 3</option>
-                                <option name="Level 4" value="Level 4">Level 4</option>
+                                <option name="Level 1" value="1">Level 1</option>
+                                <option name="Level 2" value="2">Level 2</option>
+                                <option name="Level 3" value="3">Level 3</option>
+                                <option name="Level 4" value="4">Level 4</option>
                                 <option name="N/A" value="N/A">N/A</option>
                             </select>
                         </td>
@@ -314,6 +321,19 @@
             container.appendChild(newRow);
             hiddenInput.value = checkbox.checked ? "1" : "0";
         });
+
+        document.getElementById('duration_minutes').addEventListener('input', function () {
+            let totalMinutes = parseInt(this.value) || 0; // Ambil nilai dan pastikan berupa angka
+            let hours = Math.floor(totalMinutes / 60);  // Konversi ke jam
+            let minutes = totalMinutes % 60;            // Sisa menit
+
+            // Format menjadi 2 digit (contoh: 01:30)
+            let formattedTime = String(hours).padStart(2, '0') + ':' + String(minutes).padStart(2, '0');
+
+            // Masukkan hasil konversi ke input hidden agar bisa dikirim ke database
+            document.getElementById('training_duration').value = formattedTime;
+        });
+
     </script>
 
 </body>

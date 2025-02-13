@@ -24,6 +24,7 @@ return new class extends Migration
             $table->enum('approval', ['Approved', 'Pending', 'Reject'])->default('Pending');
             $table->date('date_start');
             $table->date('date_end');
+            $table->time('training_duration');
             $table->string('comment')->nullable();
             $table->string('attachment')->nullable();
             $table->unsignedBigInteger('category_id');

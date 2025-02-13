@@ -96,6 +96,20 @@
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="17 Desember 2021">
                     </div>
+                    <div>
+                        <div>
+                            <label for="training_duration" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                Training Duration (Menit)
+                            </label>
+                            
+                            <!-- Input untuk menampilkan nilai dalam menit -->
+                            <input type="number" id="training_duration" name="training_duration" min="1"
+                                value="{{ old('training_duration', $formattedTime) }}"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 
+                                focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 
+                                dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        </div>
+                    </div>
                     <div><label for="category"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Training
                             Category</label>
@@ -359,10 +373,10 @@
                         <td scope="col" class="px-1">
                             <select id="category" name="participants[${index}][level]"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                <option name="Level 1" value="Level 1">Level 1</option>
-                                <option name="Level 2" value="Level 2">Level 2</option>
-                                <option name="Level 3" value="Level 3">Level 3</option>
-                                <option name="Level 4" value="Level 4">Level 4</option>
+                                <option name="1" value="1">Level 1</option>
+                                <option name="2" value="2">Level 2</option>
+                                <option name="3" value="3">Level 3</option>
+                                <option name="4" value="4">Level 4</option>
                                 <option name="N/A" value="N/A">N/A</option>
                             </select>
                         </td>
@@ -393,6 +407,18 @@
             container.appendChild(newRow);
             hiddenInput.value = checkbox.checked ? "1" : "0";
         });
+
+        function convertTimeToMinutes(timeString) {
+        if (!timeString) return '';
+        let [hours, minutes] = timeString.split(':').map(Number);
+        return (hours * 60) + minutes;
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        let timeInput = document.getElementById("training_duration");
+        let timeValue = "{{ $trainingRecord->training_duration }}";  // Ambil dari Blade
+        timeInput.value = convertTimeToMinutes(timeValue);
+    });
     </script>
 
 </body>

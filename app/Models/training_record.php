@@ -23,6 +23,7 @@ class training_record extends Model
         'skill_code',
         'date_start',
         'date_end',
+        'training_duration',
         'status',
         'approval',
         'comment',

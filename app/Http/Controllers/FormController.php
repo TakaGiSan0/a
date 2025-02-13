@@ -111,6 +111,7 @@ class FormController extends Controller
             'station' => $data['station'],
             'date_start' => $data['date_start'],
             'date_end' => $data['date_end'],
+            'training_duration' => $data['training_duration'],
             'skill_code' => $data['skill_code'],
             'category_id' => $data['category_id'],
             'attachment' => $filePath,
@@ -166,18 +167,21 @@ class FormController extends Controller
     {
         $trainingRecord = Training_Record::with('pesertas')->findOrFail($id);
 
+        $time = $trainingRecord->training_duration;
+        list($hours, $minutes) = explode(':', $time);
+        $minutesInTotal = ($hours * 60) + $minutes;
+        $formattedTime = $minutesInTotal;
 
-        // Ambil data peserta jika form statusnya draft
         $participants =
             $trainingRecord->status === 'Pending'
-            ? session('pending_participants', []) // Ambil data dari session
-            : $trainingRecord->pesertas; // Jika bukan pending, ambil dari database
+            ? session('pending_participants', [])
+            : $trainingRecord->pesertas;
 
         // Ambil semua categories
         $categories = Category::all();
 
         // Kirim data ke view
-        return view('form.edit_completed', compact('trainingRecord', 'categories', 'participants'));
+        return view('form.edit_completed', compact('trainingRecord', 'categories', 'participants', 'formattedTime'));
     }
 
 
@@ -193,6 +197,14 @@ class FormController extends Controller
 
         $trainingRecord = Training_Record::findOrFail($id);
 
+        // Mengambil input menit dari form
+        $minutes = $request->input('training_duration'); // misalnya 120
+
+        $hours = floor($minutes / 60);  // Jam
+        $remainingMinutes = $minutes % 60;  // Menit sisa
+
+        $formattedTime = sprintf("%d:%02d", $hours, $remainingMinutes);
+
         $trainingRecord->update([
             'training_name' => $data['training_name'],
             'doc_ref' => $data['doc_ref'],
@@ -205,23 +217,24 @@ class FormController extends Controller
             'skill_code' => $data['skill_code'],
             'category_id' => $data['category_id'],
             'status' => $status,
+            'training_duration' => $formattedTime
         ]);
-        if ($status === 'completed') {
 
-            $trainingRecord->pesertas()->detach();
-            foreach ($data['participants'] as $participant) {
-                $peserta = Peserta::where('badge_no', $participant['badge_no'])->first();
-                if ($peserta) {
-                    $trainingRecord->pesertas()->attach($peserta->id, [
-                        'level' => $participant['level'],
-                        'final_judgement' => $participant['final_judgement'],
-                        'license' => $participant['license'],
-                        'theory_result' => $participant['theory_result'],
-                        'practical_result' => $participant['practical_result'],
-                    ]);
-                }
+
+        $trainingRecord->pesertas()->detach();
+        foreach ($data['participants'] as $participant) {
+            $peserta = Peserta::where('badge_no', $participant['badge_no'])->first();
+            if ($peserta) {
+                $trainingRecord->pesertas()->attach($peserta->id, [
+                    'level' => $participant['level'],
+                    'final_judgement' => $participant['final_judgement'],
+                    'license' => $participant['license'],
+                    'theory_result' => $participant['theory_result'],
+                    'practical_result' => $participant['practical_result'],
+                ]);
             }
         }
+
 
         // Redirect atau response dengan pesan sukses
         return redirect()->route('dashboard.index')->with('success', 'Training succesfully updated.');
@@ -274,6 +287,7 @@ class FormController extends Controller
             'station' => 'required|string|max:255',
             'date_start' => 'required|date',
             'date_end' => 'required|date',
+            'training_duration' => 'required|integer',
             'skill_code' => 'required|string|max:255',
             'attachment' => 'file|mimes:pdf|max:2048',
             'category_id' => 'required|integer|exists:categories,id',

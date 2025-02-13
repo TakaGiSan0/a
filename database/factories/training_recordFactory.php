@@ -18,6 +18,7 @@ class Training_RecordFactory extends Factory
             'station' => $this->faker->word,
             'date_start' => $this->faker->date,
             'date_end' => $this->faker->date,
+            'training_duration' => $this->faker->time,
             'training_name' => $this->faker->name,
             'job_skill' => $this->faker->word,
             'trainer_name' => $this->faker->name,
