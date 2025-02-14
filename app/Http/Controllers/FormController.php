@@ -168,9 +168,21 @@ class FormController extends Controller
         $trainingRecord = Training_Record::with('pesertas')->findOrFail($id);
 
         $time = $trainingRecord->training_duration;
-        list($hours, $minutes) = explode(':', $time);
-        $minutesInTotal = ($hours * 60) + $minutes;
-        $formattedTime = $minutesInTotal;
+
+        if (!empty($time) && str_contains($time, ':')) {
+            $parts = explode(':', $time);
+            if (count($parts) === 2 && is_numeric($parts[0]) && is_numeric($parts[1])) {
+                list($hours, $minutes) = $parts;
+                $minutesInTotal = ($hours * 60) + $minutes;
+                $formattedTime = $minutesInTotal;
+            } else {
+                // Jika format tidak sesuai
+                $formattedTime = 0;
+            }
+        } else {
+            // Jika training_duration kosong
+            $formattedTime = 0;
+        }
 
         $participants =
             $trainingRecord->status === 'Pending'

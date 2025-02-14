@@ -39,6 +39,7 @@ class ExcelController extends Controller
             'file' => 'required|file|mimes:xlsx,xls',
         ]);
 
+        
         // Jalankan import
         Excel::import(new TrainingRecordsImport, $request->file('file'));
 

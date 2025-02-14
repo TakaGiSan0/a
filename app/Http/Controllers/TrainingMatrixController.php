@@ -4,75 +4,83 @@ namespace App\Http\Controllers;
 
 use App\Models\Training_Record;
 use App\Models\Peserta;
-
 use Illuminate\Http\Request;
 
 class TrainingMatrixController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Ambil data training record dengan station dan peserta yang mengikuti training
-        $records = Training_Record::with(['hasil_peserta.pesertas'])
+        // Ambil filter dari request
+        $searchQuery = $request->input('searchQuery');
+        $deptFilters = $request->input('dept', []);
+
+        $pesertasQuery = Peserta::whereHas('trainingRecords', fn($q) => $q->where('status', 'completed'));
+        if (!empty($deptFilters)) {
+            $pesertasQuery->whereIn('dept', $deptFilters);
+        }
+        if (!empty($searchQuery)) {
+            $pesertasQuery->where(fn($q) => $q->where('employee_name', 'like', "%$searchQuery%")
+                ->orWhere('badge_no', 'like', "%$searchQuery%"));
+        }
+
+        // Ambil peserta dengan pagination (10 per halaman)
+        $pesertas = $pesertasQuery->with(['trainingRecords:id,status,station'])
+            ->select('id', 'badge_no', 'join_date', 'employee_name', 'dept')
+            ->orderBy('employee_name', 'asc')
+            ->paginate(10);
+
+        // Ambil hanya 10 training_record dengan pagination
+        $records = Training_Record::with([
+            'hasil_peserta:id,training_record_id,level',
+            'hasil_peserta.pesertas:id,badge_no,nama,join_date,dept'
+        ])
             ->where('status', 'completed')
-            ->get();
+            ->select('id', 'station', 'skill_code')
+            ->paginate(10);
 
-        // Kumpulkan semua station unik
-        $stations = collect($records)->flatMap(function ($record) {
-            return explode(', ', $record->station);
-        })->unique()->values()->toArray();
+        // Ambil semua station dari seluruh training_record (tanpa pagination)
+        $allStations = Training_Record::where('status', 'completed')
+            ->pluck('station')
+            ->unique()
+            ->toArray();
 
-        // Kumpulkan semua skill code unik
-        $skillCodes = collect($records)->flatMap(function ($record) {
-            return explode(', ', $record->skill_code);
-        })->unique()->values()->toArray();
-
-        // Ambil peserta dengan training record yang statusnya completed
-        $pesertas = Peserta::whereHas('trainingRecords', function ($query) {
-            $query->where('status', 'completed');
-        })
-            ->with(['trainingRecords' => function ($query) {
-                $query->where('status', 'completed')
-                    ->withPivot('level');
-            }])
-            ->get();
-
-        // Hitung jumlah peserta
-        $pesertaCount = Peserta::whereHas('trainingRecords', function ($query) {
-            $query->where('status', 'completed');
-        })->count();
-
-        // Menyiapkan data untuk menghitung peserta dengan level 3 dan 4 pada setiap station
-        $stationsWithLevels = [];
-
-        $stationsWithLevels = [];
-
-        foreach ($stations as $station) {
-            // Menghitung jumlah level 3 dan 4 untuk setiap station
-            $countLevel3And4 = $pesertas->filter(function ($peserta) use ($station) {
-                return $peserta->trainingRecords->filter(function ($training) use ($station) {
-                    // Pastikan 'station' ada dan tidak null
-                    if (empty($training->station)) {
-                        return false;
-                    }
-
-                    // Cek jika 'station' sudah berupa array
-                    $stationsArray = is_array($training->station) ? $training->station : explode(', ', $training->station);
-
-                    // Periksa apakah station ada dalam daftar dan apakah levelnya 3 atau 4
-                    return in_array($station, $stationsArray) && in_array($training->pivot->level, ['3', '4']);
-                })->isNotEmpty();
-            })->count();
-
-            $stationsWithLevels[$station] = $countLevel3And4;
-        }
-
-        $stationsWithGaps = [];
-        foreach ($stationsWithLevels as $station => $count) {
-            $stationsWithGaps[$station] = $pesertaCount - $count;
-        }
+        // Ambil unique stations & skill codes
+        $stations = $records->pluck('station')->flatMap(fn($s) => explode(', ', $s))->unique()->values()->toArray();
+        $skillCodes = $records->pluck('skill_code')->flatMap(fn($s) => explode(', ', $s))->unique()->values()->toArray();
 
 
 
-        return view('content.training_matrix', compact('stations', 'pesertas', 'records', 'skillCodes', 'pesertaCount', 'stationsWithLevels', 'stationsWithGaps'));
+        // Ambil data peserta dengan pagination
+
+
+        $pesertaCount = $pesertas->total();
+
+        // Hitung jumlah peserta dengan level 3 & 4 per station
+        $stationsWithLevels = $pesertas->flatMap(function ($peserta) {
+            return $peserta->trainingRecords->filter(fn($t) => in_array($t->pivot->level, ['3', '4']))
+                ->pluck('station');
+        })->countBy()->toArray();
+
+        // Hitung gap peserta
+        $stationsWithGaps = collect($stationsWithLevels)->mapWithKeys(fn($count, $station) => [
+            $station => $pesertaCount - $count
+        ])->toArray();
+
+        // Ambil daftar departemen
+        $departments = Peserta::distinct('dept')->pluck('dept');
+
+        return view('content.training_matrix', compact(
+            'stations',
+            'pesertas',
+            'records',
+            'skillCodes',
+            'pesertaCount',
+            'stationsWithLevels',
+            'stationsWithGaps',
+            'searchQuery',
+            'deptFilters',
+            'departments',
+            'allStations'
+        ));
     }
 }

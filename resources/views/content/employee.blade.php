@@ -303,8 +303,8 @@
                                 if (records.length > 0) {
     records.forEach(training => {
         // Memastikan pivot ada sebelum mengakses level dan final_judgement
-        const level = training.pivot ? training.pivot.level : 'N/A';
-        const finalJudgement = training.pivot ? training.pivot.final_judgement : 'N/A';
+        const level = training?.level ?? 'N/A';
+        const finalJudgement = training?.final_judgement ?? 'N/A';
 
         trainingRecordsContent += `
         <tr class="">
@@ -373,6 +373,9 @@
                 dropdown.classList.add('hidden');
             }
         });
+
+        console.log(training.pivot);
+
     </script>
 
 

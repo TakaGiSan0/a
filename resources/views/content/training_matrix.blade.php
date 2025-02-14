@@ -20,7 +20,7 @@
             <div class="bg-white dark:bg-gray-800 shadow-md sm:rounded-xl border border-gray-200">
                 <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                     <div class="w-full md:w-1/2">
-                        <form class="flex items-center">
+                        <form class="flex items-center" method="GET" action="{{ url()->current() }}">
                             <label for="simple-search" class="sr-only">Search</label>
                             <div class="relative w-full">
                                 <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -33,11 +33,27 @@
                                 </div>
                                 <input type="text" id="simple-search"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    placeholder="Badge No/Employee Name" value="" name="searchQuery">
+                                    placeholder="Badge No/Employee Name" value="{{ $searchQuery }}" name="searchQuery">
                             </div>
                         </form>
+
                     </div>
                     <p>Demand : {{ $pesertaCount }}</p>
+                    <div
+                        class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+                        <a href="#"
+                            class="flex items-center justify-center text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800">
+                            <svg class="h-4 w-4 mr-2 text-white-500" width="24" height="24" viewBox="0 0 24 24"
+                                stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" />
+                                <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />
+                                <polyline points="7 11 12 16 17 11" />
+                                <line x1="12" y1="4" x2="12" y2="16" />
+                            </svg>
+                            Download
+                        </a>
+                    </div>
                     <div
                         class="w-full relative md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
 
@@ -61,14 +77,15 @@
                                 <form method="GET" action="{{ url()->current() }}">
                                     <div class="p-4">
                                         <div>
-
-                                            <div class="flex items-center">
-                                                <input type="checkbox" name="dept[]" value=""
-                                                    class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700">
-                                                <label for=""
-                                                    class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"></label>
-                                            </div>
-
+                                            @foreach($departments as $department)
+                                                <div class="flex items-center">
+                                                    <input type="checkbox" name="dept[]" value="{{ $department }}"
+                                                        class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700"
+                                                        {{ in_array($department, $deptFilters) ? 'checked' : '' }}>
+                                                    <label for=""
+                                                        class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">{{ $department }}</label>
+                                                </div>
+                                            @endforeach
                                         </div>
 
                                         <button type="submit"
@@ -88,13 +105,13 @@
                                 <th rowspan="2" class="px-4 py-4 border border-gray-300">Emp Name</th>
                                 <th rowspan="2" class="px-4 py-4 border border-gray-300">Date of Join</th>
                                 <th rowspan="2" class="px-4 py-4 border border-gray-300">Dept</th>
-                                <th colspan="{{ count($stations) }}" class="px-4 py-2 text-center border border-gray-300">
+                                <th colspan="{{ count($allStations) }}" class="px-4 py-2 text-center border border-gray-300">
                                     Station</th>
                                 <th colspan="{{ count($skillCodes) }}" class="px-4 py-2 text-center border border-gray-300">
                                     Skill Code</th>
                             </tr>
                             <tr>
-                                @foreach($stations as $station)
+                                @foreach($allStations as $station)
                                     <th class="px-4 py-2 text-center border border-gray-300">{{ $station }}</th>
                                 @endforeach
                                 @foreach($skillCodes as $skill)
@@ -112,16 +129,20 @@
                                                     <td class="px-4 py-3 border border-gray-300">{{ $peserta->join_date }}</td>
                                                     <td class="px-4 py-3 border border-gray-300">{{ $peserta->dept }}</td>
 
-                                                    @foreach ($stations as $station)
-                                                                            <td class="px-4 py-2 text-center border border-gray-300">
-                                                                                @php
-                                                                                    $hasil = $peserta->trainingRecords->firstWhere(function ($training) use ($station) {
-                                                                                        return in_array($station, explode(', ', $training->station));
-                                                                                    });
-                                                                                @endphp
-                                                                                {{ $hasil ? $hasil->pivot->level : '-' }}
-                                                                            </td>
-                                                    @endforeach
+                                                    @foreach ($allStations as $station)
+    <td class="px-4 py-2 text-center border border-gray-300">
+        @php
+            $hasil = $peserta->trainingRecords
+                ->filter(function ($training) use ($station) {
+                    return in_array($station, explode(', ', $training->station));
+                })
+                ->sortByDesc('pivot.level') // Urutkan berdasarkan level dari yang tertinggi
+                ->first();
+        @endphp
+        {{ $hasil ? $hasil->pivot->level : '-' }}
+    </td>
+@endforeach
+
 
                                                     {{-- Data untuk Skill Code --}}
                                                     @foreach ($skillCodes as $skill)
@@ -142,28 +163,45 @@
                                 <td class="px-4 py-3 text-center border border-gray-300" colspan="5">Supply</td>
 
                                 @foreach ($stations as $station)
-    <td class="px-4 py-2 text-center border border-gray-300">
-        {{ isset($stationsWithLevels[$station]) ? $stationsWithLevels[$station] : '-' }}
-    </td>
-@endforeach
+                                    <td class="px-4 py-2 text-center border border-gray-300">
+                                        {{ isset($stationsWithLevels[$station]) ? $stationsWithLevels[$station] : '-' }}
+                                    </td>
+                                @endforeach
                             </tr>
                             <tr>
                                 <td class="px-4 py-3 text-center border border-gray-300" colspan="5">GAP</td>
 
                                 @foreach ($stations as $station)
-    <td class="px-4 py-2 text-center border border-gray-300">
-        {{ isset($stationsWithGaps[$station]) ? $stationsWithGaps[$station] : '-' }}
-    </td>
-@endforeach
+                                    <td class="px-4 py-2 text-center border border-gray-300">
+                                        {{ isset($stationsWithGaps[$station]) ? $stationsWithGaps[$station] : '-' }}
+                                    </td>
+                                @endforeach
                             </tr>
                         </tbody>
                     </table>
 
                 </div>
+                <div class="mt-4">
+                    {{ $pesertas->links() }}
+                </div>
             </div>
         </div>
-
     </div>
+    <script>
+        document.getElementById('filterDropdownButton').addEventListener('click', function () {
+            const dropdown = document.getElementById('filterDropdown');
+            dropdown.classList.toggle('hidden'); // Toggle visibility
+        });
+
+        // Optional: Close the dropdown when clicking outside
+        document.addEventListener('click', function (event) {
+            const dropdown = document.getElementById('filterDropdown');
+            const button = document.getElementById('filterDropdownButton');
+            if (!button.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
+    </script>
 @endsection
 @section('footer')
     @include('layouts.footer')
