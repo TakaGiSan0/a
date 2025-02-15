@@ -7,7 +7,6 @@ use App\Imports\TrainingRecordsImport;
 use App\Imports\MasterDataImport;
 use App\Exports\MasterDataExport;
 use App\Exports\TrainingRecordExport;
-use App\Exports\TrainingMatrixExport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ExcelController extends Controller
@@ -19,7 +18,7 @@ class ExcelController extends Controller
             'file' => 'required|file|mimes:xlsx,xls',
         ]);
 
-
+        
         // Jalankan import
         Excel::import(new MasterDataImport, $request->file('file'));
 
@@ -40,7 +39,7 @@ class ExcelController extends Controller
             'file' => 'required|file|mimes:xlsx,xls',
         ]);
 
-
+        
         // Jalankan import
         Excel::import(new TrainingRecordsImport, $request->file('file'));
 
@@ -52,14 +51,6 @@ class ExcelController extends Controller
         $date = date('Y-m-d'); // Format tanggal: Tahun-Bulan-Hari
         $fileName = 'Training Record - ' . $date . '.xlsx';
         return Excel::download(new TrainingRecordExport(), $fileName);
-    }
-
-    public function export_matrix(Request $request)
-    {
-        
-        $date = date('Y-m-d'); // Format tanggal: Tahun-Bulan-Hari
-        $fileName = 'Matrix - ' . $date . '.xlsx';
-        return Excel::download(new TrainingMatrixExport(), $fileName);
     }
 
 }
