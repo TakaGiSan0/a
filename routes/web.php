@@ -62,8 +62,8 @@ Route::middleware(['auth', 'role:Super Admin,Admin'])->group(function () {
     Route::post('/index/create/store', [FormController::class, 'store'])->name('dashboard.store');
     Route::get('/index/edit/{id}', [FormController::class, 'edit'])->name('dashboard.edit');
     Route::put('/index/update/{id}', [FormController::class, 'update'])->name('dashboard.update');
-    
-    
+
+
     // Crud Peserta
     Route::get('/Employee/dashboard', [PesertaController::class, 'index'])->name('dashboard.peserta');
     Route::get('/Employee/New_Employee/', [PesertaController::class, 'create'])->name('peserta.create');
@@ -82,22 +82,27 @@ Route::middleware(['auth', 'role:Super Admin,Admin'])->group(function () {
 
 // Super Admin Route
 Route::middleware(['auth', 'role:Super Admin'])->group(function () {
-    // Route Import Export
+    // Route Import Export Peserta
     Route::post('/users/import', [ExcelController::class, 'import_peserta'])->name('import.peserta');
     Route::get('/users/expor', [ExcelController::class, 'export_peserta'])->name('export.peserta');
+
+    // Route Import Export Training
     Route::post('/training/import', [ExcelController::class, 'import_training'])->name('import.training');
     Route::get('/training/export', [ExcelController::class, 'export_training'])->name('export.training');
-    
-    
+
+    // Route Export Matrix
+    Route::get('/matrix/export', [ExcelController::class, 'export_matrix'])->name('export.matrix');
+
+
     Route::delete('/index/{id}', [FormController::class, 'destroy'])->name('dashboard.destroy');
     Route::get('/training-record/{id}', [FormController::class, 'show'])->name('dashboard.show');
-    
+
     // Route Matrix
     Route::get('/matrix/dashboard', [MatrixController::class, 'index'])->name('matrix.index');
     Route::get('/matrix/{id}', [MatrixController::class, 'show'])->name('matrix.show');
     Route::put('/matrix/update/{id}', [MatrixController::class, 'updateLicense'])->name('matrix.update');
 
-    
+
     // Route User
     Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
     Route::post('/User/New_User', [UserController::class, 'store'])->name('user.store');
