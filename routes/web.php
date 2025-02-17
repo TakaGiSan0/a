@@ -82,11 +82,16 @@ Route::middleware(['auth', 'role:Super Admin,Admin'])->group(function () {
 
 // Super Admin Route
 Route::middleware(['auth', 'role:Super Admin'])->group(function () {
-    // Route Import Export
+    // Route Import Export Peserta
     Route::post('/users/import', [ExcelController::class, 'import_peserta'])->name('import.peserta');
     Route::get('/users/expor', [ExcelController::class, 'export_peserta'])->name('export.peserta');
+
+    // Route Import Export Training
     Route::post('/training/import', [ExcelController::class, 'import_training'])->name('import.training');
     Route::get('/training/export', [ExcelController::class, 'export_training'])->name('export.training');
+
+     // Route Export Matrix
+     Route::get('/matrix/export', [ExcelController::class, 'export_matrix'])->name('export.matrix');
     
     
     Route::delete('/index/{id}', [FormController::class, 'destroy'])->name('dashboard.destroy');

@@ -38,6 +38,9 @@
                         </form>
 
                     </div>
+                    @php
+                        $pesertaCount = $pesertas -> total();
+                    @endphp
                     <p>Demand : {{ $pesertaCount }}</p>
                     <div
                         class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
@@ -80,10 +83,9 @@
                                             @foreach($departments as $department)
                                                 <div class="flex items-center">
                                                     <input type="checkbox" name="dept[]" value="{{ $department }}"
-                                                        class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700"
-                                                        {{ in_array($department, $deptFilters) ? 'checked' : '' }}>
-                                                    <label for=""
-                                                        class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">{{ $department }}</label>
+                                                    class="w-4 h-4 border-gray-300 rounded text-primary-600"
+                                                    {{ in_array($department, $deptFilters ?? []) ? 'checked' : '' }}>
+                                                    <label class="ml-2 text-sm font-medium">{{ $department }}</label>
                                                 </div>
                                             @endforeach
                                         </div>
@@ -107,14 +109,14 @@
                                 <th rowspan="2" class="px-4 py-4 border border-gray-300">Dept</th>
                                 <th colspan="{{ count($allStations) }}" class="px-4 py-2 text-center border border-gray-300">
                                     Station</th>
-                                <th colspan="{{ count($skillCodes) }}" class="px-4 py-2 text-center border border-gray-300">
+                                <th colspan="{{ count($allSkillCode) }}" class="px-4 py-2 text-center border border-gray-300">
                                     Skill Code</th>
                             </tr>
                             <tr>
                                 @foreach($allStations as $station)
                                     <th class="px-4 py-2 text-center border border-gray-300">{{ $station }}</th>
                                 @endforeach
-                                @foreach($skillCodes as $skill)
+                                @foreach($allSkillCode as $skill)
                                     <th class="px-4 py-2 text-center border border-gray-300">{{ $skill }}</th>
                                 @endforeach
                             </tr>
@@ -130,31 +132,33 @@
                                                     <td class="px-4 py-3 border border-gray-300">{{ $peserta->dept }}</td>
 
                                                     @foreach ($allStations as $station)
-    <td class="px-4 py-2 text-center border border-gray-300">
-        @php
-            $hasil = $peserta->trainingRecords
-                ->filter(function ($training) use ($station) {
-                    return in_array($station, explode(', ', $training->station));
-                })
-                ->sortByDesc('pivot.level') // Urutkan berdasarkan level dari yang tertinggi
-                ->first();
-        @endphp
-        {{ $hasil ? $hasil->pivot->level : '-' }}
-    </td>
-@endforeach
-
+                                                    <td class="px-4 py-2 text-center border border-gray-300">
+                                                        @php
+                                                            $levels = $peserta->trainingRecords
+                                                                ->filter(fn($training) => in_array($station, explode(', ', $training->station)))
+                                                                ->pluck('pivot.level')
+                                                                ->toArray();
+                                                
+                                                            // Pisahkan level angka dan NA
+                                                            $angkaLevels = array_filter($levels, fn($level) => is_numeric($level));
+                                                            $naLevels = array_filter($levels, fn($level) => strtoupper($level) === 'NA');
+                                                
+                                                            // Tampilkan hasil sesuai logika
+                                                            $levelTertinggi = !empty($angkaLevels) ? max($angkaLevels) : (!empty($naLevels) ? 'NA' : '-');
+                                                        @endphp
+                                                        {{ $levelTertinggi }}
+                                                    </td>
+                                                @endforeach
 
                                                     {{-- Data untuk Skill Code --}}
-                                                    @foreach ($skillCodes as $skill)
-                                                                            <td class="px-4 py-2 text-center border border-gray-300">
-                                                                                @php
-                                                                                    $hasTraining = $peserta->trainingRecords->contains(function ($training) use ($skill) {
-                                                                                        return $training->skill_code == $skill;
-                                                                                    });
-                                                                                @endphp
-                                                                                {!! $hasTraining ? '<span class="text-green-500">✔</span>' : '-' !!}
-                                                                            </td>
-                                                    @endforeach
+                                                    @foreach ($allSkillCode as $skill)
+                    <td class="px-4 py-2 text-center border border-gray-300">
+                        @php
+                            $hasTraining = $peserta->trainingRecords->contains(fn($training) => str_contains($training->skill_code, $skill));
+                        @endphp
+                        {!! $hasTraining ? '<span class="text-green-500">✔</span>' : '-' !!}
+                    </td>
+                @endforeach
                                                 </tr>
 
                             @endforeach
@@ -162,7 +166,7 @@
                             <tr>
                                 <td class="px-4 py-3 text-center border border-gray-300" colspan="5">Supply</td>
 
-                                @foreach ($stations as $station)
+                                @foreach ($allStations as $station)
                                     <td class="px-4 py-2 text-center border border-gray-300">
                                         {{ isset($stationsWithLevels[$station]) ? $stationsWithLevels[$station] : '-' }}
                                     </td>
@@ -171,7 +175,7 @@
                             <tr>
                                 <td class="px-4 py-3 text-center border border-gray-300" colspan="5">GAP</td>
 
-                                @foreach ($stations as $station)
+                                @foreach ($allStations as $station)
                                     <td class="px-4 py-2 text-center border border-gray-300">
                                         {{ isset($stationsWithGaps[$station]) ? $stationsWithGaps[$station] : '-' }}
                                     </td>

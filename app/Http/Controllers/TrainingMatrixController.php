@@ -10,77 +10,53 @@ class TrainingMatrixController extends Controller
 {
     public function index(Request $request)
     {
-        // Ambil filter dari request
-        $searchQuery = $request->input('searchQuery');
-        $deptFilters = $request->input('dept', []);
+        // Filter Peserta
+        $pesertasQuery = Peserta::with(['trainingRecords' => fn($q) => $q->where('status', 'completed')])
+            ->when($request->dept, fn($q) => $q->whereIn('dept', $request->dept))
+            ->when($request->searchQuery, fn($q) =>
+                $q->where('employee_name', 'like', "%{$request->searchQuery}%")
+                ->orWhere('badge_no', 'like', "%{$request->searchQuery}%")
+            )->distinct();
 
-        $pesertasQuery = Peserta::whereHas('trainingRecords', fn($q) => $q->where('status', 'completed'));
-        if (!empty($deptFilters)) {
-            $pesertasQuery->whereIn('dept', $deptFilters);
-        }
-        if (!empty($searchQuery)) {
-            $pesertasQuery->where(fn($q) => $q->where('employee_name', 'like', "%$searchQuery%")
-                ->orWhere('badge_no', 'like', "%$searchQuery%"));
-        }
+        $departments = $pesertasQuery->pluck('dept')->toArray();
 
-        // Ambil peserta dengan pagination (10 per halaman)
-        $pesertas = $pesertasQuery->with(['trainingRecords:id,status,station'])
-            ->select('id', 'badge_no', 'join_date', 'employee_name', 'dept')
-            ->orderBy('employee_name', 'asc')
+        // Ambil peserta & training dengan pagination
+        $pesertas = $pesertasQuery->select('id', 'badge_no', 'join_date', 'employee_name', 'dept')
+            ->orderBy('employee_name')
             ->paginate(10);
-
-        // Ambil hanya 10 training_record dengan pagination
-        $records = Training_Record::with([
-            'hasil_peserta:id,training_record_id,level',
-            'hasil_peserta.pesertas:id,badge_no,nama,join_date,dept'
-        ])
+        
+        $records = Training_Record::select('id', 'station', 'skill_code')
+            ->with('hasil_peserta.pesertas')
             ->where('status', 'completed')
-            ->select('id', 'station', 'skill_code')
             ->paginate(10);
 
-        // Ambil semua station dari seluruh training_record (tanpa pagination)
-        $allStations = Training_Record::where('status', 'completed')
-            ->pluck('station')
-            ->unique()
-            ->toArray();
+        // Ambil semua station & skill code
+        $allStations = Training_Record::where('status', 'completed')->pluck('station')->unique()->toArray();
+        $allSkillCode = Training_Record::where('status', 'completed')
+            ->pluck('skill_code')->flatMap(fn($s) => explode(', ', $s))->unique()->toArray();
 
-        // Ambil unique stations & skill codes
-        $stations = $records->pluck('station')->flatMap(fn($s) => explode(', ', $s))->unique()->values()->toArray();
-        $skillCodes = $records->pluck('skill_code')->flatMap(fn($s) => explode(', ', $s))->unique()->values()->toArray();
-
-
-
-        // Ambil data peserta dengan pagination
-
-
-        $pesertaCount = $pesertas->total();
-
-        // Hitung jumlah peserta dengan level 3 & 4 per station
+        // Hitung Level 3 & 4 per Station
         $stationsWithLevels = $pesertas->flatMap(function ($peserta) {
-            return $peserta->trainingRecords->filter(fn($t) => in_array($t->pivot->level, ['3', '4']))
+            return $peserta->trainingRecords
+                ->filter(fn($record) => in_array($record->pivot->level, ['3', '4']))
                 ->pluck('station');
         })->countBy()->toArray();
 
-        // Hitung gap peserta
-        $stationsWithGaps = collect($stationsWithLevels)->mapWithKeys(fn($count, $station) => [
-            $station => $pesertaCount - $count
-        ])->toArray();
+        $stationsWithGaps = collect($stationsWithLevels)->mapWithKeys(function ($count, $station) use ($pesertas) {
+            $totalParticipants = $pesertas->count(); // Total peserta
+            return [$station => $totalParticipants - $count];
+        })->toArray();
 
-        // Ambil daftar departemen
-        $departments = Peserta::distinct('dept')->pluck('dept');
-
-        return view('content.training_matrix', compact(
-            'stations',
-            'pesertas',
-            'records',
-            'skillCodes',
-            'pesertaCount',
-            'stationsWithLevels',
-            'stationsWithGaps',
-            'searchQuery',
-            'deptFilters',
-            'departments',
-            'allStations'
-        ));
+        // View
+        return view('content.training_matrix', [
+            'pesertas' => $pesertas,
+            'records' => $records,
+            'allSkillCode' => $allSkillCode,
+            'stationsWithLevels' => $stationsWithLevels,
+            'stationsWithGaps' => $stationsWithGaps,
+            'allStations' => $allStations,
+            'searchQuery' => $request->pesertaQuery,
+            'departments' => $departments
+        ]);
     }
 }
