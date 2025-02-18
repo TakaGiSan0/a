@@ -13,14 +13,15 @@ class PesertaController extends Controller
      */
     public function index(Request $request)
     {
-        $searchQuery = $request->input('badge_no');
+        $searchQuery = $request->input('searchQuery');
 
         // Mulai dengan query peserta
         $query = Peserta::query();
 
         // Terapkan filter pencarian jika ada
         if (!empty($searchQuery)) {
-            $query->where('badge_no', 'like', "%{$searchQuery}%");
+            $query->where('badge_no', 'like', "%{$searchQuery}%")
+                ->orWhere('employee_name', 'like', "%{$searchQuery}%");
         }
 
         // Ambil data peserta berdasarkan filter pencarian atau seluruh peserta

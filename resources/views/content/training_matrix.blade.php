@@ -13,10 +13,10 @@
 @endsection
 
 @section('content')
-    <div class="container mx-auto p-4 bg-gray-100">
+    <div class="container mx-auto py-4  bg-gray-100">
         <!-- Dashboard Header -->
 
-        <div class="mx-auto max-w-screen-xl px-4 py-5">
+        <div class="mx-auto max-w-screen-xl py-5">
             <div class="bg-white dark:bg-gray-800 shadow-md sm:rounded-xl border border-gray-200">
                 <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                     <div class="w-full md:w-1/2">
