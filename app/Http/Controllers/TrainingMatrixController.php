@@ -4,59 +4,80 @@ namespace App\Http\Controllers;
 
 use App\Models\Training_Record;
 use App\Models\Peserta;
+use App\Models\Hasil_Peserta;
 use Illuminate\Http\Request;
 
 class TrainingMatrixController extends Controller
 {
     public function index(Request $request)
     {
-        // Filter Peserta
-        $pesertasQuery = Peserta::with(['trainingRecords' => fn($q) => $q->where('status', 'completed')])
-            ->when($request->dept, fn($q) => $q->whereIn('dept', $request->dept))
-            ->when($request->searchQuery, fn($q) =>
+        // Ambil daftar semua departemen (tanpa filter)
+        $departments = Peserta::distinct()->pluck('dept')->toArray();
+
+        // Ambil peserta dengan filter yang dipilih
+        $pesertasQuery = Peserta::whereHas('trainingRecords', function ($query) {
+            $query->where('status', 'completed');
+        })
+            ->when($request->dept, fn($q) => $q->whereIn('dept', (array) $request->dept))
+            ->when(
+                $request->searchQuery,
+                fn($q) =>
                 $q->where('employee_name', 'like', "%{$request->searchQuery}%")
-                ->orWhere('badge_no', 'like', "%{$request->searchQuery}%")
-            )->distinct();
+                    ->orWhere('badge_no', 'like', "%{$request->searchQuery}%")
+            )
+            ->distinct();
 
-        $departments = $pesertasQuery->pluck('dept')->toArray();
+        
 
-        // Ambil peserta & training dengan pagination
+        // Ambil peserta dengan paginasi
         $pesertas = $pesertasQuery->select('id', 'badge_no', 'join_date', 'employee_name', 'dept')
             ->orderBy('employee_name')
             ->paginate(10);
-        
-        $records = Training_Record::select('id', 'station', 'skill_code')
-            ->with('hasil_peserta.pesertas')
-            ->where('status', 'completed')
-            ->paginate(10);
 
-        // Ambil semua station & skill code
+          
+        // Cek total participants, gunakan dd untuk debugging
+        $totalParticipants = $pesertas->total();
+
+
+        // Ambil semua Peserta Id untuk digunakan pada penghitungan Level
+        $allPesertaIds = Peserta::when($request->dept, function ($query) use ($request) {
+            return $query->whereIn('dept', (array) $request->dept);
+        })->pluck('id');
+
+        // Hitung Level 3 & 4 per Station
+        $stationsWithLevels = Hasil_Peserta::whereIn('peserta_id', $allPesertaIds)
+            ->whereIn('level', ['3', '4'])
+            ->with('trainingrecord')
+            ->get()
+            ->groupBy('trainingrecord.station')
+            ->map(fn($records) => $records->count())
+            ->toArray();
+
+
+        // Ambil semua station yang unik
         $allStations = Training_Record::where('status', 'completed')->pluck('station')->unique()->toArray();
         $allSkillCode = Training_Record::where('status', 'completed')
             ->pluck('skill_code')->flatMap(fn($s) => explode(', ', $s))->unique()->toArray();
 
-        // Hitung Level 3 & 4 per Station
-        $stationsWithLevels = $pesertas->flatMap(function ($peserta) {
-            return $peserta->trainingRecords
-                ->filter(fn($record) => in_array($record->pivot->level, ['3', '4']))
-                ->pluck('station');
-        })->countBy()->toArray();
+        // Gabungkan station dengan jumlah level 3 & 4
+        $stationsWithLevels = collect($allStations)->mapWithKeys(function ($station) use ($stationsWithLevels) {
+            return [$station => $stationsWithLevels[$station] ?? 0];
+        })->toArray();
 
-        $stationsWithGaps = collect($stationsWithLevels)->mapWithKeys(function ($count, $station) use ($pesertas) {
-            $totalParticipants = $pesertas->count(); // Total peserta
-            return [$station => $totalParticipants - $count];
+        // Hitung gap per station
+        $stationsWithGaps = collect($stationsWithLevels)->mapWithKeys(function ($count, $station) use ($totalParticipants) {
+            return [$station => $totalParticipants - $count]; // Menghitung gap
         })->toArray();
 
         // View
         return view('content.training_matrix', [
             'pesertas' => $pesertas,
-            'records' => $records,
-            'allSkillCode' => $allSkillCode,
             'stationsWithLevels' => $stationsWithLevels,
             'stationsWithGaps' => $stationsWithGaps,
             'allStations' => $allStations,
-            'searchQuery' => $request->pesertaQuery,
-            'departments' => $departments
+            'allSkillCode' => $allSkillCode,
+            'departments' => $departments,
+            'searchQuery' => $request->searchQuery,
         ]);
     }
 }

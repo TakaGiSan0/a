@@ -122,7 +122,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @php $no = 0; @endphp
+                            @php $no = ($pesertas->currentPage() - 1) * $pesertas->perPage(); @endphp
                             @foreach ($pesertas as $peserta)
                                                 <tr class="border-t">
                                                     <td class="px-4 py-3 border border-gray-300">{{ ++$no }}</td>
@@ -168,7 +168,7 @@
 
                                 @foreach ($allStations as $station)
                                     <td class="px-4 py-2 text-center border border-gray-300">
-                                        {{ isset($stationsWithLevels[$station]) ? $stationsWithLevels[$station] : '-' }}
+                                        {{ $stationsWithLevels[$station] ?? '-' }}
                                     </td>
                                 @endforeach
                             </tr>
@@ -177,7 +177,7 @@
 
                                 @foreach ($allStations as $station)
                                     <td class="px-4 py-2 text-center border border-gray-300">
-                                        {{ isset($stationsWithGaps[$station]) ? $stationsWithGaps[$station] : '-' }}
+                                        {{ $stationsWithGaps[$station] ?? '-' }}
                                     </td>
                                 @endforeach
                             </tr>
@@ -186,7 +186,7 @@
 
                 </div>
                 <div class="mt-4">
-                    {{ $pesertas->links() }}
+                    {{ $pesertas->appends([ 'dept' => request('dept')])->links()  }}
                 </div>
             </div>
         </div>
