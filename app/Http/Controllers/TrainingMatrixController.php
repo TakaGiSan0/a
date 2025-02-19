@@ -27,8 +27,6 @@ class TrainingMatrixController extends Controller
             )
             ->distinct();
 
-        
-
         // Ambil peserta dengan paginasi
         $pesertas = $pesertasQuery->select('id', 'badge_no', 'join_date', 'employee_name', 'dept')
             ->orderBy('employee_name')
@@ -42,7 +40,12 @@ class TrainingMatrixController extends Controller
         // Ambil semua Peserta Id untuk digunakan pada penghitungan Level
         $allPesertaIds = Peserta::when($request->dept, function ($query) use ($request) {
             return $query->whereIn('dept', (array) $request->dept);
-        })->pluck('id');
+        })
+        ->when($request->searchQuery, function ($query) use ($request) {
+            return $query->where('employee_name', 'like', "%{$request->searchQuery}%")
+                 ->orWhere('badge_no', 'like', "%{$request->searchQuery}%");
+        })
+        ->pluck('id');
 
         // Hitung Level 3 & 4 per Station
         $stationsWithLevels = Hasil_Peserta::whereIn('peserta_id', $allPesertaIds)

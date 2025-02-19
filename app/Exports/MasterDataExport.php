@@ -16,7 +16,7 @@ class MasterDataExport implements FromCollection , WithHeadings
         return Peserta::select('badge_no', 'employee_name', 'dept', 'position')->get();
     }
 
-    /**
+    /** 
      * Fungsi untuk menambahkan header di Excel.
      * 
      * @return array

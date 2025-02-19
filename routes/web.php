@@ -92,6 +92,9 @@ Route::middleware(['auth', 'role:Super Admin'])->group(function () {
 
      // Route Export Matrix
      Route::get('/matrix/export', [ExcelController::class, 'export_matrix'])->name('export.matrix');
+
+     // Route Export Training Matrix
+     Route::get('/training-matrix/export', [ExcelController::class, 'export_training_matrix'])->name('export.training-matrix');
     
     
     Route::delete('/index/{id}', [FormController::class, 'destroy'])->name('dashboard.destroy');

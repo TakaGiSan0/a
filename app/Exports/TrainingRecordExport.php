@@ -52,7 +52,7 @@ class TrainingRecordExport implements FromCollection, WithHeadings
 
         // Menambahkan nomor urut di posisi pertama
         $data = $data->map(function ($item, $key) {
-            // Ubah $item menjadi array dan gabungkan dengan 'No' di awal array
+            
             return array_merge(['No' => $key + 1], (array) $item);
         });
 

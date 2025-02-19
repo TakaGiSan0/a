@@ -8,6 +8,7 @@ use App\Imports\MasterDataImport;
 use App\Exports\MasterDataExport;
 use App\Exports\TrainingRecordExport;
 use App\Exports\TrainingMatrixExport;
+use App\Exports\MatrixExport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ExcelController extends Controller
@@ -26,7 +27,7 @@ class ExcelController extends Controller
         return redirect()->back()->with('success', 'Import Data Berhasil!');
     }
 
-    public function export_peserta(Request $request)
+    public function export_peserta()
     {
         $date = date('Y-m-d'); // Format tanggal: Tahun-Bulan-Hari
         $fileName = 'Master Data - ' . $date . '.xlsx';
@@ -47,16 +48,23 @@ class ExcelController extends Controller
         return redirect()->back()->with('success', 'Import Data Training Berhasil!');
     }
 
-    public function export_training(Request $request)
+    public function export_training()
     {
         $date = date('Y-m-d'); // Format tanggal: Tahun-Bulan-Hari
         $fileName = 'Training Record - ' . $date . '.xlsx';
         return Excel::download(new TrainingRecordExport(), $fileName);
     }
 
-    public function export_matrix(Request $request)
+    public function export_matrix()
     {
 
+        $date = date('Y-m-d'); // Format tanggal: Tahun-Bulan-Hari
+        $fileName = 'Matrix - ' . $date . '.xlsx';
+        return Excel::download(new MatrixExport(), $fileName);
+    }
+
+    public function export_training_matrix(request $request)
+    {
         $date = date('Y-m-d'); // Format tanggal: Tahun-Bulan-Hari
         $fileName = 'Matrix - ' . $date . '.xlsx';
         return Excel::download(new TrainingMatrixExport(), $fileName);
