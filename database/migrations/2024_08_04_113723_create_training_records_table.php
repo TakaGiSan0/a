@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('rev', length: 50)->nullable();
             $table->string('station', length: 50)->nullable();
             $table->string('skill_code', length: 50)->nullable();
-            $table->enum('status', ['Completed', 'Pending'])->default('Pending');
+            $table->enum('status', ['Completed', 'Pending', 'Waiting Approval'])->default('Waiting Approval');
             $table->enum('approval', ['Approved', 'Pending', 'Reject'])->default('Pending');
             $table->date('date_start');
             $table->date('date_end');

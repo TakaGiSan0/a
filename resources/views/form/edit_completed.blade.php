@@ -99,7 +99,7 @@
                     <div>
                         <div>
                             <label for="training_duration" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                Training Duration (Menit)
+                                Training Duration (Minute)
                             </label>
                             
                             <!-- Input untuk menampilkan nilai dalam menit -->

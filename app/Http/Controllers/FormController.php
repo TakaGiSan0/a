@@ -69,6 +69,7 @@ class FormController extends Controller
         if (!in_array($userRole, ['Super Admin', 'Admin'])) {
             abort(403, 'Unauthorized action.');
         }
+        
 
         $categories = category::all();
         $peserta = peserta::all();
@@ -81,7 +82,16 @@ class FormController extends Controller
      */
     public function store(Request $request)
     {
+    
         $data = $request->validate($this->validationRules(), $this->validationMessages());
+
+
+        if (auth()->guard()->user()->role === 'Super Admin') {
+            $status = 'Pending';
+        } elseif (auth()->guard()->user()->role === 'Admin') {
+            $status = 'Waiting Approval';
+        }
+
 
         $filePath = null; // Inisialisasi path file untuk penyimpanan
         if ($request->hasFile('attachment')) {
@@ -99,7 +109,13 @@ class FormController extends Controller
             }
         }
 
+        // Mengambil input menit dari form
+        $minutes = $data['training_duration']; // misalnya 120
 
+        $hours = floor($minutes / 60);  // Jam
+        $remainingMinutes = $minutes % 60;  // Menit sisa
+
+        $formattedTime = sprintf("%d:%02d", $hours, $remainingMinutes);
 
         // Simpan data pelatihan utama
         $trainingRecord = Training_Record::create([
@@ -111,9 +127,10 @@ class FormController extends Controller
             'station' => $data['station'],
             'date_start' => $data['date_start'],
             'date_end' => $data['date_end'],
-            'training_duration' => $data['training_duration'],
+            'training_duration' => $formattedTime,
             'skill_code' => $data['skill_code'],
             'category_id' => $data['category_id'],
+            'status' => $status,
             'attachment' => $filePath,
             'user_id' => auth()->id(),
         ]);
