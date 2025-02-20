@@ -2,6 +2,7 @@
 
 @section('title', 'Edit Peserta')
 
+
 @section('content')
     <div class="w-full max-w-xs mx-auto">
         @if ($errors->any())

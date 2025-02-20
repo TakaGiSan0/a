@@ -4,6 +4,7 @@ namespace App\Exports;
 
 use Maatwebsite\Excel\Concerns\FromCollection;
 use App\Models\hasil_peserta;
+use App\Models\training_record;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
 
@@ -22,12 +23,11 @@ class MatrixExport implements FromCollection, WithHeadings
             ->get()
             ->map(function ($item) {
                 return [
-                    'training_name' => $item->trainingrecord->training_name,
-                    'date_start' => $item->trainingrecord->date_start,
-                    'date_end' => $item->trainingrecord->date_end,
-                    'employee_name' => $item->pesertas->employee_name,
                     'badge_no' => $item->pesertas->badge_no,
+                    'employee_name' => $item->pesertas->employee_name,
                     'dept' => $item->pesertas->dept,
+                    'training_name' => $item->trainingrecord->training_name,
+                    'date_start' => $item->trainingrecord->getFormattedDateRangeAttribute(),
                     'certificate' => $item->certificate,
                     'expired_date' => $item->expired_date,
                     'category' => $item->category,

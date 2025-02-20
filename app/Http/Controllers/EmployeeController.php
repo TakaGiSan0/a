@@ -63,7 +63,8 @@ class EmployeeController extends Controller
     {
         // Ambil data peserta berdasarkan ID
         $peserta = Peserta::with(['trainingRecords' => function ($query) {
-            $query->withPivot('level', 'final_judgement');
+            $query->where('status', 'Completed')
+            ->withPivot('level', 'final_judgement');
         }])->findOrFail($id);
 
         if (!$peserta) {
@@ -74,6 +75,7 @@ class EmployeeController extends Controller
         $all_records = $peserta
             ->trainingRecords() // Pastikan menggunakan relasi many-to-many dari model Peserta
             ->with(['trainingCategory:id,name'])
+            ->where('status', 'Completed')
             ->get()
             ->map(function ($record) {
                 return [

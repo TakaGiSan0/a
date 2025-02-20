@@ -24,9 +24,11 @@
         <!-- Wrapper utama -->
         <div class="flex h-full min-w-full">
             <!-- Sidebar (Tetap Fixed dan Tidak Mengecil) -->
-            <aside class="w-64 shrink-0">
-                @yield('sidebar')
-            </aside>
+            @if(!isset($hideSidebar) || !$hideSidebar)
+                <aside class="w-64 shrink-0">
+                    @yield('sidebar')
+                </aside>
+            @endif
 
             <!-- Main Content -->
             <div class="flex flex-col flex-1 w-full">

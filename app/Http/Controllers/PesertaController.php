@@ -43,7 +43,7 @@ class PesertaController extends Controller
      */
     public function create()
     {
-        return view('peserta.create');
+        return view('peserta.create')->with('hideSidebar', true);
     }
 
     /**
@@ -57,6 +57,8 @@ class PesertaController extends Controller
                 'badge_no' => 'required|string|max:255|unique:pesertas,badge_no',
                 'employee_name' => 'required|string|max:255|unique:pesertas,employee_name',
                 'dept' => 'required|string|max:255',
+                'join_date' => 'required|date',
+                'category_level' => 'required|string|max:255',
                 'position' => 'required|string|max:255',
             ],
             [
@@ -72,6 +74,9 @@ class PesertaController extends Controller
         $peserta->badge_no = $validatedData['badge_no'];
         $peserta->employee_name = $validatedData['employee_name'];
         $peserta->dept = $validatedData['dept'];
+        $peserta->join_date = $validatedData['join_date'];
+        $peserta->join_date = $validatedData['join_date'];
+        $peserta->category_level = $validatedData['category_level'];
         $peserta->position = $validatedData['position'];
 
         // Simpan data ke database
@@ -98,7 +103,7 @@ class PesertaController extends Controller
         $this->authorize('update', $peserta);
 
         // Kembalikan view dengan data peserta
-        return view('peserta.edit', compact('peserta'));
+        return view('peserta.edit', compact('peserta'))->with('hideSidebar', true);
     }
 
     /**
@@ -111,7 +116,10 @@ class PesertaController extends Controller
             [
                 'badge_no' => 'required|string|max:255|regex:/^[A-Z0-9\-]+$/|unique:pesertas,badge_no,' . $peserta->id,
                 'employee_name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
-                'dept' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
+                'dept' => 'required|string|max:255',
+                'join_date' => 'required|date',
+                'category_level' => 'required|string|max:255',
+                'status' => 'required|string|max:255',
                 'position' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
             ],
             [

@@ -30,10 +30,13 @@ class hasil_peserta extends Model
             : null;
     }
 
-    
+
     public function getStatusAttribute()
     {
         $originalExpiredDate = $this->getRawOriginal('expired_date'); // Ambil nilai asli dari database
-        return $originalExpiredDate && Carbon::parse($originalExpiredDate)->isPast() ? 'Non Active' : 'Active';
+        if (empty($originalExpiredDate)) {
+            return 'Non Active';
+        }
+        return Carbon::parse($originalExpiredDate)->isPast() && !Carbon::parse($originalExpiredDate)->isToday() ? 'Non Active' : 'Active';
     }
 }

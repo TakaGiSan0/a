@@ -37,7 +37,7 @@ class UserController extends Controller
         $userRole = auth('')->user()->role; // Asumsikan 'role' adalah atribut di tabel users
 
         // Pilih view berdasarkan role
-        return response()->view('user.create', [], 200);
+        return view('user.create', )->with('hideSidebar', true);
     }
 
     /**
@@ -62,6 +62,7 @@ class UserController extends Controller
 
         $user->name = $validatedData['name'];
         $user->user = $validatedData['user'];
+        $user->department = $validatedData['department'];
 
         // Ambil role pengguna saat ini
         $userRole = auth('')->user()->role;
@@ -104,7 +105,7 @@ class UserController extends Controller
         $userRole = auth('')->user()->role; // Asumsikan 'role' adalah atribut di tabel users
 
         // Kembalikan view dengan data user
-        return response()->view('user.edit', compact('user'), 200);
+        return  view('user.edit', compact('user'))->with('hideSidebar', true);
     }
 
     /**

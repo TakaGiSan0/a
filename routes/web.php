@@ -75,6 +75,8 @@ Route::middleware(['auth', 'role:Super Admin,Admin'])->group(function () {
 
     // API Search Peserta Form
     Route::get('/participants/{badgeNo}', [PesertaController::class, 'getParticipantByBadgeNo']);
+
+    Route::get('/training-record/{id}', [FormController::class, 'show'])->name('dashboard.show');
 });
 
 
@@ -90,15 +92,14 @@ Route::middleware(['auth', 'role:Super Admin'])->group(function () {
     Route::post('/training/import', [ExcelController::class, 'import_training'])->name('import.training');
     Route::get('/training/export', [ExcelController::class, 'export_training'])->name('export.training');
 
-     // Route Export Matrix
-     Route::get('/matrix/export', [ExcelController::class, 'export_matrix'])->name('export.matrix');
+    // Route Export Matrix
+    Route::get('/matrix/export', [ExcelController::class, 'export_matrix'])->name('export.matrix');
 
      // Route Export Training Matrix
      Route::get('/training-matrix/export', [ExcelController::class, 'export_training_matrix'])->name('export.training-matrix');
     
     
     Route::delete('/index/{id}', [FormController::class, 'destroy'])->name('dashboard.destroy');
-    Route::get('/training-record/{id}', [FormController::class, 'show'])->name('dashboard.show');
     
     // Route Matrix
     Route::get('/matrix/dashboard', [MatrixController::class, 'index'])->name('matrix.index');
@@ -113,9 +114,10 @@ Route::middleware(['auth', 'role:Super Admin'])->group(function () {
     Route::delete('/user/{id}', [UserController::class, 'destroy'])->name('user.destroy');
     Route::get('/user/edit/{user}', [UserController::class, 'edit'])->name('user.edit');
     Route::put('/user/update/{user}', [UserController::class, 'update'])->name('user.update');
-
+    
     // Route Training Matrix
     Route::get('/training-matrix/dashboard', [TrainingMatrixController::class, 'index'])->name('training-matrix.index');
-
+    
     Route::put('/training-record/{id}/comment', [FormController::class, 'updateComment'])->name('update.comment');
+    
 });

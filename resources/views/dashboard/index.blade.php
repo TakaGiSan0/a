@@ -378,7 +378,7 @@
         const approvalField = modal.querySelector('#approval');
         const statusField = modal.querySelector('#status');
         const attachmentFrame = modal.querySelector('#modal-attachment');
-        const userRole = "{{ Auth::user()->role }}";
+        const userRole = @json(auth()->user()->role);
         const editButtons = document.querySelectorAll('.trigger-modal');
 
         editButtons.forEach(button => {

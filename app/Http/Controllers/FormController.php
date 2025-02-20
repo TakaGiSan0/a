@@ -44,7 +44,7 @@ class FormController extends Controller
                 // Filter berdasarkan tahun training_date
                 $query->whereYear('date_start', $selectedYear);
             })
-            ->orderByRaw("CASE WHEN status = 'Pending' THEN 0 ELSE 1 END")
+            ->orderByRaw("CASE WHEN status = 'Waiting Approval' THEN 0 WHEN status = 'Pending' THEN 1 ELSE 2 END")
             ->orderBy('date_start', 'desc')
 
             ->paginate(10);
@@ -135,7 +135,8 @@ class FormController extends Controller
             'user_id' => auth()->id(),
         ]);
 
-        foreach ($data['participants'] as $participant) {
+        // Simpan data peserta
+        foreach ($data['participants'] ?? [] as $participant) {
             $peserta = Peserta::where('badge_no', $participant['badge_no'])->first();
             if ($peserta) {
                 $trainingRecord->pesertas()->attach($peserta->id, [
@@ -201,10 +202,7 @@ class FormController extends Controller
             $formattedTime = 0;
         }
 
-        $participants =
-            $trainingRecord->status === 'Pending'
-            ? session('pending_participants', [])
-            : $trainingRecord->pesertas;
+        $participants = $trainingRecord->pesertas;
 
         // Ambil semua categories
         $categories = Category::all();
