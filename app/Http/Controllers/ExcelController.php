@@ -66,7 +66,7 @@ class ExcelController extends Controller
     public function export_training_matrix(request $request)
     {
         $date = date('Y-m-d'); // Format tanggal: Tahun-Bulan-Hari
-        $fileName = 'Matrix - ' . $date . '.xlsx';
+        $fileName = 'Training Matrix - ' . $date . '.xlsx';
         return Excel::download(new TrainingMatrixExport(), $fileName);
     }
 }

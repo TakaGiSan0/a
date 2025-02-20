@@ -12,13 +12,12 @@ class AuthenticatedSessionController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'user' => ['required'], // Username field
+            'user' => ['required'],
             'password' => ['required'],
         ]);
 
         $user = User::whereRaw('BINARY user = ?', [$request->user])->first();
         
-        // Jika user tidak ditemukan, kirim pesan error khusus
         if (!$user) {
             return back()
                 ->withErrors([
@@ -27,7 +26,7 @@ class AuthenticatedSessionController extends Controller
                 ->onlyInput('user');
         }
 
-        // Jika username ditemukan, cek apakah password benar
+     
         if (!Auth::attempt(['user' => $request->user, 'password' => $request->password], $request->filled('remember'))) {
             return back()
             
@@ -37,10 +36,10 @@ class AuthenticatedSessionController extends Controller
                 ->onlyInput('user');
             }
             
-        // Jika autentikasi berhasil, regenerasi session dan redirect
+       
         $request->session()->regenerate();
 
-        // Cek role dan redirect sesuai dengan role user
+        
         $user = Auth::user();
         session(['user_name' => $user->name]);
 
@@ -49,7 +48,7 @@ class AuthenticatedSessionController extends Controller
         } elseif ($user->role == 'User') {
             return redirect()->route('dashboard.summary');
         }
-        // Jika role tidak ditemukan, kirim pesan error khusus
+        
         if (!$user) {
             return back()
                 ->withErrors([
@@ -61,10 +60,10 @@ class AuthenticatedSessionController extends Controller
 
     public function destroy(Request $request)
     {
-        // Hapus session user_name
+       
         session()->forget('user_name');
 
-        // Logout
+       
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();

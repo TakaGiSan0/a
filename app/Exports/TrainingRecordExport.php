@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
+
 class TrainingRecordExport implements FromCollection, WithHeadings
 {
     /**
@@ -15,49 +16,45 @@ class TrainingRecordExport implements FromCollection, WithHeadings
      * @return \Illuminate\Support\Collection
      */
     public function collection()
-    {
-        // Ambil data dari database tanpa ROW_NUMBER()
-        $data = DB::table('training_records')
-        ->join('hasil_peserta', 'training_records.id', '=', 'hasil_peserta.training_record_id')
-        ->join('pesertas', 'hasil_peserta.peserta_id', '=', 'pesertas.id')
-        ->join('categories', 'training_records.category_id', '=', 'categories.id')  // Join ke tabel categories
-            ->orderBy('training_date', 'desc')
-            ->select(
-                'doc_ref',
-                'rev',
-                'training_name',
-                'station',
-                'job_skill',
-                'skill_code',
-                'badge_no',
-                'employee_name',
-                'dept',
-                'position',
-                'training_date',
-                'trainer_name',
-                'theory_result',
-                'practical_result',
-                'level',
-                'final_judgement',
-                'categories.name as category_name',  // Ambil nama kategori
-                'license'
-            )
-            
-            ->get()
-            ->map(function ($item) {
-                // Ganti license dengan checkbox unicode
-                $item->license = $item->license == 1 ? '☑' : '☐';
-                return $item;
+{
+    $data = Training_Record::with(['hasil_Peserta.pesertas', 'trainingCategory'])
+        ->orderBy('date_start', 'desc')
+        ->get()
+        ->flatMap(function ($record) {
+            return $record->hasil_Peserta->map(function ($hasil) use ($record) {
+                return [
+                    'No'               => 0,
+                    'doc_ref'          => $record->doc_ref,
+                    'rev'              => $record->rev,
+                    'training_name'    => $record->training_name,
+                    'station'          => $record->station,
+                    'job_skill'        => $record->job_skill,
+                    'skill_code'       => $record->skill_code,
+                    'badge_no'         => $hasil->pesertas->badge_no ?? '',
+                    'employee_name'    => $hasil->pesertas->employee_name ?? '',
+                    'dept'             => $hasil->pesertas->dept ?? '',
+                    'position'         => $hasil->pesertas->position ?? '',
+                    'date_start'    => $record->getFormattedDateRangeAttribute(), // Gunakan accessor
+                    'trainer_name'     => $record->trainer_name,
+                    'theory_result'    => $hasil->theory_result,
+                    'practical_result' => $hasil->practical_result,
+                    'level'            => $hasil->level,
+                    'final_judgement'  => $hasil->final_judgement,
+                    'category_name'    => $record->category->name ?? '',
+                    'license'          => $hasil->license == 1 ? '☑' : '☐',
+                ];
             });
-
-        // Menambahkan nomor urut di posisi pertama
-        $data = $data->map(function ($item, $key) {
-            
-            return array_merge(['No' => $key + 1], (array) $item);
         });
 
-        return $data;
-    }
+        $data = $data->map(function ($item, $key) {
+            $item['No'] = $key + 1;
+            return $item;
+        });
+
+    return collect($data);
+}
+
+
 
 
     /**
@@ -79,7 +76,7 @@ class TrainingRecordExport implements FromCollection, WithHeadings
             'Emp Name',
             'Dept',
             'Position',
-            'Trainer Date',
+            'Training Date',
             'Trainer Name',
             'Theory Result',
             'Practical Result',

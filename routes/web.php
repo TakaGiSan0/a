@@ -71,12 +71,15 @@ Route::middleware(['auth', 'role:Super Admin,Admin'])->group(function () {
     Route::get('/Employee/edit/{peserta}', [PesertaController::class, 'edit'])->name('peserta.edit');
     Route::put('/Employee/update/{peserta}', [PesertaController::class, 'update'])->name('peserta.update');
     Route::delete('/Employee/delete/{id}', [PesertaController::class, 'destroy'])->name('peserta.destroy');
-
-
+    
+    
     // API Search Peserta Form
     Route::get('/participants/{badgeNo}', [PesertaController::class, 'getParticipantByBadgeNo']);
-
+    
     Route::get('/training-record/{id}', [FormController::class, 'show'])->name('dashboard.show');
+    Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
+    Route::post('/User/New_User', [UserController::class, 'store'])->name('user.store');
+    Route::get('/User/dashboard', [UserController::class, 'index'])->name('user.index');
 });
 
 
@@ -108,16 +111,13 @@ Route::middleware(['auth', 'role:Super Admin'])->group(function () {
 
     
     // Route User
-    Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
-    Route::post('/User/New_User', [UserController::class, 'store'])->name('user.store');
-    Route::get('/User/dashboard', [UserController::class, 'index'])->name('user.index');
     Route::delete('/user/{id}', [UserController::class, 'destroy'])->name('user.destroy');
     Route::get('/user/edit/{user}', [UserController::class, 'edit'])->name('user.edit');
     Route::put('/user/update/{user}', [UserController::class, 'update'])->name('user.update');
     
     // Route Training Matrix
     Route::get('/training-matrix/dashboard', [TrainingMatrixController::class, 'index'])->name('training-matrix.index');
-    
     Route::put('/training-record/{id}/comment', [FormController::class, 'updateComment'])->name('update.comment');
+
     
 });
