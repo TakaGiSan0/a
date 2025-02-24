@@ -118,6 +118,7 @@ Route::middleware(['auth', 'role:Super Admin'])->group(function () {
     // Route Training Matrix
     Route::get('/training-matrix/dashboard', [TrainingMatrixController::class, 'index'])->name('training-matrix.index');
     Route::put('/training-record/{id}/comment', [FormController::class, 'updateComment'])->name('update.comment');
+    Route::get('/training-matrix/downloadpdf', [TrainingMatrixController::class, 'downloadpdf'])->name('download.pdf');
 
     
 });

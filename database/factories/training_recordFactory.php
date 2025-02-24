@@ -24,7 +24,7 @@ class Training_RecordFactory extends Factory
             'trainer_name' => $this->faker->name,
             'rev' => $this->faker->randomDigitNotNull,
             'skill_code' => $this->faker->bothify('SK-####'),
-            'status' => $this->faker->randomElement(['Complete', 'Pending', 'Waiting Approval']),
+            'status' => $this->faker->randomElement(['Completed', 'Pending', 'Waiting Approval']),
             'approval' => 'Pending',
             'comment' => $this->faker->sentence,
         ];

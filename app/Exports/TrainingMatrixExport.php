@@ -39,6 +39,7 @@ class TrainingMatrixExport implements FromArray, WithHeadings
             // Header kedua di A2 (berisi nilai station dan skill code)
             ['', '', '', '', ...$this->allStations, ...$this->allSkillCodes]
         ]);
+        
     }
 
     public function array(): array

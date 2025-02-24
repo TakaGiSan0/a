@@ -12,11 +12,14 @@
             
             <!-- Resources Section -->
             <div class="grid grid-cols-2 gap-6 sm:gap-8 sm:grid-cols-6 text-xs">
-                <div>
-                    <p class="text-xs   text-gray-500 uppercase dark:text-white">
-                        MDL : Medela
-                    </p>
+                
                     <ul class="text-gray-500 dark:text-gray-400 ">
+                        <li>
+                            <p class="text-xs   text-gray-500 uppercase dark:text-white">
+                                MDL : Medela
+                            </p>
+
+                        </li>
                         <li class="">
                             <p  >SSS : Swiss Spa System</p>
                         </li>
@@ -24,12 +27,16 @@
                             <p >WSA(SMI) : WS Audiology(Sivantos)</p>
                         </li>
                     </ul>
-                </div>
+                
                 <div>
-                    <p class="text-xs  text-gray-500 uppercase dark:text-white">
-                        CHG : WSA Charger
-                    </p>
                     <ul class="text-gray-500 dark:text-gray-400 ">
+                        <li>
+                            <p class="text-xs  text-gray-500 uppercase dark:text-white">
+                                CHG : WSA Charger
+                            </p>
+                            
+                        </li>
+
                         <li class="">
                             <p  >SLC : WSA SlimRic RB</p>
                         </li>
@@ -39,10 +46,14 @@
                     </ul>
                 </div>
                 <div>
-                    <p class="text-xs   text-gray-500 uppercase dark:text-white">
-                        THS : This AG
-                    </p>
                     <ul class="text-gray-500 dark:text-gray-400 ">
+                        
+                        <li>
+                            <p class="text-xs   text-gray-500 uppercase dark:text-white">
+                                THS : This AG
+                            </p>
+
+                        </li>
                         <li class="">
                             <p  >BRN : Bernina</p>
                         </li>
@@ -52,10 +63,13 @@
                     </ul>
                 </div>
                 <div>
-                    <p class="text-xs   text-gray-500 uppercase dark:text-white">
-                        KCR : Kaercher
-                    </p>
                     <ul class="text-gray-500 dark:text-gray-400 ">
+                        <li>
+                            
+                            <p class="text-xs   text-gray-500 uppercase dark:text-white">
+                                KCR : Kaercher
+                            </p>
+                        </li>
                         <li class="">
                             <p  >KRD : Kardium</p>
                         </li>
@@ -65,10 +79,14 @@
                     </ul>
                 </div>
                 <div>
-                    <p class="text-xs   text-gray-500 uppercase dark:text-white">
-                        PHV : Philips Volcar
-                    </p>
                     <ul class="text-gray-500 dark:text-gray-400 ">
+                        <li>
+                            <p class="text-xs   text-gray-500 uppercase dark:text-white">
+                                PHV : Philips Volcar
+                            </p>
+                        
+                        </li>
+
                         <li class="">
                             <p  >SON : Sonion</p>
                         </li>
@@ -78,10 +96,13 @@
                     </ul>
                 </div>
                 <div>
-                    <p class="text-xs   text-gray-500 uppercase dark:text-white">
-                        KBT : Kubota
-                    </p>
                     <ul class="text-gray-500 dark:text-gray-400 ">
+                        <li>
+                            
+                            <p class="text-xs   text-gray-500 uppercase dark:text-white">
+                                KBT : Kubota
+                            </p>
+                        </li>
                         <li class="">
                             <p  >GWF AG : Gas, Electricity and Heating</p>
                         </li>
@@ -90,7 +111,7 @@
                 </div>
             </div>
         </div>
-        <div class="flex items-start space-x-6">
+        <div class="flex items-start space-x-6 mb-10">
             <!-- Legend Product Code -->
             <div class="flex items-center">
                 <p class="text-sm  text-gray-500 uppercase dark:text-white">
@@ -101,10 +122,13 @@
             <!-- Resources Section -->
             <div class="grid grid-cols-2 gap-6 sm:gap-8 sm:grid-cols-6 text-xs">
                 <div>
-                    <p class="text-xs   text-gray-500 uppercase dark:text-white">
-                        A1 : Manual
-                    </p>
                     <ul class="text-gray-500 dark:text-gray-400 ">
+                        <li>
+                            <p class="text-xs   text-gray-500 uppercase dark:text-white">
+                                A1 : Manual
+                            </p>
+                            
+                        </li>
                         <li class="">
                             <p>A2 : Semi-Automatic</p>
                         </li>
@@ -120,10 +144,13 @@
                     </ul>
                 </div>
                 <div>
-                    <p class="text-xs   text-gray-500 uppercase dark:text-white">
-                        PP : Pckaging Product
-                    </p>
                     <ul class="text-gray-500 dark:text-gray-400 ">
+                        <li>
+                            <p class="text-xs   text-gray-500 uppercase dark:text-white">
+                                PP : Pckaging Product
+                            </p>
+                            
+                        </li>
                         <li class="">
                             <p  >M1 : Mechanical</p>
                         </li>
@@ -139,10 +166,13 @@
                     </ul>
                 </div>
                 <div>
-                    <p class="text-xs   text-gray-500 uppercase dark:text-white">
-                        R : Rework
-                    </p>
                     <ul class="text-gray-500 dark:text-gray-400 ">
+                        <li>
+                            <p class="text-xs   text-gray-500 uppercase dark:text-white">
+                                R : Rework
+                            </p>
+                            
+                        </li>
                         <li class="">
                             <p  >S : Solder Part</p>
                         </li>
@@ -158,10 +188,13 @@
                     </ul>
                 </div>
                 <div>
-                    <p class="text-xs   text-gray-500 uppercase dark:text-white">
-                        R1 : Rework Mechanical
-                    </p>
                     <ul class="text-gray-500 dark:text-gray-400 ">
+                        <li>
+                            <p class="text-xs   text-gray-500 uppercase dark:text-white">
+                                R1 : Rework Mechanical
+                            </p>
+                            
+                        </li>
                         <li class="">
                             <p  >R2 : Rework Electrical</p>
                         </li>
@@ -177,10 +210,13 @@
                     </ul>
                 </div>
                 <div>
-                    <p class="text-xs   text-gray-500 uppercase dark:text-white">
-                        NC : Nano Coat
-                    </p>
                     <ul class="text-gray-500 dark:text-gray-400 ">
+                        <li>
+                            <p class="text-xs   text-gray-500 uppercase dark:text-white">
+                                NC : Nano Coat
+                            </p>
+                            
+                        </li>
                         <li class="">
                             <p  >SC : Spray Painting</p>
                         </li>
@@ -196,10 +232,13 @@
                     </ul>
                 </div>
                 <div>
-                    <p class="text-xs   text-gray-500 uppercase dark:text-white">
-                        V2 : Visual Inspection Microscope
-                    </p>
                     <ul class="text-gray-500 dark:text-gray-400 ">
+                        <li>
+                            <p class="text-xs   text-gray-500 uppercase dark:text-white">
+                                V2 : Visual Inspection Microscope
+                            </p>
+                            
+                        </li>
                         <li class="">
                             <p  >W1 : Winding M</p>
                         </li>
@@ -214,6 +253,41 @@
                         </li>
                     </ul>
                 </div>
+            </div>
+        </div>
+        <div class="flex items-start space-x-6">
+            <!-- Legend Product Code -->
+            <div class="flex items-center pr-10">
+                <p class="text-sm  text-gray-500 uppercase dark:text-white">
+                        Skill Level:
+                </p>
+            </div>
+            
+            <!-- Resources Section -->
+            <div class="grid grid-cols-2 gap-6 sm:gap-8 sm:grid-cols-6 text-xs">
+                <div>
+                    <ul class="text-gray-500 dark:text-gray-400 ">
+                        <li>
+                            <p class="text-xs   text-gray-500 uppercase dark:text-white">
+                                1 = LEVEL 1 (work under supervision)
+                            </p>
+                            
+                        </li>
+                        <li class="">
+                            <p>2 = LEVEL 2 (work according to
+                                standards)</p>
+                        </li>
+                        <li>
+                            <p >3 = Level 3 (expert)</p>
+                        </li>
+                        <li>
+                            <p >4 = Level 4 (expert & trainer)
+                        </p>
+                        </li>
+                        
+                    </ul>
+                </div>
+                
             </div>
         </div>
     </div>

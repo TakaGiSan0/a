@@ -69,7 +69,7 @@ class FormController extends Controller
         if (!in_array($userRole, ['Super Admin', 'Admin'])) {
             abort(403, 'Unauthorized action.');
         }
-        
+
 
         $categories = category::all();
         $peserta = peserta::all();
@@ -82,7 +82,7 @@ class FormController extends Controller
      */
     public function store(Request $request)
     {
-    
+
         $data = $request->validate($this->validationRules(), $this->validationMessages());
 
 
@@ -136,18 +136,25 @@ class FormController extends Controller
         ]);
 
         // Simpan data peserta
-        foreach ($data['participants'] ?? [] as $participant) {
-            $peserta = Peserta::where('badge_no', $participant['badge_no'])->first();
-            if ($peserta) {
-                $trainingRecord->pesertas()->attach($peserta->id, [
-                    'level' => $participant['level'],
-                    'final_judgement' => $participant['final_judgement'],
-                    'license' => $participant['license'],
-                    'theory_result' => $participant['theory_result'],
-                    'practical_result' => $participant['practical_result'],
-                ]);
+        $participants = $data['participants'] ?? [];
+
+        if (!empty($participants)) {
+            foreach ($participants as $participant) {
+                $peserta = Peserta::where('badge_no', $participant['badge_no'])->first();
+                if ($peserta) {
+                    $trainingRecord->pesertas()->attach($peserta->id, [
+                        'level' => $participant['level'],
+                        'final_judgement' => $participant['final_judgement'],
+                        'license' => $participant['license'],
+                        'theory_result' => $participant['theory_result'],
+                        'practical_result' => $participant['practical_result'],
+                    ]);
+                }
             }
         }
+
+        // Lanjut ke proses berikutnya tanpa terpengaruh apakah ada peserta atau tidak
+
 
         return redirect()->route('dashboard.index')->with('success', 'Training successfully created.');
     }
@@ -219,9 +226,6 @@ class FormController extends Controller
     {
 
         $data = $request->validate($this->validationRules());
-
-        $status = $request->has('save_as_draft') ? 'pending' : 'completed';
-
         $trainingRecord = Training_Record::findOrFail($id);
 
         // Mengambil input menit dari form
@@ -243,7 +247,6 @@ class FormController extends Controller
             'date_end' => $data['date_end'],
             'skill_code' => $data['skill_code'],
             'category_id' => $data['category_id'],
-            'status' => $status,
             'training_duration' => $formattedTime
         ]);
 

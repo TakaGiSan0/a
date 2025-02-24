@@ -98,10 +98,11 @@
                     </div>
                     <div>
                         <div>
-                            <label for="training_duration" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            <label for="training_duration"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                 Training Duration (Minute)
                             </label>
-                            
+
                             <!-- Input untuk menampilkan nilai dalam menit -->
                             <input type="number" id="training_duration" name="training_duration" min="1"
                                 value="{{ old('training_duration', $formattedTime) }}"
@@ -254,8 +255,8 @@
                         clip-rule="evenodd" />
                 </svg>
                 Submit
-
             </button>
+
             <button type="button" id="add-participant"
                 class="text-white inline-flex justify-center items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mx-3">
                 <svg class="mr-1 -ml-1 w-6 h-6" fill="currentColor" viewbox="0 0 20 20"
@@ -264,22 +265,8 @@
                         d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
                         clip-rule="evenodd" />
                 </svg>
-                Tambahkan Peserta
+                Add Participants
             </button>
-            @if (session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
-                </div>
-            @endif
-            <button type="submit" name="save_as_draft" value="1"
-                class="text-white inline-flex justify-center items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mx-3">
-                <svg class="mr-1 -ml-1 w-6 h-6" fill="currentColor" viewbox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd"
-                        d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                        clip-rule="evenodd" />
-                </svg>
-                Draft</button>
         </div>
         </form>
     </div>
@@ -409,16 +396,16 @@
         });
 
         function convertTimeToMinutes(timeString) {
-        if (!timeString) return '';
-        let [hours, minutes] = timeString.split(':').map(Number);
-        return (hours * 60) + minutes;
-    }
+            if (!timeString) return '';
+            let [hours, minutes] = timeString.split(':').map(Number);
+            return (hours * 60) + minutes;
+        }
 
-    document.addEventListener("DOMContentLoaded", function () {
-        let timeInput = document.getElementById("training_duration");
-        let timeValue = "{{ $trainingRecord->training_duration }}";  // Ambil dari Blade
-        timeInput.value = convertTimeToMinutes(timeValue);
-    });
+        document.addEventListener("DOMContentLoaded", function () {
+            let timeInput = document.getElementById("training_duration");
+            let timeValue = "{{ $trainingRecord->training_duration }}";  // Ambil dari Blade
+            timeInput.value = convertTimeToMinutes(timeValue);
+        });
     </script>
 
 </body>

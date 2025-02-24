@@ -18,7 +18,7 @@ class ExampleTest extends TestCase
 
     public function testIndex()
     {
-        $user = User::factory()->create(['role' => 'Super Admin'])->first();
+        $user = User::factory()->create(['role' => 'Super Admin']);
         $this->actingAs($user);
 
         $response = $this->get('/index');
