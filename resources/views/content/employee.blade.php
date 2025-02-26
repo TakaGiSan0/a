@@ -160,6 +160,7 @@
                     </div>
                 </div>
             </div>
+        </section>
     </div>
     </section>
     <!-- End block -->

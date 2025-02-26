@@ -13,12 +13,13 @@
 @endsection
 
 @section('content')
-    <div class="container mx-auto py-4  bg-gray-100">
+    <div class="container mx-auto">
         <!-- Dashboard Header -->
-
-        <div class="mx-auto max-w-screen-xl py-5">
-            <div class="bg-white dark:bg-gray-800 shadow-md sm:rounded-xl border border-gray-200">
-                <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
+        <section class="bg-gray-100 dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden antialiased">
+            <div class="mx-auto max-w-screen-xl px-4 lg:px-12 py-5">
+            
+                <div class="bg-white dark:bg-gray-800 shadow-md sm:rounded-xl border border-gray-200">
+                    <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                     <div class="w-full md:w-1/2">
                         <form class="flex items-center" method="GET" action="{{ url()->current() }}">
                             <label for="simple-search" class="sr-only">Search</label>
@@ -189,7 +190,10 @@
                     {{ $pesertas->appends([ 'dept' => request('dept')])->links()  }}
                 </div>
             </div>
-        </div>
+
+            <div>
+            </div>
+        </section>
     </div>
     <script>
         document.getElementById('filterDropdownButton').addEventListener('click', function () {

@@ -12,81 +12,69 @@ use Barryvdh\DomPDF\Facade\Pdf;
 class TrainingMatrixController extends Controller
 {
     public function index(Request $request)
-    {
-        // Ambil daftar semua departemen (tanpa filter)
-        $departments = Peserta::whereHas('trainingRecords', function ($query) {
-            $query->where('status', 'completed');
-        })->distinct()->pluck('dept')->toArray();
+{
+    // Ambil daftar semua departemen dalam satu query
+    $departments = Peserta::whereHas('trainingRecords', function ($query) {
+        $query->where('status', 'completed');
+    })->distinct()->pluck('dept')->toArray();
 
-        // Ambil peserta dengan filter yang dipilih
-        $pesertasQuery = Peserta::whereHas('trainingRecords', function ($query) {
+    // Query untuk peserta dengan filter yang dipilih
+    $pesertasQuery = Peserta::with('trainingRecords')
+        ->whereHas('trainingRecords', function ($query) {
             $query->where('status', 'completed');
         })
-            ->when($request->dept, fn($q) => $q->whereIn('dept', (array) $request->dept))
-            ->when(
-                $request->searchQuery,
-                fn($q) =>
-                $q->where('employee_name', 'like', "%{$request->searchQuery}%")
-                    ->orWhere('badge_no', 'like', "%{$request->searchQuery}%")
-            )
-            ->distinct();
+        ->when($request->dept, fn($q) => $q->whereIn('dept', (array) $request->dept))
+        ->when(
+            $request->searchQuery,
+            fn($q) =>
+            $q->where('employee_name', 'like', "%{$request->searchQuery}%")
+                ->orWhere('badge_no', 'like', "%{$request->searchQuery}%")
+        );
 
-        // Ambil peserta dengan paginasi
-        $pesertas = $pesertasQuery->select('id', 'badge_no', 'join_date', 'employee_name', 'dept')
-            ->orderBy('employee_name')
-            ->paginate(10);
+    // Ambil peserta dengan paginasi
+    $pesertas = $pesertasQuery->select('id', 'badge_no', 'join_date', 'employee_name', 'dept')
+        ->orderBy('employee_name')
+        ->paginate(10);
 
+    // Hitung total peserta tanpa query tambahan setelah pagination
+    $totalParticipants = $pesertasQuery->count();
 
-        // Cek total participants, gunakan dd untuk debugging
-        $totalParticipants = $pesertas->total();
+    // Ambil semua Peserta Id yang difilter
+    $allPesertaIds = $pesertas->pluck('id');
 
+    // Hitung Level 3 & 4 per Station menggunakan Query Langsung
+    $stationsWithLevels = Hasil_Peserta::whereIn('peserta_id', $allPesertaIds)
+        ->whereIn('level', ['3', '4'])
+        ->join('training_records', 'hasil_peserta.training_record_id', '=', 'training_records.id')
+        ->where('status', 'completed')
+        ->groupBy('station')
+        ->selectRaw('station, COUNT(*) as total')
+        ->pluck('total', 'station')
+        ->toArray();
 
-        // Ambil semua Peserta Id untuk digunakan pada penghitungan Level
-        $allPesertaIds = Peserta::when($request->dept, function ($query) use ($request) {
-            return $query->whereIn('dept', (array) $request->dept);
-        })
-            ->when($request->searchQuery, function ($query) use ($request) {
-                return $query->where('employee_name', 'like', "%{$request->searchQuery}%")
-                    ->orWhere('badge_no', 'like', "%{$request->searchQuery}%");
-            })
-            ->pluck('id');
+    // Ambil semua station dan skill_code dari training_record dalam satu query
+    $trainingRecords = Training_Record::where('status', 'completed')->get(['station', 'skill_code']);
 
-        // Hitung Level 3 & 4 per Station
-        $stationsWithLevels = Hasil_Peserta::whereIn('peserta_id', $allPesertaIds)
-            ->whereIn('level', ['3', '4'])
-            ->with('trainingrecord')
-            ->get()
-            ->groupBy('trainingrecord.station')
-            ->map(fn($records) => $records->count())
-            ->toArray();
+    $allStations = $trainingRecords->pluck('station')->unique()->toArray();
+    $allSkillCode = $trainingRecords->pluck('skill_code')->flatMap(fn($s) => explode(', ', $s))->unique()->toArray();
 
+    // Gabungkan station dengan jumlah level 3 & 4
+    $stationsWithLevels = collect($allStations)->mapWithKeys(fn($station) => [$station => $stationsWithLevels[$station] ?? 0])->toArray();
 
-        // Ambil semua station yang unik
-        $allStations = Training_Record::where('status', 'completed')->pluck('station')->unique()->toArray();
-        $allSkillCode = Training_Record::where('status', 'completed')
-            ->pluck('skill_code')->flatMap(fn($s) => explode(', ', $s))->unique()->toArray();
+    // Hitung gap per station
+    $stationsWithGaps = collect($stationsWithLevels)->mapWithKeys(fn($count, $station) => [$station => $totalParticipants - $count])->toArray();
 
-        // Gabungkan station dengan jumlah level 3 & 4
-        $stationsWithLevels = collect($allStations)->mapWithKeys(function ($station) use ($stationsWithLevels) {
-            return [$station => $stationsWithLevels[$station] ?? 0];
-        })->toArray();
-
-        // Hitung gap per station
-        $stationsWithGaps = collect($stationsWithLevels)->mapWithKeys(function ($count, $station) use ($totalParticipants) {
-            return [$station => $totalParticipants - $count]; // Menghitung gap
-        })->toArray();
-
-        // View
-        return view('content.training_matrix', [
-            'pesertas' => $pesertas,
-            'stationsWithLevels' => $stationsWithLevels,
-            'stationsWithGaps' => $stationsWithGaps,
-            'allStations' => $allStations,
-            'allSkillCode' => $allSkillCode,
-            'departments' => $departments,
-            'searchQuery' => $request->searchQuery,
-        ]);
-    }
+    // Return view dengan data yang sudah dioptimasi
+    return view('content.training_matrix', [
+        'pesertas' => $pesertas,
+        'stationsWithLevels' => $stationsWithLevels,
+        'stationsWithGaps' => $stationsWithGaps,
+        'allStations' => $allStations,
+        'allSkillCode' => $allSkillCode,
+        'departments' => $departments,
+        'searchQuery' => $request->searchQuery,
+    ]);
+}
 
 
     public function downloadpdf(Request $request)

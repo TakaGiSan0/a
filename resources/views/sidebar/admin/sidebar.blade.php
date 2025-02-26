@@ -1,6 +1,6 @@
 {{-- Sidebar Element Employee --}}
 
-<aside :class="isOpen ? 'translate-x-0' : '-translate-x-full'"
+<aside id="sidebar"
     class="z-20 w-64 h-full bg-white dark:bg-gray-800 overflow-y-auto transition-transform duration-300 ease-in-out flex inset-y-0 left-0 transform">
     <div class="py-4 text-gray-500 dark:text-gray-400 text-center">
         <a class="text-lg font-bold text-gray-800 dark:text-gray-200 text-center" href="#">
@@ -95,6 +95,31 @@
 
     </div>
 </aside>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const sidebar = document.getElementById("sidebar");
+        const mainContent = document.getElementById("main-content");
+
+        function updateSidebarState() {
+            let sidebarState = localStorage.getItem("sidebarHidden");
+
+            if (sidebarState === "true") {
+                sidebar.classList.add("-translate-x-64"); // Sidebar disembunyikan
+                mainContent.classList.remove("ml-64"); // Hilangkan margin-left
+            } else {
+                sidebar.classList.remove("-translate-x-64"); // Sidebar ditampilkan
+                mainContent.classList.add("ml-64"); // Tambahkan margin-left
+            }
+        }
+
+        // Setel ulang berdasarkan localStorage
+        updateSidebarState();
+
+        // Dengarkan event dari navbar
+        window.addEventListener("sidebarToggle", updateSidebarState);
+    });
+</script>
 
 
 <!-- Mobile sidebar -->

@@ -1,70 +1,94 @@
-
 <header class="z-10 py-4 bg-white shadow-md dark:bg-gray-800">
-    
-    <div x-data="{ isOpen: false }" class="container flex items-center justify-between px-6 mx-auto text-purple-600 dark:text-purple-300">
-        <!-- Mobile hamburger -->
-    
-            <button class="p-1 mr-5 -ml-1 rounded-md md:hidden focus:outline-none focus:shadow-outline-purple"
-                @click="toggleSideMenu" aria-label="Menu">
-                <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd"
-                        d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                        clip-rule="evenodd"></path>
-                </svg>
-            </button>
-            <!-- Search input -->
-            <div class="flex justify-center flex-1 lg:mr-32">
-                <div class="relative w-full max-w-xl text-center mr-6 focus-within:text-purple-500">
-                    <a class="text-lg font-bold text-center text-gray-800 dark:text-gray-200" href="#">Welcome,
-                        @auth
-                            {{ Auth::user()->name }}
-                        @endauth
-                    </a>
+
+    <div class="container flex items-center justify-between px-6 mx-auto dark:text-purple-300">
+        <button id="toggleSidebarBtn" class="p-2  text-white rounded-md focus:outline-none">
+            <svg class="h-6 w-6 text-slate-500" viewBox="0 0 20 20" stroke-width="2" stroke="currentColor" fill="none"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" />
+                <line x1="4" y1="6" x2="20" y2="6" />
+                <line x1="4" y1="12" x2="20" y2="12" />
+                <line x1="4" y1="18" x2="20" y2="18" />
+            </svg>
+        </button>
+        <!-- Search input -->
+        <div class="flex justify-center flex-1 lg:mr-32">
+            <div class="relative w-full max-w-xl text-center mr-6 focus-within:text-purple-500">
+                <a class="text-lg font-bold text-center text-gray-800 dark:text-gray-200" href="#">Welcome,
+                    @auth
+                        {{ Auth::user()->name }}
+                    @endauth
+                </a>
+            </div>
+        </div>
+        <div class="relative ml-3">
+            <div class="relative">
+                <!-- Profile Button -->
+                <button type="button" id="user-menu-button"
+                    class="relative flex items-center rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                    <img class="w-8 h-8 rounded-full"
+                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                        alt="User Avatar">
+                </button>
+
+                <!-- Dropdown Menu -->
+                <div id="user-menu" class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5 
+                    transition ease-out duration-100 transform opacity-0 scale-95 hidden">
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit"
+                            class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            Log Out
+                        </button>
+                    </form>
                 </div>
             </div>
-            <ul class="flex items-center flex-shrink-0 space-x-6">
-                <!-- Theme toggler -->
-                <li class="flex">
-                    <button class="rounded-md focus:outline-none focus:shadow-outline-purple" @click="toggleTheme"
-                    aria-label="Toggle color mode">
-                    <template x-if="!dark">
-                        <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
-                            </svg>
-                        </template>
-                        <template x-if="dark">
-                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd"
-                                    d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
-                                    clip-rule="evenodd"></path>
-                            </svg>
-                        </template>
-                    </button>
-                </li>
-                <!-- Notifications menu -->
-                <li class="relative">
-                    <form method="POST" action="{{ route('logout') }}" class="mb-0">
-                        @csrf
-                        <button type="submit">Logout</button>
-                    </form>
-                </li>
-                <!-- Profile menu -->
-                <li class="relative text-black">
-                    <div
-                    class="align-middle rounded-full focus:shadow-outline-purple focus:outline-none"
-                    @click="toggleProfileMenu"
-                    @keydown.escape="closeProfileMenu"
-                    aria-label="Account"
-                    aria-haspopup="true"
-                    >
-                    <img
-                    class="object-cover w-8 h-8 rounded-full"
-                    src="https://images.unsplash.com/photo-1502378735452-bc7d86632805?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&s=aa3a807e1bbdfd4364d1f449eaa96d82"
-                    alt=""
-                    aria-hidden="true"
-                    />
-                </div>
-                </li>
-            </ul>
         </div>
-    </header>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const menuButton = document.getElementById("user-menu-button");
+            const userMenu = document.getElementById("user-menu");
+
+            menuButton.addEventListener("click", function (event) {
+                if (userMenu.classList.contains("hidden")) {
+                    userMenu.classList.remove("hidden");
+                    userMenu.classList.add("opacity-100", "scale-100");
+                    userMenu.classList.remove("opacity-0", "scale-95");
+                } else {
+                    userMenu.classList.add("opacity-0", "scale-95");
+                    userMenu.classList.remove("opacity-100", "scale-100");
+                    setTimeout(() => userMenu.classList.add("hidden"), 75); // Delay agar efek transisi berjalan
+                }
+                event.stopPropagation();
+            });
+
+            document.addEventListener("click", function (event) {
+                if (!userMenu.contains(event.target) && !menuButton.contains(event.target)) {
+                    userMenu.classList.add("opacity-0", "scale-95");
+                    userMenu.classList.remove("opacity-100", "scale-100");
+                    setTimeout(() => userMenu.classList.add("hidden"), 75);
+                }
+            });
+        });
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const toggleSidebarBtn = document.getElementById("toggleSidebarBtn");
+
+            toggleSidebarBtn.addEventListener("click", function () {
+                let sidebarState = localStorage.getItem("sidebarHidden");
+
+                if (sidebarState === "true") {
+                    localStorage.setItem("sidebarHidden", "false");
+                } else {
+                    localStorage.setItem("sidebarHidden", "true");
+                }
+
+                // Kirim event ke halaman lain (sidebar)
+                window.dispatchEvent(new Event("sidebarToggle"));
+            });
+        });
+    </script>
+
+</header>
