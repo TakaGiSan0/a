@@ -42,9 +42,7 @@
     </div>
 </body>
 
-    <!-- Footer -->
-    
-</body>
+<script src="https://cdn.jsdelivr.net/npm/flowbite@2.4.1/dist/flowbite.min.js"></script>
 <script>
     document.addEventListener("alpine:init", () => {
         Alpine.data("layout", () => ({

@@ -187,7 +187,7 @@
                     </h3>
                     <button type="button"
                         class="justify-end text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                        data-modal-target="createProductModal" data-modal-toggle="createProductModal">
+                        data-modal-toggle="readProductModal" onclick="closeModal()">
                         <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20"
                             xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd"
@@ -229,6 +229,10 @@
 
             // Create a new AbortController for the new request
             abortController = new AbortController();
+
+            function hideModal() {
+                document.getElementById('modalBody').style.display = 'none';
+            }
 
             // Hide the modal before opening a new one
             hideModal();
