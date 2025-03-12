@@ -11,6 +11,15 @@
     <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css" />
 
     <!--Replace with your tailwind.css once created-->
+    <script>
+        // Cek theme dari localStorage
+        if (localStorage.getItem("theme") === "dark") {
+                document.documentElement.classList.add("dark");
+            } else {
+                document.documentElement.classList.remove("dark");
+            }
+            updateThemeButton();
+    </script>
 </head>
 
 <style>
@@ -19,21 +28,21 @@
     }
 </style>
 
-<body class="h-screen flex flex-col">
+<body class="h-screen flex flex-col bg-[#E5E7EB]">
     <div class="relative flex-1 flex bg-white dark:bg-gray-900 w-full">
         <!-- Sidebar -->
         @if(!isset($hideSidebar) || !$hideSidebar)
-            <aside id="sidebar" class="w-64 bg-gray-900 text-white h-screen fixed top-0 left-0 transition-all duration-300">
+            <div id="sidebar" class="w-64 text-white h-screen fixed top-0 left-0 transition-all duration-300">
                 @yield('sidebar')
-            </aside>
+            </div>
         @endif
 
         <!-- Main Content -->
-        <div id="main-content" class="flex-1 transition-all duration-300 ml-64">
+        <div id="main-content" class="flex-1 transition-all duration-300 ml-64 bg-gray-100 dark:bg-gray-400">
             @include('layouts.navbar')
 
-            <div class="flex-1 p-4">
-                <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+            <div class="flex-1 p-4 bg-gray-100 dark:bg-gray-400">
+                <div class="overflow-x-auto shadow-md ">
                     @yield('content')
                 </div>
             </div>

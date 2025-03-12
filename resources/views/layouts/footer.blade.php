@@ -1,6 +1,6 @@
 
 
-<footer class="w-full bg-neutral text-neutral-content py-10 bg-white dark:bg-gray-900">
+<footer class="w-full bg-neutral text-neutral-content py-10 bg-gray-100 dark:bg-gray-800 dark:text-[#f1f1f1]">
     <div class="w-full p-4 py-6 lg:py-8">
         <div class="flex items-start space-x-6 mb-10">
             <!-- Legend Product Code -->
@@ -11,9 +11,9 @@
             </div>
             
             <!-- Resources Section -->
-            <div class="grid grid-cols-2 gap-6 sm:gap-8 sm:grid-cols-6 text-xs">
-                
-                    <ul class="text-gray-500 dark:text-gray-400 ">
+            <div class="grid grid-cols-2 gap-6 sm:gap-8 sm:grid-cols-6 text-xs ">
+                <div class="dark:text-white">
+                    <ul class="text-gray-500 dark:text-white ">
                         <li>
                             <p class="text-xs   text-gray-500 uppercase dark:text-white">
                                 MDL : Medela
@@ -27,9 +27,9 @@
                             <p >WSA(SMI) : WS Audiology(Sivantos)</p>
                         </li>
                     </ul>
-                
-                <div>
-                    <ul class="text-gray-500 dark:text-gray-400 ">
+                </div>
+                <div class="dark:text-white">
+                    <ul class="text-gray-500 dark:text-white ">
                         <li>
                             <p class="text-xs  text-gray-500 uppercase dark:text-white">
                                 CHG : WSA Charger
@@ -46,7 +46,7 @@
                     </ul>
                 </div>
                 <div>
-                    <ul class="text-gray-500 dark:text-gray-400 ">
+                    <ul class="text-gray-500 dark:text-white ">
                         
                         <li>
                             <p class="text-xs   text-gray-500 uppercase dark:text-white">
@@ -63,7 +63,7 @@
                     </ul>
                 </div>
                 <div>
-                    <ul class="text-gray-500 dark:text-gray-400 ">
+                    <ul class="text-gray-500 dark:text-white">
                         <li>
                             
                             <p class="text-xs   text-gray-500 uppercase dark:text-white">
@@ -79,7 +79,7 @@
                     </ul>
                 </div>
                 <div>
-                    <ul class="text-gray-500 dark:text-gray-400 ">
+                    <ul class="text-gray-500 dark:text-white">
                         <li>
                             <p class="text-xs   text-gray-500 uppercase dark:text-white">
                                 PHV : Philips Volcar
@@ -96,7 +96,7 @@
                     </ul>
                 </div>
                 <div>
-                    <ul class="text-gray-500 dark:text-gray-400 ">
+                    <ul class="text-gray-500 dark:text-white">
                         <li>
                             
                             <p class="text-xs   text-gray-500 uppercase dark:text-white">
@@ -122,7 +122,7 @@
             <!-- Resources Section -->
             <div class="grid grid-cols-2 gap-6 sm:gap-8 sm:grid-cols-6 text-xs">
                 <div>
-                    <ul class="text-gray-500 dark:text-gray-400 ">
+                    <ul class="text-gray-500 dark:text-white">
                         <li>
                             <p class="text-xs   text-gray-500 uppercase dark:text-white">
                                 A1 : Manual
@@ -144,7 +144,7 @@
                     </ul>
                 </div>
                 <div>
-                    <ul class="text-gray-500 dark:text-gray-400 ">
+                    <ul class="text-gray-500 dark:text-white">
                         <li>
                             <p class="text-xs   text-gray-500 uppercase dark:text-white">
                                 PP : Pckaging Product
@@ -166,7 +166,7 @@
                     </ul>
                 </div>
                 <div>
-                    <ul class="text-gray-500 dark:text-gray-400 ">
+                    <ul class="text-gray-500 dark:text-white">
                         <li>
                             <p class="text-xs   text-gray-500 uppercase dark:text-white">
                                 R : Rework
@@ -188,7 +188,7 @@
                     </ul>
                 </div>
                 <div>
-                    <ul class="text-gray-500 dark:text-gray-400 ">
+                    <ul class="text-gray-500 dark:text-white">
                         <li>
                             <p class="text-xs   text-gray-500 uppercase dark:text-white">
                                 R1 : Rework Mechanical
@@ -210,7 +210,7 @@
                     </ul>
                 </div>
                 <div>
-                    <ul class="text-gray-500 dark:text-gray-400 ">
+                    <ul class="text-gray-500 dark:text-white">
                         <li>
                             <p class="text-xs   text-gray-500 uppercase dark:text-white">
                                 NC : Nano Coat
@@ -232,7 +232,7 @@
                     </ul>
                 </div>
                 <div>
-                    <ul class="text-gray-500 dark:text-gray-400 ">
+                    <ul class="text-gray-500 dark:text-white">
                         <li>
                             <p class="text-xs   text-gray-500 uppercase dark:text-white">
                                 V2 : Visual Inspection Microscope
@@ -266,7 +266,7 @@
             <!-- Resources Section -->
             <div class="grid grid-cols-2 gap-6 sm:gap-8 sm:grid-cols-6 text-xs">
                 <div>
-                    <ul class="text-gray-500 dark:text-gray-400 ">
+                    <ul class="text-gray-500 dark:text-white">
                         <li>
                             <p class="text-xs   text-gray-500 uppercase dark:text-white">
                                 1 = LEVEL 1 (work under supervision)

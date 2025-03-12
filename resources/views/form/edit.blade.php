@@ -14,7 +14,7 @@
 
     <div class="bg-gray-100 dark:bg-gray-800 transition-colors duration-300">
         <div class="container mx-auto p-4">
-            <form id="autoSaveForm" class="space-y-4" action="{{ route('dashboard.update', $trainingRecord->id) }}"
+            <form id="autoSaveForm" class="space-y-4 dark:bg-gray-700 dark:text-white" action="{{ route('dashboard.update', $trainingRecord->id) }}"
                 method="POST">
                 @csrf
                 @method('PUT')

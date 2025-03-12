@@ -13,14 +13,12 @@
 
 
 @section('content')
-    <div class="container mx-auto">
-        <!-- Dashboard Header -->
+    
         <!-- Start block -->
-        <section class="bg-gray-100 dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden antialiased">
-            <div class="mx-auto max-w-screen-xl px-4 lg:px-12 py-5">
-                <!-- Start coding here -->
+        <section class="relative shadow-md sm:rounded-lg overflow-hidden antialiased">
+            
 
-                <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-lg">
+                <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-lg dark:bg-gray-800 dark:shadow-none">
                     <form method="GET" action="{{ route('dashboard.summary') }}">
                         <div class="relative mb-10 w-full flex  items-center justify-between rounded-md">
                             <svg class="absolute left-2 block h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg"
@@ -30,18 +28,18 @@
                                 <line x1="21" y1="21" x2="16.65" y2="16.65" class=""></line>
                             </svg>
                             <input type="text" name="search" id="search"
-                                class="h-12 w-full cursor-text rounded-md border border-gray-100 bg-gray-100 py-4 pr-40 pl-12 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="Training Name" value="{{ request('search') }}" />
                         </div>
 
                         <div
-                            class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 p-6 bg-white rounded-lg shadow-md">
+                            class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 p-6 bg-white rounded-lg shadow-md dark:bg-gray-800">
                             <div class="flex flex-col">
-                                <label for="training_category" class="text-sm font-medium text-gray-700">Station
+                                <label for="training_category" class="text-sm font-medium text-[#f1f1f1]">Station
                                 </label>
                                 <select id="station" name="station"
-                                    class="mt-2 block w-full rounded-md border border-gray-300 bg-gray-50 px-3 py-2 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                    <option value="">All Station</option>
+                                    class="mt-2 block w-full rounded-md border border-gray-300 bg-gray-50 px-3 py-2 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                    <option value="" class="dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">All Station</option>
                                     @foreach ($station as $s)
                                         <option value="{{ $s->station }}"
                                             {{ request('station') == $s->station ? 'selected' : '' }}>
@@ -51,17 +49,17 @@
                                 </select>
                             </div>
                             <div class="flex flex-col">
-                                <label for="training_date" class="text-sm font-medium text-gray-700">Training
+                                <label for="training_date" class="text-sm font-medium text-[#f1f1f1f1]">Training
                                     Date</label>
                                 <input type="date" id="date_start" name="date_start" value="{{ request('date_start') }}"
-                                    class="mt-2 block w-full cursor-pointer rounded-md border border-gray-300 bg-gray-50 px-3 py-2 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" />
+                                    class="mt-2 block w-full cursor-pointer rounded-md border border-gray-300 bg-gray-50 px-3 py-2 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                             </div>
                             <div class="flex flex-col">
-                                <label for="training_category" class="text-sm font-medium text-gray-700">Training
+                                <label for="training_category" class="text-sm font-medium text-[#f1f1f1]">Training
                                     Category</label>
                                 <select id="category" name="category"
-                                    class="mt-2 block w-full rounded-md border border-gray-300 bg-gray-50 px-3 py-2 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                    <option value="">All Categories</option>
+                                    class="mt-2 block w-full rounded-md border border-gray-300 bg-gray-50 px-3 py-2 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                    <option value="" class="dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">All Categories</option>
                                     @foreach ($training_categories as $category)
                                         <option value="{{ $category->id }}"
                                             {{ request('category') == $category->id ? 'selected' : '' }}>
@@ -85,7 +83,7 @@
                     </form>
 
                 </div>
-            </div>
+            
             <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden mt-5">
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm text-center text-gray-500 dark:text-gray-400">
@@ -112,7 +110,7 @@
                         <?php $no = ($trainingRecords->currentPage() - 1) * $trainingRecords->perPage(); ?>
                         @if ($trainingRecords->isNotEmpty())
                             @foreach ($trainingRecords as $rc)
-                                <tbody>
+                            <tbody class="text-gray-600 dark:text-gray-200 bg-gray-50 dark:bg-gray-700">
                                     <tr class=>
                                         <td scope="row" class="px-4 py-3 ">
                                             {{ ++$no }}</td>
@@ -169,10 +167,7 @@
                     {{ $trainingRecords->appends(['date_start' => request('date_start'), 'category' => request('category'), 'station' => request('station'), 'search' => request('search')])->links() }}
                 </div>
             </div>
-    </div>
-    </section>
-    </div>
-
+        </section>
 
     <!-- Read modal -->
     <div id="readProductModal" tabindex="-1" aria-hidden="true"

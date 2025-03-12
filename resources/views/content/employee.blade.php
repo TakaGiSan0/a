@@ -13,13 +13,11 @@
 @endsection
 
 @section('content')
-    <div class="container mx-auto">
-        <!-- Dashboard Header -->
+   
         <!-- Start block -->
         <section
-            class="bg-gray-100 dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden antialiased min-h-[300px]">
-            <div class="mx-auto max-w-screen-xl px-4 lg:px-12 py-5">
-                <!-- Start coding here -->
+            class="relative shadow-md sm:rounded-lg overflow-hidden antialiased min-h-[300px]">
+           
                 <div
                     class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-xl overflow-hidden border border-gray-200">
                     <div
@@ -99,7 +97,7 @@
                             </thead>
                             <?php $no = ($peserta_records->currentPage() - 1) * $peserta_records->perPage(); ?>
                             @foreach ($peserta_records as $rc)
-                                <tbody>
+                            <tbody class="text-gray-600 dark:text-gray-200 bg-gray-50 dark:bg-gray-700">
                                     <tr class=>
                                         <th scope="row" name="id"
                                             class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -159,13 +157,8 @@
                         {{ $peserta_records->appends(['dept' => request('dept')])->links() }}
                     </div>
                 </div>
-            </div>
+          
         </section>
-    </div>
-    </section>
-    <!-- End block -->
-
-    </div>
 
     <!-- Read modal -->
     <div id="readProductModal" tabindex="-1" aria-hidden="true"

@@ -13,11 +13,10 @@
 @endsection
 
 @section('content')
-    <div class="container mx-auto">
+ 
         <!-- Dashboard Header -->
-        <section class="bg-gray-100 dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden antialiased">
-            <div class="mx-auto max-w-screen-xl px-4 lg:px-12 py-5">
-            
+        <section class="relative shadow-md sm:rounded-lg overflow-hidden antialiased">
+
                 <div class="bg-white dark:bg-gray-800 shadow-md sm:rounded-xl border border-gray-200">
                     <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                     <div class="w-full md:w-1/2">
@@ -42,7 +41,7 @@
                     @php
                         $pesertaCount = $pesertas -> total();
                     @endphp
-                    <p>Demand : {{ $pesertaCount }}</p>
+                    <p class="dark:text-[#f1f1f1]">Demand : {{ $pesertaCount }}</p>
                     <div
                         class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
                         <a href="{{ route('download.pdf', request()->query()) }}"
@@ -122,7 +121,7 @@
                                 @endforeach
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="text-gray-600 dark:text-gray-200 bg-gray-50 dark:bg-gray-700">
                             @php $no = ($pesertas->currentPage() - 1) * $pesertas->perPage(); @endphp
                             @foreach ($pesertas as $peserta)
                                                 <tr class="border-t">
@@ -189,12 +188,10 @@
                 <div class="mt-4">
                     {{ $pesertas->appends([ 'dept' => request('dept')])->links()  }}
                 </div>
-            </div>
+       
 
-            <div>
-            </div>
         </section>
-    </div>
+   
     <script>
         document.getElementById('filterDropdownButton').addEventListener('click', function () {
             const dropdown = document.getElementById('filterDropdown');

@@ -1,9 +1,18 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="en">
 
-@section('title', 'Edit Peserta')
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    @vite('resources/css/app.css')
 
+</head>
 
-@section('content')
+<body>
+    <div class="flex-1 p-4 bg-gray-100 dark:bg-gray-400">
+        <div class="overflow-x-auto shadow-md ">
     <div class="w-full max-w-xs mx-auto">
         @if ($errors->any())
             <div class="alert alert-danger">
@@ -14,78 +23,83 @@
                 </ul>
             </div>
         @endif
-        <form action="{{ route('peserta.update', $peserta->id) }}" method="POST" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <form action="{{ route('peserta.update', $peserta->id) }}" method="POST" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 dark:bg-gray-700">
             @csrf
             @method('PUT')
             <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="badge_no">
+                <label class="block text-gray-700 text-sm font-bold mb-2 dark:text-white" for="badge_no">
                     Badge No
                 </label>
                 <input
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     name="badge_no" id="badge_no" type="text" value="{{ old('badge_no', $peserta->badge_no) }}">
             </div>
             <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="employee_name">
+                <label class="block text-gray-700 text-sm font-bold mb-2 dark:text-white" for="employee_name">
                     Employee Name
                 </label>
                 <input
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     id="employee_name" type="text" name="employee_name" value="{{ old('employee_name', $peserta->employee_name) }}">
             </div>
             <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="dept">
+                <label class="block text-gray-700 text-sm font-bold mb-2 dark:text-white" for="dept">
                     Dept
                 </label>
                 <input
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     id="dept" name="dept" type="text" value="{{ old('dept', $peserta->dept) }}">
             </div>
             <div class="mb-6">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="position">
+                <label class="block text-gray-700 dark:text-white text-sm font-bold mb-2" for="position">
                     Position
                 </label>
                 <input
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     id="position" type="text" name="position" value="{{ old('position', $peserta->position) }}">
             </div>
             <div class="mb-6">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="position">
+                <label class="block text-gray-700  text-sm font-bold mb-2" for="position">
                     Join Date
                 </label>
                 <input
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     id="join_date" name="join_date" type="date" value="{{ old('join_date', $peserta->join_date) }}">
             </div>
             <div class="mb-6">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="status">
+                <label class="block text-gray-700 dark:text-white text-sm font-bold mb-2" for="status">
                     Status
                 </label>
                 <select
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     id="status" name="status">
                     <option value="Active" {{ old('status', $peserta->status) == 'Active' ? 'selected' : '' }}>Active</option>
                     <option value="Non Active" {{ old('status', $peserta->status) == 'Non Active' ? 'selected' : '' }}>Non Active</option>
                 </select>
             </div>
             <div class="mb-6">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="position">
+                <label class="block text-gray-700 text-sm font-bold dark:text-white mb-2" for="position">
                     Category Level
                 </label>
                 <input
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     id="category_level" name="category_level" type="text" value="{{ old('category_level', $peserta->category_level) }}">
             </div>
             <div class="flex items-center justify-center">
                 <button
-                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-4"
                     type="submit">
                     Edit
                 </button>
+                <a href="{{ route('dashboard.peserta') }}"
+                    class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ml-4">
+                    Cancel
+                </a>
+                
             </div>
         </form>
         <p class="text-center text-gray-500 text-xs">
             &copy;{{ date('Y') }} Acme Corp. All rights reserved.
         </p>
     </div>
-@endsection
+</body>

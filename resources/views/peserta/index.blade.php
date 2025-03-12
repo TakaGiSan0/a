@@ -13,11 +13,9 @@
 @endsection
 
 @section('content')
-    <div class="container mx-auto">
-        <!-- Dashboard Header -->
-        <!-- Start block -->
-        <section class="bg-gray-100 dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden antialiased">
-            <div class="mx-auto max-w-screen-xl px-4 lg:px-12 py-5">
+    
+        <section class="relative shadow-md sm:rounded-lg overflow-hidden antialiased">
+            
                 <!-- Start coding here -->
                 <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
                     <div
@@ -108,7 +106,7 @@
                             </thead>
 
                             <?php $no = ($peserta->currentPage() - 1) * $peserta->perPage(); ?>
-                            <tbody>
+                            <tbody class="text-gray-600 dark:text-gray-200 bg-gray-50 dark:bg-gray-700">
                                 @if ($peserta->isEmpty())
                                 <tr class="">
                                     <td colspan="6" class="px-4 py-3 text-center">
@@ -162,12 +160,12 @@
 
                     </div>
                 </div>
-            </div>
+          
             <div class="mt-4">
                 {{ $peserta->links() }}
             </div>
         </section>
-    </div>
+  
 
     <!-- Modal -->
     <div id="uploadModal"
