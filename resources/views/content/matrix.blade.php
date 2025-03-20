@@ -221,7 +221,7 @@
                 const recordId = button.getAttribute('data-id');
 
                 // Fetch data dari server
-                fetch(`/matrix/${recordId}`)
+                fetch(`/Training-record/public/matrix/${recordId}`)
                     .then(response => response.json())
                     .then(data => {
                         if (data.message) {
@@ -230,7 +230,7 @@
                         }
 
                         // Set form action
-                        commentForm.action = `/matrix/update/${recordId}`;
+                        commentForm.action = `/Training-record/public/matrix/update/${recordId}`;
 
                         certificateField.value = data.certificate;
                         expiredField.value = data.expired_date;

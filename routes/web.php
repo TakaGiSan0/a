@@ -30,7 +30,7 @@ Route::get('/memory', function () {
 
 // Login Route
 Route::post('login', [AuthenticatedSessionController::class, 'store'])
-    ->middleware('throttle:10,1')->name('login');
+    ->name('login');
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 Route::get('/test-pdf', [FormController::class, 'showpdf'])->name('show.pdf');
 Route::post('/test-pdf', [FormController::class, 'testpdf'])->name('testpdf');
@@ -38,11 +38,11 @@ Route::post('/test-pdf', [FormController::class, 'testpdf'])->name('testpdf');
 Route::middleware(['auth:web'])->group(function () {
     // Dashboard Employee Training Record
     Route::get('/EmployeeTrainingRecord_list', [EmployeeController::class, 'index'])->name('dashboard.employee');
-    Route::get('employee/{id}', [EmployeeController::class, 'show'])->name('employee.show');
+    Route::get('Training-record/public/employee/{id}', [EmployeeController::class, 'show'])->name('employee.show');
 
     // Dashboard Summary Training Record
     Route::get('/SummaryTrainingRecord_list', [SummaryController::class, 'index'])->name('dashboard.summary');
-    Route::get('summary/{id}', [SummaryController::class, 'show'])->name('summary.show');
+    Route::get('Training-record/public/summary/{id}', [SummaryController::class, 'show'])->name('summary.show');
 
     // Search SummaryTraining Record
     Route::post('/api/trainings/search', [SummaryController::class, 'search']);

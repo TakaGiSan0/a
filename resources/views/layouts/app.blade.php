@@ -19,6 +19,8 @@
                 document.documentElement.classList.remove("dark");
             }
             updateThemeButton();
+
+        
     </script>
 </head>
 

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->enum('practical_result', ['Pass', 'Fail', 'NA'])->nullable();
             $table->enum('level', ['1', '2','3', '4' , 'NA'])->nullable();
             $table->enum('final_judgement', ['Competence', 'Attend', 'NA'])->nullable();
-            $table->boolean('license')->default(0);
+            $table->enum('license', ['1','0'])->default(0);
             $table->string('certificate')->nullable();
             $table->date('expired_date')->nullable();
             $table->string('category')->nullable();

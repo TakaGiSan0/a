@@ -105,6 +105,8 @@ class SummaryController extends Controller
     {
         $trainingRecord = Training_Record::with('pesertas')->findOrFail($id);
 
+        $trainingRecord->training_duration = \Carbon\Carbon::parse($trainingRecord->training_duration)->diffInMinutes(\Carbon\Carbon::parse('00:00:00'));
+        $trainingRecord->training_duration = abs($trainingRecord->training_duration);
 
         $data = [
             'training_name' => $trainingRecord->training_name,
@@ -116,6 +118,8 @@ class SummaryController extends Controller
             'date_range' => $trainingRecord->formatted_date_range,
             'skill_code' => $trainingRecord->skill_code,
             'status' => $trainingRecord->status,
+            'training_category' => $trainingRecord->trainingCategory->name,
+            'training_duration' => $trainingRecord->training_duration,
             'no' => $trainingRecord->id,
             'participants' => $trainingRecord->pesertas->map(function ($peserta) {
                 return [

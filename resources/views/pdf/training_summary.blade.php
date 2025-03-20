@@ -31,6 +31,7 @@
         .summary-section {
         margin-bottom: 20px;
         border-collapse: collapse;
+        text-align: left;
     }
 
         .summary-item {
@@ -101,12 +102,14 @@
                     <strong>Job Skill:</strong> {{ $job_skill }} <br>
                     <strong>Station:</strong> {{ $station }} <br>
                     <strong>Skill Code:</strong> {{ $skill_code }} <br>
+                    <strong>Training Category:</strong> {{ $training_category }} <br>
                 </td>
                 <td width="50%">
                     <strong>Rev:</strong> {{ $rev }} <br>
                     <strong>Trainer Name:</strong> {{ $trainer_name }} <br>
                     <strong>Training Date:</strong> {{ $date_range }}<br>
                     <strong>Doc Ref:</strong> {{ $doc_ref }} <br>
+                    <strong>Training Duration:</strong> {{ $training_duration }} Minute<br>
                 </td>
             </tr>
         </table>

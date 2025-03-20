@@ -232,7 +232,7 @@
             // Hide the modal before opening a new one
             hideModal();
 
-            fetch(`/summary/${id}`, {
+            fetch(`Training-record/public/summary/${id}`, {
                     signal: abortController.signal,
                 })
                 .then(response => {
@@ -244,7 +244,7 @@
                 })
                 .then(data => {
                     const trainingList = data.map(record => `
-                    <div class="grid grid-cols-2 text-left px-9 m-5">
+                    <div class="grid grid-cols-2 text-left px-9 m-5 text-black dark:text-white">
                         <h3>Training Name: ${record.training_name}</h3>
                         <p>Doc Ref: ${record.doc_ref}</p>
                         <p>Job Skill: ${record.job_skill}</p>

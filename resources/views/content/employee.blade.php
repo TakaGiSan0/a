@@ -192,19 +192,19 @@
                         <div><label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Emp
                                 Name:</label>
-                            <span id="employeeName">N/A</span>
+                            <span id="employeeName" class="dark:text-gray-400 text-black">N/A</span>
                         </div>
                         <div><label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Dept:</label>
-                            <span id="dept">N/A</span>
+                            <span id="dept" class="dark:text-gray-400 text-black">N/A</span>
                         </div>
                         <div><label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Badge No:</label>
-                            <span id="badgeNo">N/A</span>
+                            <span id="badgeNo" class="dark:text-gray-400 text-black">N/A</span>
                         </div>
                         <div><label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Position:</label>
-                            <span id="position">N/A</span>
+                            <span id="position" class="dark:text-gray-400 text-black">N/A</span>
                         </div>
                     </div>
                     <div id="trainingCategories">
@@ -233,7 +233,7 @@
             // Tutup modal sebelum membuka yang baru
             hideModal();
 
-            fetch(`/employee/${id}`, {
+            fetch(`Training-record/public/employee/${id}`, {
                     signal: controller.signal
                 })
                 .then(response => response.json())
@@ -281,7 +281,7 @@
                         }
 
                         trainingRecordsContent += `
-                        <p class="text-lg font-bold text-left mb-4">${category.name}</p>
+                        <p class="text-lg font-bold text-left mb-4 dark:text-white">${category.name}</p>
                         <table class="w-full text-sm text-center text-gray-500 dark:text-gray-400 mb-7">
                             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                 <tr>
@@ -302,19 +302,19 @@
 
         trainingRecordsContent += `
         <tr class="">
-            <th scope="row" class="px-4 py-3 font-medium text-gray-900 text-center whitespace-normal break-words dark:text-white overflow-hidden max-w-xs">
+            <th scope="row" class="px-4 py-3 font-medium text-gray-400 text-center whitespace-normal break-words  overflow-hidden max-w-xs">
                 ${training.training_name ?? '-'}
             </th>
-            <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap text-center dark:text-white">
+            <td class="px-4 py-3 font-medium text-gray-400 whitespace-nowrap text-center ">
                 ${training.trainer_name ?? '-'}
             </td>
-            <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap text-center dark:text-white">
+            <td class="px-4 py-3 font-medium text-gray-400 whitespace-nowrap text-center ">
                 ${training.date_formatted ?? '-'}
             </td>
-            <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap text-center dark:text-white">
+            <td class="px-4 py-3 font-medium text-gray-400 whitespace-nowrap text-center ">
                 ${level}
             </td>
-            <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap text-center dark:text-white">
+            <td class="px-4 py-3 font-medium text-gray-400 whitespace-nowrap text-center ">
                 ${finalJudgement}
             </td>
         </tr>`;

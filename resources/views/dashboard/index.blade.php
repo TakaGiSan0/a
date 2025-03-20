@@ -287,7 +287,7 @@
                             $isSuperAdmin = auth()->user()->role === 'Super Admin'; //
                         @endphp
 
-                        <textarea name="comment" id="comment" cols="30" rows="10" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
+                        <textarea name="comment" id="comment" cols="30" rows="10" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring bg-white  focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
                             @if (!$isSuperAdmin) text-gray-400 @endif" @if (!$isSuperAdmin) readonly
                             @endif>{{ !$isSuperAdmin ? 'Tunggu komentar dari super admin' : old('comment', $comment ?? '') }}</textarea>
                         @if (Auth::user()->role == 'Super Admin')

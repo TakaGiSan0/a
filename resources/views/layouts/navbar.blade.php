@@ -134,7 +134,6 @@
                 }
             }
 
-            
 
             // Toggle mode saat tombol diklik
             themeToggle.addEventListener("click", function () {
@@ -148,6 +147,11 @@
                 }
 
                 updateThemeButton();
+            });
+
+            document.getElementById("logout-button").addEventListener("click", function () {
+                localStorage.removeItem("theme"); // Hapus data tema
+
             });
         });
     </script>

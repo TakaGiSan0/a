@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Peserta;
+use App\Models\TrainingRecord;
 use Illuminate\Support\Facades\Cache;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -25,20 +26,18 @@ class EmployeeController extends Controller
         // Dapatkan semua nilai dept unik dari tabel peserta
         $uniqueDepts = Peserta::select('dept')->distinct()->pluck('dept')->toArray(); // Konversi ke array
 
-        // Mulai dengan query peserta
         $query = Peserta::select("id", "badge_no", "employee_name", "dept", "position")
-            ->when($searchQuery, function ($query, $searchQuery) {
-                $query->where('badge_no', 'like', '%' . $searchQuery . '%')
-                    ->orWhere('employee_name', 'like', '%' . $searchQuery . '%');
+            ->when($searchQuery, function ($query) use ($searchQuery) {
+                $query->where(function ($subQuery) use ($searchQuery) {
+                    $subQuery->where('badge_no', 'like', "%{$searchQuery}%")
+                        ->orWhere('employee_name', 'like', "%{$searchQuery}%");
+                });
+            })
+            ->when(!empty($deptFilter), function ($query) use ($deptFilter) {
+                $query->whereIn('dept', $deptFilter);
             })
             ->orderBy('employee_name', 'asc');
 
-        // Terapkan filter berdasarkan dept jika ada
-        if (!empty($deptFilter) && is_array($deptFilter)) {
-            $query->whereIn('dept', $deptFilter);
-        }
-
-        
 
 
         // Ambil data peserta dengan filter
@@ -61,11 +60,26 @@ class EmployeeController extends Controller
      */
     public function show($id)
     {
-        // Ambil data peserta berdasarkan ID
-        $peserta = Peserta::with(['trainingRecords' => function ($query) {
-            $query->where('status', 'Completed')
-            ->withPivot('level', 'final_judgement');
-        }])->findOrFail($id);
+        $peserta = Peserta::with([
+    'trainingRecords' => function ($query) {
+        $query->where('status', 'Completed')
+            ->select([
+             'training_records.id as training_id', // Alias untuk menghindari ambiguitas
+                'training_records.training_name', 
+                'training_records.doc_ref', 
+                'training_records.job_skill', 
+                'training_records.trainer_name', 
+                'training_records.rev', 
+                'training_records.station', 
+                'training_records.skill_code', 
+                'training_records.category_id', 
+                'training_records.date_start',
+                'training_records.date_end',
+            ])
+            ->withPivot('level', 'final_judgement')
+            ->with(['trainingCategory:id,name']);
+    }
+])->findOrFail($id);
 
         if (!$peserta) {
             return response()->json(['error' => 'Peserta not found'], 404);

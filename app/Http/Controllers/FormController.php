@@ -37,17 +37,23 @@ class FormController extends Controller
         // Query untuk mengambil data training dengan filter tahun dan pencarian
         $training_records = Training_Record::query()
             ->when($searchQuery, function ($query, $searchQuery) {
-                // Filter berdasarkan nama training
-                $query->where('training_name', 'like', "%{$searchQuery}%");
+                return $query->where('training_name', 'like', "%{$searchQuery}%");
             })
             ->when($selectedYear, function ($query, $selectedYear) {
-                // Filter berdasarkan tahun training_date
-                $query->whereYear('date_start', $selectedYear);
+                return $query->whereYear('date_start', $selectedYear);
             })
-            ->orderByRaw("CASE WHEN status = 'Waiting Approval' THEN 0 WHEN status = 'Pending' THEN 1 ELSE 2 END")
+            ->orderByRaw("
+        CASE 
+            WHEN status = 'Waiting Approval' THEN 0 
+            WHEN status = 'Pending' THEN 1 
+            ELSE 2 
+        END
+    ")
             ->orderBy('date_start', 'desc')
-
+            ->orderBy('date_end', 'desc')
             ->paginate(10);
+
+
 
         $userRole = auth('')->user()->role;
 

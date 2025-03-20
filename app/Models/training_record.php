@@ -12,6 +12,11 @@ class training_record extends Model
 
     protected $table = 'training_records';
 
+    protected $casts = [
+        'date_start' => 'date',
+        'date_end' => 'date',
+    ];
+    
     protected $fillable = [
         'doc_ref',
         'station',

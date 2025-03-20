@@ -16,6 +16,7 @@ class AuthenticatedSessionController extends Controller
             'password' => ['required'],
         ]);
 
+        
         $user = User::whereRaw('BINARY user = ?', [$request->user])->first();
         
         if (!$user) {
