@@ -53,10 +53,9 @@ class TrainingMatrixController extends Controller
         ->toArray();
 
     // Ambil semua station dan skill_code dari training_record dalam satu query
-    $trainingRecords = Training_Record::where('status', 'completed')->get(['station', 'skill_code']);
+    $trainingRecords = Training_Record::where('status', 'completed')->get(['station']);
 
     $allStations = $trainingRecords->pluck('station')->unique()->toArray();
-    $allSkillCode = $trainingRecords->pluck('skill_code')->flatMap(fn($s) => explode(', ', $s))->unique()->toArray();
 
     // Gabungkan station dengan jumlah level 3 & 4
     $stationsWithLevels = collect($allStations)->mapWithKeys(fn($station) => [$station => $stationsWithLevels[$station] ?? 0])->toArray();
@@ -70,7 +69,6 @@ class TrainingMatrixController extends Controller
         'stationsWithLevels' => $stationsWithLevels,
         'stationsWithGaps' => $stationsWithGaps,
         'allStations' => $allStations,
-        'allSkillCode' => $allSkillCode,
         'departments' => $departments,
         'searchQuery' => $request->searchQuery,
     ]);

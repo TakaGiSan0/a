@@ -20,6 +20,8 @@ return new class extends Migration
             $table->date('join_date');
             $table->enum('status', ['Active', 'Non Active'])->default('Active');
             $table->string('category_level');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

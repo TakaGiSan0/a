@@ -20,13 +20,12 @@ class Training_RecordFactory extends Factory
             'date_end' => $this->faker->date,
             'training_duration' => $this->faker->time,
             'training_name' => $this->faker->name,
-            'job_skill' => $this->faker->word,
             'trainer_name' => $this->faker->name,
             'rev' => $this->faker->randomDigitNotNull,
-            'skill_code' => $this->faker->bothify('SK-####'),
             'status' => $this->faker->randomElement(['Completed', 'Pending', 'Waiting Approval']),
             'approval' => 'Pending',
             'comment' => $this->faker->sentence,
+            'user_id' => \App\Models\User::inRandomOrder()->first()->id,
         ];
     }
 }

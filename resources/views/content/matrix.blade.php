@@ -14,14 +14,13 @@
 
 @section('content')
 
-    <section
-        class="relative shadow-md sm:rounded-lg overflow-hidden antialiased min-h-[300px]">
+    <section class="relative shadow-md sm:rounded-lg overflow-hidden antialiased min-h-[300px]">
 
         <!-- Start coding here -->
         <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-xl overflow-hidden border border-gray-200">
             <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                 <div class="w-full md:w-1/2">
-                    <form class="flex items-center">
+                    <form method="GET" action="{{ route('matrix.index') }}" class="flex items-center">
                         <label for="simple-search" class="sr-only">Search</label>
                         <div class="relative w-full">
                             <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -34,27 +33,31 @@
                             </div>
                             <input type="text" id="simple-search"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="Badge No/Employee Name" value="" name="searchQuery">
+                                placeholder="Badge No/Employee Name" value="{{ request('searchQuery') }}"
+                                name="searchQuery">
                         </div>
                     </form>
+
                 </div>
                 <div
                     class="w-full relative md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
                 </div>
-                <div
-                    class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-                    <a href="{{ route('export.matrix') }}"
-                        class="flex items-center justify-center text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800">
-                        <svg class="h-4 w-4 mr-2 text-white-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
-                            stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                            <path stroke="none" d="M0 0h24v24H0z" />
-                            <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />
-                            <polyline points="7 11 12 16 17 11" />
-                            <line x1="12" y1="4" x2="12" y2="16" />
-                        </svg>
-                        Download
-                    </a>
-                </div>
+                @if (auth()->user()->role == 'Super Admin')
+                    <div
+                        class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+                        <a href="{{ route('export.matrix') }}"
+                            class="flex items-center justify-center text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800">
+                            <svg class="h-4 w-4 mr-2 text-white-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+                                stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" />
+                                <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />
+                                <polyline points="7 11 12 16 17 11" />
+                                <line x1="12" y1="4" x2="12" y2="16" />
+                            </svg>
+                            Download
+                        </a>
+                    </div>
+                @endif
             </div>
 
             <div class="overflow-x-auto">
@@ -71,12 +74,14 @@
                             <th scope="col" class="px-4 py-3">Expired Date</th>
                             <th scope="col" class="px-4 py-3">Category</th>
                             <th scope="col" class="px-4 py-3">Status</th>
-                            <th scope="col" class="px-4 py-3">Action</th>
+                            @if (auth()->user()->role == 'Super Admin')
+                                <th scope="col" class="px-4 py-3">Action</th>
+                            @endif
                         </tr>
                     </thead>
                     <?php $no = 0; ?>
                     @foreach ($matrix as $item)
-                    <tbody class="text-gray-600 dark:text-gray-200 bg-gray-50 dark:bg-gray-700">
+                        <tbody class="text-gray-600 dark:text-gray-200 bg-gray-50 dark:bg-gray-700">
                             <tr class=>
                                 <th scope="row" name="id"
                                     class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -114,26 +119,28 @@
                                 <td class="px-4 py-3">
                                     {{ $item->status }}
                                 </td>
-                                <td class="px-4 py-3 flex items-center justify-center space-x-4">
-                                    <button type="button" data-modal-target="readProductModal"
-                                        data-modal-toggle="readProductModal" data-id="{{ $item->id }}"
-                                        class="trigger-modal items-center justify-center over:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
-                                        <svg class="h-8 w-8 text-slate-500" width="24" height="24" viewBox="0 0 24 24"
-                                            stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
-                                            stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z" />
-                                            <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
-                                            <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
-                                        </svg>
-                                    </button>
-                                </td>
+                                @if (auth()->user()->role == 'Super Admin')
+                                    <td class="px-4 py-3 flex items-center justify-center space-x-4">
+                                        <button type="button" data-modal-target="readProductModal"
+                                            data-modal-toggle="readProductModal" data-id="{{ $item->id }}"
+                                            class="trigger-modal items-center justify-center over:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
+                                            <svg class="h-8 w-8 text-slate-500" width="24" height="24" viewBox="0 0 24 24"
+                                                stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+                                                stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" />
+                                                <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
+                                                <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
+                                            </svg>
+                                        </button>
+                                    </td>
+                                @endif
                             </tr>
                         </tbody>
                     @endforeach
                 </table>
             </div>
             <div class="mt-4">
-                
+
             </div>
         </div>
     </section>

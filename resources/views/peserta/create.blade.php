@@ -48,7 +48,7 @@
                         </label>
                         <input
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            id="dept" name="dept" type="text">
+                            id="dept" name="dept" type="text" >
                     </div>
                     <div class="mb-6">
                         <label class="block text-gray-700 dark:text-white text-sm font-bold mb-2" for="position">

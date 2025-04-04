@@ -15,11 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('doc_ref');
             $table->string('training_name', length: 200);
-            $table->string('job_skill', length: 50)->nullable();
             $table->string('trainer_name', length: 50);
             $table->string('rev', length: 50)->nullable();
             $table->string('station', length: 50)->nullable();
-            $table->string('skill_code', length: 50)->nullable();
             $table->enum('status', ['Completed', 'Pending', 'Waiting Approval'])->default('Waiting Approval');
             $table->enum('approval', ['Approved', 'Pending', 'Reject'])->default('Pending');
             $table->date('date_start');
@@ -29,10 +27,11 @@ return new class extends Migration
             $table->string('attachment')->nullable();
             $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('training_skill_id')->nullable();
             $table->foreign('category_id')->references('id')->on
             ('categories');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-
+            $table->foreign('training_skill_id')->references('id')->on('training_skill');
             $table->timestamps();
         });
     }

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->enum('role', ['Super Admin', 'Admin', 'User'])->default('User');
             $table->string('password');
-            $table->string('department');
+            $table->string('dept');
             $table->timestamps();
 
         });

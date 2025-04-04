@@ -7,14 +7,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use App\Models\training_record;
 use App\Models\category;
-use App\Models\attachments;
 use App\Models\peserta;
+use App\Models\training_skill;
 use Barryvdh\DomPDF\Facade\pdf;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-
-
-
 
 
 class FormController extends Controller
@@ -24,18 +21,21 @@ class FormController extends Controller
      */
     public function index(Request $request)
     {
-        // Ambil parameter pencarian (search) dan tahun dari request
         $searchQuery = $request->input('search');
-        $selectedYear = $request->input('year'); // Ambil tahun yang dipilih dari request
+        $selectedYear = $request->input('year');
 
-        // Ambil tahun unik dari kolom training_date
+        // Ambil tahun unik dari date_start
         $years = Training_Record::selectRaw('YEAR(date_start) as year')
             ->distinct()
             ->orderBy('year', 'desc')
             ->pluck('year');
 
-        // Query untuk mengambil data training dengan filter tahun dan pencarian
+        // Ambil role user
+        $user = auth('web')->user();
+
+        // Query training_records dengan filter pencarian, tahun, dan byUserRole
         $training_records = Training_Record::query()
+            ->byUserRole($user) // Tambahkan filter berdasarkan role
             ->when($searchQuery, function ($query, $searchQuery) {
                 return $query->where('training_name', 'like', "%{$searchQuery}%");
             })
@@ -43,23 +43,21 @@ class FormController extends Controller
                 return $query->whereYear('date_start', $selectedYear);
             })
             ->orderByRaw("
-        CASE 
-            WHEN status = 'Waiting Approval' THEN 0 
-            WHEN status = 'Pending' THEN 1 
-            ELSE 2 
-        END
-    ")
+            CASE 
+                WHEN status = 'Waiting Approval' THEN 0 
+                WHEN status = 'Pending' THEN 1 
+                ELSE 2 
+            END
+        ")
             ->orderBy('date_start', 'desc')
             ->orderBy('date_end', 'desc')
             ->paginate(10);
 
+        $jobskill = training_skill::select('id', 'job_skill', 'skill_code')->get();
 
-
-        $userRole = auth('')->user()->role;
-
-        // Kembalikan ke view dengan data yang dibutuhkan
-        return view('dashboard.index', compact('training_records', 'years', 'searchQuery', 'selectedYear'));
+        return view('dashboard.index', compact('training_records', 'years', 'searchQuery', 'selectedYear', 'jobskill'));
     }
+
 
 
     /**
@@ -127,18 +125,18 @@ class FormController extends Controller
         $trainingRecord = Training_Record::create([
             'training_name' => $data['training_name'],
             'doc_ref' => $data['doc_ref'],
-            'job_skill' => $data['job_skill'],
+
             'trainer_name' => $data['trainer_name'],
             'rev' => $data['rev'],
             'station' => $data['station'],
             'date_start' => $data['date_start'],
             'date_end' => $data['date_end'],
             'training_duration' => $formattedTime,
-            'skill_code' => $data['skill_code'],
+
             'category_id' => $data['category_id'],
             'status' => $status,
             'attachment' => $filePath,
-            'user_id' => auth()->id(),
+            'user_id' => auth('web')->id(),
         ]);
 
         // Simpan data peserta
@@ -245,13 +243,13 @@ class FormController extends Controller
         $trainingRecord->update([
             'training_name' => $data['training_name'],
             'doc_ref' => $data['doc_ref'],
-            'job_skill' => $data['job_skill'],
+
             'trainer_name' => $data['trainer_name'],
             'rev' => $data['rev'],
             'station' => $data['station'],
             'date_start' => $data['date_start'],
             'date_end' => $data['date_end'],
-            'skill_code' => $data['skill_code'],
+
             'category_id' => $data['category_id'],
             'training_duration' => $formattedTime
         ]);
@@ -317,14 +315,14 @@ class FormController extends Controller
         return [
             'training_name' => 'required|string|max:255',
             'doc_ref' => 'required|string|max:255',
-            'job_skill' => 'required|string|max:255',
+
             'trainer_name' => 'required|string|max:255',
             'rev' => 'required|string|max:255',
             'station' => 'required|string|max:255',
             'date_start' => 'required|date',
             'date_end' => 'required|date',
             'training_duration' => 'required|integer',
-            'skill_code' => 'required|string|max:255',
+
             'attachment' => 'file|mimes:pdf|max:2048',
             'category_id' => 'required|integer|exists:categories,id',
             'participants.*.badge_no' => 'max:255',
@@ -344,5 +342,34 @@ class FormController extends Controller
         return [
             'doc_ref.unique' => 'Pelatihan sudah ada.',
         ];
+    }
+
+    public function jobs_skill_store(request $request)
+    {
+        $request->validate([
+            'job_skill.*' => 'required|string|max:255',
+            'skill_code.*' => 'required|string|max:100',
+        ]);
+
+        foreach ($request->job_skill as $index => $job_skill) {
+            training_skill::create([
+                'job_skill' => $job_skill,
+                'skill_code' => $request->skill_code[$index],
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Job Skill berhasil ditambahkan!');
+    }
+
+    public function jobs_skill_destroy($id)
+    {
+        $jobSkill = training_skill::find($id);
+
+        if (!$jobSkill) {
+            return redirect()->back()->with('error', 'Job Skill tidak ditemukan!');
+        }
+
+        $jobSkill->delete();
+        return redirect()->back()->with('success', 'Job Skill berhasil dihapus!');
     }
 }

@@ -7,16 +7,28 @@ use App\Models\hasil_peserta;
 
 class MatrixController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $matrix = hasil_peserta::where('license', 1)
+        $user = auth('web')->user();
+        $searchQuery = $request->input('searchQuery'); // Ambil input pencarian
+
+        $matrix = Hasil_Peserta::where('license', 1)
+            ->byUserRole($user)
             ->whereHas('trainingrecord', function ($query) {
                 $query->where('status', 'completed');
             })
-            ->with('pesertas', 'trainingrecord')
+            ->whereHas('pesertas', function ($query) use ($searchQuery) { // Gunakan whereHas ke peserta
+                $query->where('employee_name', 'like', "%$searchQuery%")
+                    ->orWhere('badge_no', 'like', "%$searchQuery%");
+            })
+            ->with(['trainingrecord.user', 'pesertas']) // Ambil relasi peserta juga
             ->get();
-        return view('content.matrix', compact('matrix'));
+
+        return view('content.matrix', compact('matrix', 'searchQuery'));
     }
+
+
+
 
     public function show($id)
     {

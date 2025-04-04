@@ -51,7 +51,7 @@
                         </label>
                         <input
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500""
-                    id=" departement" type="text" name="department" value="{{ old('department', $user->department) }}">
+                    id=" departement" type="text" name="dept" value="{{ old('dept', $user->dept) }}">
                     </div>
                     <div class="mb-4">
                         <label class="block text-gray-700 text-sm font-bold dark:text-white mb-2" for="username">

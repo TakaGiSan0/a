@@ -19,6 +19,13 @@ class MasterDataImport implements ToModel, WithStartRow
     *
     * @return \Illuminate\Database\Eloquent\Model|null
     */
+
+    protected $userId;
+
+    public function __construct($userId)
+    {
+        $this->userId = $userId;
+    }
     public function model(array $row)
 {
     // Cek apakah badge_no sudah ada di database
@@ -46,6 +53,7 @@ class MasterDataImport implements ToModel, WithStartRow
         'join_date' => $formattedDate,
         'category_level' => $row[5],
         'status' => 'Active',
+        'user_id' => $this->userId, // Ambil user_id dari auth
     ]);
 }
 

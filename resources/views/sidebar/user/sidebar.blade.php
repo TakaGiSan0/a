@@ -10,6 +10,21 @@
         </a>
         <ul class="mt-6">
             <li>
+                <a href="{{ route('dashboard.peserta') }}"
+                    class="relative flex items-center px-6 py-3 w-full text-sm font-semibold transition-colors duration-150 
+                        {{ request()->routeIs('dashboard.peserta') ? 'bg-white text-[#2D435F]' : ' hover:text-white' }}">
+
+                    <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"
+                        stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                        <path
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01">
+                        </path>
+                    </svg>
+
+                    <span class="ml-4">Master Data Employee</span>
+                </a>
+            </li>
+            <li>
                 <a href="{{ route('dashboard.summary') }}"
                     class="relative flex items-center px-6 py-3 w-full text-sm font-semibold transition-colors duration-150 
                         {{ request()->routeIs('dashboard.summary') ? 'bg-white text-[#2D435F]' : ' hover:text-white' }}">
@@ -37,9 +52,63 @@
                     <span class="ml-4">Employee Training Record</span>
                 </a>
             </li>
+            <li>
+                <a href="{{ route('matrix.index') }}" class="relative flex items-center px-6 py-3 w-full text-sm font-semibold transition-colors duration-150 
+                        {{ request()->routeIs('matrix.index') ? 'bg-white text-[#2D435F]' : ' hover:text-white' }}">
+
+                    <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"
+                        stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke="none" d="M0 0h24v24H0z" />
+                        <path
+                            d="M15 21h-9a3 3 0 0 1 -3 -3v-1h10v2a2 2 0 0 0 4 0v-14a2 2 0 1 1 2 2h-2m2 -4h-11a3 3 0 0 0 -3 3v11" />
+                        <line x1="9" y1="7" x2="13" y2="7" />
+                        <line x1="9" y1="11" x2="13" y2="11" />
+                    </svg>
+                    <span class="ml-4">Training Matrix</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('training-matrix.index') }}"
+                    class="relative flex items-center px-6 py-3 w-full text-sm font-semibold transition-colors duration-150 
+                        {{ request()->routeIs('training-matrix.index') ? 'bg-white text-[#2D435F]' : ' hover:text-white' }}">
+
+                    <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"
+                        stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke="none" d="M0 0h24v24H0z" />
+                        <circle cx="12" cy="12" r="9" />
+                        <path d="M9 12l2 2l4 -4" />
+                    </svg>
+                    <span class="">Production Competency Matrix</span>
+                </a>
+            </li>
         </ul>
 
     </div>
 </aside>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const sidebar = document.getElementById("sidebar");
+        const mainContent = document.getElementById("main-content");
+
+        function updateSidebarState() {
+            let sidebarState = localStorage.getItem("sidebarHidden");
+
+            if (sidebarState === "true") {
+                sidebar.classList.add("-translate-x-64"); // Sidebar disembunyikan
+                mainContent.classList.remove("ml-64"); // Hilangkan margin-left
+            } else {
+                sidebar.classList.remove("-translate-x-64"); // Sidebar ditampilkan
+                mainContent.classList.add("ml-64"); // Tambahkan margin-left
+            }
+        }
+
+        // Setel ulang berdasarkan localStorage
+        updateSidebarState();
+
+        // Dengarkan event dari navbar
+        window.addEventListener("sidebarToggle", updateSidebarState);
+    });
+</script>
 <!-- Mobile sidebar -->
 <!-- Backdrop -->

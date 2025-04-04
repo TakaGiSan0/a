@@ -19,7 +19,7 @@
 
         <!-- Start coding here -->
         <div class="bg-white dark:bg-gray-800 relative shadow-lg sm:rounded-xl overflow-hidden 
-                        border border-gray-200">
+                                                                    border border-gray-200">
             <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                 <div class="w-full md:w-1/2">
                     <form class="flex items-center">
@@ -84,6 +84,21 @@
                         </a>
                     </div>
                 @endif
+                @if (auth()->user()->role == 'Super Admin')
+                    <div
+                        class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+                        <!-- Tombol untuk membuka modal -->
+                        <button id="openModalBtn"
+                            class="flex items-center justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                            <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path clip-rule="evenodd" fill-rule="evenodd"
+                                    d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
+                            </svg>
+                            Job Skill
+                        </button>
+                    </div>
+                @endif
                 <div
                     class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
                     <a href="{{ route('dashboard.create') }}"
@@ -143,7 +158,7 @@
 
                                 <!-- Edit dan Delete Actions -->
                                 <td class="px-4 py-3 flex items-center justify-center space-x-4">
-                                    @if(auth()->user()->role === 'Super Admin' || auth()->user()->department === $rc->user?->department)
+                                    @if(auth()->user()->role === 'Super Admin' || auth()->user()->id === $rc->user_id)
                                         <a href="{{ route('dashboard.edit', $rc->id) }}">
                                             <svg class="h-8 w-8 text-slate-500" width="24" height="24" viewBox="0 0 24 24"
                                                 stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
@@ -168,16 +183,18 @@
                                             </button>
                                         </form>
                                     @endif
-                                    <button type="button" data-modal-target="readProductModal"
-                                        data-modal-toggle="readProductModal" data-id="{{ $rc->id }}"
-                                        class="trigger-modal items-center justify-center over:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
-                                        <svg class="w-8 h-8 flex-shrink-0 text-slate-500" xmlns="http://www.w3.org/2000/svg"
-                                            viewbox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" />
-                                        </svg>
-                                    </button>
+                                    @if(auth()->user()->role === 'Super Admin' || auth()->user()->id === $rc->user_id)
+                                        <button type="button" data-modal-target="readProductModal"
+                                            data-modal-toggle="readProductModal" data-id="{{ $rc->id }}"
+                                            class="trigger-modal items-center justify-center over:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
+                                            <svg class="w-8 h-8 flex-shrink-0 text-slate-500" xmlns="http://www.w3.org/2000/svg"
+                                                viewbox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                                    d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" />
+                                            </svg>
+                                        </button>
+                                    @endif
 
                                 </td>
                             </tr>
@@ -191,6 +208,77 @@
             {{ $training_records->appends(['year' => request('year')])->links() }}
         </div>
     </section>
+
+    <div id="jobSkillModal" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 max-w-2xl w-full">
+            <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4 text-center">Tambah Job Skill</h2>
+
+            <!-- Form untuk Tambah Data -->
+            <form action="{{ route('jobs_skill.store') }}" method="POST">
+                @csrf
+                <div class="overflow-x-auto max-h-96">
+                    <table
+                        class="w-full text-sm text-gray-500 dark:text-gray-400 border border-gray-300 dark:border-gray-600">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+                            <tr>
+                                <th scope="col" class="px-4 py-3 border border-gray-300 dark:border-gray-600">No</th>
+                                <th scope="col" class="px-4 py-3 border border-gray-300 dark:border-gray-600">Skill Code
+                                </th>
+                                <th scope="col" class="px-4 py-3 border border-gray-300 dark:border-gray-600">Job Skill</th>
+                                <th scope="col" class="px-4 py-3 border border-gray-300 dark:border-gray-600">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="jobSkillTableBody"
+                            class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                            @php $no = 0; @endphp
+                            @foreach ($jobskill as $js)
+                                <tr>
+                                    <td class="px-4 py-3 text-center border border-gray-300 dark:border-gray-600">{{ ++$no }}
+                                    </td>
+                                    <td class="px-4 py-3 text-center border border-gray-300 dark:border-gray-600">
+                                        {{ $js->skill_code }}
+                                    </td>
+                                    <td class="px-4 py-3 text-center border border-gray-300 dark:border-gray-600">
+                                        {{ $js->job_skill }}
+                                    </td>
+                                    <td class="px-4 py-3 text-center border border-gray-300 dark:border-gray-600">
+                                        <!-- Form Hapus Ditempatkan di Luar Form Tambah -->
+                                        <form action="{{ route('jobs_skill.destroy', $js->id) }}" method="POST"
+                                            onsubmit="return confirm('Yakin ingin menghapus?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                class="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600">
+                                                Hapus
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Tombol -->
+                <div class="flex justify-end mt-4 space-x-3">
+                    <button type="button" id="addRowBtn"
+                        class="px-4 py-2 bg-blue-300 text-gray-700 rounded-lg hover:bg-blue-400">
+                        +
+                    </button>
+
+                    <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                        Tambah
+                    </button>
+
+                    <button type="button" id="closeModalBtn"
+                        class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400">
+                        Tutup
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
 
 
 
@@ -225,7 +313,7 @@
                 @csrf
                 <div class=" border-gray-200 border-dashed mt-6">
                     <!-- Konten Upload -->
-                    
+
                     <input
                         class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                         id="file_input" type="file" name="file" accept=".xlsx,.xls">
@@ -288,8 +376,8 @@
                         @endphp
 
                         <textarea name="comment" id="comment" cols="30" rows="10" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring bg-white  focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
-                            @if (!$isSuperAdmin) text-gray-400 @endif" @if (!$isSuperAdmin) readonly
-                            @endif>{{ !$isSuperAdmin ? 'Tunggu komentar dari super admin' : old('comment', $comment ?? '') }}</textarea>
+                                                                        @if (!$isSuperAdmin) text-gray-400 @endif" @if (!$isSuperAdmin) readonly
+                                                                        @endif>{{ !$isSuperAdmin ? 'Tunggu komentar dari super admin' : old('comment', $comment ?? '') }}</textarea>
                         @if (Auth::user()->role == 'Super Admin')
                             <div>
                                 <label for="category"
@@ -339,105 +427,152 @@
         </div>
     </div>
 
-@endsection
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const modal = document.getElementById('uploadModal');
-        const openModalButtons = document.querySelectorAll(
-            '.open-modal'); // Sesuaikan tombol untuk membuka modal
-        const closeModalButtons = document.querySelectorAll('.close-modal');
-        // Fungsi untuk membuka modal
-        openModalButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const modal = document.getElementById('uploadModal');
+            const openModalButtons = document.querySelectorAll(
+                '.open-modal'); // Sesuaikan tombol untuk membuka modal
+            const closeModalButtons = document.querySelectorAll('.close-modal');
+            // Fungsi untuk membuka modal
+            openModalButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    modal.classList.remove('hidden');
+                    modal.classList.add('flex');
+                });
+            });
+            // Fungsi untuk menutup modal
+            closeModalButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    modal.classList.add('hidden');
+                });
             });
         });
-        // Fungsi untuk menutup modal
-        closeModalButtons.forEach(button => {
-            button.addEventListener('click', () => {
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('readProductModal');
+            const commentForm = modal.querySelector('form');
+            const commentField = modal.querySelector('#comment');
+            const approvalField = modal.querySelector('#approval');
+            const statusField = modal.querySelector('#status');
+            const attachmentFrame = modal.querySelector('#modal-attachment');
+            const userRole = @json(auth()->user()->role);
+            const editButtons = document.querySelectorAll('.trigger-modal');
+
+            editButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const recordId = button.getAttribute('data-id');
+
+                    // Fetch data dari server
+                    fetch(`/training-record/${recordId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.message) {
+                                alert(data.message); // Jika ada pesan error
+                                return;
+                            }
+
+                            // Set form action
+                            commentForm.action = `/training-record/${recordId}/comment`;
+
+                            // Set field values
+                            if (data.comment) {
+                                commentField.value = data.comment;
+                            } else if (userRole !== 'Super Admin') {
+                                commentField.value = "Tunggu komentar dari Super Admin";
+                            } else {
+                                commentField.value =
+                                    ""; // Kosongkan untuk Super Admin jika tidak ada komentar
+                            }
+                            if (userRole === 'Super Admin') {
+                                approvalField.value = data.approval;
+                                statusField.value = data.status;
+                            }
+                            // Set attachment (PDF)
+                            if (data.attachment) {
+                                attachmentFrame.href = data.attachment;
+                            } else {
+                                attachmentFrame.href = '';
+                                alert('Attachment tidak tersedia.');
+                            }
+
+                            // Show modal
+                            modal.classList.remove('hidden');
+                            modal.classList.add('flex');
+                        })
+                        .catch(error => {
+                            console.error('Error fetching data:', error);
+                            alert('Terjadi kesalahan saat mengambil data.');
+                        });
+                });
+            });
+
+            // Close modal
+            const closeButton = modal.querySelector('[data-modal-hide]');
+            closeButton.addEventListener('click', () => {
                 modal.classList.add('hidden');
             });
         });
-    });
 
-    document.addEventListener('DOMContentLoaded', () => {
-        const modal = document.getElementById('readProductModal');
-        const commentForm = modal.querySelector('form');
-        const commentField = modal.querySelector('#comment');
-        const approvalField = modal.querySelector('#approval');
-        const statusField = modal.querySelector('#status');
-        const attachmentFrame = modal.querySelector('#modal-attachment');
-        const userRole = @json(auth()->user()->role);
-        const editButtons = document.querySelectorAll('.trigger-modal');
 
-        editButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const recordId = button.getAttribute('data-id');
+        function closeModal() {
+            // Menutup modal
+            document.getElementById('readProductModal').classList.add('hidden');
+        }
 
-                // Fetch data dari server
-                fetch(`/training-record/${recordId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.message) {
-                            alert(data.message); // Jika ada pesan error
-                            return;
-                        }
-
-                        // Set form action
-                        commentForm.action = `/training-record/${recordId}/comment`;
-
-                        // Set field values
-                        if (data.comment) {
-                            commentField.value = data.comment;
-                        } else if (userRole !== 'Super Admin') {
-                            commentField.value = "Tunggu komentar dari Super Admin";
-                        } else {
-                            commentField.value =
-                                ""; // Kosongkan untuk Super Admin jika tidak ada komentar
-                        }
-                        if (userRole === 'Super Admin') {
-                            approvalField.value = data.approval;
-                            statusField.value = data.status;
-                        }
-                        // Set attachment (PDF)
-                        if (data.attachment) {
-                            attachmentFrame.href = data.attachment;
-                        } else {
-                            attachmentFrame.href = '';
-                            alert('Attachment tidak tersedia.');
-                        }
-
-                        // Show modal
-                        modal.classList.remove('hidden');
-                        modal.classList.add('flex');
-                    })
-                    .catch(error => {
-                        console.error('Error fetching data:', error);
-                        alert('Terjadi kesalahan saat mengambil data.');
-                    });
+        // Menutup modal
+        document.querySelectorAll('[data-modal-hide="readProductModal"]').forEach(button => {
+            button.addEventListener('click', function () {
+                const modal = document.getElementById('readProductModal');
+                modal.classList.add('hidden');
             });
         });
 
-        // Close modal
-        const closeButton = modal.querySelector('[data-modal-hide]');
-        closeButton.addEventListener('click', () => {
-            modal.classList.add('hidden');
+        document.addEventListener("DOMContentLoaded", function () {
+            const modal = document.getElementById("jobSkillModal");
+            const openModalBtn = document.getElementById("openModalBtn");
+            const closeModalBtn = document.getElementById("closeModalBtn");
+
+            openModalBtn.addEventListener("click", function () {
+                modal.classList.remove("hidden");
+            });
+
+            closeModalBtn.addEventListener("click", function () {
+                modal.classList.add("hidden");
+            });
+
+            // Tutup modal jika klik di luar kontennya
+            window.addEventListener("click", function (event) {
+                if (event.target === modal) {
+                    modal.classList.add("hidden");
+                }
+            });
         });
-    });
+
+        document.getElementById("addRowBtn").addEventListener("click", function () {
+
+            let tableBody = document.getElementById("jobSkillTableBody");
+            console.log(document.getElementById("jobSkillTableBody").innerHTML);
+            if (!tableBody) {
+                console.error("Elemen <tbody> tidak ditemukan!");
+                return;
+            }
+
+            let rowCount = tableBody.getElementsByTagName("tr").length + 1;
 
 
-    function closeModal() {
-        // Menutup modal
-        document.getElementById('readProductModal').classList.add('hidden');
-    }
+            let newRow = document.createElement("tr");
+            newRow.innerHTML = `
+                        <td class="px-4 py-3 text-center border border-gray-300 dark:border-gray-600">${rowCount}</td>
+                        <td class="px-4 py-3 text-center border border-gray-300 dark:border-gray-600">
+                            <input type="text" name="skill_code[]" class="w-full p-2 border rounded">
+                        </td>
+                        <td class="px-4 py-3 text-center border border-gray-300 dark:border-gray-600">
+                            <input type="text" name="job_skill[]" class="w-full p-2 border rounded">
+                        </td>
+                    `;
 
-    // Menutup modal
-    document.querySelectorAll('[data-modal-hide="readProductModal"]').forEach(button => {
-        button.addEventListener('click', function () {
-            const modal = document.getElementById('readProductModal');
-            modal.classList.add('hidden');
+            tableBody.appendChild(newRow);
+
         });
-    });
-</script>
+    </script>
+@endsection

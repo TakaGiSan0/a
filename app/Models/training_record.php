@@ -16,7 +16,7 @@ class training_record extends Model
         'date_start' => 'date',
         'date_end' => 'date',
     ];
-    
+
     protected $fillable = [
         'doc_ref',
         'station',
@@ -48,12 +48,12 @@ class training_record extends Model
     public function pesertas()
     {
         return $this->belongsToMany(Peserta::class, 'hasil_peserta')
-                    ->withPivot('level', 'final_judgement', 'license', 'theory_result', 'practical_result');
+            ->withPivot('level', 'final_judgement', 'license', 'theory_result', 'practical_result');
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function getFormattedDateRangeAttribute()
@@ -64,5 +64,16 @@ class training_record extends Model
         return "{$start} - {$end}";
     }
 
+    public function scopeByUserRole($query, $user)
+    {
+        if ($user->role === 'Super Admin') {
+            return $query;
+        } elseif ($user->role === 'Admin' || $user->role === 'User') {
+            return $query->whereHas('user', function ($q) use ($user) {
+                $q->where('dept', $user->dept);
+            });
+        }
 
+        return $query->where('id', null); // Jika bukan superadmin atau admin, kosongkan data
+    }
 }

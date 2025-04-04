@@ -69,6 +69,7 @@ class TrainingRecordsImport implements ToModel, WithHeadingRow
             'category_id' => $category->id,
             'status' => 'completed',
             'approval' => 'Approved',
+            'user_id' => auth('web')->id(), // Ambil user_id dari session
 
         ]);
 

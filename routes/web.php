@@ -39,14 +39,24 @@ Route::middleware(['auth:web'])->group(function () {
     // Dashboard Employee Training Record
     Route::get('/EmployeeTrainingRecord_list', [EmployeeController::class, 'index'])->name('dashboard.employee');
     Route::get('Training-record/public/employee/{id}', [EmployeeController::class, 'show'])->name('employee.show');
-
+    
     // Dashboard Summary Training Record
     Route::get('/SummaryTrainingRecord_list', [SummaryController::class, 'index'])->name('dashboard.summary');
     Route::get('Training-record/public/summary/{id}', [SummaryController::class, 'show'])->name('summary.show');
 
+    // Dashboard Master Data Employee
+    Route::get('/Employee/dashboard', [PesertaController::class, 'index'])->name('dashboard.peserta');
+
+    // Dashboard Training Matrix
+    Route::get('/matrix/dashboard', [MatrixController::class, 'index'])->name('matrix.index');
+
+    // Dashboard Production Competency Training Matrix
+    Route::get('/training-matrix/dashboard', [TrainingMatrixController::class, 'index'])->name('training-matrix.index');
+    
     // Search SummaryTraining Record
     Route::post('/api/trainings/search', [SummaryController::class, 'search']);
 
+    
     // API download pdf summary
     Route::get('/summary/download/{id}', [SummaryController::class, 'downloadSummaryPdf'])->name('download.summary');
     Route::get('/employee/download/{id}', [EmployeeController::class, 'downloadPdf'])->name('download.employee');
@@ -65,7 +75,6 @@ Route::middleware(['auth', 'role:Super Admin,Admin'])->group(function () {
     
     
     // Crud Peserta
-    Route::get('/Employee/dashboard', [PesertaController::class, 'index'])->name('dashboard.peserta');
     Route::get('/Employee/New_Employee/', [PesertaController::class, 'create'])->name('peserta.create');
     Route::post('/Employee/New_Employee/store', [PesertaController::class, 'store'])->name('peserta.store');
     Route::get('/Employee/edit/{peserta}', [PesertaController::class, 'edit'])->name('peserta.edit');
@@ -100,12 +109,11 @@ Route::middleware(['auth', 'role:Super Admin'])->group(function () {
 
      // Route Export Training Matrix
      Route::get('/training-matrix/export', [ExcelController::class, 'export_training_matrix'])->name('export.training-matrix');
-    
-    
+     
+     
     Route::delete('/index/{id}', [FormController::class, 'destroy'])->name('dashboard.destroy');
     
     // Route Matrix
-    Route::get('/matrix/dashboard', [MatrixController::class, 'index'])->name('matrix.index');
     Route::get('/matrix/{id}', [MatrixController::class, 'show'])->name('matrix.show');
     Route::put('/matrix/update/{id}', [MatrixController::class, 'updateLicense'])->name('matrix.update');
 
@@ -116,9 +124,11 @@ Route::middleware(['auth', 'role:Super Admin'])->group(function () {
     Route::put('/user/update/{user}', [UserController::class, 'update'])->name('user.update');
     
     // Route Training Matrix
-    Route::get('/training-matrix/dashboard', [TrainingMatrixController::class, 'index'])->name('training-matrix.index');
     Route::put('/training-record/{id}/comment', [FormController::class, 'updateComment'])->name('update.comment');
     Route::get('/training-matrix/downloadpdf', [TrainingMatrixController::class, 'downloadpdf'])->name('download.pdf');
 
-    
+    // Route Job Skill
+    Route::post('/job-skill/create', [FormController::class, 'jobs_skill_store'])->name('jobs_skill.store');
+    Route::delete('/job-skill/delete/{id}', [FormController::class, 'jobs_skill_destroy'])->name('jobs_skill.destroy');
+
 });

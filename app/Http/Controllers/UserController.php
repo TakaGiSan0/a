@@ -14,10 +14,14 @@ class UserController extends Controller
     public function index(Request $request)
     {
         // Ambil data user berdasarkan filter pencarian
-        $user = User::select('id', 'name', 'user', 'role', 'department')->paginate(10);
 
         // Ambil role pengguna saat ini
-        $userRole = auth('')->user()->role; // Asumsikan 'role' adalah atribut di tabel users
+        $users = auth('web')->user(); // Asumsikan 'role' adalah atribut di tabel users
+
+        $user = User::byUserRole($users) // Terapkan filter sesuai role & dept
+        ->orderBy('name', 'asc')
+        ->paginate(10);
+        
 
         // Pastikan $message selalu terdefinisi
         $message = $user->isEmpty() ? 'No results found for your search.' : '';
@@ -34,10 +38,11 @@ class UserController extends Controller
      */
     public function create()
     {
-        $userRole = auth('')->user()->role; // Asumsikan 'role' adalah atribut di tabel users
 
         // Pilih view berdasarkan role
-        return view('user.create', )->with('hideSidebar', true);
+        return view('user.create', [
+            'user' => auth('')->user(), // Kirim user yang sedang login
+        ])->with('hideSidebar', true);
     }
 
     /**
@@ -51,7 +56,7 @@ class UserController extends Controller
                 'name' => 'required|string|max:255',
                 'user' => 'required|string|max:255|unique:users,user',
                 'password' => 'required|string|min:8',
-                'department' => 'required|string',
+                'dept' => 'required|string',
             ],
             [
                 'user.unique' => 'User dengan Nama ini sudah ada.',
@@ -62,7 +67,7 @@ class UserController extends Controller
 
         $user->name = $validatedData['name'];
         $user->user = $validatedData['user'];
-        $user->department = $validatedData['department'];
+        $user->dept = $validatedData['dept'];
 
         // Ambil role pengguna saat ini
         $userRole = auth('')->user()->role;
@@ -119,7 +124,7 @@ class UserController extends Controller
                 'user' => 'required|string|max:255',
                 'name' => 'required|string|max:255',
                 'role' => 'required|string|max:255',
-                'department' => 'required|string|max:255',
+                'dept' => 'required|string|max:255',
                 'password' => 'nullable|string|max:255',
             ],
             [],

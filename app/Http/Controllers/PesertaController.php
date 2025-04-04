@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\peserta;
+
 use Illuminate\Http\Request;
 
 
@@ -24,8 +25,13 @@ class PesertaController extends Controller
                 ->orWhere('employee_name', 'like', "%{$searchQuery}%");
         }
 
+        $user = auth('web')->user();
+
         // Ambil data peserta berdasarkan filter pencarian atau seluruh peserta
-        $peserta = $query->select('id', 'badge_no', 'employee_name', 'dept', 'position', 'join_date', 'status', 'category_level')
+        $peserta = $query->with('user:id,name,updated_at') // Memuat relasi user hanya dengan id dan name
+
+            ->byDept()
+            ->select('id', 'badge_no', 'employee_name', 'dept', 'position', 'join_date', 'status', 'category_level', 'user_id')
             ->orderBy('employee_name', 'asc')
             ->paginate(10);
 
@@ -78,6 +84,7 @@ class PesertaController extends Controller
         $peserta->join_date = $validatedData['join_date'];
         $peserta->category_level = $validatedData['category_level'];
         $peserta->position = $validatedData['position'];
+        $peserta->user_id = auth('')->id();
 
         // Simpan data ke database
         $peserta->save();

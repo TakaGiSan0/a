@@ -1,9 +1,9 @@
 {{-- Sidebar Element Employee --}}
 
 <aside id="sidebar"
-class="z-20 w-64 h-full text-white bg-[#2D435F] dark:bg-gray-800 overflow-y-auto transition-transform duration-300 ease-in-out flex inset-y-0 left-0 transform">
-<div class="py-4 text-[#F1F1F1] dark:text-gray-400 text-center">
-    <a class="text-lg font-bold text-white dark:text-gray-200 text-center" href="#">
+    class="z-20 w-64 h-full text-white bg-[#2D435F] dark:bg-gray-800 overflow-y-auto transition-transform duration-300 ease-in-out flex inset-y-0 left-0 transform">
+    <div class="py-4 text-[#F1F1F1] dark:text-gray-400 text-center">
+        <a class="text-lg font-bold text-white dark:text-gray-200 text-center" href="#">
             @auth
                 {{ Auth::user()->role }}
             @endauth
@@ -81,7 +81,35 @@ class="z-20 w-64 h-full text-white bg-[#2D435F] dark:bg-gray-800 overflow-y-auto
                     <span class="ml-4">Employee Training Record</span>
                 </a>
             </li>
+            <li>
+                <a href="{{ route('matrix.index') }}" class="relative flex items-center px-6 py-3 w-full text-sm font-semibold transition-colors duration-150 
+                        {{ request()->routeIs('matrix.index') ? 'bg-white text-[#2D435F]' : ' hover:text-white' }}">
 
+                    <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"
+                        stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke="none" d="M0 0h24v24H0z" />
+                        <path
+                            d="M15 21h-9a3 3 0 0 1 -3 -3v-1h10v2a2 2 0 0 0 4 0v-14a2 2 0 1 1 2 2h-2m2 -4h-11a3 3 0 0 0 -3 3v11" />
+                        <line x1="9" y1="7" x2="13" y2="7" />
+                        <line x1="9" y1="11" x2="13" y2="11" />
+                    </svg>
+                    <span class="ml-4">Training Matrix</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('training-matrix.index') }}"
+                    class="relative flex items-center px-6 py-3 w-full text-sm font-semibold transition-colors duration-150 
+                        {{ request()->routeIs('training-matrix.index') ? 'bg-white text-[#2D435F]' : ' hover:text-white' }}">
+
+                    <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"
+                        stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke="none" d="M0 0h24v24H0z" />
+                        <circle cx="12" cy="12" r="9" />
+                        <path d="M9 12l2 2l4 -4" />
+                    </svg>
+                    <span class="">Production Competency Matrix</span>
+                </a>
+            </li>
         </ul>
 
     </div>

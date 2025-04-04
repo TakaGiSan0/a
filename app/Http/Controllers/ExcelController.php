@@ -20,9 +20,10 @@ class ExcelController extends Controller
             'file' => 'required|file|mimes:xlsx,xls',
         ]);
 
+        $userId = auth('')->id();
 
         // Jalankan import
-        Excel::import(new MasterDataImport, $request->file('file'));
+        Excel::import(new MasterDataImport($userId), $request->file('file'));
 
         return redirect()->back()->with('success', 'Import Data Berhasil!');
     }

@@ -41,9 +41,10 @@
                     @php
                         $pesertaCount = $pesertas -> total();
                     @endphp
-                    <p class="dark:text-[#f1f1f1]">Demand : {{ $pesertaCount }}</p>
+                    <p class="dark:text-gray-200 text-black">Demand : {{ $pesertaCount }}</p>
+                    @if (auth()->user()->role == 'Super Admin')
                     <div
-                        class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+                    class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
                         <a href="{{ route('download.pdf', request()->query()) }}"
                             class="flex items-center justify-center text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800">
                             <svg class="h-4 w-4 mr-2 text-white-500" width="24" height="24" viewBox="0 0 24 24"
@@ -57,6 +58,7 @@
                             Download
                         </a>
                     </div>
+                    @endif
                     <div
                         class="w-full relative md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
 
@@ -109,16 +111,16 @@
                                 <th rowspan="2" class="px-4 py-4 border border-gray-300">Dept</th>
                                 <th colspan="{{ count($allStations) }}" class="px-4 py-2 text-center border border-gray-300">
                                     Station</th>
-                                <th colspan="{{ count($allSkillCode) }}" class="px-4 py-2 text-center border border-gray-300">
+                                <th colspan="" class="px-4 py-2 text-center border border-gray-300">
                                     Skill Code</th>
                             </tr>
                             <tr>
                                 @foreach($allStations as $station)
                                     <th class="px-4 py-2 text-center border border-gray-300">{{ $station }}</th>
                                 @endforeach
-                                @foreach($allSkillCode as $skill)
-                                    <th class="px-4 py-2 text-center border border-gray-300">{{ $skill }}</th>
-                                @endforeach
+                               
+                                    <th class="px-4 py-2 text-center border border-gray-300"></th>
+                              
                             </tr>
                         </thead>
                         <tbody class="text-gray-600 dark:text-gray-200 bg-gray-50 dark:bg-gray-700">
@@ -151,14 +153,12 @@
                                                 @endforeach
 
                                                     {{-- Data untuk Skill Code --}}
-                                                    @foreach ($allSkillCode as $skill)
+                                                  
                     <td class="px-4 py-2 text-center border border-gray-300">
-                        @php
-                            $hasTraining = $peserta->trainingRecords->contains(fn($training) => str_contains($training->skill_code, $skill));
-                        @endphp
-                        {!! $hasTraining ? '<span class="text-green-500">✔</span>' : '-' !!}
+                       
+                        
                     </td>
-                @endforeach
+             
                                                 </tr>
 
                             @endforeach

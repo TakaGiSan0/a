@@ -39,4 +39,17 @@ class hasil_peserta extends Model
         }
         return Carbon::parse($originalExpiredDate)->isPast() && !Carbon::parse($originalExpiredDate)->isToday() ? 'Non Active' : 'Active';
     }
+
+    public function scopeByUserRole($query, $user)
+    {
+        if ($user->role === 'Super Admin') {
+            return $query; // Super Admin bisa melihat semua data
+        } elseif ($user->role === 'Admin' || $user->role === 'User') {
+            return $query->whereHas('trainingrecord.user', function ($q) use ($user) {
+                $q->where('dept', $user->dept); // Filter berdasarkan departemen dari user yang membuat training_record
+            });
+        }
+
+        return $query->where('id', null); // Jika bukan Super Admin/Admin/User, kosongkan data
+    }
 }
