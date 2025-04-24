@@ -100,6 +100,7 @@
                             <th scope="col" class="px-4 py-3">Join Date</th>
                             <th scope="col" class="px-4 py-3">Status</th>
                             <th scope="col" class="px-4 py-3">Category Level</th>
+                            <th scope="col" class="px-4 py-3">Gender</th>
                             <th scope="col" class="px-4 py-3">Last Modified</th>
                             @if (auth()->user()->role == 'Super Admin')
                                 <th scope="col" class="px-4 py-3">Action</th>
@@ -129,6 +130,7 @@
                                     <td class="px-4 py-3">{{ $p->join_date }}</td>
                                     <td class="px-4 py-3">{{ $p->status }}</td>
                                     <td class="px-4 py-3">{{ $p->category_level }}</td>
+                                    <td class="px-4 py-3">{{ $p->gender }}</td>
                                     <td class="px-4 py-3">{{ optional($p->user)->name ?? 'Tidak ada user' }}<br>
                                         {{ $p->user->updated_at }}</td>
 

@@ -41,16 +41,7 @@
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             required>
                     </div>
-                    <div id="trainingNameContainer">
-                        <div class="training-name-input">
-                            <label for="training_name"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                Job Skill</label>
-                            <input type="text" name="job_skill" id="job_skill"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                required>
-                        </div>
-                    </div>
+
 
                     <div><label for="station"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Station</label>
@@ -58,24 +49,27 @@
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             required>
                     </div>
-                    <div class="sm:col-span-2"><label for="description"
+                    <div><label for="station"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Training Name</label>
                         <input type="text" name="training_name" id="training_name"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            required>
+                            required="">
                     </div>
 
-                    <div><label for="skill_code"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Skill
-                            Code</label>
-                        <input type="text" name="skill_code" id="skill_id"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    </div>
+
                     <div><label for="category"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Trainer
                             Name</label>
                         <input type="text" name="trainer_name"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    </div>
+                    <div><label for="training_duration"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Training
+                            Duration (Minute)</label>
+                        <input type="number" id="training_duration" name="training_duration" min="0" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 
+                        focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 
+                        dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="Enter minutes">
                     </div>
                     <div><label for="category"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Training
@@ -89,15 +83,7 @@
                         <input type="date" name="date_end"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     </div>
-                    <div><label for="training_duration"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Training
-                            Duration (Minute)</label>
-                        <input type="number" id="training_duration" name="training_duration" min="0"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 
-                            focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 
-                            dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter minutes">
-
-                    </div>
+                    
                     <div><label for="category"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Training
                             Category</label>
@@ -115,6 +101,18 @@
                             required>
                     </div>
 
+
+                </div>
+                <div class="grid gap-4 mb-2 sm:grid-cols-2">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-900 dark:text-white">Skill Code</label>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-900 dark:text-white">Job Skill</label>
+                    </div>
+                </div>
+                <div id="skill-wrapper">
+                    <!-- Baris input pertama bisa ditambahkan di sini jika mau -->
                 </div>
                 <div id="participants-container" class="mt-0">
                     <div class="participant-row" id="participant_1">
@@ -183,6 +181,16 @@
                                 clip-rule="evenodd" />
                         </svg>
                         Add Participants
+                    </button>
+                    <button type="button" id="add-skill"
+                        class="text-white inline-flex justify-center items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mx-3">
+                        <svg class="mr-1 -ml-1 w-6 h-6" fill="currentColor" viewbox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        Add Skill Code
                     </button>
                     @if (session('success'))
                         <div class="alert alert-success">
@@ -311,7 +319,51 @@
             hiddenInput.value = checkbox.checked ? "1" : "0";
         });
 
+        $('#add-skill').on('click', function () {
+            const newRow = `
+        <div class="training-row grid gap-4 mb-4 sm:grid-cols-2">
+            <div>
+                <input type="text" name="skill_codes[]"
+                    class="skill_code_input bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
+                    focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 
+                    dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                    required>
+            </div>
 
+            <div>
+                <input type="text" name="job_skill[]"
+                    class="job_skill_input bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
+                    focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 
+                    dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                    readonly>
+            </div>
+        </div>
+    `;
+            $('#skill-wrapper').append(newRow);
+        });
+
+
+        $(document).on('keypress', '.skill_code_input', function (e) {
+            if (e.which == 13) {
+                e.preventDefault();
+
+                let $this = $(this); // input skill_code yang sedang aktif
+                let skillCode = $this.val();
+                let $row = $this.closest('.training-row'); // ambil parent barisnya
+
+                $.ajax({
+                    url: '/get-job-skill/' + encodeURIComponent(skillCode),
+                    type: 'GET',
+                    success: function (data) {
+                        // hanya update input di dalam baris yang aktif
+                        $row.find('.job_skill_input').val(data.job_skill);
+                    },
+                    error: function () {
+                        $row.find('.job_skill_input').val('Tidak ditemukan');
+                    }
+                });
+            }
+        });
     </script>
 
 </body>

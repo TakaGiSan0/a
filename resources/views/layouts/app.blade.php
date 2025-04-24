@@ -14,13 +14,13 @@
     <script>
         // Cek theme dari localStorage
         if (localStorage.getItem("theme") === "dark") {
-                document.documentElement.classList.add("dark");
-            } else {
-                document.documentElement.classList.remove("dark");
-            }
-            updateThemeButton();
+            document.documentElement.classList.add("dark");
+        } else {
+            document.documentElement.classList.remove("dark");
+        }
+        updateThemeButton();
 
-        
+
     </script>
 </head>
 
@@ -40,11 +40,11 @@
         @endif
 
         <!-- Main Content -->
-        <div id="main-content" class="flex-1 transition-all duration-300 ml-64 bg-gray-100 dark:bg-gray-400">
+        <div id="main-content" class="flex-1 transition-all duration-300 ml-0 md:ml-64 bg-gray-100 dark:bg-gray-400">
             @include('layouts.navbar')
 
             <div class="flex-1 p-4 bg-gray-100 dark:bg-gray-400">
-                <div class="overflow-x-auto shadow-md ">
+                <div class="overflow-x-auto shadow-md">
                     @yield('content')
                 </div>
             </div>

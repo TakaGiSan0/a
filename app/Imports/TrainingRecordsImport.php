@@ -6,9 +6,13 @@ use App\Models\Training_Record;
 use App\Models\Peserta;
 use App\Models\Category;
 use App\Models\Hasil_Peserta;
+use App\Models\training_comment;
+use App\Models\training_skill;
+use App\Models\trainingskillrecord;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use DateTime;
+use Illuminate\Support\Facades\Log;
 
 class TrainingRecordsImport implements ToModel, WithHeadingRow
 {
@@ -27,6 +31,7 @@ class TrainingRecordsImport implements ToModel, WithHeadingRow
      */
     public function model(array $row)
     {
+
         if (!empty($row['training_category'])) {
             $category = Category::firstOrCreate(['name' => $row['training_category']], ['id' => $this->getCategoryId($row['training_category'])]);
         } else {
@@ -35,12 +40,10 @@ class TrainingRecordsImport implements ToModel, WithHeadingRow
         }
 
         if (is_numeric($row['training_date'])) {
-            // Jika format angka (Excel date)
             $trainingDate = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['training_date']);
             $formattedDateStart = $trainingDate->format('Y-m-d');
             $formattedDateEnd = $trainingDate->format('Y-m-d');
         } else {
-            // Jika format teks seperti '18 Mar-15 Apr 2021' atau '28-30 Dec 20'
             $dates = $this->parseDateRange($row['training_date']);
             $formattedDateStart = $dates['start'];
             $formattedDateEnd = $dates['end'];
@@ -54,39 +57,45 @@ class TrainingRecordsImport implements ToModel, WithHeadingRow
         if (!$peserta) {
             return; // Abaikan dan tidak melakukan apa-apa
         }
-        
+
         // Tambahkan data training_record jika belum ada
         $trainingRecord = Training_Record::firstOrCreate([
             'doc_ref' => $row['doc_ref'],
             'rev' => $row['rev'],
             'training_name' => $row['training_name'],
             'station' => $row['station'],
-            'job_skill' => $row['job_skill'],
-            'skill_code' => $row['skill_code'],
             'date_start' => $formattedDateStart,
             'date_end' => $formattedDateEnd,
             'trainer_name' => $row['trainer_name'],
             'category_id' => $category->id,
             'status' => 'completed',
-            'approval' => 'Approved',
             'user_id' => auth('web')->id(), // Ambil user_id dari session
 
         ]);
-
-        
-      
-
         // Tambahkan data ke tabel pivot hasil_peserta
         // Buat record di tabel pivot hasil_peserta
-        Hasil_Peserta::create([
+        Hasil_Peserta::firstOrCreate([
             'training_record_id' => $trainingRecord->id,
             'peserta_id' => $peserta->id,
             'theory_result' => $row['theory_result'],
             'practical_result' => $row['practical_result'],
             'level' => $row['level'],
             'final_judgement' => $row['final_judgement'],
-            'license' => (!empty($row['license']) && $row['license'] == ['✔', '☑']) ? 1 : 0,
+            'license' => (!empty($row['license']) && $row['license'] == ['✔', '☑']) ? '1' : '0',
+        ]);
 
+        training_comment::firstOrCreate([
+            'training_record_id' => $trainingRecord->id,
+            'approval' => 'Approved',
+        ]);
+
+        $trainingskill = training_skill::firstOrCreate([
+            'skill_code' => $row['skill_code'],
+            'job_skill' => $row['job_skill'],
+        ]);
+        trainingskillrecord::firstOrCreate([
+            'training_record_id' => $trainingRecord->id,
+            'training_skill_id' => $trainingskill->id,
         ]);
     }
 
@@ -112,30 +121,70 @@ class TrainingRecordsImport implements ToModel, WithHeadingRow
         }
     }
 
+   
     private function parseDateRange($dateRange)
-{
-    // Ambil tahun dari string (jika ada)
-    preg_match('/\d{4}/', $dateRange, $yearMatch);
-    $year = $yearMatch[0] ?? date('Y');
+    {
+        // Tangkap tahun dari akhir string (bisa 2 atau 4 digit)
+        preg_match('/(\d{2,4})$/', $dateRange, $yearMatch);
+        $year = $yearMatch[1] ?? date('Y');
 
-    // Ambil dua bagian tanggal (start-end)
-    $parts = preg_split('/[-–]/', $dateRange);
-    $startPart = trim($parts[0]);
-    $endPart = trim($parts[1] ?? $startPart);
+        // Ubah 2 digit tahun menjadi 4 digit (misal: 20 → 2020)
+        if (strlen($year) == 2) {
+            $year = (intval($year) > 30) ? "19$year" : "20$year";
+        }
 
-    // Format start date
-    $startDate = DateTime::createFromFormat('d M Y', "$startPart $year") 
-                  ?? DateTime::createFromFormat('d/m/Y', "$startPart/$year") 
-                  ?? DateTime::createFromFormat('d M y', "$startPart $year");
+        // Hilangkan tahun dari string agar bisa fokus ke tanggal
+        $dateRange = str_replace($yearMatch[0], '', $dateRange);
 
-    // Coba format end date
-    $endDate = DateTime::createFromFormat('d M Y', "$endPart $year") 
-                ?? DateTime::createFromFormat('d/m/Y', "$endPart/$year") 
-                ?? DateTime::createFromFormat('d M y', "$endPart $year");
+        // Pisahkan tanggal awal dan akhir
+        $parts = preg_split('/[-–]/', $dateRange);
+        $startPart = trim($parts[0] ?? '');
+        $endPart = trim($parts[1] ?? $startPart);
 
-    return [
-        'start' => $startDate ? $startDate->format('Y-m-d') : '1970-01-01',
-        'end' => $endDate ? $endDate->format('Y-m-d') : '1970-01-01',
-    ];
-}
+        // Ambil bulan dari bagian akhir (biasanya ada bulan di sana)
+        preg_match('/[A-Za-z]{3,}/', $endPart, $monthMatch);
+        $month = $monthMatch[0] ?? '';
+
+        // Jika bulan tidak ada di end, ambil dari start
+        if (!$month) {
+            preg_match('/[A-Za-z]{3,}/', $startPart, $monthMatch);
+            $month = $monthMatch[0] ?? '';
+        }
+
+        // Ambil tanggal dari start dan end
+        preg_match('/\d{1,2}/', $startPart, $dayStartMatch);
+        preg_match('/\d{1,2}/', $endPart, $dayEndMatch);
+
+        $dayStart = $dayStartMatch[0] ?? '01';
+        $dayEnd = $dayEndMatch[0] ?? '01';
+
+        // Handle kasus "31–4 Apr 2023", 31 dianggap bulan sebelumnya
+        $startMonth = $month;
+        if ((int)$dayStart > 28 && (int)$dayEnd <= 12) {
+            // Misalnya: 31–4 Apr → start date dianggap bulan sebelumnya
+            $startMonth = date('M', strtotime("-1 month", strtotime("1 $month $year")));
+        }
+
+        // Buat objek DateTime
+        $startDate = DateTime::createFromFormat('j M Y', "$dayStart $startMonth $year");
+        $endDate = DateTime::createFromFormat('j M Y', "$dayEnd $month $year");
+
+        return [
+            'start' => $startDate ? $startDate->format('Y-m-d') : '1970-01-01',
+            'end' => $endDate ? $endDate->format('Y-m-d') : '1970-01-01',
+        ];
+    }
+
+
+
+    private function getPreviousMonthAbbreviation($monthAbbrev)
+    {
+        try {
+            $date = \DateTime::createFromFormat('M', $monthAbbrev);
+            $date->modify('-1 month');
+            return $date->format('M'); // Mengembalikan bulan sebelumnya
+        } catch (\Exception $e) {
+            return $monthAbbrev;
+        }
+    }
 }

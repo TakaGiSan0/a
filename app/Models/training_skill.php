@@ -17,8 +17,8 @@ class training_skill extends Model
         'skill_code',
     ];
 
-    public function training()
+    public function training_records()
     {
-        return $this->belongsTo(Training_Record::class, 'training_record_id');
+        return $this->belongsToMany(Training_Record::class);
     }
 }

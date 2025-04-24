@@ -29,9 +29,8 @@ class PesertaController extends Controller
 
         // Ambil data peserta berdasarkan filter pencarian atau seluruh peserta
         $peserta = $query->with('user:id,name,updated_at') // Memuat relasi user hanya dengan id dan name
-
             ->byDept()
-            ->select('id', 'badge_no', 'employee_name', 'dept', 'position', 'join_date', 'status', 'category_level', 'user_id')
+            ->select('id', 'badge_no', 'employee_name', 'dept', 'position', 'join_date', 'status', 'category_level','gender', 'user_id')
             ->orderBy('employee_name', 'asc')
             ->paginate(10);
 

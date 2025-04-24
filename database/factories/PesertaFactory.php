@@ -33,6 +33,7 @@ class PesertaFactory extends Factory
             ]),
             'created_at' => now(),
             'join_date' => $this->faker->date,
+            'gender' => $this->faker->randomElement(['Male', 'Female']),
             'status' => $this->faker->randomElement(['Active', 'Non Active']),
             'category_level' => $this->faker->randomElement(['Contractor', 'Permanent']),
             'user_id' => $user->id, // Gunakan user_id yang diambil

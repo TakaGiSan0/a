@@ -14,8 +14,8 @@
 
     <div class="bg-gray-100 dark:bg-gray-800 transition-colors duration-300">
         <div class="container mx-auto p-4">
-            <form id="autoSaveForm" class="space-y-4 dark:bg-gray-700 dark:text-white" action="{{ route('dashboard.update', $trainingRecord->id) }}"
-                method="POST">
+            <form id="autoSaveForm" class="space-y-4" action="{{ route('dashboard.update', $trainingRecord->id) }}"
+                method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
@@ -43,36 +43,18 @@
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             required="">
                     </div>
-                    <div id="trainingNameContainer">
-                        <div class="training-name-input">
-                            <label for="training_name"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Job Skill
-                            </label>
-                            <input type="text" id="job_skill" name="job_skill" value="{{ $trainingRecord->job_skill }}"
-                                required
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                required="">
-                        </div>
-                    </div>
-
                     <div><label for="station"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Station</label>
                         <input type="text" name="station" id="station" value="{{ $trainingRecord->station }}"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             required="">
                     </div>
-                    <div class="sm:col-span-2"><label for="description"
+                    <div><label for="station"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Training Name</label>
                         <input type="text" name="training_name" id="training_name"
                             value="{{ $trainingRecord->training_name }}"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:pPlaceholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             required="">
-                    </div>
-                    <div><label for="skill_code"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Skill
-                            Code</label>
-                        <input type="text" name="skill_code" id="skill_code" value="{{ $trainingRecord->skill_code }}"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     </div>
                     <div><label for="category"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Trainer
@@ -82,20 +64,6 @@
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="John Doe">
                     </div>
-                    <div><label for="category"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Training
-                            Start</label>
-                        <input type="date" name="date_start" id="date_start" value="{{ $trainingRecord->date_start }}"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="17 Desember 2021">
-                    </div>
-                    <div><label for="category"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Training
-                            End</label>
-                        <input type="date" name="date_end" id="date_end" value="{{ $trainingRecord->date_end }}"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="17 Desember 2021">
-                    </div>
                     <div>
                         <div>
                             <label for="training_duration"
@@ -103,7 +71,6 @@
                                 Training Duration (Minute)
                             </label>
 
-                            <!-- Input untuk menampilkan nilai dalam menit -->
                             <input type="number" id="training_duration" name="training_duration" min="1"
                                 value="{{ old('training_duration', $formattedTime) }}"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 
@@ -112,17 +79,82 @@
                         </div>
                     </div>
                     <div><label for="category"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Training
+                        Start</label>
+                    <input type="date" name="date_start" id="date_start"
+                        value="{{ $trainingRecord->date_start->format('Y-m-d') }}"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                </div>
+                    <div><label for="category"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Training
+                            End</label>
+                        <input type="date" name="date_end" id="date_end"
+                            value="{{ $trainingRecord->date_end->format('Y-m-d') }}"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    </div>
+                    
+                    <div><label for="category"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Training
                             Category</label>
                         <select id="category" name="category_id" id="category_id_1"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                             @foreach ($categories as $category)
                                 <option value="{{ $category->id }}" {{ $trainingRecord->category_id == $category->id ? 'selected' : '' }}>
-                                    {{ $category->name }} <!-- Sesuaikan dengan nama kolom yang diinginkan -->
+                                    {{ $category->name }}
                                 </option>
                             @endforeach
                         </select>
                     </div>
+                    <div>
+                        <label for="attachment"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Attachment</label>
+
+                        @php
+                            $fileName = $trainingRecord->attachment ? basename($trainingRecord->attachment) : null;
+                        @endphp
+
+
+                        <input type="file" name="attachment" id="attachment" accept=".pdf"
+                            class="mt-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <span class="text-sm text-gray-500">
+                            {{ $fileName ? "Sebelumnya: $fileName" : 'Attachment tidak ada' }}
+                        </span>
+                    </div>
+
+                </div>
+
+                <div class="grid gap-4 mb-2 sm:grid-cols-2">
+                    <div>
+                        <label for="training_name"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Skill Code
+                        </label>
+
+                    </div>
+                    <div class="training-name-input">
+                        <label for="training_name"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Job Skill
+                        </label>
+
+                    </div>
+                </div>
+                @foreach ($trainingRecord->training_skills as $skill)
+                    <div class="grid gap-4 mb-2 sm:grid-cols-2">
+                        <div>
+                            <input type="text" id="job_skill" name="skill_codes[]" value="{{ $skill->skill_code }}"
+                                class="skill_code_input bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                required>
+                        </div>
+                        <div>
+                            <input type="text" id="job_skill" name="job_skill[]" value="{{ $skill->job_skill }}"
+                                class="job_skill_input bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                readonly>
+                        </div>
+
+                    </div>
+                @endforeach
+
+                <div id="skill-wrapper">
+                    <!-- Baris input pertama bisa ditambahkan di sini jika mau -->
                 </div>
                 <div id="participants-container">
 
@@ -267,6 +299,16 @@
                 </svg>
                 Add Participants
             </button>
+            <button type="button" id="add-skill"
+                class="text-white inline-flex justify-center items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mx-3">
+                <svg class="mr-1 -ml-1 w-6 h-6" fill="currentColor" viewbox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                        d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                        clip-rule="evenodd" />
+                </svg>
+                Add Skill Code
+            </button>
         </div>
         </form>
     </div>
@@ -394,6 +436,52 @@
             container.appendChild(newRow);
             hiddenInput.value = checkbox.checked ? "1" : "0";
         });
+
+        $('#add-skill').on('click', function () {
+            const newRow = `
+        <div class="training-row grid gap-4 mb-4 sm:grid-cols-2">
+            <div>
+                <input type="text" name="skill_codes[]"
+                    class="skill_code_input bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
+                    focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 
+                    dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                    required>
+            </div>
+
+            <div>
+                <input type="text" name="job_skill[]"
+                    class="job_skill_input bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
+                    focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 
+                    dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                    readonly>
+            </div>
+        </div>
+    `;
+            $('#skill-wrapper').append(newRow);
+        });
+
+        $(document).on('keypress', '.skill_code_input', function (e) {
+            if (e.which == 13) {
+                e.preventDefault();
+
+                let $this = $(this); // input skill_code yang sedang aktif
+                let skillCode = $this.val();
+                let $row = $this.closest('.training-row'); // ambil parent barisnya
+
+                $.ajax({
+                    url: '/get-job-skill/' + encodeURIComponent(skillCode),
+                    type: 'GET',
+                    success: function (data) {
+                        // hanya update input di dalam baris yang aktif
+                        $row.find('.job_skill_input').val(data.job_skill);
+                    },
+                    error: function () {
+                        $row.find('.job_skill_input').val('Tidak ditemukan');
+                    }
+                });
+            }
+        });
+
 
         function convertTimeToMinutes(timeString) {
             if (!timeString) return '';

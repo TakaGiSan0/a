@@ -5,6 +5,7 @@ namespace App\Imports;
 use App\Models\Peserta;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 use DateTime;
 
@@ -22,6 +23,12 @@ class MasterDataImport implements ToModel, WithStartRow
 
     protected $userId;
 
+    public function collection(Collection $rows)
+{
+    foreach ($rows as $index => $row) {
+        Log::info("Baris ke-{$index}", $row->toArray());
+    }
+}
     public function __construct($userId)
     {
         $this->userId = $userId;
@@ -36,9 +43,10 @@ class MasterDataImport implements ToModel, WithStartRow
         Log::info("Peserta dengan badge_no {$row[0]} sudah ada. Data di-skip.");
         return null;
     }
+    
 
     // Konversi join_date
-    $formattedDate = $this->formatJoinDate($row[4]);
+    $formattedDate = $this->formatJoinDate($row[2]);
 
     if (!$formattedDate) {
         Log::warning("Tanggal join_date tidak valid untuk badge_no {$row[0]}: {$row[4]}");
@@ -48,11 +56,12 @@ class MasterDataImport implements ToModel, WithStartRow
     return new Peserta([
         'badge_no' => $row[0],
         'employee_name' => $row[1],
-        'dept' => $row[2],
-        'position' => $row[3],
+        'dept' => $row[3],
+        'position' => $row[4],
         'join_date' => $formattedDate,
         'category_level' => $row[5],
         'status' => 'Active',
+        'gender' => $row[6],
         'user_id' => $this->userId, // Ambil user_id dari auth
     ]);
 }

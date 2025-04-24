@@ -247,12 +247,12 @@
                     <div class="grid grid-cols-2 text-left px-9 m-5 text-black dark:text-white">
                         <h3>Training Name: ${record.training_name}</h3>
                         <p>Doc Ref: ${record.doc_ref}</p>
-                        <p>Job Skill: ${record.job_skill}</p>
                         <p>Trainer Name: ${record.trainer_name}</p>
                         <p>Rev: ${record.rev}</p>
                         <p>Station: ${record.station}</p>
-                        <p>Skill Code: ${record.skill_code}</p>
                         <p>Training Date: ${record.date_formatted ?? '-'}</p>
+                         <p>Skill Code: <br> ${record.skills.map(skill => skill.skill_code).join('<br> ') || '-'}</p>
+                          <p>Job Skill: <br> ${record.skills.map(skill => skill.job_skill).join('<br> ') || '-'}</p>
                     </div>
                         
                         <table class="w-full text-sm text-center text-gray-500 dark:text-gray-400">

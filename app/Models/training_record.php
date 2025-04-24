@@ -22,10 +22,8 @@ class training_record extends Model
         'station',
         'category_id',
         'training_name',
-        'job_skill',
         'trainer_name',
         'rev',
-        'skill_code',
         'date_start',
         'date_end',
         'training_duration',
@@ -34,6 +32,7 @@ class training_record extends Model
         'comment',
         'attachment',
         'user_id',
+        'training_skill_id',
     ];
 
     public function trainingCategory()
@@ -54,6 +53,33 @@ class training_record extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function training_skills()
+    {
+        return $this->belongsToMany(Training_Skill::class);
+    }
+
+    public function training_skill_record()
+{
+    return $this->hasMany(Trainingskillrecord::class, 'training_record_id');
+}
+
+    public function comments()
+    {
+        return $this->hasMany(training_comment::class, 'training_record_id');
+    }
+
+    public function latestComment()
+    {
+        return $this->hasOne(training_comment::class)
+            ->select(
+                'comment_training.id',
+                'comment_training.training_record_id',
+                'comment_training.approval',
+                'comment_training.created_at'
+            )
+            ->latestOfMany();
     }
 
     public function getFormattedDateRangeAttribute()

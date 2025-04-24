@@ -16,43 +16,52 @@ class TrainingRecordExport implements FromCollection, WithHeadings
      * @return \Illuminate\Support\Collection
      */
     public function collection()
-{
-    $data = Training_Record::with(['hasil_Peserta.pesertas', 'trainingCategory'])
-        ->orderBy('date_start', 'desc')
-        ->get()
-        ->flatMap(function ($record) {
-            return $record->hasil_Peserta->map(function ($hasil) use ($record) {
-                return [
-                    'No'               => 0,
-                    'doc_ref'          => $record->doc_ref,
-                    'rev'              => $record->rev,
-                    'training_name'    => $record->training_name,
-                    'station'          => $record->station,
-                    'job_skill'        => $record->job_skill,
-                    'skill_code'       => $record->skill_code,
-                    'badge_no'         => $hasil->pesertas->badge_no ?? '',
-                    'employee_name'    => $hasil->pesertas->employee_name ?? '',
-                    'dept'             => $hasil->pesertas->dept ?? '',
-                    'position'         => $hasil->pesertas->position ?? '',
-                    'date_start'    => $record->getFormattedDateRangeAttribute(), // Gunakan accessor
-                    'trainer_name'     => $record->trainer_name,
-                    'theory_result'    => $hasil->theory_result,
-                    'practical_result' => $hasil->practical_result,
-                    'level'            => $hasil->level,
-                    'final_judgement'  => $hasil->final_judgement,
-                    'category_name'    => $record->category->name ?? '',
-                    'license'          => $hasil->license == 1 ? '☑' : '☐',
-                ];
+    {
+        $data = Training_Record::with([
+            'hasil_Peserta.pesertas',
+            'trainingCategory',
+            'training_skill_record.training_skill'
+        ])
+            ->orderBy('date_start', 'desc')
+            ->get()
+            ->flatMap(function ($record) {
+                return $record->hasil_Peserta->map(function ($hasil) use ($record) {
+                    // Ambil semua skill yang terkait dari pivot
+                    $skillCodes = $record->training_skill_record->pluck('training_skill.skill_code')->filter()->unique()->implode(', ');
+                    $jobSkills = $record->training_skill_record->pluck('training_skill.job_skill')->filter()->unique()->implode(', ');
+
+                    return [
+                        'No'               => 0,
+                        'doc_ref'          => $record->doc_ref,
+                        'rev'              => $record->rev,
+                        'training_name'    => $record->training_name,
+                        'station'          => $record->station,
+                        'job_skill'        => $jobSkills ?? '-',
+                        'skill_code'       => $skillCodes ?? '-',
+                        'badge_no'         => $hasil->pesertas->badge_no ?? '-',
+                        'employee_name'    => $hasil->pesertas->employee_name ?? '-',
+                        'dept'             => $hasil->pesertas->dept ?? '-',
+                        'position'         => $hasil->pesertas->position ?? '-',
+                        'training_date'    => $this->formatTrainingDate($record->date_start, $record->date_end),
+                        'trainer_name'     => $record->trainer_name,
+                        'theory_result'    => $hasil->theory_result,
+                        'practical_result' => $hasil->practical_result,
+                        'level'            => $hasil->level,
+                        'final_judgement'  => $hasil->final_judgement,
+                        'category_name'    => $record->trainingCategory->name ?? '-',
+                        'license'          => $hasil->license == 1 ? '☑' : '☐',
+                    ];
+                });
             });
-        });
+
 
         $data = $data->map(function ($item, $key) {
             $item['No'] = $key + 1;
             return $item;
         });
 
-    return collect($data);
-}
+        return collect($data);
+    }
 
 
 
@@ -86,4 +95,33 @@ class TrainingRecordExport implements FromCollection, WithHeadings
             'License',
         ];
     }
+
+    private function formatTrainingDate($start, $end)
+{
+    $start = \Carbon\Carbon::parse($start);
+    $end = \Carbon\Carbon::parse($end);
+
+    $startDay = $start->format('j');
+    $startMonth = strtolower($start->format('M'));
+    $startYear = $start->format('y');
+
+    $endDay = $end->format('j');
+    $endMonth = strtolower($end->format('M'));
+    $endYear = $end->format('y');
+
+    // Jika tanggal sama persis
+    if ($start->equalTo($end)) {
+        return "{$startDay} {$startMonth} {$startYear}";
+    }
+
+    // Jika bulan dan tahun sama
+    if ($start->format('M Y') === $end->format('M Y')) {
+        return "{$startDay}-{$endDay} {$startMonth} {$startYear}";
+    }
+
+    // Jika bulan atau tahun beda
+    return "{$startDay} {$startMonth} - {$endDay} {$endMonth} {$endYear}";
+}
+
+    
 }

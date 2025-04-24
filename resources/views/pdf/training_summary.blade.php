@@ -12,27 +12,30 @@
         }
 
         .header {
-        display: flex;
-        align-items: center;
-        margin-bottom: 20px; /* Jarak bawah header */
-    }
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            /* Jarak bawah header */
+        }
 
         .header h1 {
-        flex-grow: 1; /* Agar judul tetap di tengah */
-        text-align: center;
-        margin: 0; /* Hilangkan margin default */
-    }
+            flex-grow: 1;
+            /* Agar judul tetap di tengah */
+            text-align: center;
+            margin: 0;
+            /* Hilangkan margin default */
+        }
 
         .content {
-        width: 100%;
-    }
+            width: 100%;
+        }
 
         /* Flexbox styling untuk summary section */
         .summary-section {
-        margin-bottom: 20px;
-        border-collapse: collapse;
-        text-align: left;
-    }
+            margin-bottom: 20px;
+            border-collapse: collapse;
+            text-align: left;
+        }
 
         .summary-item {
             width: 48%;
@@ -55,15 +58,20 @@
         }
 
         table {
-        width: 100%;
-        border-collapse: collapse; /* Menghilangkan garis antar sel */
-    }
+            width: 100%;
+            border-collapse: collapse;
+            /* Menghilangkan garis antar sel */
+        }
 
-    td, th {
-        text-align: left; /* Mengatur teks agar berada di kiri */
-        padding: 8px; /* Menambahkan padding untuk spasi antar teks */
-        border: none; /* Menghilangkan garis tabel */
-    }
+        td,
+        th {
+            text-align: left;
+            /* Mengatur teks agar berada di kiri */
+            padding: 8px;
+            /* Menambahkan padding untuk spasi antar teks */
+            border: none;
+            /* Menghilangkan garis tabel */
+        }
 
         table th,
         table td {
@@ -77,20 +85,20 @@
         }
 
         .event-number {
-       text-align: center
-        font-size: 14px; /* Ukuran teks event number */
-    }
+            text-align: center font-size: 14px;
+            /* Ukuran teks event number */
+        }
     </style>
 </head>
 
 <body>
     <div class="header">
-        
+
         <h1>Summary Training Record</h1>
         <div class="event-number" style="text-align: center; font-size: 14px;">
             Event Number : TR-{{ $no }}
         </div>
-        
+
     </div>
 
     <div class="content">
@@ -99,21 +107,35 @@
             <tr>
                 <td width="50%">
                     <strong>Training Name:</strong> {{ $training_name }} <br>
-                    <strong>Job Skill:</strong> {{ $job_skill }} <br>
                     <strong>Station:</strong> {{ $station }} <br>
-                    <strong>Skill Code:</strong> {{ $skill_code }} <br>
                     <strong>Training Category:</strong> {{ $training_category }} <br>
+                    <strong>Rev:</strong> {{ $rev }} <br>
                 </td>
                 <td width="50%">
-                    <strong>Rev:</strong> {{ $rev }} <br>
                     <strong>Trainer Name:</strong> {{ $trainer_name }} <br>
                     <strong>Training Date:</strong> {{ $date_range }}<br>
                     <strong>Doc Ref:</strong> {{ $doc_ref }} <br>
                     <strong>Training Duration:</strong> {{ $training_duration }} Minute<br>
                 </td>
             </tr>
+
+            <tr>
+                <td width="50%">
+                    <strong>Skill Code:</strong>
+                    @foreach ($skills as $skill)
+                      <BR> {{ $skill['skill_code'] }}
+                    @endforeach
+
+                </td>
+                <td width="50%">
+                    <strong>Job Skill:</strong>
+                    @foreach ($skills as $skill)
+                    <BR> {{ $skill['job_skill'] }}
+                    @endforeach
+                </td>
+            </tr>
         </table>
-    
+
         <!-- Table untuk Participants -->
         <table>
             <thead>

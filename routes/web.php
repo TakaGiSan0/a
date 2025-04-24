@@ -84,6 +84,9 @@ Route::middleware(['auth', 'role:Super Admin,Admin'])->group(function () {
     
     // API Search Peserta Form
     Route::get('/participants/{badgeNo}', [PesertaController::class, 'getParticipantByBadgeNo']);
+
+    Route::get('/get-job-skill/{skillCode}', [FormController::class, 'getJobSkill']);
+
     
     Route::get('/training-record/{id}', [FormController::class, 'show'])->name('dashboard.show');
     Route::get('/user/create', [UserController::class, 'create'])->name('user.create');

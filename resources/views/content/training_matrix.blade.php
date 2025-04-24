@@ -111,16 +111,16 @@
                                 <th rowspan="2" class="px-4 py-4 border border-gray-300">Dept</th>
                                 <th colspan="{{ count($allStations) }}" class="px-4 py-2 text-center border border-gray-300">
                                     Station</th>
-                                <th colspan="" class="px-4 py-2 text-center border border-gray-300">
+                                <th colspan="{{ count($allSkills) }}" class="px-4 py-2 text-center border border-gray-300">
                                     Skill Code</th>
                             </tr>
                             <tr>
                                 @foreach($allStations as $station)
                                     <th class="px-4 py-2 text-center border border-gray-300">{{ $station }}</th>
                                 @endforeach
-                               
-                                    <th class="px-4 py-2 text-center border border-gray-300"></th>
-                              
+                               @foreach ($allSkills as $skills )
+                               <th class="px-4 py-2 text-center border border-gray-300">{{ $skills }}</th>
+                               @endforeach
                             </tr>
                         </thead>
                         <tbody class="text-gray-600 dark:text-gray-200 bg-gray-50 dark:bg-gray-700">
@@ -152,13 +152,21 @@
                                                     </td>
                                                 @endforeach
 
-                                                    {{-- Data untuk Skill Code --}}
-                                                  
-                    <td class="px-4 py-2 text-center border border-gray-300">
-                       
-                        
-                    </td>
-             
+                                                @foreach ($allSkill as $skill)
+    <td class="px-4 py-2 text-center border border-gray-300">
+        @php
+      
+            $trainingRecordIds = $peserta->trainingRecords->pluck('id')->toArray();
+
+         
+            $pernahIkut = \App\Models\TrainingSkillRecord::whereIn('training_record_id', $trainingRecordIds)
+                ->where('training_skill_id', $skill->id)
+                ->exists();
+        @endphp
+
+        {{ $pernahIkut ? '✔️' : '-' }}
+    </td>
+@endforeach
                                                 </tr>
 
                             @endforeach

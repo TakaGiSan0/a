@@ -67,11 +67,9 @@ class EmployeeController extends Controller
              'training_records.id as training_id', // Alias untuk menghindari ambiguitas
                 'training_records.training_name', 
                 'training_records.doc_ref', 
-                'training_records.job_skill', 
                 'training_records.trainer_name', 
                 'training_records.rev', 
                 'training_records.station', 
-                'training_records.skill_code', 
                 'training_records.category_id', 
                 'training_records.date_start',
                 'training_records.date_end',

@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create("training_skill", function (Blueprint $table) {
-            $table->bigIncrements("id");
-            $table->string("job_skill")->nullable();
-            $table->string("skill_code")->nullable();
+        Schema::create('training_record_training_skill', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('training_skill_id');
+            $table->foreignId('training_record_id')->constrained()->onDelete('cascade');
+            $table->foreign('training_skill_id')->references('id')->on('training_skill');
             $table->timestamps();
-    });
+        });
     }
 
     /**

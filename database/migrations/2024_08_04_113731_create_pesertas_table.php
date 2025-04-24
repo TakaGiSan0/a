@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('position');
             $table->date('join_date');
             $table->enum('status', ['Active', 'Non Active'])->default('Active');
+            $table->enum('gender', ['Male', 'Female']);
             $table->string('category_level');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');

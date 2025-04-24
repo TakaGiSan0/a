@@ -9,6 +9,8 @@ use App\Models\training_record;
 use App\Models\category;
 use App\Models\peserta;
 use App\Models\training_skill;
+use App\Models\training_comment;
+
 use Barryvdh\DomPDF\Facade\pdf;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -34,8 +36,8 @@ class FormController extends Controller
         $user = auth('web')->user();
 
         // Query training_records dengan filter pencarian, tahun, dan byUserRole
-        $training_records = Training_Record::query()
-            ->byUserRole($user) // Tambahkan filter berdasarkan role
+        $training_records = Training_Record::with('latestComment')
+            ->byUserRole($user)
             ->when($searchQuery, function ($query, $searchQuery) {
                 return $query->where('training_name', 'like', "%{$searchQuery}%");
             })
@@ -43,12 +45,12 @@ class FormController extends Controller
                 return $query->whereYear('date_start', $selectedYear);
             })
             ->orderByRaw("
-            CASE 
-                WHEN status = 'Waiting Approval' THEN 0 
-                WHEN status = 'Pending' THEN 1 
-                ELSE 2 
-            END
-        ")
+        CASE 
+            WHEN status = 'Waiting Approval' THEN 0 
+            WHEN status = 'Pending' THEN 1 
+            ELSE 2 
+        END
+    ")
             ->orderBy('date_start', 'desc')
             ->orderBy('date_end', 'desc')
             ->paginate(10);
@@ -86,7 +88,6 @@ class FormController extends Controller
      */
     public function store(Request $request)
     {
-
         $data = $request->validate($this->validationRules(), $this->validationMessages());
 
 
@@ -95,6 +96,17 @@ class FormController extends Controller
         } elseif (auth()->guard()->user()->role === 'Admin') {
             $status = 'Waiting Approval';
         }
+
+        if (strtotime($data['date_start']) > strtotime($data['date_end'])) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['date_start' => 'Start date tidak boleh lebih besar dari End date.']);
+        }
+
+        $skillCodes = $request->input('skill_codes', []);
+
+        // Ambil ID dari skill_code yang sesuai
+        $trainingSkillIds = Training_Skill::whereIn('skill_code', $skillCodes)->pluck('id')->toArray();
 
 
         $filePath = null; // Inisialisasi path file untuk penyimpanan
@@ -125,19 +137,25 @@ class FormController extends Controller
         $trainingRecord = Training_Record::create([
             'training_name' => $data['training_name'],
             'doc_ref' => $data['doc_ref'],
-
             'trainer_name' => $data['trainer_name'],
             'rev' => $data['rev'],
             'station' => $data['station'],
             'date_start' => $data['date_start'],
             'date_end' => $data['date_end'],
             'training_duration' => $formattedTime,
-
             'category_id' => $data['category_id'],
             'status' => $status,
             'attachment' => $filePath,
             'user_id' => auth('web')->id(),
         ]);
+
+        $trainingRecord->comments()->create([
+            'comment' => null,
+            'approval' => 'Pending',
+        ]);
+
+        // Simpan data Training Skill
+        $trainingRecord->training_Skills()->sync($trainingSkillIds);
 
         // Simpan data peserta
         $participants = $data['participants'] ?? [];
@@ -167,25 +185,38 @@ class FormController extends Controller
      * Display the specified resource.
      */
     public function show($id)
-    {
-        $comment = training_record::select('comment', 'approval', 'status', 'attachment')->where('id', $id)->first();
+{
+    $record = Training_Record::select('status', 'user_id')->with('user')->findOrFail($id);
 
-        if (!$comment) {
-            Log::info('Data tidak ditemukan untuk ID: ' . $id);
-            return response()->json(['message' => 'Data tidak ditemukan'], 404);
-        }
+    $history = training_comment::where('training_record_id', $id)
+        ->orderBy('created_at', 'asc')
+        ->get();
 
-        $attachmentUrl = $comment->attachment
-            ? asset("storage/" . urlencode($comment->attachment))
-            : null;
-
-        return response()->json([
-            'comment' => $comment->comment,
-            'approval' => $comment->approval,
-            'status' => $comment->status,
-            'attachment' => $attachmentUrl,
-        ]);
+    if ($history->isEmpty()) {
+        Log::info('History tidak ditemukan untuk ID: ' . $id);
+        return response()->json(['message' => 'Data tidak ditemukan'], 404);
     }
+
+    // Ambil record terakhir dari history
+    $lastComment = $history->last();
+
+    $attachmentUrl = $lastComment->attachment
+        ? asset("storage/" . urlencode($lastComment->attachment))
+        : null;
+
+    return response()->json([
+        'history' => $history,
+        'comment' => $lastComment->comment,
+        'approval' => $lastComment->approval,
+        'status' => $record->status,
+        'attachment' => $attachmentUrl,
+        'requestor_name' => $record->user->name ?? 'Tidak diketahui',
+        'created_at' => $record->created_at?->format('d M Y H:i'),
+        'updated_at' => $record->updated_at?->format('d M Y H:i'),
+    ]);
+}
+
+
 
 
 
@@ -195,6 +226,7 @@ class FormController extends Controller
     public function edit($id)
     {
         $trainingRecord = Training_Record::with('pesertas')->findOrFail($id);
+        $trainingskill = Training_Record::with('training_skills')->findOrFail($id);
 
         $time = $trainingRecord->training_duration;
 
@@ -214,12 +246,14 @@ class FormController extends Controller
         }
 
         $participants = $trainingRecord->pesertas;
+        $skill_code = $trainingRecord->training_skills;
+
 
         // Ambil semua categories
         $categories = Category::all();
 
         // Kirim data ke view
-        return view('form.edit_completed', compact('trainingRecord', 'categories', 'participants', 'formattedTime'));
+        return view('form.edit', compact('trainingRecord', 'categories', 'participants', 'formattedTime', 'skill_code'));
     }
 
 
@@ -232,6 +266,26 @@ class FormController extends Controller
         $data = $request->validate($this->validationRules());
         $trainingRecord = Training_Record::findOrFail($id);
 
+        $filePath = null; // Inisialisasi path file untuk penyimpanan
+        if ($request->hasFile('attachment')) {
+            $pdfFile = $request->file('attachment');
+
+            // Buat nama file unik untuk menghindari konflik
+            $fileName = str_replace(' ', '+', $pdfFile->getClientOriginalName());
+
+            try {
+                $filePath = $pdfFile->storeAs('attachments', $fileName, 'public');
+                Log::info('File berhasil disimpan: ' . $filePath);
+            } catch (\Exception $e) {
+                Log::error('File upload error: ' . $e->getMessage());
+                return redirect()->back()->with('error', 'Gagal mengunggah file. Silakan coba lagi.');
+            }
+        }
+
+        $skillCodes = $request->input('skill_codes', []);
+
+        // Ambil ID dari skill_code yang sesuai
+        $trainingSkillIds = Training_Skill::whereIn('skill_code', $skillCodes)->pluck('id')->toArray();
         // Mengambil input menit dari form
         $minutes = $request->input('training_duration'); // misalnya 120
 
@@ -243,16 +297,17 @@ class FormController extends Controller
         $trainingRecord->update([
             'training_name' => $data['training_name'],
             'doc_ref' => $data['doc_ref'],
-
             'trainer_name' => $data['trainer_name'],
             'rev' => $data['rev'],
             'station' => $data['station'],
             'date_start' => $data['date_start'],
             'date_end' => $data['date_end'],
-
             'category_id' => $data['category_id'],
+            'attachment' => $filePath,
             'training_duration' => $formattedTime
         ]);
+
+        $trainingRecord->training_Skills()->sync($trainingSkillIds);
 
 
         $trainingRecord->pesertas()->detach();
@@ -274,24 +329,33 @@ class FormController extends Controller
         return redirect()->route('dashboard.index')->with('success', 'Training succesfully updated.');
     }
 
-    public function updateComment(request $request, $id)
+    public function updateComment(Request $request, $id)
     {
-
         $validated = $request->validate([
             'comment' => 'required|string|max:255',
             'approval' => 'required|string|max:255',
             'status' => 'required|string|max:255',
         ]);
 
-        $record = Training_Record::findOrFail($id);
-        $record->comment = $validated['comment'];
-        $record->approval = $validated['approval'];
-        $record->status = $validated['status'];
+        // Cari Training_Record berdasarkan ID
+        $trainingRecord = Training_Record::findOrFail($id);
 
-        $record->save();
+        // Perbarui status di tabel training_record
+        $trainingRecord->status = $validated['status'];
+        $trainingRecord->save();
+
+        // Buat entri komentar baru di tabel training_comment
+        $comment = training_comment::create([
+            'training_record_id' => $trainingRecord->id,
+            'approval' => $validated['approval'],
+            'comment' => $validated['comment'],
+
+        ]);
+       
 
         return redirect()->back()->with('success', 'Komentar berhasil diperbarui.');
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -344,19 +408,17 @@ class FormController extends Controller
         ];
     }
 
-    public function jobs_skill_store(request $request)
+    public function jobs_skill_store(Request $request)
     {
         $request->validate([
-            'job_skill.*' => 'required|string|max:255',
-            'skill_code.*' => 'required|string|max:100',
+            'job_skill' => 'required|string|max:255',
+            'skill_code' => 'required|string|max:100',
         ]);
 
-        foreach ($request->job_skill as $index => $job_skill) {
-            training_skill::create([
-                'job_skill' => $job_skill,
-                'skill_code' => $request->skill_code[$index],
-            ]);
-        }
+        training_skill::create([
+            'job_skill' => $request->job_skill,
+            'skill_code' => $request->skill_code,
+        ]);
 
         return redirect()->back()->with('success', 'Job Skill berhasil ditambahkan!');
     }
@@ -371,5 +433,22 @@ class FormController extends Controller
 
         $jobSkill->delete();
         return redirect()->back()->with('success', 'Job Skill berhasil dihapus!');
+    }
+
+    public function getJobSkill($skillCode)
+    {
+        $skill = Training_Skill::where('skill_code', $skillCode)->first();
+
+        if ($skill) {
+            return response()->json([
+                'job_skill' => $skill->job_skill,
+                'id' => $skill->id // <- ini penting agar bisa disimpan
+            ]);
+        }
+
+        return response()->json([
+            'job_skill' => null,
+            'id' => null
+        ], 404);
     }
 }

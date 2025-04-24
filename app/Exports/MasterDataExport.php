@@ -13,7 +13,7 @@ class MasterDataExport implements FromCollection , WithHeadings
     */
     public function collection()
     {
-        return Peserta::select('badge_no', 'employee_name', 'dept', 'position')->get();
+        return Peserta::select('badge_no', 'employee_name', 'join_date', 'dept', 'position', 'category_level', 'gender')->get();
     }
 
     /** 
@@ -26,8 +26,11 @@ class MasterDataExport implements FromCollection , WithHeadings
         return [
             'Badge No',
             'Employee Name',
+            'Join Date',
             'Dept',
             'Position',
+            'Level Category', 
+            'Gender',
         ];
     }
 

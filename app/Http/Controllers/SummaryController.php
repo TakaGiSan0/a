@@ -43,7 +43,7 @@ class SummaryController extends Controller
 
     public function show($id)
     {
-        $trainingRecords = Training_Record::with(['pesertas', 'trainingCategory'])
+        $trainingRecords = Training_Record::with(['pesertas', 'trainingCategory', 'training_skills'])
             ->where('id', $id)
             ->get();
 
@@ -57,14 +57,18 @@ class SummaryController extends Controller
                 'doc_ref' => $record->doc_ref,
                 'license' => $record->license,
                 'training_name' => $record->training_name,
-                'job_skill' => $record->job_skill,
                 'trainer_name' => $record->trainer_name,
                 'rev' => $record->rev,
                 'station' => $record->station,
-                'skill_code' => $record->skill_code,
                 'date_formatted' => $record->formatted_date_range,
                 'status' => $record->status,
                 'peserta' => $record->pesertas,
+                'skills' => $record->training_Skills->map(function ($skill) {
+                    return [
+                        'skill_code' => $skill->skill_code,
+                        'job_skill' => $skill->job_skill,
+                    ];
+                }),
             ];
         });
 
@@ -103,7 +107,7 @@ class SummaryController extends Controller
 
     public function downloadSummaryPdf($id)
     {
-        $trainingRecord = Training_Record::with('pesertas')->findOrFail($id);
+        $trainingRecord = Training_Record::with('pesertas', 'training_skills')->findOrFail($id);
 
         $trainingRecord->training_duration = \Carbon\Carbon::parse($trainingRecord->training_duration)->diffInMinutes(\Carbon\Carbon::parse('00:00:00'));
         $trainingRecord->training_duration = abs($trainingRecord->training_duration);
@@ -111,12 +115,10 @@ class SummaryController extends Controller
         $data = [
             'training_name' => $trainingRecord->training_name,
             'doc_ref' => $trainingRecord->doc_ref,
-            'job_skill' => $trainingRecord->job_skill,
             'trainer_name' => $trainingRecord->trainer_name,
             'rev' => $trainingRecord->rev,
             'station' => $trainingRecord->station,
             'date_range' => $trainingRecord->formatted_date_range,
-            'skill_code' => $trainingRecord->skill_code,
             'status' => $trainingRecord->status,
             'training_category' => $trainingRecord->trainingCategory->name,
             'training_duration' => $trainingRecord->training_duration,
@@ -132,6 +134,12 @@ class SummaryController extends Controller
                     'license' => $peserta->pivot->license,
                     'theory_result' => $peserta->pivot->theory_result,
                     'practical_result' => $peserta->pivot->practical_result,
+                ];
+            }),
+            'skills' => $trainingRecord->training_skills->map(function ($skill) {
+                return [
+                    'skill_code' => $skill->skill_code,
+                    'job_skill' => $skill->job_skill,
                 ];
             }),
         ];

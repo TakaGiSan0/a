@@ -21,8 +21,8 @@ class training_skillFactory extends Factory
     public function definition(): array
     {
         return [
-            "job_skill"=> $this->faker->randomElement(['V1', 'V2', 'V3']),
-            "skill_code"=> $this->faker->randomElement(['Completed', 'Pending', 'Waiting Approval']),
+            "skill_code"=> $this->faker->randomElement(['V1', 'V2', 'V3']),
+            "job_skill"=> $this->faker->randomElement(['Completed', 'Pending', 'Waiting Approval']),
         ];
     }
 }

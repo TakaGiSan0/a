@@ -22,9 +22,6 @@ class Training_RecordFactory extends Factory
             'training_name' => $this->faker->name,
             'trainer_name' => $this->faker->name,
             'rev' => $this->faker->randomDigitNotNull,
-            'status' => $this->faker->randomElement(['Completed', 'Pending', 'Waiting Approval']),
-            'approval' => 'Pending',
-            'comment' => $this->faker->sentence,
             'user_id' => \App\Models\User::inRandomOrder()->first()->id,
         ];
     }

@@ -18,15 +18,15 @@
     <section class="relative shadow-md dark:shadow-none sm:rounded-lg overflow-hidden antialiased">
 
         <!-- Start coding here -->
-        <div class="bg-white dark:bg-gray-800 relative shadow-lg sm:rounded-xl overflow-hidden 
-                                                                    border border-gray-200">
+        <div
+            class="bg-white dark:bg-gray-800 relative shadow-lg sm:rounded-xl overflow-hidden border border-gray-200 ">
             <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                 <div class="w-full md:w-1/2">
                     <form class="flex items-center">
                         <label for="simple-search" class="sr-only">Search</label>
                         <div class="relative w-full">
                             <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor"
+                                <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor"
                                     viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                     <path fill-rule="evenodd"
                                         d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
@@ -46,6 +46,7 @@
                         <div class="relative">
                             <select id="year" name="year"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <option value="" {{ request('year') == null ? 'selected' : '' }}>All Year</option>
                                 @foreach ($years as $year)
                                     <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }}>{{ $year }}
                                     </option>
@@ -65,7 +66,7 @@
                             type="button">
 
                             <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20"
-                                xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                xmlns="http://www.w3.org/2000/svg" >
                                 <path clip-rule="evenodd" fill-rule="evenodd"
                                     d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
                             </svg>Import Excel
@@ -76,7 +77,7 @@
                         <a href="{{ route('export.training') }}"
                             class="flex items-center justify-center text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800">
                             <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20"
-                                xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                xmlns="http://www.w3.org/2000/svg">
                                 <path clip-rule="evenodd" fill-rule="evenodd"
                                     d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
                             </svg>
@@ -91,7 +92,7 @@
                         <button id="openModalBtn"
                             class="flex items-center justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
                             <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20"
-                                xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                xmlns="http://www.w3.org/2000/svg">
                                 <path clip-rule="evenodd" fill-rule="evenodd"
                                     d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
                             </svg>
@@ -104,7 +105,7 @@
                     <a href="{{ route('dashboard.create') }}"
                         class="flex items-center justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
                         <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20"
-                            xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            xmlns="http://www.w3.org/2000/svg">
                             <path clip-rule="evenodd" fill-rule="evenodd"
                                 d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
                         </svg>
@@ -151,7 +152,7 @@
                                 <!-- Nama Trainer -->
                                 <td class="px-4 py-3 text-center">{{ $rc->trainer_name }}</td>
 
-                                <td class="px-4 py-3 text-center"> {{ $rc->approval }}</td>
+                                <td class="px-4 py-3 text-center"> {{ $rc->latestComment->approval ?? '-' }}</td>
 
                                 <!-- Status -->
                                 <td class="px-4 py-3 text-center">{{ $rc->status }}</td>
@@ -185,10 +186,10 @@
                                     @endif
                                     @if(auth()->user()->role === 'Super Admin' || auth()->user()->id === $rc->user_id)
                                         <button type="button" data-modal-target="readProductModal"
-                                            data-modal-toggle="readProductModal" data-id="{{ $rc->id }}"
-                                            class="trigger-modal items-center justify-center over:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
+                                            data-modal-toggle="readProductModal" data-id="{{ $rc->id }}" id="trigger-modal"
+                                            class=" items-center justify-center over:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
                                             <svg class="w-8 h-8 flex-shrink-0 text-slate-500" xmlns="http://www.w3.org/2000/svg"
-                                                viewbox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                                viewbox="0 0 24 24" fill="currentColor" >
                                                 <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
                                                 <path fill-rule="evenodd" clip-rule="evenodd"
                                                     d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -209,78 +210,77 @@
         </div>
     </section>
 
-    <div id="jobSkillModal" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div id="jobSkillModal" class="hidden fixed inset-0  items-center justify-center bg-black bg-opacity-50 z-50">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 max-w-2xl w-full">
             <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4 text-center">Tambah Job Skill</h2>
 
-            <!-- Form untuk Tambah Data -->
-            <form action="{{ route('jobs_skill.store') }}" method="POST">
-                @csrf
-                <div class="overflow-x-auto max-h-96">
-                    <table
-                        class="w-full text-sm text-gray-500 dark:text-gray-400 border border-gray-300 dark:border-gray-600">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+            <!-- Form POST hanya untuk tambah -->
+
+
+            <!-- TABEL -->
+            <div class="overflow-x-auto max-h-96">
+                <table class="w-full text-sm text-gray-500 border">
+                    <thead>
+                        <tr>
+                            <th class="px-4 py-3 border">No</th>
+                            <th class="px-4 py-3 border">Skill Code</th>
+                            <th class="px-4 py-3 border">Job Skill</th>
+                            <th class="px-4 py-3 border">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white">
+
+                        {{-- DATA LAMA (TIDAK MASUK FORM) --}}
+                        @php $no = 1; @endphp
+                        @foreach ($jobskill as $js)
                             <tr>
-                                <th scope="col" class="px-4 py-3 border border-gray-300 dark:border-gray-600">No</th>
-                                <th scope="col" class="px-4 py-3 border border-gray-300 dark:border-gray-600">Skill Code
-                                </th>
-                                <th scope="col" class="px-4 py-3 border border-gray-300 dark:border-gray-600">Job Skill</th>
-                                <th scope="col" class="px-4 py-3 border border-gray-300 dark:border-gray-600">Action</th>
+                                <td class="px-4 py-3 text-center border">{{ $no++ }}</td>
+                                <td class="px-4 py-3 text-center border">{{ $js->skill_code }}</td>
+                                <td class="px-4 py-3 text-center border">{{ $js->job_skill }}</td>
+                                <td class="px-4 py-3 text-center border">
+                                    <!-- FORM DELETE DIPISAH -->
+                                    <form action="{{ route('jobs_skill.destroy', $js->id) }}" method="POST"
+                                        onsubmit="return confirm('Yakin ingin menghapus?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody id="jobSkillTableBody"
-                            class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                            @php $no = 0; @endphp
-                            @foreach ($jobskill as $js)
-                                <tr>
-                                    <td class="px-4 py-3 text-center border border-gray-300 dark:border-gray-600">{{ ++$no }}
-                                    </td>
-                                    <td class="px-4 py-3 text-center border border-gray-300 dark:border-gray-600">
-                                        {{ $js->skill_code }}
-                                    </td>
-                                    <td class="px-4 py-3 text-center border border-gray-300 dark:border-gray-600">
-                                        {{ $js->job_skill }}
-                                    </td>
-                                    <td class="px-4 py-3 text-center border border-gray-300 dark:border-gray-600">
-                                        <!-- Form Hapus Ditempatkan di Luar Form Tambah -->
-                                        <form action="{{ route('jobs_skill.destroy', $js->id) }}" method="POST"
-                                            onsubmit="return confirm('Yakin ingin menghapus?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                class="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600">
-                                                Hapus
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                        @endforeach
 
-                <!-- Tombol -->
-                <div class="flex justify-end mt-4 space-x-3">
-                    <button type="button" id="addRowBtn"
-                        class="px-4 py-2 bg-blue-300 text-gray-700 rounded-lg hover:bg-blue-400">
-                        +
-                    </button>
-
-                    <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                        Tambah
-                    </button>
-
+                        {{-- FORM TAMBAH (HANYA BARIS INI YANG DIBUNGKUS FORM) --}}
+                        <form action="{{ route('jobs_skill.store') }}" method="POST">
+                            @csrf
+                            <tr>
+                                <td class="px-4 py-3 text-center border">#</td>
+                                <td class="px-4 py-3 text-center border">
+                                    <input type="text" name="skill_code" class="w-full border rounded px-2 py-1" required>
+                                </td>
+                                <td class="px-4 py-3 text-center border">
+                                    <input type="text" name="job_skill" class="w-full border rounded px-2 py-1" required>
+                                </td>
+                                <td class="px-4 py-3 border text-center">
+                                    <button type="submit"
+                                        class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600">
+                                        Add
+                                    </button>
+                                </td>
+                            </tr>
+                        </form>
+                    </tbody>
+                </table>
+                <div class="flex justify-end mt-4">
                     <button type="button" id="closeModalBtn"
                         class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400">
-                        Tutup
+                        Close
                     </button>
                 </div>
-            </form>
-
+            </div>
         </div>
     </div>
-
-
 
     <div id="uploadModal"
         class="hidden fixed inset-0 p-4 justify-center items-center w-full h-full z-50 overflow-auto font-[sans-serif]">
@@ -329,7 +329,7 @@
         </div>
     </div>
 
-    <div id="readProductModal" tabindex="-1" aria-hidden="true"
+    <div id="readProductModal" aria-hidden="false"
         class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full bg-black bg-opacity-50">
         <div class="relative w-full max-w-2xl max-h-full mx-auto">
             <!-- Modal content -->
@@ -337,11 +337,10 @@
                 <!-- Modal header -->
                 <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                        Detail Produk
+                        Detail Event
                     </h3>
                     <button type="button" data-modal-hide="readProductModal"
-                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                        aria-label="Close">
+                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd"
                                 d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
@@ -366,22 +365,47 @@
                                 Lihat PDF
                             </a>
                         </div>
+                        <div class="mt-4">
+                            <h3 id="requestor-name" class="text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                                History Approval - Requestor = 
+                              </h3>
+                            <table class="min-w-full text-sm text-left text-gray-500 dark:text-gray-400 border">
+                                <thead
+                                    class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+                                    <tr>
+                                        <th scope="col" class="px-2 py-1 border">No</th>
+                                        <th scope="col" class="px-2 py-1 border">Approval</th>
+                                        <th scope="col" class="px-2 py-1 border">Comment</th>
+                                        <th scope="col" class="px-2 py-1 border">Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="modal-history-body">
+                                    {{-- Baris history akan diisi lewat JavaScript --}}
+                                </tbody>
+                            </table>
+                        </div>
                         @csrf
                         @method('PUT')
-                        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400" id="modal-content">
+                        
+                        <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" id="modal-content">
+                        </p>
+                        <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" id="modal-content">
                             Komentar
                         </p>
                         @php
                             $isSuperAdmin = auth()->user()->role === 'Super Admin'; //
                         @endphp
 
-                        <textarea name="comment" id="comment" cols="30" rows="10" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring bg-white  focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
-                                                                        @if (!$isSuperAdmin) text-gray-400 @endif" @if (!$isSuperAdmin) readonly
-                                                                        @endif>{{ !$isSuperAdmin ? 'Tunggu komentar dari super admin' : old('comment', $comment ?? '') }}</textarea>
+                        <textarea name="comment" id="comment" class="w-full h-24 px-3 py-2 border border-gray-300 rounded-md text-black focus:outline-none focus:ring bg-white  
+                                        dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
+                                        focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 
+                                    @if (!$isSuperAdmin) text-gray-400 @endif" @if (!$isSuperAdmin) readonly @endif
+                            placeholder="{{ !$isSuperAdmin ? 'Tunggu komentar dari super admin' : '' }}">{{ old('comment', $comment ?? '') }}</textarea>
                         @if (Auth::user()->role == 'Super Admin')
                             <div>
-                                <label for="category"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Approval</label>
+                                <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Approval
+                                </label>
                                 <select id="approval" name="approval"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                     <option value="Pending" {{ old('approval', $approval ?? '') == 'Pending' ? 'selected' : '' }}>
@@ -450,19 +474,21 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             const modal = document.getElementById('readProductModal');
-            const commentForm = modal.querySelector('form');
+            const commentForm = modal.querySelector('#commentForm');
             const commentField = modal.querySelector('#comment');
             const approvalField = modal.querySelector('#approval');
             const statusField = modal.querySelector('#status');
             const attachmentFrame = modal.querySelector('#modal-attachment');
             const userRole = @json(auth()->user()->role);
-            const editButtons = document.querySelectorAll('.trigger-modal');
+            const editButtons = document.querySelectorAll('#trigger-modal');
+            const requestorNameElement = document.getElementById('requestor-name');
+
+
 
             editButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     const recordId = button.getAttribute('data-id');
-
-                    // Fetch data dari server
+                    
                     fetch(`/training-record/${recordId}`)
                         .then(response => response.json())
                         .then(data => {
@@ -470,7 +496,6 @@
                                 alert(data.message); // Jika ada pesan error
                                 return;
                             }
-
                             // Set form action
                             commentForm.action = `/training-record/${recordId}/comment`;
 
@@ -480,13 +505,15 @@
                             } else if (userRole !== 'Super Admin') {
                                 commentField.value = "Tunggu komentar dari Super Admin";
                             } else {
-                                commentField.value =
-                                    ""; // Kosongkan untuk Super Admin jika tidak ada komentar
+                                commentField.value = "";
                             }
+                            
                             if (userRole === 'Super Admin') {
                                 approvalField.value = data.approval;
                                 statusField.value = data.status;
                             }
+                            console.log('Set form action:', commentForm.action);
+
                             // Set attachment (PDF)
                             if (data.attachment) {
                                 attachmentFrame.href = data.attachment;
@@ -494,8 +521,12 @@
                                 attachmentFrame.href = '';
                                 alert('Attachment tidak tersedia.');
                             }
+                            requestorNameElement.textContent = `History Approval - Requestor = ${data.requestor_name}`;
+                            
+                            // Tampilkan history ke tabel
+                            renderHistoryTable(data.history);
 
-                            // Show modal
+                            // Tampilkan modal
                             modal.classList.remove('hidden');
                             modal.classList.add('flex');
                         })
@@ -503,8 +534,44 @@
                             console.error('Error fetching data:', error);
                             alert('Terjadi kesalahan saat mengambil data.');
                         });
+                        
                 });
             });
+            
+
+            function renderHistoryTable(historyData) {
+                const tbody = document.getElementById('modal-history-body');
+                tbody.innerHTML = ''; // Kosongkan isinya dulu
+
+                if (!historyData || historyData.length === 0) {
+                    const emptyRow = document.createElement('tr');
+                    emptyRow.innerHTML = `<td colspan="3" class="p-2 text-center text-gray-500">Tidak ada riwayat komentar atau approval</td>`;
+                    tbody.appendChild(emptyRow);
+                    return;
+                }
+
+                historyData.forEach((entry, index) => {
+                    const tr = document.createElement('tr');
+
+                    // Format updated_at menggunakan toLocaleString
+                    const formattedDate = new Date(entry.updated_at).toLocaleString('id-ID', {
+                        day: '2-digit',
+                        month: 'short',  // singkatan bulan
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+
+                    tr.innerHTML = `
+            <td class="p-2 text-center">${index + 1}</td>
+            <td class="p-2">${entry.approval || '-'}</td>
+            <td class="p-2">${entry.comment || '-'}</td>
+            <td class="p-2">${formattedDate}</td>
+        `;
+                    tbody.appendChild(tr);
+                });
+            }
+
 
             // Close modal
             const closeButton = modal.querySelector('[data-modal-hide]');
@@ -534,6 +601,7 @@
 
             openModalBtn.addEventListener("click", function () {
                 modal.classList.remove("hidden");
+                modal.classList.add("flex");
             });
 
             closeModalBtn.addEventListener("click", function () {
@@ -548,31 +616,6 @@
             });
         });
 
-        document.getElementById("addRowBtn").addEventListener("click", function () {
 
-            let tableBody = document.getElementById("jobSkillTableBody");
-            console.log(document.getElementById("jobSkillTableBody").innerHTML);
-            if (!tableBody) {
-                console.error("Elemen <tbody> tidak ditemukan!");
-                return;
-            }
-
-            let rowCount = tableBody.getElementsByTagName("tr").length + 1;
-
-
-            let newRow = document.createElement("tr");
-            newRow.innerHTML = `
-                        <td class="px-4 py-3 text-center border border-gray-300 dark:border-gray-600">${rowCount}</td>
-                        <td class="px-4 py-3 text-center border border-gray-300 dark:border-gray-600">
-                            <input type="text" name="skill_code[]" class="w-full p-2 border rounded">
-                        </td>
-                        <td class="px-4 py-3 text-center border border-gray-300 dark:border-gray-600">
-                            <input type="text" name="job_skill[]" class="w-full p-2 border rounded">
-                        </td>
-                    `;
-
-            tableBody.appendChild(newRow);
-
-        });
     </script>
 @endsection

@@ -19,19 +19,15 @@ return new class extends Migration
             $table->string('rev', length: 50)->nullable();
             $table->string('station', length: 50)->nullable();
             $table->enum('status', ['Completed', 'Pending', 'Waiting Approval'])->default('Waiting Approval');
-            $table->enum('approval', ['Approved', 'Pending', 'Reject'])->default('Pending');
             $table->date('date_start');
             $table->date('date_end');
             $table->time('training_duration')->nullable();
-            $table->string('comment')->nullable();
             $table->string('attachment')->nullable();
             $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->unsignedBigInteger('training_skill_id')->nullable();
             $table->foreign('category_id')->references('id')->on
             ('categories');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('training_skill_id')->references('id')->on('training_skill');
             $table->timestamps();
         });
     }
