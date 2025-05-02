@@ -11,8 +11,8 @@ use App\Models\training_skill;
 use App\Models\trainingskillrecord;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use DateTime;
 use Illuminate\Support\Facades\Log;
+use DateTime;
 
 class TrainingRecordsImport implements ToModel, WithHeadingRow
 {
@@ -89,14 +89,44 @@ class TrainingRecordsImport implements ToModel, WithHeadingRow
             'approval' => 'Approved',
         ]);
 
-        $trainingskill = training_skill::firstOrCreate([
-            'skill_code' => $row['skill_code'],
-            'job_skill' => $row['job_skill'],
-        ]);
-        trainingskillrecord::firstOrCreate([
-            'training_record_id' => $trainingRecord->id,
-            'training_skill_id' => $trainingskill->id,
-        ]);
+        $skillCodes = array_map('trim', explode(',', $row['skill_code']));
+        $jobSkills  = array_map('trim', explode(',', $row['job_skill']));
+
+        // Validasi jumlah pasangan harus sama
+        if (count($skillCodes) !== count($jobSkills)) {
+            Log::warning("Jumlah skill_code dan job_skill tidak cocok di baris: ", $row);
+            return;
+        }
+
+        $seenCodes = []; // untuk melacak skill_code yang sudah diproses di baris ini
+
+        foreach ($skillCodes as $i => $code) {
+            // Jika skill_code sudah diproses di baris ini, lewati
+            if (in_array($code, $seenCodes)) {
+                continue;
+            }
+            $seenCodes[] = $code;
+
+            // Cek apakah skill_code sudah ada di database
+            $existing = training_skill::where('skill_code', $code)->first();
+
+            if ($existing) {
+                // Jika sudah ada, gunakan yang dari database (abaikan job_skill dari Excel)
+                $trainingskill = $existing;
+            } else {
+                // Jika belum ada, tambahkan dari Excel
+                $trainingskill = training_skill::create([
+                    'skill_code' => $code,
+                    'job_skill' => $jobSkills[$i],
+                ]);
+            }
+
+            // Simpan relasi dengan training_record
+            trainingskillrecord::firstOrCreate([
+                'training_record_id' => $trainingRecord->id,
+                'training_skill_id' => $trainingskill->id,
+            ]);
+        }
     }
 
     /**
@@ -121,11 +151,12 @@ class TrainingRecordsImport implements ToModel, WithHeadingRow
         }
     }
 
-   
+
     private function parseDateRange($dateRange)
     {
-        // Tangkap tahun dari akhir string (bisa 2 atau 4 digit)
+
         preg_match('/(\d{2,4})$/', $dateRange, $yearMatch);
+
         $year = $yearMatch[1] ?? date('Y');
 
         // Ubah 2 digit tahun menjadi 4 digit (misal: 20 → 2020)
@@ -152,7 +183,7 @@ class TrainingRecordsImport implements ToModel, WithHeadingRow
         }
 
         // Ambil tanggal dari start dan end
-        preg_match('/\d{1,2}/', $startPart, $dayStartMatch);
+        preg_match('/d{1,2}/', $startPart, $dayStartMatch);
         preg_match('/\d{1,2}/', $endPart, $dayEndMatch);
 
         $dayStart = $dayStartMatch[0] ?? '01';
@@ -167,6 +198,7 @@ class TrainingRecordsImport implements ToModel, WithHeadingRow
 
         // Buat objek DateTime
         $startDate = DateTime::createFromFormat('j M Y', "$dayStart $startMonth $year");
+
         $endDate = DateTime::createFromFormat('j M Y', "$dayEnd $month $year");
 
         return [

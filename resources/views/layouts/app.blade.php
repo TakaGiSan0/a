@@ -34,7 +34,7 @@
     <div class="relative flex-1 flex bg-white dark:bg-gray-900 w-full">
         <!-- Sidebar -->
         @if(!isset($hideSidebar) || !$hideSidebar)
-            <div id="sidebar" class="w-64 text-white h-screen fixed top-0 left-0 transition-all duration-300">
+            <div id="sidebar" class="w-64 text-white h-screen fixed top-0 left-0 transition-all duration-300 Z-50">
                 @yield('sidebar')
             </div>
         @endif
