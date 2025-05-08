@@ -212,7 +212,7 @@ class TrainingRecordsImport implements ToModel, WithHeadingRow
     private function getPreviousMonthAbbreviation($monthAbbrev)
     {
         try {
-            $date = \DateTime::createFromFormat('M', $monthAbbrev);
+            $date = DateTime::createFromFormat('M', $monthAbbrev);
             $date->modify('-1 month');
             return $date->format('M'); // Mengembalikan bulan sebelumnya
         } catch (\Exception $e) {

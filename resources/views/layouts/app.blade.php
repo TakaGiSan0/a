@@ -34,13 +34,13 @@
     <div class="relative flex-1 flex bg-white dark:bg-gray-900 w-full">
         <!-- Sidebar -->
         @if(!isset($hideSidebar) || !$hideSidebar)
-            <div id="sidebar" class="w-64 text-white h-screen fixed top-0 left-0 transition-all duration-300 Z-50">
+            <div id="sidebar" class="w-64 text-white h-screen fixed top-0 left-0 transition-all duration-300 z-50">
                 @yield('sidebar')
             </div>
         @endif
 
         <!-- Main Content -->
-        <div id="main-content" class="flex-1 transition-all duration-300 ml-0 md:ml-64 bg-gray-100 dark:bg-gray-400">
+        <div id="main-content" class="flex-1 transition-all duration-300 ml-0 pt-16 bg-gray-100 dark:bg-gray-400">
             @include('layouts.navbar')
 
             <div class="flex-1 p-4 bg-gray-100 dark:bg-gray-400">
