@@ -49,11 +49,12 @@ class ExcelController extends Controller
         return redirect()->back()->with('success', 'Import Data Training Berhasil!');
     }
 
-    public function export_training()
+    public function export_training(request $request)
     {
+        $year = $request->get('year', 'all');
         $date = date('Y-m-d'); // Format tanggal: Tahun-Bulan-Hari
         $fileName = 'Training Record - ' . $date . '.xlsx';
-        return Excel::download(new TrainingRecordExport(), $fileName);
+        return Excel::download(new TrainingRecordExport($year), $fileName);
     }
 
     public function export_matrix()

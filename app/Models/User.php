@@ -19,23 +19,14 @@ class User extends Authenticatable
      */
     protected $table = 'users';
 
-    protected $fillable = [
-        'user',
-        'name',
-        'role',
-        'dept',
-        'password',
-    ];
+    protected $fillable = ['user', 'name', 'role', 'dept', 'password'];
 
     /**
      * The attributes that should be hidden for serialization.
      *
      * @var array<int, string>
      */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    protected $hidden = ['password', 'remember_token'];
 
     /**
      * Get the attributes that should be cast.
@@ -60,8 +51,15 @@ class User extends Authenticatable
         if ($user->role === 'Super Admin') {
             return $query; // Super Admin bisa melihat semua user
         }
-
-        // Admin & User hanya bisa melihat user dengan dept yang sama
-        return $query->where('dept', $user->dept);
+        return $query->whereHas('pesertaLogin', function ($q) use ($user) {
+            $q->where('dept', $user->pesertaLogin->dept);
+        });
     }
+
+    public function pesertaLogin()
+    {
+        return $this->hasOne(Peserta::class, 'user_id_login');
+    }
+
+
 }

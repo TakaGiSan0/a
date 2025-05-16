@@ -22,8 +22,11 @@ return new class extends Migration
             $table->enum('gender', ['Male', 'Female']);
             $table->string('category_level');
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_id_login')->nullable();
             $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id_login')->references('id')->on('users');
             $table->timestamps();
+
         });
     }
 

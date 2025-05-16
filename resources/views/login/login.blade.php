@@ -9,6 +9,14 @@
     @vite('resources/css/app.css')
 </head>
 
+<style>
+    body {
+        background-image: url('/images/bg-login.png');
+        background-size: cover;
+        background-repeat: no-repeat;
+
+    };
+</style>
 <body class="bg-[#E5E7EB] flex h-screen items-center justify-center">
     <div class="w-full max-w-sm bg-white shadow-lg rounded-lg p-8">
         <h2 class="text-center text-2xl font-bold text-gray-900">Sign in to your account</h2>

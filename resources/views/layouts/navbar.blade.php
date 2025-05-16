@@ -16,7 +16,7 @@
             <!-- Teks Welcome -->
             <div class="text-lg font-bold text-gray-800 dark:text-gray-200 mr-4">
                 @auth
-                    {{ Auth::user()->name }}
+                    {{ Auth::user()->pesertaLogin->employee_name ?? 'User' }}
                 @endauth
             </div>
 
@@ -24,13 +24,14 @@
             <div class="relative">
                 <button type="button" id="user-menu-button"
                     class="relative flex items-center rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                    <img class="w-8 h-8 rounded-full"
-                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                    <img class="w-8 h-8 rounded-full bg-white"
+                        src="{{ asset('/images/bg-profile.png') }}"
+                        onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name ?? 'User') }}';"
                         alt="User Avatar">
                 </button>
 
                 <!-- Dropdown Menu -->
-                <div id="user-menu" class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5 
+                <div id="user-menu" class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5
                     transition ease-out duration-100 transform opacity-0 scale-95 hidden">
                     <button id='theme-toggle'
                         class="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">

@@ -18,16 +18,15 @@
     <section class="relative shadow-md dark:shadow-none sm:rounded-lg overflow-hidden antialiased">
 
         <!-- Start coding here -->
-        <div
-            class="bg-white dark:bg-gray-800 relative shadow-lg sm:rounded-xl overflow-hidden border border-gray-200 ">
+        <div class="bg-white dark:bg-gray-800 relative shadow-lg sm:rounded-xl overflow-hidden border border-gray-200 ">
             <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                 <div class="w-full md:w-1/2">
                     <form class="flex items-center">
                         <label for="simple-search" class="sr-only">Search</label>
                         <div class="relative w-full">
                             <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor"
-                                    viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewbox="0 0 20 20"
+                                    xmlns="http://www.w3.org/2000/svg">
                                     <path fill-rule="evenodd"
                                         d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
                                         clip-rule="evenodd" />
@@ -48,7 +47,8 @@
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                 <option value="" {{ request('year') == null ? 'selected' : '' }}>All Year</option>
                                 @foreach ($years as $year)
-                                    <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }}>{{ $year }}
+                                    <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }}>
+                                        {{ $year }}
                                     </option>
                                 @endforeach
                             </select>
@@ -62,11 +62,11 @@
                     <div
                         class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
                         <button
-                            class="open-modal flex items-center justify-center text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800"
+                            class="open-modal-import flex items-center justify-center text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800"
                             type="button">
 
                             <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20"
-                                xmlns="http://www.w3.org/2000/svg" >
+                                xmlns="http://www.w3.org/2000/svg">
                                 <path clip-rule="evenodd" fill-rule="evenodd"
                                     d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
                             </svg>Import Excel
@@ -74,15 +74,16 @@
                     </div>
                     <div
                         class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-                        <a href="{{ route('export.training') }}"
-                            class="flex items-center justify-center text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800">
+                        <button
+                            class="open-modal-export flex items-center justify-center text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800"
+                            type="button">
+
                             <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path clip-rule="evenodd" fill-rule="evenodd"
                                     d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
-                            </svg>
-                            <input type="file" name="file" class="hidden" accept=".xlsx,.xls">Export Excel
-                        </a>
+                            </svg>Import Excel
+                        </button>
                     </div>
                 @endif
                 @if (auth()->user()->role == 'Super Admin')
@@ -159,11 +160,11 @@
 
                                 <!-- Edit dan Delete Actions -->
                                 <td class="px-4 py-3 flex items-center justify-center space-x-4">
-                                    @if(auth()->user()->role === 'Super Admin' || auth()->user()->id === $rc->user_id)
+                                    @if (auth()->user()->role === 'Super Admin' || auth()->user()->id === $rc->user_id)
                                         <a href="{{ route('dashboard.edit', $rc->id) }}">
-                                            <svg class="h-8 w-8 text-slate-500" width="24" height="24" viewBox="0 0 24 24"
-                                                stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
-                                                stroke-linejoin="round">
+                                            <svg class="h-8 w-8 text-slate-500" width="24" height="24"
+                                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                                fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                 <path stroke="none" d="M0 0h24v24H0z" />
                                                 <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
                                                 <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
@@ -184,12 +185,14 @@
                                             </button>
                                         </form>
                                     @endif
-                                    @if(auth()->user()->role === 'Super Admin' || auth()->user()->id === $rc->user_id)
+                                    @if (auth()->user()->role === 'Super Admin' || auth()->user()->id === $rc->user_id)
                                         <button type="button" data-modal-target="readProductModal"
-                                            data-modal-toggle="readProductModal" data-id="{{ $rc->id }}" id="trigger-modal"
+                                            data-modal-toggle="readProductModal" data-id="{{ $rc->id }}"
+                                            id="trigger-modal"
                                             class=" items-center justify-center over:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
-                                            <svg class="w-8 h-8 flex-shrink-0 text-slate-500" xmlns="http://www.w3.org/2000/svg"
-                                                viewbox="0 0 24 24" fill="currentColor" >
+                                            <svg class="w-8 h-8 flex-shrink-0 text-slate-500"
+                                                xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"
+                                                fill="currentColor">
                                                 <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
                                                 <path fill-rule="evenodd" clip-rule="evenodd"
                                                     d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -214,9 +217,6 @@
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 max-w-2xl w-full">
             <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4 text-center">Tambah Job Skill</h2>
 
-            <!-- Form POST hanya untuk tambah -->
-
-
             <!-- TABEL -->
             <div class="overflow-x-auto max-h-96">
                 <table class="w-full text-sm text-gray-500 border">
@@ -229,8 +229,6 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white">
-
-                        {{-- DATA LAMA (TIDAK MASUK FORM) --}}
                         @php $no = 1; @endphp
                         @foreach ($jobskill as $js)
                             <tr>
@@ -243,7 +241,8 @@
                                         onsubmit="return confirm('Yakin ingin menghapus?');">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">
+                                        <button type="submit"
+                                            class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">
                                             Delete
                                         </button>
                                     </form>
@@ -251,16 +250,17 @@
                             </tr>
                         @endforeach
 
-                        {{-- FORM TAMBAH (HANYA BARIS INI YANG DIBUNGKUS FORM) --}}
                         <form action="{{ route('jobs_skill.store') }}" method="POST">
                             @csrf
                             <tr>
                                 <td class="px-4 py-3 text-center border">#</td>
                                 <td class="px-4 py-3 text-center border">
-                                    <input type="text" name="skill_code" class="w-full border rounded px-2 py-1" required>
+                                    <input type="text" name="skill_code" class="w-full border rounded px-2 py-1"
+                                        required>
                                 </td>
                                 <td class="px-4 py-3 text-center border">
-                                    <input type="text" name="job_skill" class="w-full border rounded px-2 py-1" required>
+                                    <input type="text" name="job_skill" class="w-full border rounded px-2 py-1"
+                                        required>
                                 </td>
                                 <td class="px-4 py-3 border text-center">
                                     <button type="submit"
@@ -329,6 +329,56 @@
         </div>
     </div>
 
+    <div id="uploadModalexport"
+        class="hidden fixed inset-0 p-4 justify-center items-center w-full h-full z-50 overflow-auto font-[sans-serif]">
+
+        <!-- Overlay (background hitam) -->
+        <div class="fixed inset-0 bg-black bg-opacity-50"></div>
+        <!-- Konten Modal -->
+        <div class="w-full max-w-lg bg-white shadow-lg rounded-lg p-6 relative z-10 dark:bg-gray-700 dark:text-[#f1f1f1]">
+            <div class="flex items-center pb-3 border-b border-gray-200">
+                <div class="flex-1">
+                    <h3 class="text-gray-800 text-xl font-bold dark:text-white">Export Excel</h3>
+                    <p class="text-gray-600 text-xs mt-1 dark:text-white">Tahun Export</p>
+                </div>
+
+                <!-- Tombol Close -->
+                <svg xmlns="http://www.w3.org/2000/svg"
+                    class="w-3 ml-2 cursor-pointer shrink-0 fill-gray-400 hover:fill-red-500 close-modal"
+                    viewBox="0 0 320.591 320.591">
+                    <path
+                        d="M30.391 318.583a30.37 30.37 0 0 1-21.56-7.288c-11.774-11.844-11.774-30.973 0-42.817L266.643 10.665c12.246-11.459 31.462-10.822 42.921 1.424 10.362 11.074 10.966 28.095 1.414 39.875L51.647 311.295a30.366 30.366 0 0 1-21.256 7.288z"
+                        data-original="#000000"></path>
+                    <path
+                        d="M287.9 318.583a30.37 30.37 0 0 1-21.257-8.806L8.83 51.963C-2.078 39.225-.595 20.055 12.143 9.146c11.369-9.736 28.136-9.736 39.504 0l259.331 257.813c12.243 11.462 12.876 30.679 1.414 42.922-.456.487-.927.958-1.414 1.414a30.368 30.368 0 0 1-23.078 7.288z"
+                        data-original="#000000"></path>
+                </svg>
+            </div>
+
+            <!-- Konten Lainnya -->
+            <form action="{{ route('export.training') }}" method="GET" class="mt-4 flex items-center gap-4">
+                <label for="export_year" class="text-sm font-medium text-gray-700 dark:text-gray-300">Pilih Tahun:</label>
+
+                <select id="year" name="year"
+                    class="mt-2 block w-full rounded-md border border-gray-300 bg-gray-50 px-3 py-2 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <option value="all"
+                        class="dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        All Year</option>
+
+                    @foreach ($years as $year)
+                        <option value="{{ $year }}">{{ $year }}</option>
+                    @endforeach
+
+                </select>
+
+                <button type="submit"
+                    class="px-4 py-2 rounded-lg text-white text-sm bg-green-600 hover:bg-green-700 active:bg-green-600">
+                    Export
+                </button>
+            </form>
+        </div>
+    </div>
+
     <div id="readProductModal" aria-hidden="false"
         class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full bg-black bg-opacity-50">
         <div class="relative w-full max-w-2xl max-h-full mx-auto">
@@ -352,8 +402,9 @@
                 <form id="commentForm" action="" method="POST" enctype="multipart/form-data">
                     <div class="p-6 space-y-6">
                         <div class="flex">
-                            <svg class="h-8 w-8 text-slate-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
-                                stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <svg class="h-8 w-8 text-slate-500" width="24" height="24" viewBox="0 0 24 24"
+                                stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+                                stroke-linejoin="round">
                                 <path stroke="none" d="M0 0h24v24H0z" />
                                 <path d="M14 3v4a1 1 0 0 0 1 1h4" />
                                 <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
@@ -367,8 +418,8 @@
                         </div>
                         <div class="mt-4">
                             <h3 id="requestor-name" class="text-sm font-semibold text-gray-900 dark:text-white mb-2">
-                                History Approval - Requestor = 
-                              </h3>
+                                History Approval - Requestor =
+                            </h3>
                             <table class="min-w-full text-sm text-left text-gray-500 dark:text-gray-400 border">
                                 <thead
                                     class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
@@ -386,7 +437,7 @@
                         </div>
                         @csrf
                         @method('PUT')
-                        
+
                         <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" id="modal-content">
                         </p>
                         <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" id="modal-content">
@@ -396,24 +447,30 @@
                             $isSuperAdmin = auth()->user()->role === 'Super Admin'; //
                         @endphp
 
-                        <textarea name="comment" id="comment" class="w-full h-24 px-3 py-2 border border-gray-300 rounded-md text-black focus:outline-none focus:ring bg-white  
+                        <textarea name="comment" id="comment"
+                            class="w-full h-24 px-3 py-2 border border-gray-300 rounded-md text-black focus:outline-none focus:ring bg-white
                                         dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
-                                        focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 
-                                    @if (!$isSuperAdmin) text-gray-400 @endif" @if (!$isSuperAdmin) readonly @endif
+                                        focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600
+                                    @if (!$isSuperAdmin) text-gray-400 @endif"
+                            @if (!$isSuperAdmin) readonly @endif
                             placeholder="{{ !$isSuperAdmin ? 'Tunggu komentar dari super admin' : '' }}">{{ old('comment', $comment ?? '') }}</textarea>
                         @if (Auth::user()->role == 'Super Admin')
                             <div>
-                                <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                <label for="category"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                     Approval
                                 </label>
                                 <select id="approval" name="approval"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                    <option value="Pending" {{ old('approval', $approval ?? '') == 'Pending' ? 'selected' : '' }}>
+                                    <option value="Pending"
+                                        {{ old('approval', $approval ?? '') == 'Pending' ? 'selected' : '' }}>
                                         Pending
                                     </option>
-                                    <option value="Approved" {{ old('approval', $approval ?? '') == 'Approved' ? 'selected' : '' }}>Approved
+                                    <option value="Approved"
+                                        {{ old('approval', $approval ?? '') == 'Approved' ? 'selected' : '' }}>Approved
                                     </option>
-                                    <option value="Reject" {{ old('approval', $approval ?? '') == 'Reject' ? 'selected' : '' }}>
+                                    <option value="Reject"
+                                        {{ old('approval', $approval ?? '') == 'Reject' ? 'selected' : '' }}>
                                         Reject
                                     </option>
                                 </select>
@@ -423,12 +480,16 @@
                                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
                                 <select id="status" name="status"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                    <option value="Waiting Approval" {{ old('status', $status ?? '') == 'Waiting Approval' ? 'selected' : '' }}>Waiting Approval
+                                    <option value="Waiting Approval"
+                                        {{ old('status', $status ?? '') == 'Waiting Approval' ? 'selected' : '' }}>Waiting
+                                        Approval
                                     </option>
-                                    <option value="Pending" {{ old('status', $status ?? '') == 'Pending' ? 'selected' : '' }}>
+                                    <option value="Pending"
+                                        {{ old('status', $status ?? '') == 'Pending' ? 'selected' : '' }}>
                                         Pending
                                     </option>
-                                    <option value="Completed" {{ old('status', $status ?? '') == 'Completed' ? 'selected' : '' }}>
+                                    <option value="Completed"
+                                        {{ old('status', $status ?? '') == 'Completed' ? 'selected' : '' }}>
                                         Completed
                                     </option>
                                 </select>
@@ -452,10 +513,10 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const modal = document.getElementById('uploadModal');
             const openModalButtons = document.querySelectorAll(
-                '.open-modal'); // Sesuaikan tombol untuk membuka modal
+                '.open-modal-import'); // Sesuaikan tombol untuk membuka modal
             const closeModalButtons = document.querySelectorAll('.close-modal');
             // Fungsi untuk membuka modal
             openModalButtons.forEach(button => {
@@ -468,6 +529,26 @@
             closeModalButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     modal.classList.add('hidden');
+                });
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const modalexport = document.getElementById('uploadModalexport');
+            const openModalexportButtons = document.querySelectorAll(
+                '.open-modal-export'); // Sesuaikan tombol untuk membuka modal
+            const closeModalButtons = document.querySelectorAll('.close-modal');
+            // Fungsi untuk membuka modal
+            openModalexportButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    modalexport.classList.remove('hidden');
+                    modalexport.classList.add('flex');
+                });
+            });
+            // Fungsi untuk menutup modal
+            closeModalButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    modalexport.classList.add('hidden');
                 });
             });
         });
@@ -488,7 +569,7 @@
             editButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     const recordId = button.getAttribute('data-id');
-                    
+
                     fetch(`/training-record/${recordId}`)
                         .then(response => response.json())
                         .then(data => {
@@ -507,7 +588,7 @@
                             } else {
                                 commentField.value = "";
                             }
-                            
+
                             if (userRole === 'Super Admin') {
                                 approvalField.value = data.approval;
                                 statusField.value = data.status;
@@ -521,8 +602,9 @@
                                 attachmentFrame.href = '';
                                 alert('Attachment tidak tersedia.');
                             }
-                            requestorNameElement.textContent = `History Approval - Requestor = ${data.requestor_name}`;
-                            
+                            requestorNameElement.textContent =
+                                `History Approval - Requestor = ${data.requestor_name}`;
+
                             // Tampilkan history ke tabel
                             renderHistoryTable(data.history);
 
@@ -534,10 +616,10 @@
                             console.error('Error fetching data:', error);
                             alert('Terjadi kesalahan saat mengambil data.');
                         });
-                        
+
                 });
             });
-            
+
 
             function renderHistoryTable(historyData) {
                 const tbody = document.getElementById('modal-history-body');
@@ -545,7 +627,8 @@
 
                 if (!historyData || historyData.length === 0) {
                     const emptyRow = document.createElement('tr');
-                    emptyRow.innerHTML = `<td colspan="3" class="p-2 text-center text-gray-500">Tidak ada riwayat komentar atau approval</td>`;
+                    emptyRow.innerHTML =
+                        `<td colspan="3" class="p-2 text-center text-gray-500">Tidak ada riwayat komentar atau approval</td>`;
                     tbody.appendChild(emptyRow);
                     return;
                 }
@@ -556,7 +639,7 @@
                     // Format updated_at menggunakan toLocaleString
                     const formattedDate = new Date(entry.updated_at).toLocaleString('id-ID', {
                         day: '2-digit',
-                        month: 'short',  // singkatan bulan
+                        month: 'short', // singkatan bulan
                         year: 'numeric',
                         hour: '2-digit',
                         minute: '2-digit'
@@ -588,34 +671,32 @@
 
         // Menutup modal
         document.querySelectorAll('[data-modal-hide="readProductModal"]').forEach(button => {
-            button.addEventListener('click', function () {
+            button.addEventListener('click', function() {
                 const modal = document.getElementById('readProductModal');
                 modal.classList.add('hidden');
             });
         });
 
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             const modal = document.getElementById("jobSkillModal");
             const openModalBtn = document.getElementById("openModalBtn");
             const closeModalBtn = document.getElementById("closeModalBtn");
 
-            openModalBtn.addEventListener("click", function () {
+            openModalBtn.addEventListener("click", function() {
                 modal.classList.remove("hidden");
                 modal.classList.add("flex");
             });
 
-            closeModalBtn.addEventListener("click", function () {
+            closeModalBtn.addEventListener("click", function() {
                 modal.classList.add("hidden");
             });
 
             // Tutup modal jika klik di luar kontennya
-            window.addEventListener("click", function (event) {
+            window.addEventListener("click", function(event) {
                 if (event.target === modal) {
                     modal.classList.add("hidden");
                 }
             });
         });
-
-
     </script>
 @endsection

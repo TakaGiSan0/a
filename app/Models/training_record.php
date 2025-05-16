@@ -17,23 +17,7 @@ class training_record extends Model
         'date_end' => 'date',
     ];
 
-    protected $fillable = [
-        'doc_ref',
-        'station',
-        'category_id',
-        'training_name',
-        'trainer_name',
-        'rev',
-        'date_start',
-        'date_end',
-        'training_duration',
-        'status',
-        'approval',
-        'comment',
-        'attachment',
-        'user_id',
-        'training_skill_id',
-    ];
+    protected $fillable = ['doc_ref', 'station', 'category_id', 'training_name', 'trainer_name', 'rev', 'date_start', 'date_end', 'training_duration', 'status', 'approval', 'comment', 'attachment', 'user_id', 'training_skill_id'];
 
     public function trainingCategory()
     {
@@ -46,8 +30,7 @@ class training_record extends Model
     }
     public function pesertas()
     {
-        return $this->belongsToMany(Peserta::class, 'hasil_peserta')
-            ->withPivot('level', 'final_judgement', 'license', 'theory_result', 'practical_result');
+        return $this->belongsToMany(Peserta::class, 'hasil_peserta')->withPivot('level', 'final_judgement', 'license', 'theory_result', 'practical_result');
     }
 
     public function user()
@@ -61,9 +44,9 @@ class training_record extends Model
     }
 
     public function training_skill_record()
-{
-    return $this->hasMany(Trainingskillrecord::class, 'training_record_id');
-}
+    {
+        return $this->hasMany(Trainingskillrecord::class, 'training_record_id');
+    }
 
     public function comments()
     {
@@ -72,14 +55,7 @@ class training_record extends Model
 
     public function latestComment()
     {
-        return $this->hasOne(training_comment::class)
-            ->select(
-                'comment_training.id',
-                'comment_training.training_record_id',
-                'comment_training.approval',
-                'comment_training.created_at'
-            )
-            ->latestOfMany();
+        return $this->hasOne(training_comment::class)->select('comment_training.id', 'comment_training.training_record_id', 'comment_training.approval', 'comment_training.created_at')->latestOfMany();
     }
 
     public function getFormattedDateRangeAttribute()
@@ -95,8 +71,9 @@ class training_record extends Model
         if ($user->role === 'Super Admin') {
             return $query;
         } elseif ($user->role === 'Admin' || $user->role === 'User') {
-            return $query->whereHas('user', function ($q) use ($user) {
-                $q->where('dept', $user->dept);
+            $dept = $user->pesertaLogin->dept;
+            return $query->whereHas('pesertas', function ($q) use ($dept) {
+                $q->where('dept', $dept);
             });
         }
 

@@ -28,7 +28,7 @@ class PesertaController extends Controller
         $user = auth('web')->user();
 
         // Ambil data peserta berdasarkan filter pencarian atau seluruh peserta
-        $peserta = $query->with('user:id,name,updated_at') // Memuat relasi user hanya dengan id dan name
+        $peserta = $query->with('user:id,user,updated_at') // Memuat relasi user hanya dengan id dan name
             ->byDept()
             ->select('id', 'badge_no', 'employee_name', 'dept', 'position', 'join_date', 'status', 'category_level','gender', 'user_id')
             ->orderBy('employee_name', 'asc')

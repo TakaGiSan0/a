@@ -17,28 +17,26 @@ class TrainingMatrixController extends Controller
         // Ambil daftar semua departemen dalam satu query
         $departments = Peserta::whereHas('trainingRecords', function ($query) {
             $query->where('status', 'completed');
-        })->distinct()->pluck('dept')->toArray();
+        })
+            ->distinct()
+            ->pluck('dept')
+            ->toArray();
 
         // Ambil semua skill dan job_skill dalam satu query
         $legendSkills = Training_Skill::select('skill_code', 'job_skill')->get();
 
         // Query untuk peserta dengan filter yang dipilih
-        $pesertasQuery = Peserta::with(['trainingRecords' => function ($query) {
-            $query->where('status', 'completed');
-        }])
+        $pesertasQuery = Peserta::with([
+            'trainingRecords' => function ($query) {
+                $query->where('status', 'completed');
+            },
+        ])
             ->whereHas('trainingRecords', fn($query) => $query->where('status', 'completed'))
             ->when($request->dept, fn($q) => $q->whereIn('dept', (array) $request->dept))
-            ->when(
-                $request->searchQuery,
-                fn($q) =>
-                $q->where('employee_name', 'like', "%{$request->searchQuery}%")
-                    ->orWhere('badge_no', 'like', "%{$request->searchQuery}%")
-            );
+            ->when($request->searchQuery, fn($q) => $q->where('employee_name', 'like', "%{$request->searchQuery}%")->orWhere('badge_no', 'like', "%{$request->searchQuery}%"));
 
         // Ambil peserta dengan paginasi
-        $pesertas = $pesertasQuery->select('id', 'badge_no', 'join_date', 'employee_name', 'dept')
-            ->orderBy('employee_name')
-            ->paginate(10);
+        $pesertas = $pesertasQuery->select('id', 'badge_no', 'join_date', 'employee_name', 'dept')->orderBy('employee_name')->paginate(10);
 
         // Total peserta
         $totalParticipants = (clone $pesertasQuery)->count();
@@ -57,26 +55,31 @@ class TrainingMatrixController extends Controller
             ->all();
 
         // Ambil semua station dalam satu query
-        $allStations = Training_Record::where('status', 'completed')
-            ->pluck('station')
-            ->unique()
-            ->values()
-            ->toArray();
+        $allStations = Training_Record::where('status', 'completed')->where('station', '!=', 'NA')->pluck('station')->unique()->values()->toArray();
+
 
         // Ambil semua skill_code dalam satu query
-        $allSkills = Training_Skill::pluck('skill_code')->unique()->toArray();
-        $allSkill = Training_Skill::all();
+        $allSkills = Training_Skill::where('skill_code', '!=', 'NA')->pluck('skill_code')->unique()->toArray();
+
+        $allSkill = Training_Skill::where('skill_code', '!=', 'NA')->get();
 
         // Gabungkan station dengan jumlah level 3 & 4
-        $stationsWithLevels = collect($allStations)->mapWithKeys(fn($station) => [
-            $station => $stationsWithLevels[$station] ?? 0
-        ])->toArray();
+        $stationsWithLevels = collect($allStations)
+        ->mapWithKeys(
+                fn($station) => [
+                    $station => $stationsWithLevels[$station] ?? 0,
+                ],
+            )
+            ->toArray();
 
         // Hitung gap per station
-        $stationsWithGaps = collect($stationsWithLevels)->mapWithKeys(fn($count, $station) => [
-            $station => $totalParticipants - $count
-        ])->toArray();
-
+        $stationsWithGaps = collect($stationsWithLevels)
+            ->mapWithKeys(
+                fn($count, $station) => [
+                    $station => $totalParticipants - $count,
+                ],
+                )
+                ->toArray();
         // Return view dengan data yang sudah dioptimasi
         return view('content.training_matrix', [
             'pesertas' => $pesertas,
@@ -90,8 +93,6 @@ class TrainingMatrixController extends Controller
             'legendSkills' => $legendSkills,
         ]);
     }
-
-
 
     public function downloadpdf(Request $request)
     {
@@ -112,31 +113,26 @@ class TrainingMatrixController extends Controller
             ->orderBy('employee_name', 'asc')
             ->get();
 
-        $allStations = Training_Record::where('status', 'completed')
-            ->pluck('station')->unique()->toArray();
+        $allStations = Training_Record::where('status', 'completed')->pluck('station')->unique()->toArray();
 
-        $allSkillCodes = Training_Record::where('status', 'completed')
-            ->pluck('skill_code')->flatMap(fn($s) => explode(', ', $s))->unique()->toArray();
+        $allSkillCodes = Training_Record::where('status', 'completed')->pluck('skill_code')->flatMap(fn($s) => explode(', ', $s))->unique()->toArray();
 
         $data = [];
         $stationsWithSupply = array_fill_keys($allStations, 0);
 
         foreach ($pesertas as $peserta) {
             $row = [
-                'badge_no'     => $peserta->badge_no,
+                'badge_no' => $peserta->badge_no,
                 'employee_name' => $peserta->employee_name,
-                'dept'         => $peserta->dept,
-                'join_date'    => $peserta->join_date,
-                'stations'     => [],
-                'skills'       => [],
+                'dept' => $peserta->dept,
+                'join_date' => $peserta->join_date,
+                'stations' => [],
+                'skills' => [],
             ];
 
             // Tambahkan level berdasarkan station
             foreach ($allStations as $station) {
-                $levels = $peserta->trainingRecords
-                    ->filter(fn($training) => in_array($station, explode(', ', $training->station)), $station)
-                    ->pluck('pivot.level')
-                    ->toArray();
+                $levels = $peserta->trainingRecords->filter(fn($training) => in_array($station, explode(', ', $training->station)), $station)->pluck('pivot.level')->toArray();
 
                 $angkaLevels = array_filter($levels, fn($level) => is_numeric($level));
                 $naLevels = array_filter($levels, fn($level) => strtoupper($level) === 'NA');
@@ -167,8 +163,7 @@ class TrainingMatrixController extends Controller
         $gapRow = array_map(fn($supply) => $totalParticipants - $supply, $stationsWithSupply);
 
         // Render PDF
-        $pdf = Pdf::loadView('pdf.training_matrix', compact('data', 'allStations', 'allSkillCodes', 'supplyRow', 'gapRow', 'deptList'))
-            ->setPaper('A4', 'landscape');
+        $pdf = Pdf::loadView('pdf.training_matrix', compact('data', 'allStations', 'allSkillCodes', 'supplyRow', 'gapRow', 'deptList'))->setPaper('A4', 'landscape');
 
         return $pdf->download('Training_Matrix.pdf');
     }

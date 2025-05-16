@@ -96,7 +96,7 @@
                             <th scope="col" class="px-4 py-4">Badge No</th>
                             <th scope="col" class="px-4 py-3">Employee Name</th>
                             <th scope="col" class="px-4 py-3">Dept</th>
-                            <th scope="col" class="px-4 py-3">Position\EFF</th>
+                            <th scope="col" class="px-4 py-3">Position/effective</th>
                             <th scope="col" class="px-4 py-3">Join Date</th>
                             <th scope="col" class="px-4 py-3">Status</th>
                             <th scope="col" class="px-4 py-3">Category Level</th>
@@ -131,16 +131,15 @@
                                     <td class="px-4 py-3">{{ $p->status }}</td>
                                     <td class="px-4 py-3">{{ $p->category_level }}</td>
                                     <td class="px-4 py-3">{{ $p->gender }}</td>
-                                    <td class="px-4 py-3">{{ optional($p->user)->name ?? 'Tidak ada user' }}<br>
-                                        {{ $p->user->updated_at }}</td>
+                                    <td class="px-4 py-3">{{ optional($p->user)->user ?? 'Tidak ada user' }}<br>
+                                        {{ optional($p->user)->updated_at ?? '' }}</td>
 
                                     @if (auth()->user()->role == 'Super Admin')
-
                                         <td class="px-4 py-3 flex items-center justify-center">
                                             <a href="{{ route('peserta.edit', $p->id) }}">
-                                                <svg class="h-8 w-8 text-slate-500" width="24" height="24" viewBox="0 0 24 24"
-                                                    stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
-                                                    stroke-linejoin="round">
+                                                <svg class="h-8 w-8 text-slate-500" width="24" height="24"
+                                                    viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                     <path stroke="none" d="M0 0h24v24H0z" />
                                                     <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
                                                     <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
@@ -151,9 +150,10 @@
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger">
-                                                    <svg class="h-8 w-8 text-slate-500" fill="none" viewBox="0 0 24 24"
-                                                        stroke="currentColor">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    <svg class="h-8 w-8 text-slate-500" fill="none"
+                                                        viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
                                                             d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                                     </svg>
                                                 </button>
@@ -226,7 +226,7 @@
 @endsection
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         const modal = document.getElementById('uploadModal');
         const openModalButtons = document.querySelectorAll(
             '.open-modal'); // Sesuaikan tombol untuk membuka modal

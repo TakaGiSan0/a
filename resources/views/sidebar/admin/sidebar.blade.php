@@ -10,7 +10,7 @@
         </a>
         <ul class="mt-6">
             <li>
-                <a href="{{ route('dashboard.index') }}" class="relative flex items-center px-6 py-3 w-full text-sm font-semibold transition-colors duration-150 
+                <a href="{{ route('dashboard.index') }}" class="relative flex items-center px-6 py-3 w-full text-sm font-semibold transition-colors duration-150
                         {{ request()->routeIs('dashboard.index') ? 'bg-white text-[#2D435F]' : ' hover:text-white' }}">
 
                     <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"
@@ -27,7 +27,7 @@
         <ul>
             <li>
                 <a href="{{ route('dashboard.peserta') }}"
-                    class="relative flex items-center px-6 py-3 w-full text-sm font-semibold transition-colors duration-150 
+                    class="relative flex items-center px-6 py-3 w-full text-sm font-semibold transition-colors duration-150
                         {{ request()->routeIs('dashboard.peserta') ? 'bg-white text-[#2D435F]' : ' hover:text-white' }}">
 
                     <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"
@@ -41,7 +41,7 @@
                 </a>
             </li>
             <li>
-                <a href="{{ route('user.index') }}" class="relative flex items-center px-6 py-3 w-full text-sm font-semibold transition-colors duration-150 
+                <a href="{{ route('user.index') }}" class="relative flex items-center px-6 py-3 w-full text-sm font-semibold transition-colors duration-150
                         {{ request()->routeIs('user.index') ? 'bg-white text-[#2D435F]' : ' hover:text-white' }}">
 
                     <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"
@@ -55,7 +55,7 @@
             </li>
             <li>
                 <a href="{{ route('dashboard.summary') }}"
-                    class="relative flex items-center px-6 py-3 w-full text-sm font-semibold transition-colors duration-150 
+                    class="relative flex items-center px-6 py-3 w-full text-sm font-semibold transition-colors duration-150
                         {{ request()->routeIs('dashboard.summary') ? 'bg-white text-[#2D435F]' : ' hover:text-white' }}">
 
                     <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"
@@ -70,7 +70,7 @@
             </li>
             <li>
                 <a href="{{ route('dashboard.employee') }}"
-                    class="relative flex items-center px-6 py-3 w-full text-sm font-semibold transition-colors duration-150 
+                    class="relative flex items-center px-6 py-3 w-full text-sm font-semibold transition-colors duration-150
                         {{ request()->routeIs('dashboard.employee') ? 'bg-white text-[#2D435F]' : ' hover:text-white' }}">
 
                     <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"
@@ -82,7 +82,7 @@
                 </a>
             </li>
             <li>
-                <a href="{{ route('matrix.index') }}" class="relative flex items-center px-6 py-3 w-full text-sm font-semibold transition-colors duration-150 
+                <a href="{{ route('matrix.index') }}" class="relative flex items-center px-6 py-3 w-full text-sm font-semibold transition-colors duration-150
                         {{ request()->routeIs('matrix.index') ? 'bg-white text-[#2D435F]' : ' hover:text-white' }}">
 
                     <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"
@@ -98,7 +98,7 @@
             </li>
             <li>
                 <a href="{{ route('training-matrix.index') }}"
-                    class="relative flex items-center px-6 py-3 w-full text-sm font-semibold transition-colors duration-150 
+                    class="relative flex items-center px-6 py-3 w-full text-sm font-semibold transition-colors duration-150
                         {{ request()->routeIs('training-matrix.index') ? 'bg-white text-[#2D435F]' : ' hover:text-white' }}">
 
                     <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"
@@ -108,6 +108,35 @@
                         <path d="M9 12l2 2l4 -4" />
                     </svg>
                     <span class="">Production Competency Matrix</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('dashboard.peserta') }}"
+                    class="relative flex items-center px-6 py-3 w-full text-sm font-semibold transition-colors duration-150
+                        {{ request()->routeIs('dashboard.peserta') ? 'bg-white text-[#2D435F]' : ' hover:text-white' }}">
+
+                    <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"
+                        stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                        <path
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01">
+                        </path>
+                    </svg>
+
+                    <span class="ml-4">Master Data Employee</span>
+                </a>
+            </li><li>
+                <a href="{{ route('dashboard.peserta') }}"
+                    class="relative flex items-center px-6 py-3 w-full text-sm font-semibold transition-colors duration-150
+                        {{ request()->routeIs('dashboard.peserta') ? 'bg-white text-[#2D435F]' : ' hover:text-white' }}">
+
+                    <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"
+                        stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                        <path
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01">
+                        </path>
+                    </svg>
+
+                    <span class="ml-4">Master Data Employee</span>
                 </a>
             </li>
         </ul>

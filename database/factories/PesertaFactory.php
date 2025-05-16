@@ -37,6 +37,7 @@ class PesertaFactory extends Factory
             'status' => $this->faker->randomElement(['Active', 'Non Active']),
             'category_level' => $this->faker->randomElement(['Contractor', 'Permanent']),
             'user_id' => $user->id, // Gunakan user_id yang diambil
+            'user_id_login' => null, // default
         ];
     }
 }

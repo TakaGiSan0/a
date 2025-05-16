@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\peserta;
 use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
@@ -13,24 +14,22 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        // Ambil data user berdasarkan filter pencarian
+        $userLogin = auth('web')->user();
 
-        // Ambil role pengguna saat ini
-        $users = auth('web')->user(); // Asumsikan 'role' adalah atribut di tabel users
-
-        $user = User::byUserRole($users) // Terapkan filter sesuai role & dept
-        ->orderBy('name', 'asc')
-        ->paginate(10);
-        
+        $user = User::select('users.*')->leftJoin('pesertas', 'pesertas.user_id_login', '=', 'users.id')->byUserRole($userLogin)->orderBy('pesertas.employee_name', 'asc')->paginate(10);
 
         // Pastikan $message selalu terdefinisi
         $message = $user->isEmpty() ? 'No results found for your search.' : '';
 
         // Kembalikan view dengan data user dan pesan
-        return response()->view('user.index', [
-            'user' => $user,
-            'message' => $message,
-        ], 200);
+        return response()->view(
+            'user.index',
+            [
+                'user' => $user,
+                'message' => $message,
+            ],
+            200,
+        );
     }
 
     /**
@@ -38,7 +37,6 @@ class UserController extends Controller
      */
     public function create()
     {
-
         // Pilih view berdasarkan role
         return view('user.create', [
             'user' => auth('')->user(), // Kirim user yang sedang login
@@ -110,7 +108,7 @@ class UserController extends Controller
         $userRole = auth('')->user()->role; // Asumsikan 'role' adalah atribut di tabel users
 
         // Kembalikan view dengan data user
-        return  view('user.edit', compact('user'))->with('hideSidebar', true);
+        return view('user.edit', compact('user'))->with('hideSidebar', true);
     }
 
     /**

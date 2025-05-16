@@ -84,9 +84,9 @@
                                         {{ ++$no }}
                                     </th>
                                     <td class="px-4 py-3">{{ $p->user }}</td>
-                                    <td class="px-4 py-3">{{ $p->name }}</td>
+                                    <td class="px-4 py-3">{{ $p->pesertaLogin->employee_name }}</td>
                                     <td class="px-4 py-3">{{ $p->role }}</td>
-                                    <td class="px-4 py-3">{{ $p->dept }}</td>
+                                    <td class="px-4 py-3">{{ $p->pesertaLogin->dept }}</td>
 
                                     @if (auth()->user()->role == 'Super Admin')
                                         <td class="px-4 py-3 flex items-center justify-center">
