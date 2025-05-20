@@ -111,9 +111,9 @@
                 </a>
             </li>
             <li>
-                <a href="{{ route('dashboard.peserta') }}"
+                <a href="{{ route('training-request.index') }}"
                     class="relative flex items-center px-6 py-3 w-full text-sm font-semibold transition-colors duration-150
-                        {{ request()->routeIs('dashboard.peserta') ? 'bg-white text-[#2D435F]' : ' hover:text-white' }}">
+                        {{ request()->routeIs('training-request.index') ? 'bg-white text-[#2D435F]' : ' hover:text-white' }}">
 
                     <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"
                         stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
