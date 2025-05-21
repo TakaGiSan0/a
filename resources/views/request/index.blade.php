@@ -28,7 +28,7 @@
                 @if (auth()->user()->role == 'Super Admin')
                     <div
                         class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-                        <a href="{{ route('export.matrix') }}"
+                        <a href="{{ route('export.training-request') }}"
                             class="flex items-center justify-center text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800">
                             <svg class="h-4 w-4 mr-2 text-white-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
                                 stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -72,41 +72,80 @@
                     </thead>
                     <?php $no = 0; ?>
                     @foreach ($request as $r)
-                    <tbody class="text-gray-600 dark:text-gray-200 bg-gray-50 dark:bg-gray-700">
-                        <tr class=>
-                            <th scope="row" name="id"
-                                class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {{ ++$no }}
-                            </th>
-                            <td class="px-4 py-3">
-                                {{ $r->peserta->employee_name ?? 'Tidak ditemukan' }}
-                            </td>
-                            <td class="px-4 py-3">
-                                {{ $r->peserta->badge_no ?? 'Tidak ditemukan' }}
-                            </td>
-                            <td class="px-4 py-3">
-                                {{ $r->peserta->dept ?? 'Tidak ditemukan' }}
-                            </td>
-                            <td class="px-4 py-3">
-                                {{ $r->description ?? 'Tidak ditemukan' }}
-                            </td>
-                            @if (auth()->user()->role == 'Super Admin')
-                                <td class="px-4 py-3 flex items-center justify-center space-x-4">
-                                    <button type="button" data-modal-target="readProductModal"
-                                        data-modal-toggle="readProductModal" data-id=""
-                                        class="trigger-modal items-center justify-center over:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
-                                        <svg class="h-8 w-8 text-slate-500" width="24" height="24" viewBox="0 0 24 24"
-                                            stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
-                                            stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z" />
-                                            <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
-                                            <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
-                                        </svg>
-                                    </button>
+                        <tbody class="text-gray-600 dark:text-gray-200 bg-gray-50 dark:bg-gray-700">
+                            <tr class=>
+                                <th scope="row" name="id"
+                                    class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    {{ ++$no }}
+                                </th>
+                                <td class="px-4 py-3">
+                                    {{ $r->peserta->employee_name ?? 'Tidak ditemukan' }}
                                 </td>
-                            @endif
-                        </tr>
-                    </tbody>
+                                <td class="px-4 py-3">
+                                    {{ $r->peserta->badge_no ?? 'Tidak ditemukan' }}
+                                </td>
+                                <td class="px-4 py-3">
+                                    {{ $r->peserta->dept ?? 'Tidak ditemukan' }}
+                                </td>
+                                <td class="px-4 py-3">
+                                    {{ Str::words($r->description ?? 'Tidak ditemukan', 10, '...') }}
+                                </td>
+                                @if (auth()->user()->role == 'Super Admin')
+                                    <td class="relative px-4 py-3 text-center">
+                                        <!-- Trigger & Dropdown wrapper -->
+                                        <div class="inline-block text-left">
+                                            <!-- Button -->
+                                            <button onclick="toggleDropdown(event, this)"
+                                                class="hover:bg-gray-100 dark:hover:bg-gray-600 rounded-full p-2">
+                                                <!-- SVG icon -->
+                                                <svg class="h-6 w-6 text-gray-500" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                    stroke-linejoin="round">
+                                                    <circle cx="12" cy="12" r="1" />
+                                                    <circle cx="12" cy="5" r="1" />
+                                                    <circle cx="12" cy="19" r="1" />
+                                                </svg>
+                                            </button>
+                                            <div
+                                                class="dropdown-menu hidden absolute top-0 right-full ml-2 bg-white border rounded shadow-md z-50 w-32">
+
+                                                <!-- Button Edit -->
+                                                <button
+                                                    class="w-full flex items-center gap-2 text-left px-4 py-2 hover:bg-gray-100">
+                                                    <svg class="h-4 w-4 text-blue-500" fill="none" stroke="currentColor"
+                                                        stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round"
+                                                        stroke-linejoin="round">
+                                                        <path d="M12 20h9" />
+                                                        <path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4 12.5-12.5z" />
+                                                    </svg>
+                                                    Edit
+                                                </button>
+
+
+                                                <!-- Button Hapus -->
+                                                <button
+                                                    class="w-full flex items-center gap-2 text-left px-4 py-2 text-red-600 hover:bg-red-100">
+                                                    <svg class="h-4 w-4 text-red-600" fill="none" stroke="currentColor"
+                                                        stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round"
+                                                        stroke-linejoin="round">
+                                                        <polyline points="3 6 5 6 21 6" />
+                                                        <path
+                                                            d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6m5 0V4a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v2" />
+                                                        <line x1="10" y1="11" x2="10" y2="17" />
+                                                        <line x1="14" y1="11" x2="14" y2="17" />
+                                                    </svg>
+                                                    Hapus
+                                                </button>
+                                            </div>
+
+
+                                        </div>
+                                    </td>
+
+
+                                @endif
+                            </tr>
+                        </tbody>
                     @endforeach
                 </table>
             </div>
@@ -192,5 +231,24 @@
                 modal.classList.add("hidden");
             }
         });
+    });
+
+    function toggleDropdown(event, btn) {
+        event.stopPropagation(); // cegah event bubbling
+        const dropdown = btn.nextElementSibling;
+        const allDropdowns = document.querySelectorAll('.dropdown-menu');
+
+        allDropdowns.forEach(d => {
+            if (d !== dropdown) d.classList.add('hidden');
+        });
+
+        dropdown.classList.toggle('hidden');
+    }
+
+    // Tutup dropdown saat klik di luar
+    document.addEventListener('click', function (e) {
+        if (!e.target.closest('.dropdown-menu') && !e.target.closest('button')) {
+            document.querySelectorAll('.dropdown-menu').forEach(d => d.classList.add('hidden'));
+        }
     });
 </script>

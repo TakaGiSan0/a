@@ -88,31 +88,56 @@
                                     <td class="px-4 py-3">{{ $p->role }}</td>
                                     <td class="px-4 py-3">{{ $p->pesertaLogin->dept }}</td>
 
-                                    @if (auth()->user()->role == 'Super Admin')
-                                        <td class="px-4 py-3 flex items-center justify-center">
-                                            <a href="{{ route('user.edit', $p->id) }}">
-                                                <svg class="h-8 w-8 text-slate-500" width="24" height="24" viewBox="0 0 24 24"
-                                                    stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+                                    <td class="relative px-4 py-3 text-center">
+                                        <!-- Trigger & Dropdown wrapper -->
+                                        <div class="inline-block text-left">
+                                            <!-- Button -->
+                                            <button onclick="toggleDropdown(event, this)"
+                                                class="hover:bg-gray-100 dark:hover:bg-gray-600 rounded-full p-2">
+                                                <!-- SVG icon -->
+                                                <svg class="h-6 w-6 text-gray-500" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                                     stroke-linejoin="round">
-                                                    <path stroke="none" d="M0 0h24v24H0z" />
-                                                    <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
-                                                    <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
+                                                    <circle cx="12" cy="12" r="1" />
+                                                    <circle cx="12" cy="5" r="1" />
+                                                    <circle cx="12" cy="19" r="1" />
                                                 </svg>
-                                            </a>
-                                            <form action="{{ route('user.destroy', $p->id) }}" method="POST"
-                                                onsubmit="return confirm('Apakah Anda yakin ingin menghapus peserta ini?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger">
-                                                    <svg class="h-8 w-8 text-slate-500" fill="none" viewBox="0 0 24 24"
-                                                        stroke="currentColor">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                                    </svg>
-                                                </button>
-                                            </form>
-                                        </td>
-                                    @endif
+                                            </button>
+                                            <div
+                                                class="dropdown-menu hidden absolute top-0 right-full ml-2 bg-white border rounded shadow-md z-50 w-32">
+
+                                                <!-- Button Edit -->
+                                                @if (auth()->user()->role == 'Super Admin')
+                                                <a href="{{ route('user.edit', $p->id) }}"
+                                                        class="w-full flex items-center gap-2 text-left px-4 py-2 hover:bg-gray-100">
+                                                        <svg class="h-4 w-4 text-blue-500" fill="none" stroke="currentColor"
+                                                            stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round"
+                                                            stroke-linejoin="round">
+                                                            <path d="M12 20h9" />
+                                                            <path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4 12.5-12.5z" />
+                                                        </svg>
+                                                        Edit
+                                                    </a>
+
+
+                                                    <form action="{{ route('user.destroy', $p->id) }}" method="POST"
+                                                        onsubmit="return confirm('Apakah Anda yakin ingin menghapus peserta ini?');">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button
+                                                            class="w-full flex items-center gap-2 text-left px-4 py-2 text-red-600 hover:bg-red-100">
+                                                            <svg class="h-4 w-4 text-red-600" fill="none" viewBox="0 0 24 24"
+                                                                stroke="currentColor">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                            </svg>
+                                                            Hapus
+                                                        </button>
+                                                    </form>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </td>
                                 </tr>
                             </tbody>
                         @endforeach
@@ -126,4 +151,24 @@
         </div>
     </section>
 
+    <script>
+        function toggleDropdown(event, btn) {
+            event.stopPropagation(); // cegah event bubbling
+            const dropdown = btn.nextElementSibling;
+            const allDropdowns = document.querySelectorAll('.dropdown-menu');
+
+            allDropdowns.forEach(d => {
+                if (d !== dropdown) d.classList.add('hidden');
+            });
+
+            dropdown.classList.toggle('hidden');
+        }
+
+        // Tutup dropdown saat klik di luar
+        document.addEventListener('click', function (e) {
+            if (!e.target.closest('.dropdown-menu') && !e.target.closest('button')) {
+                document.querySelectorAll('.dropdown-menu').forEach(d => d.classList.add('hidden'));
+            }
+        });
+    </script>
 @endsection

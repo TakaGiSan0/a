@@ -9,6 +9,7 @@ use App\Exports\MasterDataExport;
 use App\Exports\TrainingRecordExport;
 use App\Exports\TrainingMatrixExport;
 use App\Exports\MatrixExport;
+use App\Exports\TrainingRequestExport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ExcelController extends Controller
@@ -70,5 +71,13 @@ class ExcelController extends Controller
         $date = date('Y-m-d'); // Format tanggal: Tahun-Bulan-Hari
         $fileName = 'Training Matrix - ' . $date . '.xlsx';
         return Excel::download(new TrainingMatrixExport(), $fileName);
+    }
+
+    public function export_training_request(request $request)
+    {
+        $date = date('Y-m-d'); // Format tanggal: Tahun-Bulan-Hari
+        $fileName = 'Training Request - ' . $date . '.xlsx';
+        return Excel::download(new TrainingRequestExport, $fileName);
+
     }
 }
