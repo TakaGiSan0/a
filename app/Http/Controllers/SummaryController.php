@@ -18,7 +18,8 @@ class SummaryController extends Controller
         $search = $request->input('search');
         $station = $request->input('station');
 
-        $trainingRecords = Training_Record::with(['trainingCategory:id,name'])
+        $trainingRecords = Training_Record::select('id', 'training_name', 'status', 'date_start', 'category_id', 'station')
+            ->with(['trainingCategory:id,name'])
             ->where('status', 'Completed')
             ->when($search, function ($query, $search) {
                 $query->where('training_name', 'like', '%' . $search . '%');

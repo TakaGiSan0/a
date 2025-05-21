@@ -11,6 +11,8 @@ use App\Http\Controllers\FormController;
 use App\Http\Controllers\MatrixController;
 use App\Http\Controllers\TrainingMatrixController;
 use App\Http\Controllers\TrainingRequestController;
+use App\Http\Controllers\TrainingEvaluationController;
+
 
 use Illuminate\Routing\Middleware\ThrottleRequests;
 
@@ -56,6 +58,10 @@ Route::middleware(['auth:web'])->group(function () {
 
     // Dashboard Training Request
     Route::get('/training-request/dashboard', [TrainingRequestController::class, 'index'])->name('training-request.index');
+    Route::post('/training-request/store', [TrainingRequestController::class, 'store'])->name('training-request.store');
+
+    //Dashboard Training Evaluation
+    Route::get('/training-evaluation/dashboard', [TrainingEvaluationController::class, 'index'])->name('training-evaluation.index');
 
     // Search SummaryTraining Record
     Route::post('/api/trainings/search', [SummaryController::class, 'search']);

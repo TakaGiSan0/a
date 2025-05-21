@@ -6,59 +6,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     @vite('resources/css/app.css')
 </head>
 
 <style>
     body {
-        background-image: url('/images/bg-login.png');
+        background-image: url('/images/bg-login-1.png');
         background-size: cover;
         background-repeat: no-repeat;
 
-    };
-</style>
-<body class="bg-[#E5E7EB] flex h-screen items-center justify-center">
-    <div class="w-full max-w-sm bg-white shadow-lg rounded-lg p-8">
-        <h2 class="text-center text-2xl font-bold text-gray-900">Sign in to your account</h2>
+    }
 
-        <form class="mt-6 space-y-4" action="{{ route('login') }}" method="POST">
+    ,
+    h1 {
+        font-size: 64px !important;
+        font-style: italic;
+    }
+
+    ;
+</style>
+
+<body class="bg-white flex h-screen flex-col items-center justify-center">
+
+    <div class="w-full max-w-sm text-center mb-10 leading-none">
+        <h1 style="font-size: 64px !important; font-style: italic; font-family: 'Times New Roman', serif;"
+            class="text-center font-bold text-blue-600 m-0">
+            TMS
+        </h1>
+        <p class="text-sm text-red-400 font-semibold mb-5 leading-none">
+            Training Management System
+        </p>
+    </div>
+    <!-- Form Login -->
+    <div class="w-full max-w-sm bg-white shadow-xl rounded-lg p-6">
+        <h2 class="text-center text-xl font-semibold text-gray-900 mb-6">Sign in to your account</h2>
+
+        <form action="{{ route('login') }}" method="POST" class="space-y-4">
             @csrf
 
-            <!-- Username Field -->
             <div>
                 <label for="user" class="block text-sm font-medium text-gray-700">Username</label>
                 <input id="user" name="user" type="text" required
-                    class="mt-1 block w-full rounded-md border border-gray-300 bg-gray-50 py-2 px-3 text-gray-900 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                @error('user')
-                    <span class="text-red-500 text-xs">{{ $message }}</span>
-                @enderror
+                    class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
             </div>
 
-            <!-- Password Field -->
             <div>
                 <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
                 <input id="password" name="password" type="password" required
-                    class="mt-1 block w-full rounded-md border border-gray-300 bg-gray-50 py-2 px-3 text-gray-900 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                @error('password')
-                    <span class="text-red-500 text-xs">{{ $message }}</span>
-                @enderror
+                    class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
             </div>
 
-            <!-- Submit Button -->
-            <div>
-                <button type="submit"
-                    class="w-full rounded-md bg-indigo-600 py-2 text-sm font-semibold text-white shadow-md hover:bg-indigo-500 focus:ring-2 focus:ring-indigo-400 focus:outline-none">
-                    Sign in
-                </button>
-            </div>
-
-            @if (session('message'))
-                <div class="mt-4 text-center text-sm text-red-500">
-                    {{ session('message') }}
-                </div>
-            @endif
+            <button type="submit"
+                class="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-500 focus:ring-2 focus:ring-indigo-400 focus:outline-none font-semibold">
+                Sign in
+            </button>
         </form>
     </div>
 </body>
+
+
+
+
 
 </html>

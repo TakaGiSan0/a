@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\a;
+use App\Models\TrainingRequest;
 use Illuminate\Http\Request;
 
 class TrainingRequestController extends Controller
@@ -12,7 +12,11 @@ class TrainingRequestController extends Controller
      */
     public function index()
     {
-        return view('request.index');
+        $request = TrainingRequest::with('peserta')
+            ->byUserRole(auth('')->user())  // pastikan user yg login diteruskan
+            ->paginate(10);
+
+        return view('request.index', compact('request'));
     }
 
     /**
@@ -28,8 +32,26 @@ class TrainingRequestController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'description' => 'nullable|string|max:1000',
+        ]);
+
+        $user = auth("")->user();
+        $peserta = $user->pesertaLogin;
+
+        if (!$peserta) {
+            return back()->with('error', 'Data peserta tidak ditemukan untuk user ini.');
+        }
+
+        TrainingRequest::create([
+            'user_id_login' => $user->id,
+            'peserta_id' => $peserta->id,
+            'description' => $request->description,
+        ]);
+
+        return redirect()->back()->with('success', 'Training request berhasil dikirim.');
     }
+
 
     /**
      * Display the specified resource.
