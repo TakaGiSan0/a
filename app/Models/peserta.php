@@ -11,7 +11,7 @@ class peserta extends Model
 
     protected $table = 'pesertas';
 
-    protected $fillable = ['badge_no', 'employee_name', 'dept', 'position', 'join_date', 'category_level', 'status', 'user_id', 'gender'];
+    protected $fillable = ['badge_no', 'employee_name', 'dept', 'position', 'join_date', 'category_level', 'status', 'user_id', 'user_id_login', 'gender'];
 
     public function trainingRecords()
     {
@@ -35,7 +35,7 @@ class peserta extends Model
 
     public function scopeByDept($query)
     {
-        $user = auth()->user();
+        $user = auth('')->user();
 
         if ($user->role !== 'Super Admin' && $user->pesertaLogin) {
             return $query->whereHas('akunLogin', function ($q) use ($user) {

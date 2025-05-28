@@ -14,7 +14,7 @@ class Training_CommentFactory extends Factory
         return [
             'training_record_id' => Training_Record::factory(), // Menautkan ke TrainingRecord
             'comment' => $this->faker->sentence(),  // Komentar acak
-            'approval' => $this->faker->randomElement(['Pending', 'Approved', 'Reject']),  // Approval acak
+            'approval' => 'Pending',  // Approval acak
             
         ];
     }

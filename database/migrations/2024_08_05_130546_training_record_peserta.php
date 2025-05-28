@@ -20,9 +20,11 @@ return new class extends Migration
             $table->enum('level', ['1', '2','3', '4' , 'NA'])->nullable();
             $table->enum('final_judgement', ['Competence', 'Attend', 'NA'])->nullable();
             $table->enum('license', ['1','0'])->default(0);
+            $table->enum('evaluation', ['1','0'])->default(0);
             $table->string('certificate')->nullable();
             $table->date('expired_date')->nullable();
             $table->string('category')->nullable();
+            
             $table->foreign('peserta_id')->references('id')->on('pesertas')->onDelete('cascade');
             $table->foreign('training_record_id')->references('id')->on('training_records')->onDelete('cascade');
             $table->timestamps();

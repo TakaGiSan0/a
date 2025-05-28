@@ -40,25 +40,21 @@
                         <label class="block text-gray-700 dark:text-white text-sm font-bold mb-2" for="username">
                             Name
                         </label>
-                        <input
+                        <select
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            id="name" type="text" name="name" placeholder="Name">
+                            id="name" type="text" name="employee_name" placeholder="Name">
+                            <option value="">Pilih Peserta</option>
+                            @foreach ($pesertaTanpaUser as $peserta)
+                                <option value="{{ $peserta->employee_name }}" {{ old('employee') == $peserta->employee_name ? 'selected' : '' }}>
+                                    {{ $peserta->employee_name }} -  {{ $peserta->badge_no }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                     @php
                         $role = auth()->user()->role; // Ambil role user yang login
                         $dept = auth()->user()->dept; // Ambil dept user yang login
                     @endphp
-
-
-                    <div class="mb-4">
-                        <label class="block text-gray-700 dark:text-white text-sm font-bold mb-2" for="dept">
-                            Dept
-                        </label>
-
-                        <input
-                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            id="dept" name="dept" type="text" value="{{ $role == 'Admin' ? $dept : '' }}"  {{ $role == 'Admin' ? 'readonly' : '' }}> 
-                    </div>
 
                     <div class="mb-4">
                         <label class=" block text-gray-700 text-sm font-bold dark:text-white mb-2" for="username"> Role

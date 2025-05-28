@@ -9,6 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.x.x/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
     <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <!--Replace with your tailwind.css once created-->
     <script>

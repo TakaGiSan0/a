@@ -59,9 +59,9 @@ class TrainingMatrixController extends Controller
 
 
         // Ambil semua skill_code dalam satu query
-        $allSkills = Training_Skill::where('skill_code', '!=', 'NA')->pluck('skill_code')->unique()->toArray();
+        $allSkills = Training_Skill::withTrashed()->where('skill_code', '!=', 'NA')->pluck('skill_code')->unique()->toArray();
 
-        $allSkill = Training_Skill::where('skill_code', '!=', 'NA')->get();
+        $allSkill = Training_Skill::withTrashed()->where('skill_code', '!=', 'NA')->get();
 
         // Gabungkan station dengan jumlah level 3 & 4
         $stationsWithLevels = collect($allStations)

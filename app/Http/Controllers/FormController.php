@@ -14,6 +14,7 @@ use App\Models\training_comment;
 use Barryvdh\DomPDF\Facade\pdf;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 
 class FormController extends Controller
@@ -27,7 +28,7 @@ class FormController extends Controller
         $selectedYear = $request->input('year');
 
         // Ambil tahun unik dari date_start
-        $years = Training_Record::selectRaw('YEAR(date_start) as year')
+        $years = Training_Record::selectRaw('YEAR(date_end) as year')
             ->distinct()
             ->orderBy('year', 'desc')
             ->pluck('year');
@@ -168,8 +169,26 @@ class FormController extends Controller
                         'level' => $participant['level'],
                         'final_judgement' => $participant['final_judgement'],
                         'license' => $participant['license'],
+                        'evaluation' => $participant['evaluation'],
                         'theory_result' => $participant['theory_result'],
                         'practical_result' => $participant['practical_result'],
+                    ]);
+                }
+
+                // Ambil ID dari pivot (hasil_peserta)
+                $hasilPeserta = DB::table('hasil_peserta')
+                    ->where('peserta_id', $peserta->id)
+                    ->where('training_record_id', $trainingRecord->id)
+                    ->latest('id')
+                    ->first();
+
+                // Jika evaluation bernilai 1, simpan ke tabel training_evaluation
+                if ($participant['evaluation'] == '1' && $hasilPeserta) {
+                    DB::table('training_evaluation')->insert([
+                        'hasil_peserta_id' => $hasilPeserta->id,
+                        'status' => 'Pending', // atau nilai default lain sesuai kebutuhan
+                        'created_at' => now(),
+                        'updated_at' => now(),
                     ]);
                 }
             }
@@ -185,49 +204,45 @@ class FormController extends Controller
      * Display the specified resource.
      */
     public function show($id)
-{
-    $record = Training_Record::select('status', 'user_id')->with('user')->findOrFail($id);
+    {
+        $record = Training_Record::select('status', 'user_id')->with('user')->findOrFail($id);
 
-    $history = training_comment::where('training_record_id', $id)
-        ->orderBy('created_at', 'asc')
-        ->get();
+        $history = training_comment::where('training_record_id', $id)
+            ->orderBy('created_at', 'asc')
+            ->get();
 
-    if ($history->isEmpty()) {
-        Log::info('History tidak ditemukan untuk ID: ' . $id);
-        return response()->json(['message' => 'Data tidak ditemukan'], 404);
+        if ($history->isEmpty()) {
+            Log::info('History tidak ditemukan untuk ID: ' . $id);
+            return response()->json(['message' => 'Data tidak ditemukan'], 404);
+        }
+
+        // Ambil record terakhir dari history
+        $lastComment = $history->last();
+
+        $attachmentUrl = $lastComment->attachment
+            ? asset("storage/" . urlencode($lastComment->attachment))
+            : null;
+
+        return response()->json([
+            'history' => $history,
+            'comment' => $lastComment->comment,
+            'approval' => $lastComment->approval,
+            'status' => $record->status,
+            'attachment' => $attachmentUrl,
+            'requestor_name' => $record->user->name ?? 'Tidak diketahui',
+            'created_at' => $record->created_at?->format('d M Y H:i'),
+            'updated_at' => $record->updated_at?->format('d M Y H:i'),
+        ]);
     }
-
-    // Ambil record terakhir dari history
-    $lastComment = $history->last();
-
-    $attachmentUrl = $lastComment->attachment
-        ? asset("storage/" . urlencode($lastComment->attachment))
-        : null;
-
-    return response()->json([
-        'history' => $history,
-        'comment' => $lastComment->comment,
-        'approval' => $lastComment->approval,
-        'status' => $record->status,
-        'attachment' => $attachmentUrl,
-        'requestor_name' => $record->user->name ?? 'Tidak diketahui',
-        'created_at' => $record->created_at?->format('d M Y H:i'),
-        'updated_at' => $record->updated_at?->format('d M Y H:i'),
-    ]);
-}
-
-
-
-
 
     /**
      * Show the form for editing the specified resource.
      */
     public function edit($id)
     {
-        $trainingRecord = Training_Record::with('pesertas')->findOrFail($id);
-        $trainingskill = Training_Record::with('training_skills')->findOrFail($id);
-
+        $trainingRecord = Training_Record::with(['pesertas', 'training_skills' => function ($query) {
+            $query->withTrashed(); // <-- Ini kuncinya
+        }])->findOrFail($id);
         $time = $trainingRecord->training_duration;
 
         if (!empty($time) && str_contains($time, ':')) {
@@ -310,20 +325,61 @@ class FormController extends Controller
         $trainingRecord->training_Skills()->sync($trainingSkillIds);
 
 
-        $trainingRecord->pesertas()->detach();
+        $pesertaToSync = [];
+        $participantsForEvaluation = []; // Simpan data untuk training_evaluation
+
         foreach ($data['participants'] as $participant) {
             $peserta = Peserta::where('badge_no', $participant['badge_no'])->first();
+
             if ($peserta) {
-                $trainingRecord->pesertas()->attach($peserta->id, [
+                // Siapkan data untuk sync
+                $pesertaToSync[$peserta->id] = [
                     'level' => $participant['level'],
                     'final_judgement' => $participant['final_judgement'],
                     'license' => $participant['license'],
+                    'evaluation' => $participant['evaluation'],
                     'theory_result' => $participant['theory_result'],
                     'practical_result' => $participant['practical_result'],
-                ]);
+                ];
+
+                // Jika evaluation = 1, tandai peserta ini untuk diproses nanti
+                if ($participant['evaluation'] == '1') {
+                    $participantsForEvaluation[] = $peserta->id;
+                }
             }
         }
 
+        // Lakukan sinkronisasi! Ini akan menambah, update, atau menghapus
+        // sesuai kebutuhan agar cocok dengan $pesertaToSync.
+        $trainingRecord->pesertas()->sync($pesertaToSync);
+
+        // --- Menangani training_evaluation SETELAH sync ---
+
+        // 1. Ambil semua hasil_peserta yang relevan (yang baru saja disinkronkan
+        //    dan memiliki evaluation == 1)
+        $relevantHasilPeserta = DB::table('hasil_peserta')
+            ->where('training_record_id', $trainingRecord->id)
+            ->whereIn('peserta_id', $participantsForEvaluation) // Hanya yang evaluation = 1
+            ->get();
+
+        // 2. Hapus dulu entri training_evaluation lama yang mungkin sudah tidak valid
+        //    (Ini opsional, tergantung kebutuhan. Jika Anda ingin mempertahankan
+        //     status lama, lewati langkah ini atau buat logikanya lebih kompleks)
+        DB::table('training_evaluation')
+            ->whereIn('hasil_peserta_id', $trainingRecord->pesertas()->pluck('hasil_peserta.id'))
+            ->delete(); // Hati-hati dengan ini, pastikan ini yang Anda mau.
+
+        // 3. Masukkan entri baru untuk yang relevan
+        foreach ($relevantHasilPeserta as $hasil) {
+            // Anda bisa tambahkan pengecekan di sini jika tidak ingin duplikat
+            // atau jika Anda tidak menghapus semua di langkah 2.
+            DB::table('training_evaluation')->insert([
+                'hasil_peserta_id' => $hasil->id,
+                'status' => 'Pending',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
 
         // Redirect atau response dengan pesan sukses
         return redirect()->route('dashboard.index')->with('success', 'Training succesfully updated.');
@@ -351,7 +407,7 @@ class FormController extends Controller
             'comment' => $validated['comment'],
 
         ]);
-       
+
 
         return redirect()->back()->with('success', 'Komentar berhasil diperbarui.');
     }
@@ -396,6 +452,7 @@ class FormController extends Controller
             'participants.*.level' => 'max:255',
             'participants.*.final_judgement' => 'max:255',
             'participants.*.license' => 'nullable|max:255',
+            'participants.*.evaluation' => 'nullable|max:255',
             'participants.*.theory_result' => 'max:255',
             'participants.*.practical_result' => 'max:255',
         ];
@@ -425,14 +482,16 @@ class FormController extends Controller
 
     public function jobs_skill_destroy($id)
     {
-        $jobSkill = training_skill::find($id);
+        $trainingSkill = Training_Skill::find($id);
 
-        if (!$jobSkill) {
-            return redirect()->back()->with('error', 'Job Skill tidak ditemukan!');
+        if (!$trainingSkill) {
+            return redirect()->route('dashboard.index')->with('error', 'Skill tidak ditemukan.');
         }
 
-        $jobSkill->delete();
-        return redirect()->back()->with('success', 'Job Skill berhasil dihapus!');
+        // Melakukan soft delete
+        $trainingSkill->delete(); // Ini akan mengisi kolom `deleted_at`
+
+        return redirect()->route('dashboard.index')->with('success', 'Skill berhasil dinonaktifkan (soft deleted).');
     }
 
     public function getJobSkill($skillCode)

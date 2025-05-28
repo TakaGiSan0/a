@@ -12,7 +12,7 @@ class hasil_peserta extends Model
 
     protected $table = 'hasil_peserta';
 
-    protected $fillable = ['peserta_id', 'training_record_id', 'level', 'practical_result', 'theory_result', 'final_judgement', 'license', 'certificate', 'expired_date', 'category'];
+    protected $fillable = ['peserta_id', 'training_record_id', 'level', 'practical_result', 'theory_result', 'final_judgement', 'license', 'evaluation', 'certificate', 'expired_date', 'category'];
 
     public function trainingrecord()
     {
@@ -21,6 +21,11 @@ class hasil_peserta extends Model
     public function pesertas()
     {
         return $this->belongsTo(peserta::class, 'peserta_id');
+    }
+
+    public function evaluationDetail()
+    {
+        return $this->hasOne(TrainingEvaluation::class);
     }
 
     public function getExpiredDateAttribute()
@@ -45,7 +50,7 @@ class hasil_peserta extends Model
         if ($user->role === 'Super Admin') {
             return $query; // Super Admin bisa melihat semua data
         } elseif ($user->role === 'Admin' || $user->role === 'User') {
-            return $query->whereHas('trainingrecord.user', function ($q) use ($user) {
+            return $query->whereHas('pesertas', function ($q) use ($user) {
                 $q->where('dept', $user->dept); // Filter berdasarkan departemen dari user yang membuat training_record
             });
         }

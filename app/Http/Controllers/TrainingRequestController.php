@@ -80,8 +80,15 @@ class TrainingRequestController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy()
+    public function destroy($id)
     {
-        //
+        $trainingRequest = TrainingRequest::findOrFail($id);
+
+        $trainingRequest->delete();
+
+        // Redirect ke halaman index dengan pesan sukses
+        return redirect()->back() // Ganti 'training_requests.index' sesuai nama route Anda
+                         ->with('success', 'Data Training Request berhasil dihapus.');
+    
     }
 }

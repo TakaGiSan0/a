@@ -30,7 +30,7 @@ class training_record extends Model
     }
     public function pesertas()
     {
-        return $this->belongsToMany(Peserta::class, 'hasil_peserta')->withPivot('level', 'final_judgement', 'license', 'theory_result', 'practical_result');
+        return $this->belongsToMany(Peserta::class, 'hasil_peserta')->withPivot('level', 'final_judgement', 'license', 'evaluation', 'theory_result', 'practical_result');
     }
 
     public function user()
@@ -52,6 +52,7 @@ class training_record extends Model
     {
         return $this->hasMany(training_comment::class, 'training_record_id');
     }
+
 
     public function latestComment()
     {

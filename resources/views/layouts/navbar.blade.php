@@ -25,7 +25,7 @@
                 <button type="button" id="user-menu-button"
                     class="relative flex items-center rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                     <img class="w-8 h-8 rounded-full bg-white"
-                        src="{{ asset('/images/bg-profile.png') }}"
+                        src="{{ asset('/images/bg-profil2.png') }}"
                         onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name ?? 'User') }}';"
                         alt="User Avatar">
                 </button>

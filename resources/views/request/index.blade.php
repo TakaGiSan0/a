@@ -65,9 +65,12 @@
                             <th scope="col" class="px-4 py-3">Badge No</th>
                             <th scope="col" class="px-4 py-3">Dept</th>
                             <th scope="col" class="px-4 py-3">Description</th>
-                            @if (auth()->user()->role == 'Super Admin')
-                                <th scope="col" class="px-4 py-3">Action</th>
-                            @endif
+                            @foreach ($request as $r)
+
+                                @if (auth()->user()->id === $r->user_id_login)
+                                    <th scope="col" class="px-4 py-3">Action</th>
+                                @endif
+                            @endforeach
                         </tr>
                     </thead>
                     <?php $no = 0; ?>
@@ -90,42 +93,19 @@
                                 <td class="px-4 py-3">
                                     {{ Str::words($r->description ?? 'Tidak ditemukan', 10, '...') }}
                                 </td>
-                                @if (auth()->user()->role == 'Super Admin')
+                                @if (auth()->user()->id === $r->user_id_login)
                                     <td class="relative px-4 py-3 text-center">
                                         <!-- Trigger & Dropdown wrapper -->
                                         <div class="inline-block text-left">
                                             <!-- Button -->
-                                            <button onclick="toggleDropdown(event, this)"
-                                                class="hover:bg-gray-100 dark:hover:bg-gray-600 rounded-full p-2">
-                                                <!-- SVG icon -->
-                                                <svg class="h-6 w-6 text-gray-500" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                                    stroke-linejoin="round">
-                                                    <circle cx="12" cy="12" r="1" />
-                                                    <circle cx="12" cy="5" r="1" />
-                                                    <circle cx="12" cy="19" r="1" />
-                                                </svg>
-                                            </button>
-                                            <div
-                                                class="dropdown-menu hidden absolute top-0 right-full ml-2 bg-white border rounded shadow-md z-50 w-32">
-
-                                                <!-- Button Edit -->
-                                                <button
-                                                    class="w-full flex items-center gap-2 text-left px-4 py-2 hover:bg-gray-100">
-                                                    <svg class="h-4 w-4 text-blue-500" fill="none" stroke="currentColor"
-                                                        stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round"
-                                                        stroke-linejoin="round">
-                                                        <path d="M12 20h9" />
-                                                        <path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4 12.5-12.5z" />
-                                                    </svg>
-                                                    Edit
-                                                </button>
-
-
+                                            <form action="{{ route('training-request.destroy', $r->id) }}" method="POST"
+                                                onsubmit="return confirm('Apakah Anda yakin ingin menghapus request ini?');">
+                                                @csrf
+                                                @method('DELETE')
                                                 <!-- Button Hapus -->
                                                 <button
                                                     class="w-full flex items-center gap-2 text-left px-4 py-2 text-red-600 hover:bg-red-100">
-                                                    <svg class="h-4 w-4 text-red-600" fill="none" stroke="currentColor"
+                                                    <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor"
                                                         stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round"
                                                         stroke-linejoin="round">
                                                         <polyline points="3 6 5 6 21 6" />
@@ -134,15 +114,11 @@
                                                         <line x1="10" y1="11" x2="10" y2="17" />
                                                         <line x1="14" y1="11" x2="14" y2="17" />
                                                     </svg>
-                                                    Hapus
+                                                  
                                                 </button>
-                                            </div>
-
-
+                                            </form>
                                         </div>
                                     </td>
-
-
                                 @endif
                             </tr>
                         </tbody>

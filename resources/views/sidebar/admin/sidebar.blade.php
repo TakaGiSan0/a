@@ -137,7 +137,7 @@
                         </path>
                     </svg>
 
-                    <span class="ml-4">Training Evalution</span>
+                    <span class="ml-4">Training Evaluation</span>
                 </a>
             </li>
         </ul>

@@ -59,9 +59,14 @@ Route::middleware(['auth:web'])->group(function () {
     // Dashboard Training Request
     Route::get('/training-request/dashboard', [TrainingRequestController::class, 'index'])->name('training-request.index');
     Route::post('/training-request/store', [TrainingRequestController::class, 'store'])->name('training-request.store');
+    Route::delete('/training-request/destory/{id}', [TrainingRequestController::class, 'destroy'])->name('training-request.destroy');
 
     //Dashboard Training Evaluation
     Route::get('/training-evaluation/dashboard', [TrainingEvaluationController::class, 'index'])->name('training-evaluation.index');
+    Route::get('/evaluation/{id}/edit', [TrainingEvaluationController::class, 'edit'])->name('evaluation.edit');
+
+    // Untuk update data
+    Route::put('/evaluation/{id}', [TrainingEvaluationController::class, 'update'])->name('evaluation.update');
 
     // Search SummaryTraining Record
     Route::post('/api/trainings/search', [SummaryController::class, 'search']);
@@ -145,5 +150,4 @@ Route::middleware(['auth', 'role:Super Admin'])->group(function () {
     // Route Job Skill
     Route::post('/job-skill/create', [FormController::class, 'jobs_skill_store'])->name('jobs_skill.store');
     Route::delete('/job-skill/delete/{id}', [FormController::class, 'jobs_skill_destroy'])->name('jobs_skill.destroy');
-
 });

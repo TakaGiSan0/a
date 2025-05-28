@@ -25,7 +25,7 @@ class TrainingRecordExport implements FromCollection, WithHeadings
         $data = Training_Record::with(['hasil_Peserta.pesertas', 'trainingCategory', 'training_skill_record.training_skill'])->orderBy('date_start', 'desc');
 
         if ($this->year !== 'all') {
-            $data->whereYear('date_start', $this->year); // pastikan ini jalan
+            $data->whereYear('date_end', $this->year);
         }
 
         $data = $data->get()->flatMap(function ($record) {

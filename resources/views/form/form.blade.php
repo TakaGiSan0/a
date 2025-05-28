@@ -150,6 +150,9 @@
                                         <th scope="col" class="px-6 py-3">
                                             license
                                         </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Evaluation
+                                        </th>
                                     </tr>
                                 </td>
                             </thead>
@@ -311,6 +314,13 @@
                                 value="1"
                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                                 {{ old('license', 0) ? 'checked' : '' }}>
+                        </td>
+                        <td scope="col" class="px-1">
+                            <input type="hidden" name="participants[${index}][evaluation]" value="0">
+                            <input id="evaluation-checkbox-${index}" name="participants[${index}][evaluation]" type="checkbox"
+                                value="1"
+                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                {{ old('evaluation', 0) ? 'checked' : '' }}>
 
                         </td>
                         <input type="hidden" name="participant_count" value="1">

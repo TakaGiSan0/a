@@ -164,8 +164,6 @@
                                                         </svg>
                                                         Edit
                                                     </a>
-
-
                                                     <form action="{{ route('peserta.destroy', $p->id) }}" method="POST"
                                                         onsubmit="return confirm('Apakah Anda yakin ingin menghapus peserta ini?');">
                                                         @csrf

@@ -37,7 +37,10 @@ class SummaryController extends Controller
             ->paginate(10);
 
         $training_categories = Category::all();
-        $station = training_record::select('station')->distinct()->get();
+        $station = training_record::select('station')
+        ->distinct()
+        ->where('status', 'Completed')
+        ->get();
 
         return view('content.summary', compact('trainingRecords', 'training_categories', 'date_start', 'search', 'station'));
     }

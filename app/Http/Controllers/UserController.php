@@ -37,9 +37,11 @@ class UserController extends Controller
      */
     public function create()
     {
-        // Pilih view berdasarkan role
+        $pesertaTanpaUser = Peserta::whereNull('user_id_login')->get();
+
         return view('user.create', [
-            'user' => auth('')->user(), // Kirim user yang sedang login
+            'pesertaTanpaUser' => $pesertaTanpaUser,
+            'user' => auth('')->user(), // Gunakan helper auth() saja
         ])->with('hideSidebar', true);
     }
 
@@ -51,21 +53,27 @@ class UserController extends Controller
         // Validasi input tanpa 'role'
         $validatedData = $request->validate(
             [
-                'name' => 'required|string|max:255',
+                'employee_name' => 'required|string|max:255',
                 'user' => 'required|string|max:255|unique:users,user',
                 'password' => 'required|string|min:8',
-                'dept' => 'required|string',
+                
             ],
             [
                 'user.unique' => 'User dengan Nama ini sudah ada.',
             ],
         );
 
+        $selectedPeserta = Peserta::where('employee_name', $validatedData['employee_name'])->first();
+
+        // Pastikan peserta ditemukan, meskipun seharusnya selalu karena berasal dari dropdown
+        if (!$selectedPeserta) {
+            return back()->withErrors(['employe_name' => 'Peserta yang dipilih tidak valid.']);
+        }
+
         $user = new User();
 
-        $user->name = $validatedData['name'];
         $user->user = $validatedData['user'];
-        $user->dept = $validatedData['dept'];
+       
 
         // Ambil role pengguna saat ini
         $userRole = auth('')->user()->role;
@@ -83,6 +91,9 @@ class UserController extends Controller
         $user->password = bcrypt($validatedData['password']);
 
         $user->save();
+
+        $selectedPeserta->user_id_login = $user->id;
+        $selectedPeserta->save();
 
         return redirect()->route('user.index')->with('success', 'User created successfully.');
     }

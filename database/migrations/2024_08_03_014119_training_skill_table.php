@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string("job_skill")->nullable();
             $table->string("skill_code")->nullable();
             $table->timestamps();
+            $table->softDeletes();
     });
     }
 

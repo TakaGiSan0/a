@@ -19,7 +19,7 @@ class trainingrecordSeeder extends Seeder
     {
         // Membuat 10 data Training_Record beserta Training_Comment
         Training_Record::factory(10)
-        ->has(Training_Comment::factory()->count(1), 'comments') // <- HARUS sesuai nama relasi
+        ->has(Training_Comment::factory()->count(1), 'comments')
         ->create();
     }
 }
