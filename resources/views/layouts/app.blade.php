@@ -21,7 +21,6 @@
         }
         updateThemeButton();
 
-
     </script>
 </head>
 

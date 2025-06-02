@@ -67,9 +67,7 @@
                             <th scope="col" class="px-4 py-3">Name</th>
                             <th scope="col" class="px-4 py-3">Role</th>
                             <th scope="col" class="px-4 py-3">Department</th>
-                            @if (auth()->user()->role == 'Super Admin')
-                                <th scope="col" class="px-4 py-3">Action</th>
-                            @endif
+                            <th scope="col" class="px-4 py-3">Action</th>
                         </tr>
                     </thead>
                     @if ($user->isEmpty())
@@ -77,7 +75,7 @@
                     @else
                         <?php    $no = ($user->currentPage() - 1) * $user->perPage(); ?>
                         @foreach ($user as $p)
-                        <tbody class="text-gray-600 dark:text-gray-200 bg-gray-50 dark:bg-gray-700">
+                            <tbody class="text-gray-600 dark:text-gray-200 bg-gray-50 dark:bg-gray-700">
                                 <tr class=>
                                     <th scope="row" name="id"
                                         class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -87,28 +85,46 @@
                                     <td class="px-4 py-3">{{ $p->pesertaLogin->employee_name }}</td>
                                     <td class="px-4 py-3">{{ $p->role }}</td>
                                     <td class="px-4 py-3">{{ $p->pesertaLogin->dept }}</td>
+                                    @if (auth()->user()->role == 'Admin')
+                                        <td class="px-4 py-3 flex items-center justify-center space-x-4">
+                                            <form action="{{ route('user.destroy', $p->id) }}" method="POST"
+                                                onsubmit="return confirm('Apakah Anda yakin ingin menghapus peserta ini?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button
+                                                    class="w-full flex items-center gap-2 text-left px-4 py-2 text-red-600 hover:bg-red-100">
+                                                    <svg class="h-8 w-8 text-red-600" fill="none" viewBox="0 0 24 24"
+                                                        stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                    </svg>
+                                                
+                                                </button>
+                                            </form>
+                                        </td>
+                                    @endif
+                                    @if (auth()->user()->role == 'Super Admin')
+                                        <td class="relative px-4 py-3 text-center">
+                                            <!-- Trigger & Dropdown wrapper -->
+                                            <div class="inline-block text-left">
+                                                <!-- Button -->
+                                                <button onclick="toggleDropdown(event, this)"
+                                                    class="hover:bg-gray-100 dark:hover:bg-gray-600 rounded-full p-2">
+                                                    <!-- SVG icon -->
+                                                    <svg class="h-6 w-6 text-gray-500" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                        stroke-linejoin="round">
+                                                        <circle cx="12" cy="12" r="1" />
+                                                        <circle cx="12" cy="5" r="1" />
+                                                        <circle cx="12" cy="19" r="1" />
+                                                    </svg>
+                                                </button>
+                                                <div
+                                                    class="dropdown-menu hidden absolute top-0 right-full ml-2 bg-white border rounded shadow-md z-50 w-32">
 
-                                    <td class="relative px-4 py-3 text-center">
-                                        <!-- Trigger & Dropdown wrapper -->
-                                        <div class="inline-block text-left">
-                                            <!-- Button -->
-                                            <button onclick="toggleDropdown(event, this)"
-                                                class="hover:bg-gray-100 dark:hover:bg-gray-600 rounded-full p-2">
-                                                <!-- SVG icon -->
-                                                <svg class="h-6 w-6 text-gray-500" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                                    stroke-linejoin="round">
-                                                    <circle cx="12" cy="12" r="1" />
-                                                    <circle cx="12" cy="5" r="1" />
-                                                    <circle cx="12" cy="19" r="1" />
-                                                </svg>
-                                            </button>
-                                            <div
-                                                class="dropdown-menu hidden absolute top-0 right-full ml-2 bg-white border rounded shadow-md z-50 w-32">
+                                                    <!-- Button Edit -->
 
-                                                <!-- Button Edit -->
-                                                @if (auth()->user()->role == 'Super Admin')
-                                                <a href="{{ route('user.edit', $p->id) }}"
+                                                    <a href="{{ route('user.edit', $p->id) }}"
                                                         class="w-full flex items-center gap-2 text-left px-4 py-2 hover:bg-gray-100">
                                                         <svg class="h-4 w-4 text-blue-500" fill="none" stroke="currentColor"
                                                             stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round"
@@ -134,10 +150,11 @@
                                                             Hapus
                                                         </button>
                                                     </form>
-                                                @endif
+
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
+                                        </td>
+                                    @endif
                                 </tr>
                             </tbody>
                         @endforeach

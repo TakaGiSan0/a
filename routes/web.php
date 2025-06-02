@@ -107,6 +107,9 @@ Route::middleware(['auth', 'role:Super Admin,Admin'])->group(function () {
     Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
     Route::post('/User/New_User', [UserController::class, 'store'])->name('user.store');
     Route::get('/User/dashboard', [UserController::class, 'index'])->name('user.index');
+    Route::delete('/user/{id}', [UserController::class, 'destroy'])->name('user.destroy');
+    Route::get('/user/edit/{user}', [UserController::class, 'edit'])->name('user.edit');
+    Route::put('/user/update/{user}', [UserController::class, 'update'])->name('user.update');
 });
 
 
@@ -137,11 +140,6 @@ Route::middleware(['auth', 'role:Super Admin'])->group(function () {
     Route::get('/matrix/{id}', [MatrixController::class, 'show'])->name('matrix.show');
     Route::put('/matrix/update/{id}', [MatrixController::class, 'updateLicense'])->name('matrix.update');
 
-
-    // Route User
-    Route::delete('/user/{id}', [UserController::class, 'destroy'])->name('user.destroy');
-    Route::get('/user/edit/{user}', [UserController::class, 'edit'])->name('user.edit');
-    Route::put('/user/update/{user}', [UserController::class, 'update'])->name('user.update');
 
     // Route Training Matrix
     Route::put('/training-record/{id}/comment', [FormController::class, 'updateComment'])->name('update.comment');

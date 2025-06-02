@@ -9,6 +9,7 @@ use App\Models\Training_Record;
 
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class SummaryController extends Controller
 {
@@ -18,29 +19,40 @@ class SummaryController extends Controller
         $search = $request->input('search');
         $station = $request->input('station');
 
-        $trainingRecords = Training_Record::select('id', 'training_name', 'status', 'date_start', 'category_id', 'station')
-            ->with(['trainingCategory:id,name'])
-            ->where('status', 'Completed')
-            ->when($search, function ($query, $search) {
+        $user = Auth::user();
+
+        $query = training_record::select('id', 'training_name', 'status', 'date_start', 'category_id', 'station', 'doc_ref')
+            ->with(['trainingCategory:id,name']) // Ensure 'name' is a field in your Category model
+            ->where('status', 'Completed');
+
+
+        if ($user->role === 'Admin' || $user->role === 'Super Admin') {
+        } else {
+            $query->whereHas('pesertas', function ($q_peserta) use ($user) {
+                $q_peserta->where('user_id_login', $user->id);
+            });
+
+            $query->when($search, function ($query, $search) {
                 $query->where('training_name', 'like', '%' . $search . '%');
             })
-            ->when($date_start, function ($query, $date_start) {
-                $query->whereDate('date_start', $date_start);
-            })
-            ->when(request('category'), function ($query, $category) {
-                $query->where('category_id', $category);
-            })
-            ->when($station, function ($query, $station) {
-                $query->where('station', $station);
-            })
-            ->orderBy('date_start', 'desc')
+                ->when($date_start, function ($query, $date_start) {
+                    $query->whereDate('date_start', $date_start);
+                })
+
+                ->when($station, function ($query, $station) { // Gunakan $station_input
+                    $query->where('station', $station);
+                });
+        }
+        $trainingRecords = $query->orderBy('date_start', 'desc')
             ->paginate(10);
 
         $training_categories = Category::all();
-        $station = training_record::select('station')
-        ->distinct()
-        ->where('status', 'Completed')
-        ->get();
+
+        $station = Training_Record::select('station')
+            ->distinct()
+            ->where('status', 'Completed')
+            ->pluck('station');
+
 
         return view('content.summary', compact('trainingRecords', 'training_categories', 'date_start', 'search', 'station'));
     }

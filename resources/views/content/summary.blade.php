@@ -38,28 +38,30 @@
                                 <label for="training_category" class="text-sm font-medium dark:text-gray-200 text-black">Station
                                 </label>
                                 <select id="station" name="station"
-                                    class="mt-2 block w-full rounded-md border border-gray-300 bg-gray-50 px-3 py-2 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                    <option value="" class="dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">All Station</option>
-                                    @foreach ($station as $s)
-                                        <option value="{{ $s->station }}"
-                                            {{ request('station') == $s->station ? 'selected' : '' }}>
-                                            {{ $s->station }}
-                                        </option>
-                                    @endforeach
+                                    class="mt-2 block w-full rounded-md border border-gray-300 bg-gray-50 px-3 py-2 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white text-black dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                    <option value="" class="dark:bg-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">All Station</option>
+                                    @if(isset($stations))
+                                        @foreach ($stations as $nama_stasiun)
+            {{-- $nama_stasiun adalah string di sini, contohnya "Kantor Pusat", "Cabang A" --}}
+                                            <option value="{{ $nama_stasiun }}" {{ (isset($station) && $station == $nama_stasiun) ? 'selected' : '' }}>
+                                            {{ $nama_stasiun }}
+                                            </option>
+                                        @endforeach
+                                    @endif
                                 </select>
                             </div>
                             <div class="flex flex-col">
                                 <label for="training_date" class="text-sm font-medium dark:text-gray-200 text-black">Training
                                     Date</label>
                                 <input type="date" id="date_start" name="date_start" value="{{ request('date_start') }}"
-                                    class="mt-2 block w-full cursor-pointer rounded-md border border-gray-300 bg-gray-50 px-3 py-2 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                                    class="mt-2 block w-full cursor-pointer rounded-md border border-gray-300 bg-gray-50 px-3 py-2 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 text-black dark:focus:border-blue-500" />
                             </div>
                             <div class="flex flex-col">
                                 <label for="training_category" class="text-sm font-medium dark:text-gray-200 text-black">Training
                                     Category</label>
                                 <select id="category" name="category"
-                                    class="mt-2 block w-full rounded-md border border-gray-300 bg-gray-50 px-3 py-2 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                    <option value="" class="dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">All Categories</option>
+                                    class="mt-2 block w-full rounded-md border border-gray-300 bg-gray-50 px-3 py-2 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white text-black dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                    <option value="" class="dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500  dark:focus:border-blue-500">All Categories</option>
                                     @foreach ($training_categories as $category)
                                         <option value="{{ $category->id }}"
                                             {{ request('category') == $category->id ? 'selected' : '' }}>

@@ -7,6 +7,7 @@ use App\Models\Peserta;
 use App\Models\TrainingRecord;
 use Illuminate\Support\Facades\Cache;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 
 
 
@@ -26,7 +27,10 @@ class EmployeeController extends Controller
         // Dapatkan semua nilai dept unik dari tabel peserta
         $uniqueDepts = Peserta::select('dept')->distinct()->pluck('dept')->toArray(); // Konversi ke array
 
-        $query = Peserta::select("id", "badge_no", "employee_name", "dept", "position")
+        $user = Auth::user();
+
+        $query = Peserta::byDept()
+            ->select("id", "badge_no", "employee_name", "dept", "position")
             ->when($searchQuery, function ($query) use ($searchQuery) {
                 $query->where(function ($subQuery) use ($searchQuery) {
                     $subQuery->where('badge_no', 'like', "%{$searchQuery}%")
@@ -61,23 +65,23 @@ class EmployeeController extends Controller
     public function show($id)
     {
         $peserta = Peserta::with([
-    'trainingRecords' => function ($query) {
-        $query->where('status', 'Completed')
-            ->select([
-             'training_records.id as training_id', // Alias untuk menghindari ambiguitas
-                'training_records.training_name', 
-                'training_records.doc_ref', 
-                'training_records.trainer_name', 
-                'training_records.rev', 
-                'training_records.station', 
-                'training_records.category_id', 
-                'training_records.date_start',
-                'training_records.date_end',
-            ])
-            ->withPivot('level', 'final_judgement')
-            ->with(['trainingCategory:id,name']);
-    }
-])->findOrFail($id);
+            'trainingRecords' => function ($query) {
+                $query->where('status', 'Completed')
+                    ->select([
+                        'training_records.id as training_id', // Alias untuk menghindari ambiguitas
+                        'training_records.training_name',
+                        'training_records.doc_ref',
+                        'training_records.trainer_name',
+                        'training_records.rev',
+                        'training_records.station',
+                        'training_records.category_id',
+                        'training_records.date_start',
+                        'training_records.date_end',
+                    ])
+                    ->withPivot('level', 'final_judgement')
+                    ->with(['trainingCategory:id,name']);
+            }
+        ])->findOrFail($id);
 
         if (!$peserta) {
             return response()->json(['error' => 'Peserta not found'], 404);

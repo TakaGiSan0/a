@@ -112,12 +112,10 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        // Cek otorisasi menggunakan policy
-        $this->authorize('update', $user);
-
         // Ambil role pengguna saat ini
-        $userRole = auth('')->user()->role; // Asumsikan 'role' adalah atribut di tabel users
+        $userRole = auth('')->user()->role; 
 
+        
         // Kembalikan view dengan data user
         return view('user.edit', compact('user'))->with('hideSidebar', true);
     }

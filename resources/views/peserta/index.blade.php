@@ -133,7 +133,7 @@
                                     <td class="px-4 py-3">{{ $p->gender }}</td>
                                     <td class="px-4 py-3">{{ optional($p->user)->user ?? 'Tidak ada user' }}<br>
                                         {{ optional($p->user)->updated_at ?? '' }}</td>
-
+                                    @if (auth()->user()->role == 'Super Admin')
                                     <td class="relative px-4 py-3 text-center">
                                         <!-- Trigger & Dropdown wrapper -->
                                         <div class="inline-block text-left">
@@ -182,6 +182,7 @@
                                             </div>
                                         </div>
                                     </td>
+                                    @endif
                                 </tr>
                             @endforeach
                         @endif
