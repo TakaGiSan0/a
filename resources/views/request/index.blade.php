@@ -99,7 +99,7 @@
                                         <div class="inline-block text-left">
                                             <!-- Button -->
                                             <form action="{{ route('training-request.destroy', $r->id) }}" method="POST"
-                                                onsubmit="return confirm('Apakah Anda yakin ingin menghapus request ini?');">
+                                                onsubmit="return confirm('Are you sure you want to delete this request?');">
                                                 @csrf
                                                 @method('DELETE')
                                                 <!-- Button Hapus -->

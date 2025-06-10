@@ -26,7 +26,7 @@ class ExcelController extends Controller
         // Jalankan import
         Excel::import(new MasterDataImport($userId), $request->file('file'));
 
-        return redirect()->back()->with('success', 'Import Data Berhasil!');
+        return redirect()->back()->with('success', 'Import Master Data Successfully');
     }
 
     public function export_peserta()
@@ -47,7 +47,7 @@ class ExcelController extends Controller
         // Jalankan import
         Excel::import(new TrainingRecordsImport, $request->file('file'));
 
-        return redirect()->back()->with('success', 'Import Data Training Berhasil!');
+        return redirect()->back()->with('success', 'Import Training successfully ');
     }
 
     public function export_training(request $request)

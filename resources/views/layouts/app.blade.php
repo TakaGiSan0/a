@@ -53,6 +53,62 @@
     </div>
 </body>
 
+@auth
+<script>
+(function() {
+    // Pengaturan
+    const sessionLifetimeInMinutes = {{ config('session.lifetime', 120) }};
+    const sessionLifetime = sessionLifetimeInMinutes * 60 * 1000;
+
+    let idleTimer;
+    let countdownLogInterval;
+
+    /**
+     * Fungsi untuk logout.
+     * Karena route 'logout' sudah diubah menjadi GET, kita hanya perlu mengarahkan browser.
+     */
+    const logoutUser = () => {
+        console.warn("WAKTU HABIS! Sesi telah berakhir. Mengarahkan ke halaman logout...");
+        // Langsung arahkan ke route logout
+        window.location.href = '{{ route('logout') }}';
+    };
+
+    /**
+     * Fungsi untuk me-reset timer.
+     */
+    const resetIdleTimer = () => {
+        clearTimeout(idleTimer);
+        clearInterval(countdownLogInterval);
+        
+        idleTimer = setTimeout(logoutUser, sessionLifetime);
+
+        // --- Logika untuk Console Log Hitung Mundur ---
+        let timeLeftInSeconds = sessionLifetimeInMinutes * 60;
+        console.clear();
+        console.log(`Timer direset. Logout otomatis dalam ${sessionLifetimeInMinutes} menit.`);
+        
+        countdownLogInterval = setInterval(() => {
+            timeLeftInSeconds--;
+            const minutes = Math.floor(timeLeftInSeconds / 60);
+            const seconds = timeLeftInSeconds % 60;
+            console.log(`Sesi akan berakhir dalam: ${minutes} menit ${seconds} detik`);
+            if (timeLeftInSeconds <= 0) {
+                clearInterval(countdownLogInterval);
+            }
+        }, 1000);
+    };
+
+    // Daftar event aktivitas pengguna.
+    const userActivityEvents = ['load', 'mousemove', 'mousedown', 'click', 'keydown', 'scroll'];
+
+    // Pasang listener untuk setiap event.
+    userActivityEvents.forEach(event => {
+        window.addEventListener(event, resetIdleTimer, true);
+    });
+
+})();
+</script>
+@endauth
 <script src="https://cdn.jsdelivr.net/npm/flowbite@2.4.1/dist/flowbite.min.js"></script>
 <script>
     document.addEventListener("alpine:init", () => {

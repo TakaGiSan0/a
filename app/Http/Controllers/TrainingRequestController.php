@@ -49,7 +49,7 @@ class TrainingRequestController extends Controller
             'description' => $request->description,
         ]);
 
-        return redirect()->back()->with('success', 'Training request berhasil dikirim.');
+        return redirect()->back()->with('success', 'Training Request Successfully Created');
     }
 
 
@@ -88,7 +88,7 @@ class TrainingRequestController extends Controller
 
         // Redirect ke halaman index dengan pesan sukses
         return redirect()->back() // Ganti 'training_requests.index' sesuai nama route Anda
-                         ->with('success', 'Data Training Request berhasil dihapus.');
+                         ->with('success', 'Training Request Successfully Deleted');
     
     }
 }

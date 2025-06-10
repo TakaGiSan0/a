@@ -22,7 +22,7 @@ class AuthenticatedSessionController extends Controller
         if (!$user) {
             return back()
                 ->withErrors([
-                    'user' => 'Username tidak ditemukan.',
+                    'user' => 'Username Not Found.',
                 ])
                 ->onlyInput('user');
         }
@@ -32,7 +32,7 @@ class AuthenticatedSessionController extends Controller
             return back()
             
             ->withErrors([
-                'password' => 'Password salah.',
+                'password' => 'Password Invalid',
                 ])
                 ->onlyInput('user');
             }
@@ -60,17 +60,17 @@ class AuthenticatedSessionController extends Controller
     }
 
     public function destroy(Request $request)
-    {
-       
-        session()->forget('user_name');
+{
+    // Lakukan logout pada guard yang aktif
+    Auth::logout();
 
-       
-        Auth::guard('web')->logout();
+    // Hancurkan sesi lama untuk keamanan
+    $request->session()->invalidate();
 
-        $request->session()->invalidate();
+    // Buat ulang token CSRF untuk sesi baru
+    $request->session()->regenerateToken();
 
-        $request->session()->regenerateToken();
-
-        return redirect('/login');
-    }
+    // Arahkan ke halaman login
+    return redirect('/login');
+}
 }

@@ -35,7 +35,7 @@ class MatrixController extends Controller
         $matrix = hasil_peserta::select('certificate', 'expired_date', 'category')->where('id', $id)->first();
 
         if (!$matrix) {
-            return response()->json(['message' => 'Data tidak ditemukan'], 404);
+            return response()->json(['message' => 'Data Not Found'], 404);
         }
 
         return response()->json([
@@ -62,6 +62,6 @@ class MatrixController extends Controller
 
         $matrix->save();
 
-        return redirect()->back()->with('success', 'Komentar berhasil diperbarui.');
+        return redirect()->back()->with('success', 'Matrix Succesfully Updated.');
     }
 }

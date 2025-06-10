@@ -13,7 +13,9 @@ class MasterDataExport implements FromCollection , WithHeadings
     */
     public function collection()
     {
-        return Peserta::select('badge_no', 'employee_name', 'join_date', 'dept', 'position', 'category_level', 'gender')->get();
+        return Peserta::select('badge_no', 'employee_name', 'join_date', 'dept', 'position', 'category_level', 'gender')
+        ->orderBy('employee_name', 'asc')
+        ->get();
     }
 
     /** 

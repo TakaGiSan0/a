@@ -38,7 +38,6 @@ class FormController extends Controller
 
         // Query training_records dengan filter pencarian, tahun, dan byUserRole
         $training_records = Training_Record::with('latestComment')
-            ->byUserRole($user)
             ->when($searchQuery, function ($query, $searchQuery) {
                 return $query->where('training_name', 'like', "%{$searchQuery}%");
             })
@@ -118,7 +117,7 @@ class FormController extends Controller
             $fileName = str_replace(' ', '+', $pdfFile->getClientOriginalName());
 
             try {
-                $filePath = $pdfFile->storeAs('attachments', $fileName, 'public');
+                $filePath = $pdfFile->storeAs('attachment', $fileName, 'public');
                 Log::info('File berhasil disimpan: ' . $filePath);
             } catch (\Exception $e) {
                 Log::error('File upload error: ' . $e->getMessage());
@@ -205,7 +204,7 @@ class FormController extends Controller
      */
     public function show($id)
     {
-        $record = Training_Record::select('status', 'user_id')->with('user')->findOrFail($id);
+        $record = Training_Record::select('status', 'user_id', 'attachment')->with('user')->findOrFail($id);
 
         $history = training_comment::where('training_record_id', $id)
             ->orderBy('created_at', 'asc')
@@ -219,8 +218,10 @@ class FormController extends Controller
         // Ambil record terakhir dari history
         $lastComment = $history->last();
 
-        $attachmentUrl = $lastComment->attachment
-            ? asset("storage/" . urlencode($lastComment->attachment))
+        $pathToFile = $record->attachment; // <-- Gunakan nama kolom yang benar dari $record
+
+        $attachmentUrl = $pathToFile
+            ? asset("storage/" . urlencode($pathToFile))
             : null;
 
         return response()->json([
@@ -229,7 +230,7 @@ class FormController extends Controller
             'approval' => $lastComment->approval,
             'status' => $record->status,
             'attachment' => $attachmentUrl,
-            'requestor_name' => $record->user->name ?? 'Tidak diketahui',
+            'requestor_name' => $record->user->user ?? 'Unknown User',
             'created_at' => $record->created_at?->format('d M Y H:i'),
             'updated_at' => $record->updated_at?->format('d M Y H:i'),
         ]);
@@ -281,22 +282,37 @@ class FormController extends Controller
         $data = $request->validate($this->validationRules());
         $trainingRecord = Training_Record::findOrFail($id);
 
-        $filePath = null; // Inisialisasi path file untuk penyimpanan
-        if ($request->hasFile('attachment')) {
+        $currentAttachmentPath = $trainingRecord->attachment; // Simpan path attachment saat ini
+
+        if ($request->hasFile('attachment')) { // 2. Cek jika ada file baru
             $pdfFile = $request->file('attachment');
 
-            // Buat nama file unik untuk menghindari konflik
-            $fileName = str_replace(' ', '+', $pdfFile->getClientOriginalName());
+            $originalName = $pdfFile->getClientOriginalName();
+            // $fileName = str_replace(' ', '_', time() . '_' . $originalName); // Alternatif nama file yang lebih unik
+            $fileName = str_replace(' ', '+', $originalName); // Sesuai logika Anda sebelumnya
 
             try {
-                $filePath = $pdfFile->storeAs('attachments', $fileName, 'public');
-                Log::info('File berhasil disimpan: ' . $filePath);
+                // 3b. Simpan file baru
+                // $filePath akan berisi sesuatu seperti 'attachments/namafile.pdf'
+                $newFilePath = $pdfFile->storeAs('attachments', $fileName, 'public');
+                Log::info('File baru berhasil disimpan untuk update: ' . $newFilePath);
+
+                // 3c. Jika file baru berhasil disimpan DAN ada file lama, hapus file lama
+                if ($newFilePath && $currentAttachmentPath) {
+                    if (Storage::disk('public')->exists($currentAttachmentPath)) {
+                        Storage::disk('public')->delete($currentAttachmentPath);
+                        Log::info('File lama berhasil dihapus: ' . $currentAttachmentPath);
+                    } else {
+                        Log::warning('File lama tidak ditemukan untuk dihapus: ' . $currentAttachmentPath);
+                    }
+                }
+                $trainingRecord->attachment = $newFilePath; // 3d. Update path di record dengan yang baru
+
             } catch (\Exception $e) {
-                Log::error('File upload error: ' . $e->getMessage());
-                return redirect()->back()->with('error', 'Gagal mengunggah file. Silakan coba lagi.');
+                Log::error('File upload error saat update: ' . $e->getMessage());
+                return redirect()->back()->with('error', 'Gagal mengunggah file baru. Silakan coba lagi.');
             }
         }
-
         $skillCodes = $request->input('skill_codes', []);
 
         // Ambil ID dari skill_code yang sesuai
@@ -318,7 +334,7 @@ class FormController extends Controller
             'date_start' => $data['date_start'],
             'date_end' => $data['date_end'],
             'category_id' => $data['category_id'],
-            'attachment' => $filePath,
+            'attachment' => $currentAttachmentPath,
             'training_duration' => $formattedTime
         ]);
 
@@ -409,7 +425,7 @@ class FormController extends Controller
         ]);
 
 
-        return redirect()->back()->with('success', 'Komentar berhasil diperbarui.');
+        return redirect()->back()->with('success', 'Comment Succesfully Updated.');
     }
 
 
@@ -477,7 +493,7 @@ class FormController extends Controller
             'skill_code' => $request->skill_code,
         ]);
 
-        return redirect()->back()->with('success', 'Job Skill berhasil ditambahkan!');
+        return redirect()->back()->with('success', 'Job Skill successfully created');
     }
 
     public function jobs_skill_destroy($id)
@@ -491,7 +507,7 @@ class FormController extends Controller
         // Melakukan soft delete
         $trainingSkill->delete(); // Ini akan mengisi kolom `deleted_at`
 
-        return redirect()->route('dashboard.index')->with('success', 'Skill berhasil dinonaktifkan (soft deleted).');
+        return redirect()->route('dashboard.index')->with('success', 'Job Skill Succesfully Deleted. (soft deleted).');
     }
 
     public function getJobSkill($skillCode)
@@ -501,7 +517,7 @@ class FormController extends Controller
         if ($skill) {
             return response()->json([
                 'job_skill' => $skill->job_skill,
-                'id' => $skill->id // <- ini penting agar bisa disimpan
+                'id' => $skill->id 
             ]);
         }
 

@@ -99,32 +99,35 @@
                 <th rowspan="2" class="px-4 py-4 border border-gray-300">Emp Name</th>
                 <th rowspan="2" class="px-4 py-4 border border-gray-300">Date of Join</th>
                 <th rowspan="2" class="px-4 py-4 border border-gray-300">Dept</th>
-                <th colspan="{{ count($allStations) }}" class="px-4 py-2 text-center border border-gray-300">Station
+                <th colspan="{{ count($masterStations) }}" class="px-4 py-2 text-center border border-gray-300">Station
                 </th>
-                <th colspan="{{ count($allSkillCodes) }}" class="px-4 py-2 text-center border border-gray-300">Skill
+                <th colspan="{{ count($masterSkills) }}" class="px-4 py-2 text-center border border-gray-300">Skill
                     Code</th>
             </tr>
             <tr>
-                @foreach($allStations as $station)
+                @foreach($masterStations as $station)
                     <th class="px-4 py-2 border border-gray-300">{{ $station }}</th>
                 @endforeach
-                @foreach($allSkillCodes as $skill)
-                    <th class="px-4 py-2 border border-gray-300">{{ $skill }}</th>
+                @foreach($masterSkills as $skill)
+                    <th class="px-4 py-2 border border-gray-300">{{ $skill->skill_code }}</th>
                 @endforeach
             </tr>
         </thead>
         <tbody>
-            @foreach($data as $row)
+            @foreach($results as $row)
                 <tr>
                     <td>{{ $row['badge_no'] }}</td>
                     <td>{{ $row['employee_name'] }}</td>
                     <td>{{ $row['join_date'] }}</td>
                     <td>{{ $row['dept'] }}</td>
-                    @foreach($allStations as $station)
+                    @foreach($masterStations as $station)
                         <td>{{ $row['stations'][$station] ?? '-' }}</td>
                     @endforeach
-                    @foreach($allSkillCodes as $skill)
-                        <td>{{ $row['skills'][$skill] ?? '-'}}</td>
+                    @foreach ($masterSkills as $skillCode => $skillModel)
+                        <td class="text-center">
+                            {{-- Ambil nilai ✓ atau - dari array 'skills' di dalam $row --}}
+                            {{ $row['skills'][$skillCode] ?? '-' }}
+                        </td>
                     @endforeach
                 </tr>
             @endforeach
@@ -133,8 +136,8 @@
                 @foreach($supplyRow as $supply)
                     <td class="px-4 py-2 text-center border border-gray-300">{{ $supply }}</td>
                 @endforeach
-                @if(count($allSkillCodes) > 0)
-                <td rowspan="2" colspan="{{ count($allSkillCodes) }}" class="hide-border-right-bottom"></td>
+                @if(count($masterSkills) > 0)
+                    <td rowspan="2" colspan="{{ count($masterSkills) }}" class="hide-border-right-bottom"></td>
                 @endif
 
             </tr>

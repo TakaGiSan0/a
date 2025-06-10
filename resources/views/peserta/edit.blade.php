@@ -59,7 +59,7 @@
                     id="position" type="text" name="position" value="{{ old('position', $peserta->position) }}">
             </div>
             <div class="mb-6">
-                <label class="block text-gray-700  text-sm font-bold mb-2" for="position">
+                <label class="block text-white  text-sm font-bold mb-2" for="position">
                     Join Date
                 </label>
                 <input
@@ -74,7 +74,7 @@
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     id="status" name="status">
                     <option value="Active" {{ old('status', $peserta->status) == 'Active' ? 'selected' : '' }}>Active</option>
-                    <option value="Non Active" {{ old('status', $peserta->status) == 'Non Active' ? 'selected' : '' }}>Non Active</option>
+                    <option value="Female" {{ old('status', $peserta->status) == 'Female' ? 'selected' : '' }}>Female</option>
                 </select>
             </div>
             <div class="mb-6">
@@ -84,6 +84,17 @@
                 <input
                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     id="category_level" name="category_level" type="text" value="{{ old('category_level', $peserta->category_level) }}">
+            </div>
+            <div class="mb-6">
+                <label class="block text-gray-700 dark:text-white text-sm font-bold mb-2" for="gender">
+                    Gender
+                </label>
+                <select
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    id="gender" name="gender">
+                    <option value="Male" {{ old('gender', $peserta->gender) == 'Male' ? 'selected' : '' }}>Male</option>
+                    <option value="Female" {{ old('gender', $peserta->gender) == 'Female' ? 'selected' : '' }}>Female</option>
+                </select>
             </div>
             <div class="flex items-center justify-center">
                 <button

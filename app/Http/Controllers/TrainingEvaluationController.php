@@ -6,6 +6,7 @@ use App\Models\TrainingEvaluation;
 use Illuminate\Http\Request;
 use App\Models\Hasil_Peserta;
 use App\Models\TrainingRecord;
+use Illuminate\Support\Facades\Auth;
 
 class TrainingEvaluationController extends Controller
 {
@@ -21,6 +22,9 @@ class TrainingEvaluationController extends Controller
 
         // Mulai query untuk TrainingEvaluation
         $query = TrainingEvaluation::with('hasilPeserta.pesertas', 'hasilPeserta.trainingRecord');
+        $query->whereHas('hasilPeserta.trainingRecord', function ($q) {
+            $q->where('status', 'Completed');
+        });
 
         // Jika Super Admin → Lihat semua evaluasi
         if ($user->role === 'Super Admin') {
@@ -31,7 +35,7 @@ class TrainingEvaluationController extends Controller
                         ->orWhere('badge_no', 'like', '%' . $searchTerm . '%');
                 });
             }
-            $trainingEvaluations = $query->get(); // Eksekusi query
+            $trainingEvaluations = $query->first()->get(); // Eksekusi query
         } else {
             // Ambil ID peserta milik user ini (asumsi: relasi user ke peserta)
             $pesertaId = optional($user->pesertaLogin)->id;
@@ -42,14 +46,12 @@ class TrainingEvaluationController extends Controller
                 $query->whereHas('hasilPeserta', function ($q) use ($pesertaId) {
                     $q->where('peserta_id', $pesertaId);
                 });
-
-                
             } else {
                 // Jika tidak ada pesertaId, tidak ada evaluasi yang harus ditampilkan
                 $query->whereRaw('1 = 0'); // Query yang selalu false
             }
 
-            $trainingEvaluations = $query->get(); // Eksekusi query
+            $trainingEvaluations = $query->paginate(10); // Eksekusi query
         }
 
         return view('evaluation.index', compact('trainingEvaluations'));
@@ -108,6 +110,16 @@ class TrainingEvaluationController extends Controller
     {
         $evaluation = TrainingEvaluation::findOrFail($id);
 
+        $ownerId = optional($evaluation->hasilPeserta->pesertas)->user_id_login;
+
+        // --- LOGIKA PERMISSION YANG DIPERBARUI ---
+
+        // 1. Siapa yang boleh mengisi field? HANYA PEMILIK. (Logika ini tetap)
+        $canEditFields = (Auth::id() === $ownerId);
+
+        // 2. Siapa yang boleh mengubah status? HANYA SUPER ADMIN. (Logika baru)
+        $canEditStatus = (Auth::user()->role === 'Super Admin');
+
         return response()->json([
             'question_1' => $evaluation->question_1,
             'question_2' => $evaluation->question_2,
@@ -115,6 +127,11 @@ class TrainingEvaluationController extends Controller
             'question_4' => $evaluation->question_4,
             'question_5' => $evaluation->question_5,
             'status' => $evaluation->status,
+            'evaluation' => $evaluation,
+            'permissions' => [
+                'can_edit_fields' => $canEditFields,
+                'can_edit_status' => $canEditStatus,
+            ]
 
         ]);
     }

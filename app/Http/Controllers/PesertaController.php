@@ -37,9 +37,10 @@ class PesertaController extends Controller
         // Kembalikan view dengan data peserta dan status pesan
         return view('peserta.index', [
             'peserta' => $peserta,
-            'searchQuery' => $searchQuery, // Kirimkan pencarian ke view untuk mempertahankan nilai pencarian
-            'message' => $peserta->isEmpty() ? 'Tidak ada data yang ditemukan.' : ''
+            'searchQuery' => $searchQuery, // Pass the search query to the view to retain the search value
+            'message' => $peserta->isEmpty() ? 'No data found.' : ''
         ]);
+       
     }
 
 
@@ -65,6 +66,8 @@ class PesertaController extends Controller
                 'join_date' => 'required|date',
                 'category_level' => 'required|string|max:255',
                 'position' => 'required|string|max:255',
+                'gender' => 'required|string|max:255',
+
             ],
             [
                 'employee_name.unique' => 'Peserta dengan Nama ini sudah ada.',
@@ -83,6 +86,7 @@ class PesertaController extends Controller
         $peserta->join_date = $validatedData['join_date'];
         $peserta->category_level = $validatedData['category_level'];
         $peserta->position = $validatedData['position'];
+        $peserta->gender = $validatedData['gender'];
         $peserta->user_id = auth('')->id();
 
         // Simpan data ke database
@@ -127,11 +131,13 @@ class PesertaController extends Controller
                 'category_level' => 'required|string|max:255',
                 'status' => 'required|string|max:255',
                 'position' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
+                'gender' => 'required|string|max:255',
+
             ],
             [
-                'badge_no.regex' => 'Badge No hanya boleh berisi huruf besar, angka, dan tanda hubung.',
-                'employee_name.regex' => 'Nama hanya boleh berisi huruf',
-                'badge_no.unique' => 'Peserta dengan Badge No ini sudah ada.',
+                'badge_no.regex' => 'Badge No may only contain uppercase letters, numbers, and hyphens.',
+                'employee_name.regex' => 'Name may only contain letters.',
+                'badge_no.unique' => 'A participant with this Badge No already exists.',
             ],
         );
 

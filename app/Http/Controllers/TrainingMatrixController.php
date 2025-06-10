@@ -12,39 +12,117 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class TrainingMatrixController extends Controller
 {
+    // File: app/Http/Controllers/YourController.php
+
     public function index(Request $request)
     {
-        // Ambil daftar semua departemen dalam satu query
-        $departments = Peserta::whereHas('trainingRecords', function ($query) {
-            $query->where('status', 'completed');
-        })
-            ->distinct()
-            ->pluck('dept')
-            ->toArray();
+        // =========================================================================
+        // FASE 1: PERSIAPAN DAN PENGAMBILAN DATA MASTER
+        // =========================================================================
 
-        // Ambil semua skill dan job_skill dalam satu query
+        // Ambil daftar departemen (Kode Anda sudah bagus)
+        $departments = Peserta::whereHas('trainingRecords', fn($q) => $q->where('status', 'completed'))
+            ->distinct()->pluck('dept')->toArray();
+
+        // Ambil data untuk legenda (Kode Anda sudah bagus)
         $legendSkills = Training_Skill::select('skill_code', 'job_skill')->get();
 
-        // Query untuk peserta dengan filter yang dipilih
-        $pesertasQuery = Peserta::with([
-            'trainingRecords' => function ($query) {
-                $query->where('status', 'completed');
-            },
-        ])
-            ->whereHas('trainingRecords', fn($query) => $query->where('status', 'completed'))
+        // Standarkan pengambilan data master untuk header tabel
+        $masterSkills = Training_Skill::withTrashed()
+            ->where('skill_code', '!=', 'NA')
+            ->where('skill_code', '!=', 'N/A')
+            ->whereNotNull('skill_code') // Memastikan tidak null
+            ->where('skill_code', '!=', '')     // Memastikan tidak string kosong
+            ->get()
+            ->keyBy('skill_code');
+        $allStations = Training_Record::where('status', 'Completed')
+            ->pluck('station')
+            ->flatMap(fn($s) => explode(', ', $s))
+            ->unique()
+            // --- TAMBAHKAN FILTER DI SINI ---
+            ->filter(function ($station) {
+                // Hanya ambil station yang tidak kosong dan bukan 'NA' atau 'N/A'
+                $trimmedStation = trim($station);
+                $upperStation = strtoupper($trimmedStation);
+                return !empty($trimmedStation) && $upperStation !== 'NA' && $upperStation !== 'N/A';
+            })
+            ->sort()
+            ->values();
+        // =========================================================================
+        // FASE 2: MEMBUAT DAN MENGAMBIL DATA UTAMA (PAGINASI)
+        // =========================================================================
+
+        $user = auth('')->user();
+
+        // Query untuk peserta
+        $pesertasQuery = Peserta::query()
+            // --- PERBAIKAN KRUSIAL: Eager Load relasi bersarang untuk performa optimal ---
+            ->with([
+                'trainingRecords' => function ($query) {
+                    // FILTER DI SINI: Hanya muat record yang statusnya 'Completed'.
+                    $query->where('status', 'completed')
+                        // DAN muat juga relasi skill dari record yang completed itu.
+                        ->with('training_Skills'); // Pastikan nama relasi camelCase: trainingSkills
+                }
+            ])
+            ->whereHas('trainingRecords', fn($q) => $q->where('status', 'completed'))
             ->when($request->dept, fn($q) => $q->whereIn('dept', (array) $request->dept))
-            ->when($request->searchQuery, fn($q) => $q->where('employee_name', 'like', "%{$request->searchQuery}%")->orWhere('badge_no', 'like', "%{$request->searchQuery}%"));
+            ->when($request->searchQuery, fn($q) => $q->where(function ($subq) use ($request) {
+                $subq->where('employee_name', 'like', "%{$request->searchQuery}%")
+                    ->orWhere('badge_no', 'like', "%{$request->searchQuery}%");
+            }))
+            ->byUserRole($user) // Asumsi ini adalah scope lokal Anda
+            ->orderBy('employee_name');
 
-        // Ambil peserta dengan paginasi
-        $pesertas = $pesertasQuery->select('id', 'badge_no', 'join_date', 'employee_name', 'dept')->orderBy('employee_name')->paginate(10);
-
-        // Total peserta
+        // Ambil total sebelum paginasi (Kode Anda sudah bagus)
         $totalParticipants = (clone $pesertasQuery)->count();
 
-        // Ambil semua Peserta Id yang difilter
-        $allPesertaIds = $pesertas->pluck('id');
+        // Ambil peserta dengan paginasi
+        $pesertas = $pesertasQuery->select('id', 'badge_no', 'join_date', 'employee_name', 'dept')->paginate(10);
 
-        // Hitung Level 3 & 4 per Station
+
+        // =========================================================================
+        // FASE 3: PROSES DAN "HIAS" HASIL PAGINASI (BAGIAN BARU & PENTING)
+        // =========================================================================
+
+        // Loop melalui hasil paginasi (misal: 10 peserta per halaman)
+        // dan tambahkan data 'level' dan 'skill' yang sudah diproses ke setiap objek.
+        $pesertas->through(function ($peserta) use ($allStations, $masterSkills) {
+
+            // --- Proses Stations untuk peserta ini ---
+            $stationLevels = [];
+            foreach ($peserta->trainingRecords as $record) {
+                $levels = explode(', ', $record->pivot->level ?? '');
+                $stationsInRecord = explode(', ', $record->station);
+                foreach ($stationsInRecord as $index => $stationName) {
+                    if (!isset($stationLevels[$stationName])) $stationLevels[$stationName] = [];
+                    $stationLevels[$stationName][] = $levels[$index] ?? null;
+                }
+            }
+
+            $stationResults = [];
+            foreach ($allStations as $station) {
+                $levelsForStation = collect($stationLevels[$station] ?? [])->filter();
+                $angkaLevels = $levelsForStation->filter(fn($l) => is_numeric($l))->all();
+                $naLevels = $levelsForStation->filter(fn($l) => strtoupper($l) === 'NA')->isNotEmpty();
+                $stationResults[$station] = !empty($angkaLevels) ? max($angkaLevels) : ($naLevels ? 'NA' : '-');
+            }
+
+            // --- Proses Skills untuk peserta ini ---
+            $ownedSkills = $peserta->trainingRecords->pluck('training_Skills')->flatten()->pluck('skill_code')->unique();
+            $skillLookup = $ownedSkills->flip();
+
+            // "Hias" objek peserta dengan data yang sudah jadi
+            $peserta->processed_stations = $stationResults;
+            $peserta->processed_skills_lookup = $skillLookup;
+
+            return $peserta;
+        });
+
+        // ... Kode Anda untuk menghitung $stationsWithLevels dan $stationsWithGaps ...
+        // Sebaiknya perhitungan ini juga dioptimalkan, tapi kita fokus pada matriks utama dulu.
+
+        $allPesertaIds = $pesertas->pluck('id');
         $stationsWithLevels = Hasil_Peserta::whereIn('peserta_id', $allPesertaIds)
             ->whereIn('level', ['3', '4'])
             ->join('training_records', 'hasil_peserta.training_record_id', '=', 'training_records.id')
@@ -54,40 +132,33 @@ class TrainingMatrixController extends Controller
             ->pluck('total', 'station')
             ->all();
 
-        // Ambil semua station dalam satu query
-        $allStations = Training_Record::where('status', 'completed')->where('station', '!=', 'NA')->pluck('station')->unique()->values()->toArray();
 
-
-        // Ambil semua skill_code dalam satu query
-        $allSkills = Training_Skill::withTrashed()->where('skill_code', '!=', 'NA')->pluck('skill_code')->unique()->toArray();
-
-        $allSkill = Training_Skill::withTrashed()->where('skill_code', '!=', 'NA')->get();
-
-        // Gabungkan station dengan jumlah level 3 & 4
         $stationsWithLevels = collect($allStations)
-        ->mapWithKeys(
+            ->mapWithKeys(
                 fn($station) => [
                     $station => $stationsWithLevels[$station] ?? 0,
                 ],
             )
             ->toArray();
 
-        // Hitung gap per station
         $stationsWithGaps = collect($stationsWithLevels)
             ->mapWithKeys(
                 fn($count, $station) => [
                     $station => $totalParticipants - $count,
                 ],
-                )
-                ->toArray();
-        // Return view dengan data yang sudah dioptimasi
+            )
+            ->toArray();
+
+        // =========================================================================
+        // FASE 4: KIRIM DATA KE VIEW
+        // =========================================================================
+
         return view('content.training_matrix', [
             'pesertas' => $pesertas,
-            'stationsWithLevels' => $stationsWithLevels,
-            'stationsWithGaps' => $stationsWithGaps,
+            'stationsWithLevels' => $stationsWithLevels, // Anda sudah punya ini
+            'stationsWithGaps' => $stationsWithGaps,    // Anda sudah punya ini
             'allStations' => $allStations,
-            'allSkills' => $allSkills,
-            'allSkill' => $allSkill,
+            'masterSkills' => $masterSkills, // Kirim ini untuk header & loop
             'departments' => $departments,
             'searchQuery' => $request->searchQuery,
             'legendSkills' => $legendSkills,
@@ -96,31 +167,83 @@ class TrainingMatrixController extends Controller
 
     public function downloadpdf(Request $request)
     {
-        $dept = $request->input('dept'); // Ambil filter dari request
-
+        $dept = $request->input('dept');
         $deptList = is_array($dept) ? implode(', ', $dept) : $dept;
 
-        $pesertas = Peserta::whereHas('trainingRecords', function ($query) {
-            $query->where('status', 'completed');
-        })
+        // =========================================================================
+        // FASE 1: AMBIL SEMUA DATA DARI DATABASE DENGAN EFISIEN
+        // =========================================================================
+
+        // 1.1. Ambil semua skill master untuk kolom laporan.
+        $masterSkills = Training_skill::withTrashed()->get()->keyBy('skill_code');
+
+        // 1.2. Ambil semua station master.
+        $masterStations = Training_Record::where('status', 'completed')
+            ->pluck('station')
+            ->flatMap(fn($s) => explode(', ', $s))
+            ->unique()
+            ->sort()
+            ->values();
+
+        // 1.3. Query utama untuk mengambil peserta + semua relasinya (Eager Loading).
+        $allPeserta = Peserta::query()
+            ->whereHas('trainingRecords', fn($q) => $q->where('status', 'completed'))
             ->when($dept, function ($query) use ($dept) {
-                if (is_array($dept)) {
-                    $query->whereIn('dept', $dept);
-                } else {
-                    $query->where('dept', $dept);
-                }
+                is_array($dept) ? $query->whereIn('dept', $dept) : $query->where('dept', $dept);
             })
+            ->with([
+                // Eager Load relasi untuk menghindari N+1 Query
+                'trainingRecords' => function ($query) {
+                    $query->where('status', 'completed')->with('training_Skills');
+                }
+            ])
             ->orderBy('employee_name', 'asc')
             ->get();
 
-        $allStations = Training_Record::where('status', 'completed')->pluck('station')->unique()->toArray();
+        // =========================================================================
+        // FASE 2: PROSES DATA MENTAH MENJADI PETA (MAP) YANG CEPAT DIAKSES
+        // =========================================================================
 
-        $allSkillCodes = Training_Record::where('status', 'completed')->pluck('skill_code')->flatMap(fn($s) => explode(', ', $s))->unique()->toArray();
+        $participantDataMap = [];
+        foreach ($allPeserta as $peserta) {
+            // --- Proses SKILL ---
+            $ownedSkills = $peserta->trainingRecords->pluck('training_Skills')->flatten()->pluck('skill_code')->unique();
+            $participantSkillLookup = $ownedSkills->flip();
 
-        $data = [];
-        $stationsWithSupply = array_fill_keys($allStations, 0);
+            // --- Proses STATION ---
+            $stationLevels = [];
+            foreach ($peserta->trainingRecords as $record) {
+                $levels = explode(', ', $record->pivot->level ?? '');
+                $stationsInRecord = explode(', ', $record->station);
+                foreach ($stationsInRecord as $index => $stationName) {
+                    if (!isset($stationLevels[$stationName])) $stationLevels[$stationName] = [];
+                    $stationLevels[$stationName][] = $levels[$index] ?? null;
+                }
+            }
 
-        foreach ($pesertas as $peserta) {
+            $stationResults = [];
+            foreach ($masterStations as $station) {
+                $levelsForStation = collect($stationLevels[$station] ?? [])->filter();
+                $angkaLevels = $levelsForStation->filter(fn($l) => is_numeric($l))->all();
+                $naLevels = $levelsForStation->filter(fn($l) => strtoupper($l) === 'NA')->isNotEmpty();
+                $stationResults[$station] = !empty($angkaLevels) ? max($angkaLevels) : ($naLevels ? 'NA' : '-');
+            }
+
+            // Simpan data yang sudah diproses ke dalam map
+            $participantDataMap[$peserta->id] = [
+                'skills' => $participantSkillLookup,
+                'stations' => $stationResults,
+            ];
+        }
+
+        // =========================================================================
+        // FASE 3: BANGUN ARRAY FINAL UNTUK DIKIRIM KE VIEW
+        // =========================================================================
+
+        $results = [];
+        $stationsWithSupply = array_fill_keys($masterStations->all(), 0);
+
+        foreach ($allPeserta as $peserta) {
             $row = [
                 'badge_no' => $peserta->badge_no,
                 'employee_name' => $peserta->employee_name,
@@ -130,40 +253,31 @@ class TrainingMatrixController extends Controller
                 'skills' => [],
             ];
 
-            // Tambahkan level berdasarkan station
-            foreach ($allStations as $station) {
-                $levels = $peserta->trainingRecords->filter(fn($training) => in_array($station, explode(', ', $training->station)), $station)->pluck('pivot.level')->toArray();
+            // Isi data station & skill dari map yang sudah kita buat (sangat cepat)
+            $stationData = $participantDataMap[$peserta->id]['stations'];
+            $skillDataLookup = $participantDataMap[$peserta->id]['skills'];
 
-                $angkaLevels = array_filter($levels, fn($level) => is_numeric($level));
-                $naLevels = array_filter($levels, fn($level) => strtoupper($level) === 'NA');
-
-                $levelTertinggi = !empty($angkaLevels) ? max($angkaLevels) : (!empty($naLevels) ? 'NA' : '-');
-
+            foreach ($masterStations as $station) {
+                $levelTertinggi = $stationData[$station] ?? '-';
+                $row['stations'][$station] = $levelTertinggi;
                 if (in_array($levelTertinggi, ['3', '4'])) {
                     $stationsWithSupply[$station]++;
                 }
-
-                $row['stations'][$station] = $levelTertinggi;
             }
 
-            // Tambahkan skill code
-            foreach ($allSkillCodes as $skill) {
-                $hasTraining = $peserta->trainingRecords->contains(fn($training) => str_contains($training->skill_code, $skill));
-                $row['skills'][$skill] = $hasTraining ? '✓' : '-';
+            foreach ($masterSkills as $skillCode => $skillModel) {
+                $row['skills'][$skillCode] = isset($skillDataLookup[$skillCode]) ? '✓' : '-';
             }
 
-            $data[] = $row;
+            $results[] = $row;
         }
 
-        // Hitung total peserta setelah difilter
-        $totalParticipants = count($pesertas);
-
-        // Buat baris Supply dan Gap
-        $supplyRow = array_map(fn($supply) => $supply, $stationsWithSupply);
+        $totalParticipants = count($allPeserta);
+        $supplyRow = $stationsWithSupply;
         $gapRow = array_map(fn($supply) => $totalParticipants - $supply, $stationsWithSupply);
 
-        // Render PDF
-        $pdf = Pdf::loadView('pdf.training_matrix', compact('data', 'allStations', 'allSkillCodes', 'supplyRow', 'gapRow', 'deptList'))->setPaper('A4', 'landscape');
+        $pdf = Pdf::loadView('pdf.training_matrix', compact('results', 'masterStations', 'masterSkills', 'supplyRow', 'gapRow', 'deptList'))
+            ->setPaper('A4', 'landscape');
 
         return $pdf->download('Training_Matrix.pdf');
     }

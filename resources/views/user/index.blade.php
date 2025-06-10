@@ -88,7 +88,7 @@
                                     @if (auth()->user()->role == 'Admin')
                                         <td class="px-4 py-3 flex items-center justify-center space-x-4">
                                             <form action="{{ route('user.destroy', $p->id) }}" method="POST"
-                                                onsubmit="return confirm('Apakah Anda yakin ingin menghapus peserta ini?');">
+                                                onsubmit="return confirm('Are you sure you want to delete this user?');">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button
@@ -137,7 +137,7 @@
 
 
                                                     <form action="{{ route('user.destroy', $p->id) }}" method="POST"
-                                                        onsubmit="return confirm('Apakah Anda yakin ingin menghapus peserta ini?');">
+                                                        onsubmit="return confirm('Are you sure you want to delete this user?');">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button
@@ -147,7 +147,7 @@
                                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                                     d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                                             </svg>
-                                                            Hapus
+                                                            Delete
                                                         </button>
                                                     </form>
 

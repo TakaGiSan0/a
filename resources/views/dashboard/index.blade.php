@@ -82,7 +82,7 @@
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path clip-rule="evenodd" fill-rule="evenodd"
                                     d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
-                            </svg>Import Excel
+                            </svg>Export Excel
                         </button>
                     </div>
                 @endif
@@ -163,48 +163,50 @@
                                     <!-- Trigger & Dropdown wrapper -->
                                     <div class="inline-block text-left">
                                         <!-- Button -->
-                                        <button onclick="toggleDropdown(event, this)"
-                                            class="hover:bg-gray-100 dark:hover:bg-gray-600 rounded-full p-2">
-                                            <!-- SVG icon -->
-                                            <svg class="h-6 w-6 text-gray-500" viewBox="0 0 24 24" fill="none"
-                                                stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                                stroke-linejoin="round">
-                                                <circle cx="12" cy="12" r="1" />
-                                                <circle cx="12" cy="5" r="1" />
-                                                <circle cx="12" cy="19" r="1" />
-                                            </svg>
-                                        </button>
+                                        @if (auth()->user()->role === 'Super Admin' || auth()->user()->id === $rc->user_id)
+                                            <button onclick="toggleDropdown(event, this)"
+                                                class="hover:bg-gray-100 dark:hover:bg-gray-600 rounded-full p-2">
+                                                <!-- SVG icon -->
+                                                <svg class="h-6 w-6 text-gray-500" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                    stroke-linejoin="round">
+                                                    <circle cx="12" cy="12" r="1" />
+                                                    <circle cx="12" cy="5" r="1" />
+                                                    <circle cx="12" cy="19" r="1" />
+                                                </svg>
+                                            </button>
+                                        @endif
                                         <div
                                             class="dropdown-menu hidden absolute top-0 right-full ml-2 bg-white border rounded shadow-md z-50 w-32">
 
                                             <!-- Button Edit -->
-                                            @if (auth()->user()->role === 'Super Admin' || auth()->user()->id === $rc->user_id)
-                                                <a href="{{ route('dashboard.edit', $rc->id) }}"
-                                                    class="w-full flex items-center gap-2 text-left px-4 py-2 hover:bg-gray-100">
-                                                    <svg class="h-4 w-4 text-blue-500" fill="none" stroke="currentColor"
-                                                        stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round"
-                                                        stroke-linejoin="round">
-                                                        <path d="M12 20h9" />
-                                                        <path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4 12.5-12.5z" />
-                                                    </svg>
-                                                    Edit
-                                                </a>
-                                            @endif
+
+                                            <a href="{{ route('dashboard.edit', $rc->id) }}"
+                                                class="w-full flex items-center gap-2 text-left px-4 py-2 hover:bg-gray-100">
+                                                <svg class="h-4 w-4 text-blue-500" fill="none" stroke="currentColor"
+                                                    stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round"
+                                                    stroke-linejoin="round">
+                                                    <path d="M12 20h9" />
+                                                    <path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4 12.5-12.5z" />
+                                                </svg>
+                                                Edit
+                                            </a>
+
 
                                             <!-- Button Download -->
-                                            @if (auth()->user()->role === 'Super Admin' || auth()->user()->id === $rc->user_id)
-                                                <button type="button" data-modal-target="readProductModal"
-                                                    data-modal-toggle="readProductModal" data-id="{{ $rc->id }}" id="trigger-modal"
-                                                    class="w-full flex items-center gap-2 text-left px-4 py-2 hover:bg-gray-100">
-                                                    <svg class="w-4 h-4 flex-shrink-0 text-slate-500"
-                                                        xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor">
-                                                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                                            d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" />
-                                                    </svg>
-                                                    View
-                                                </button>
-                                            @endif
+
+                                            <button type="button" data-modal-target="readProductModal"
+                                                data-modal-toggle="readProductModal" data-id="{{ $rc->id }}" id="trigger-modal"
+                                                class="w-full flex items-center gap-2 text-left px-4 py-2 hover:bg-gray-100">
+                                                <svg class="w-4 h-4 flex-shrink-0 text-slate-500"
+                                                    xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor">
+                                                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                                        d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" />
+                                                </svg>
+                                                View
+                                            </button>
+
 
                                             @if (Auth::user()->role == 'Super Admin')
                                                 <form action="{{ route('dashboard.destroy', $rc->id) }}" method="POST"
@@ -219,7 +221,7 @@
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                                 d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                                         </svg>
-                                                        Hapus
+                                                        Delete
                                                     </button>
                                                 </form>
                                             @endif
@@ -263,7 +265,7 @@
                                 <td class="px-4 py-3 text-center border">
                                     <!-- FORM DELETE DIPISAH -->
                                     <form action="{{ route('jobs_skill.destroy', $js->id) }}" method="POST"
-                                        onsubmit="return confirm('Yakin ingin menghapus?');">
+                                        onsubmit="return confirm('Are You Sure Delete Job Skill?');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">
@@ -382,7 +384,7 @@
                 <label for="export_year" class="text-sm font-medium text-gray-700 dark:text-gray-300">Pilih Tahun:</label>
 
                 <select id="year" name="year"
-                    class="mt-2 block w-full rounded-md border border-gray-300 bg-gray-50 px-3 py-2 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    class="mt-2 block w-full rounded-md border border-gray-300 bg-gray-50 px-3 py-2 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600  text-black dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <option value="all"
                         class="dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         All Year</option>
@@ -469,10 +471,10 @@
                         @endphp
 
                         <textarea name="comment" id="comment" class="w-full h-24 px-3 py-2 border border-gray-300 rounded-md text-black focus:outline-none focus:ring bg-white
-                                                            dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
-                                                            focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600
-                                                        @if (!$isSuperAdmin) text-gray-400 @endif" @if (!$isSuperAdmin)
-                                                        readonly @endif
+                                                                dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
+                                                                focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600
+                                                            @if (!$isSuperAdmin) text-gray-400 @endif" @if (!$isSuperAdmin)
+                                                            readonly @endif
                             placeholder="{{ !$isSuperAdmin ? 'Tunggu komentar dari super admin' : '' }}">{{ old('comment', $comment ?? '') }}</textarea>
                         @if (Auth::user()->role == 'Super Admin')
                             <div>
@@ -659,11 +661,11 @@
                     });
 
                     tr.innerHTML = `
-                                <td class="p-2 text-center">${index + 1}</td>
-                                <td class="p-2">${entry.approval || '-'}</td>
-                                <td class="p-2">${entry.comment || '-'}</td>
-                                <td class="p-2">${formattedDate}</td>
-                            `;
+                                    <td class="p-2 text-center">${index + 1}</td>
+                                    <td class="p-2">${entry.approval || '-'}</td>
+                                    <td class="p-2">${entry.comment || '-'}</td>
+                                    <td class="p-2">${formattedDate}</td>
+                                `;
                     tbody.appendChild(tr);
                 });
             }
