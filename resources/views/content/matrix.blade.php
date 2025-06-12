@@ -226,9 +226,9 @@
         editButtons.forEach(button => {
             button.addEventListener('click', () => {
                 const recordId = button.getAttribute('data-id');
-
+window.baseURL = '{{ url('/') }}'
                 // Fetch data dari server
-                fetch(`/matrix/${recordId}`)
+                fetch(window.baseURL +`/matrix/${recordId}`)
                     .then(response => response.json())
                     .then(data => {
                         if (data.message) {
@@ -237,7 +237,7 @@
                         }
 
                         // Set form action
-                        commentForm.action = `/matrix/update/${recordId}`;
+                        commentForm.action = window.baseURL +`/matrix/update/${recordId}`;
 
                         certificateField.value = data.certificate;
                         expiredField.value = data.expired_date;

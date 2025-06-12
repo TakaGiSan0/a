@@ -584,8 +584,8 @@
             editButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     const recordId = button.getAttribute('data-id');
-
-                    fetch(`/training-record/${recordId}`)
+                     window.baseURL = '{{ url('/') }}'
+                    fetch(window.baseURL +`/training-record/${recordId}`)
                         .then(response => response.json())
                         .then(data => {
                             if (data.message) {
@@ -593,7 +593,7 @@
                                 return;
                             }
                             // Set form action
-                            commentForm.action = `/training-record/${recordId}/comment`;
+                            commentForm.action = window.baseURL +`/training-record/${recordId}/comment`;
 
                             // Set field values
                             if (data.comment) {

@@ -233,8 +233,8 @@
 
             // Hide the modal before opening a new one
             hideModal();
-
-            fetch(`Training-record/public/summary/${id}`, {
+            window.baseURL = '{{ url('/') }}'
+            fetch(window.baseURL + `Training-record/public/summary/${id}`, {
                     signal: abortController.signal,
                 })
                 .then(response => {

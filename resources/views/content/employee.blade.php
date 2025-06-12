@@ -232,8 +232,8 @@
 
             // Tutup modal sebelum membuka yang baru
             hideModal();
-
-            fetch(`Training-record/public/employee/${id}`, {
+            window.baseURL = '{{ url('/') }}'
+            fetch(window.baseURL +`Training-record/public/employee/${id}`, {
                     signal: controller.signal
                 })
                 .then(response => response.json())

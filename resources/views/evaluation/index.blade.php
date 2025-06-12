@@ -270,9 +270,10 @@
 
                 $('#commentForm')[0].reset();
                 $('#commentForm textarea').val('');
+                 window.baseURL = '{{ url('/') }}'
 
                 $.ajax({
-                    url: '/evaluation/' + id + '/edit',
+                    url:  window.baseURL +'/evaluation/' + id + '/edit',
                     type: 'GET',
                     success: function (data) {
                         console.log(data); // Untuk debug

@@ -222,9 +222,9 @@
                     e.preventDefault(); // Mencegah submit form
 
                     let badgeNo = $(this).val(); // Ambil nilai badge_no
-
+                     window.baseURL = '{{ url('/') }}'
                     $.ajax({
-                        url: '/participants/' + badgeNo, // URL untuk mengambil data peserta
+                        url: window.baseURL + '/participants/' + badgeNo, // URL untuk mengambil data peserta
                         type: 'GET',
                         success: function (data) {
                             // Temukan parent row dari input yang di-trigger
@@ -360,9 +360,10 @@
                 let $this = $(this); // input skill_code yang sedang aktif
                 let skillCode = $this.val();
                 let $row = $this.closest('.training-row'); // ambil parent barisnya
+                window.baseURL = '{{ url('/') }}'
 
                 $.ajax({
-                    url: '/get-job-skill/' + encodeURIComponent(skillCode),
+                     url: window.baseURL + '/get-job-skill/' + encodeURIComponent(skillCode),
                     type: 'GET',
                     success: function (data) {
                         // hanya update input di dalam baris yang aktif
