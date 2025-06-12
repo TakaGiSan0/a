@@ -12,7 +12,7 @@
 
 <style>
     body {
-        background-image: url('/images/bg-login-1.png');
+        background-image: url("{{ asset('images/bg-login-1.png') }}");
         background-size: cover;
         background-repeat: no-repeat;
 

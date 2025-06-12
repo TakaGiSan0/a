@@ -55,11 +55,11 @@ class UserController extends Controller
             [
                 'employee_name' => 'required|string|max:255',
                 'user' => 'required|string|max:255|unique:users,user',
-                'password' => 'required|string|min:8',
-                
+                'password' => 'required|string',
+
             ],
             [
-                'user.unique' => 'User dengan Nama ini sudah ada.',
+                'user.unique' => 'A user with this name already exists.',
             ],
         );
 
@@ -73,7 +73,7 @@ class UserController extends Controller
         $user = new User();
 
         $user->user = $validatedData['user'];
-       
+
 
         // Ambil role pengguna saat ini
         $userRole = auth('')->user()->role;
@@ -110,44 +110,90 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(User $user)
-    {
-        // Ambil role pengguna saat ini
-        $userRole = auth('')->user()->role; 
+    public function edit($id)
+{
 
-        
-        // Kembalikan view dengan data user
-        return view('user.edit', compact('user'))->with('hideSidebar', true);
-    }
+    $user = User::with('pesertaLogin')->findOrFail($id);
 
+    $pesertaAvailableForSelection = Peserta::select('id', 'employee_name', 'badge_no', 'user_id_login')
+        ->whereNull('user_id_login')
+        ->orWhere('user_id_login', $user->id)
+        ->get(); 
+
+    return view('user.edit', [
+        'user' => $user,
+        'pesertaAvailableForSelection' => $pesertaAvailableForSelection,
+    ])->with('hideSidebar', true);
+}
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, $id)
     {
-        // Validasi input dengan pengecualian untuk ID yang sedang diperbarui
-        $validated = $request->validate(
+        $user = User::findOrFail($id); // Temukan user yang akan diupdate
+
+        // Validasi input
+        $validatedData = $request->validate(
             [
-                'user' => 'required|string|max:255',
-                'name' => 'required|string|max:255',
-                'role' => 'required|string|max:255',
-                'dept' => 'required|string|max:255',
-                'password' => 'nullable|string|max:255',
+                'employee_name' => 'required|string|max:255', // Nama peserta wajib diisi
+                'user' => 'required', 'string', 'max:255',
+                'password' => 'nullable|string',
             ],
-            [],
+            [
+                'user.unique' => 'A user with this name already exists.',
+            ],
         );
 
-        // Jika password diisi, hash dan simpan, jika tidak, abaikan
-        if (!empty($validated['password'])) {
-            $validated['password'] = bcrypt($validated['password']);
-        } else {
-            // Hapus field password agar tidak diupdate jika kosong
-            unset($validated['password']);
-        }
-        // Update data user
-        $user->update($validated);
+        $newSelectedPeserta = Peserta::where('employee_name', $validatedData['employee_name'])->first();
 
-        return redirect()->route('user.index')->with('success', 'User successfully updated.');
+        // Pastikan peserta yang dipilih valid
+        if (!$newSelectedPeserta) {
+            return back()->withErrors(['employee_name' => 'Peserta yang dipilih tidak valid.'])->withInput();
+        }
+
+        // Ambil peserta yang sebelumnya terkait dengan user ini
+        // Menggunakan relasi hasOne dari model User (cek relasi di model User.php)
+        $oldPeserta = $user->peserta;
+
+        // Logika untuk melepaskan peserta lama dan mengaitkan peserta baru
+        // Jika ada peserta lama DAN id peserta lama berbeda dengan id peserta yang baru dipilih
+        if ($oldPeserta && $oldPeserta->id !== $newSelectedPeserta->id) {
+            $oldPeserta->user_id_login = null; // Lepaskan user_id_login dari peserta lama
+            $oldPeserta->save(); // Simpan perubahan pada peserta lama
+        }
+
+        // Kaitkan peserta baru dengan user ini
+        $newSelectedPeserta->user_id_login = $user->id;
+        $newSelectedPeserta->save(); // Simpan perubahan pada peserta baru
+
+        // Update data user
+        $user->user = $validatedData['user']; // Update username user
+
+        // Update password hanya jika ada input password baru
+        if ($request->filled('password')) {
+            $user->password = bcrypt($validatedData['password']);
+        }
+
+        // Ambil role pengguna saat ini (yang sedang login)
+        $userRole = auth('')->user()->role;
+
+        // Logika role, sama seperti di fungsi store, untuk membatasi perubahan role
+        if ($userRole === 'Admin') {
+            // Admin tidak bisa mengubah role user lain dari 'user'.
+            // Jika role user yang sedang diedit adalah 'Super Admin', jangan diubah menjadi 'user' oleh Admin.
+            if ($user->role !== 'Super Admin') {
+                $user->role = 'user';
+            }
+        } elseif ($userRole === 'Super Admin') {
+            // Super Admin bisa mengubah role sesuai input dari form.
+            $user->role = $request->input('role', 'user'); // Gunakan 'user' sebagai default jika tidak ada input role
+        } else {
+            abort(403, 'Unauthorized action.'); // Akses ditolak jika tidak ada role yang sesuai
+        }
+
+        $user->save(); // Simpan perubahan pada user
+
+        return redirect()->route('user.index')->with('success', 'User updated successfully.'); // Redirect dengan pesan sukses
     }
 
     /**

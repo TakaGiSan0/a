@@ -13,7 +13,7 @@ class TrainingRequestController extends Controller
     public function index()
     {
         $request = TrainingRequest::with('peserta')
-            ->byUserRole(auth('')->user())  // pastikan user yg login diteruskan
+            ->byUserRole(auth('')->user())
             ->paginate(10);
 
         return view('request.index', compact('request'));
@@ -56,9 +56,18 @@ class TrainingRequestController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show()
+    public function show($id)
     {
-        //
+        $trainingRequest = TrainingRequest::with('peserta')
+            ->byUserRole(auth('')->user())
+            ->where('id', $id)
+            ->first(); // Menggunakan first() untuk mendapatkan satu model
+
+        if (!$trainingRequest) {
+            return response()->json(['message' => 'Permintaan pelatihan tidak ditemukan.'], 404);
+        }
+
+        return response()->json($trainingRequest);
     }
 
     /**
@@ -88,7 +97,6 @@ class TrainingRequestController extends Controller
 
         // Redirect ke halaman index dengan pesan sukses
         return redirect()->back() // Ganti 'training_requests.index' sesuai nama route Anda
-                         ->with('success', 'Training Request Successfully Deleted');
-    
+            ->with('success', 'Training Request Successfully Deleted');
     }
 }

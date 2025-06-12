@@ -16,9 +16,6 @@ class TrainingMatrixController extends Controller
 
     public function index(Request $request)
     {
-        // =========================================================================
-        // FASE 1: PERSIAPAN DAN PENGAMBILAN DATA MASTER
-        // =========================================================================
 
         // Ambil daftar departemen (Kode Anda sudah bagus)
         $departments = Peserta::whereHas('trainingRecords', fn($q) => $q->where('status', 'completed'))
@@ -48,15 +45,12 @@ class TrainingMatrixController extends Controller
             })
             ->sort()
             ->values();
-        // =========================================================================
-        // FASE 2: MEMBUAT DAN MENGAMBIL DATA UTAMA (PAGINASI)
-        // =========================================================================
 
         $user = auth('')->user();
 
         // Query untuk peserta
         $pesertasQuery = Peserta::query()
-            // --- PERBAIKAN KRUSIAL: Eager Load relasi bersarang untuk performa optimal ---
+            ->ByDept()
             ->with([
                 'trainingRecords' => function ($query) {
                     // FILTER DI SINI: Hanya muat record yang statusnya 'Completed'.
@@ -71,7 +65,7 @@ class TrainingMatrixController extends Controller
                 $subq->where('employee_name', 'like', "%{$request->searchQuery}%")
                     ->orWhere('badge_no', 'like', "%{$request->searchQuery}%");
             }))
-            ->byUserRole($user) // Asumsi ini adalah scope lokal Anda
+            
             ->orderBy('employee_name');
 
         // Ambil total sebelum paginasi (Kode Anda sudah bagus)
@@ -80,13 +74,6 @@ class TrainingMatrixController extends Controller
         // Ambil peserta dengan paginasi
         $pesertas = $pesertasQuery->select('id', 'badge_no', 'join_date', 'employee_name', 'dept')->paginate(10);
 
-
-        // =========================================================================
-        // FASE 3: PROSES DAN "HIAS" HASIL PAGINASI (BAGIAN BARU & PENTING)
-        // =========================================================================
-
-        // Loop melalui hasil paginasi (misal: 10 peserta per halaman)
-        // dan tambahkan data 'level' dan 'skill' yang sudah diproses ke setiap objek.
         $pesertas->through(function ($peserta) use ($allStations, $masterSkills) {
 
             // --- Proses Stations untuk peserta ini ---
