@@ -34,7 +34,7 @@ class FormController extends Controller
             ->pluck('year');
 
         // Ambil role user
-        $user = auth('web')->user();
+        $user = auth('')->user();
 
         // Query training_records dengan filter pencarian, tahun, dan byUserRole
         $training_records = Training_Record::with('latestComment')
@@ -169,7 +169,7 @@ class FormController extends Controller
                         'level' => $participant['level'],
                         'final_judgement' => $participant['final_judgement'],
                         'license' => $participant['license'],
-                        'evaluation' => $participant['evaluation'],
+
                         'theory_result' => $participant['theory_result'],
                         'practical_result' => $participant['practical_result'],
                     ]);
@@ -183,14 +183,7 @@ class FormController extends Controller
                     ->first();
 
                 // Jika evaluation bernilai 1, simpan ke tabel training_evaluation
-                if ($participant['evaluation'] == '1' && $hasilPeserta) {
-                    DB::table('training_evaluation')->insert([
-                        'hasil_peserta_id' => $hasilPeserta->id,
-                        'status' => 'Waiting Approval', // atau nilai default lain sesuai kebutuhan
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ]);
-                }
+
             }
         }
 
@@ -285,7 +278,7 @@ class FormController extends Controller
 
         $currentAttachmentPath = $trainingRecord->attachment; // Simpan path attachment saat ini
 
-        if ($request->hasFile('attachment')) { 
+        if ($request->hasFile('attachment')) {
             $pdfFile = $request->file('attachment');
 
             $originalName = $pdfFile->getClientOriginalName();
@@ -342,7 +335,7 @@ class FormController extends Controller
 
 
         $pesertaToSync = [];
-        $participantsForEvaluation = []; // Simpan data untuk training_evaluation
+
 
         foreach ($data['participants'] as $participant) {
             $peserta = Peserta::where('badge_no', $participant['badge_no'])->first();
@@ -353,49 +346,15 @@ class FormController extends Controller
                     'level' => $participant['level'],
                     'final_judgement' => $participant['final_judgement'],
                     'license' => $participant['license'],
-                    'evaluation' => $participant['evaluation'],
+
                     'theory_result' => $participant['theory_result'],
                     'practical_result' => $participant['practical_result'],
                 ];
-
-                // Jika evaluation = 1, tandai peserta ini untuk diproses nanti
-                if ($participant['evaluation'] == '1') {
-                    $participantsForEvaluation[] = $peserta->id;
-                }
             }
         }
 
-        // Lakukan sinkronisasi! Ini akan menambah, update, atau menghapus
-        // sesuai kebutuhan agar cocok dengan $pesertaToSync.
+
         $trainingRecord->pesertas()->sync($pesertaToSync);
-
-        // --- Menangani training_evaluation SETELAH sync ---
-
-        // 1. Ambil semua hasil_peserta yang relevan (yang baru saja disinkronkan
-        //    dan memiliki evaluation == 1)
-        $relevantHasilPeserta = DB::table('hasil_peserta')
-            ->where('training_record_id', $trainingRecord->id)
-            ->whereIn('peserta_id', $participantsForEvaluation) // Hanya yang evaluation = 1
-            ->get();
-
-        // 2. Hapus dulu entri training_evaluation lama yang mungkin sudah tidak valid
-        //    (Ini opsional, tergantung kebutuhan. Jika Anda ingin mempertahankan
-        //     status lama, lewati langkah ini atau buat logikanya lebih kompleks)
-        DB::table('training_evaluation')
-            ->whereIn('hasil_peserta_id', $trainingRecord->pesertas()->pluck('hasil_peserta.id'))
-            ->delete(); // Hati-hati dengan ini, pastikan ini yang Anda mau.
-
-        // 3. Masukkan entri baru untuk yang relevan
-        foreach ($relevantHasilPeserta as $hasil) {
-            // Anda bisa tambahkan pengecekan di sini jika tidak ingin duplikat
-            // atau jika Anda tidak menghapus semua di langkah 2.
-            DB::table('training_evaluation')->insert([
-                'hasil_peserta_id' => $hasil->id,
-                'status' => 'Pending',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        }
 
         // Redirect atau response dengan pesan sukses
         return redirect()->route('dashboard.index')->with('success', 'Training succesfully updated.');
@@ -468,7 +427,7 @@ class FormController extends Controller
             'participants.*.level' => 'max:255',
             'participants.*.final_judgement' => 'max:255',
             'participants.*.license' => 'nullable|max:255',
-            'participants.*.evaluation' => 'nullable|max:255',
+
             'participants.*.theory_result' => 'max:255',
             'participants.*.practical_result' => 'max:255',
         ];
@@ -517,7 +476,7 @@ class FormController extends Controller
         if ($skill) {
             return response()->json([
                 'job_skill' => $skill->job_skill,
-                'id' => $skill->id 
+                'id' => $skill->id
             ]);
         }
 

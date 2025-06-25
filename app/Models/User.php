@@ -49,7 +49,7 @@ class User extends Authenticatable
     public function scopeByUserRole($query, $user)
     {
         if ($user->role === 'Super Admin') {
-            return $query; // Super Admin bisa melihat semua user
+            return $query;
         }
         return $query->whereHas('pesertaLogin', function ($q) use ($user) {
             $q->where('dept', $user->pesertaLogin->dept);

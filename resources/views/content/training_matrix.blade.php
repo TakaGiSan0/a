@@ -57,46 +57,47 @@
                             Download
                         </a>
                     </div>
-                @endif
-                <div
-                    class="w-full relative md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
 
-                    <div class="relative inline-block text-left">
-                        <div>
-                            <button id="filterDropdownButton" type="button"
-                                class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-                                aria-haspopup="true" aria-expanded="true">
-                                Dept
-                                <svg class="-mr-1 ml-1.5 w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                                    xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                    <path clip-rule="evenodd" fill-rule="evenodd"
-                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
-                                </svg>
-                            </button>
-                        </div>
+                    <div
+                        class="w-full relative md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
 
-                        <div id="filterDropdown"
-                            class="absolute right-0 mt-2 w-56 origin-top-right rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 overflow-auto max-h-96 hidden"
-                            style="z-index: 9999;">
-                            <form method="GET" action="{{ url()->current() }}">
-                                <div class="p-4">
-                                    <div>
-                                        @foreach($departments as $department)
-                                            <div class="flex items-center">
-                                                <input type="checkbox" name="dept[]" value="{{ $department }}"
-                                                    class="w-4 h-4 border-gray-300 rounded text-primary-600" {{ in_array($department, $deptFilters ?? []) ? 'checked' : '' }}>
-                                                <label class="ml-2 text-sm font-medium">{{ $department }}</label>
-                                            </div>
-                                        @endforeach
+                        <div class="relative inline-block text-left">
+                            <div>
+                                <button id="filterDropdownButton" type="button"
+                                    class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                                    aria-haspopup="true" aria-expanded="true">
+                                    Dept
+                                    <svg class="-mr-1 ml-1.5 w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                                        xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <path clip-rule="evenodd" fill-rule="evenodd"
+                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <div id="filterDropdown"
+                                class="absolute right-0 mt-2 w-56 origin-top-right rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 overflow-auto max-h-96 hidden"
+                                style="z-index: 9999;">
+                                <form method="GET" action="{{ url()->current() }}">
+                                    <div class="p-4">
+                                        <div>
+                                            @foreach($departments as $department)
+                                                <div class="flex items-center">
+                                                    <input type="checkbox" name="dept[]" value="{{ $department }}"
+                                                        class="w-4 h-4 border-gray-300 rounded text-primary-600" {{ in_array($department, $deptFilters ?? []) ? 'checked' : '' }}>
+                                                    <label class="ml-2 text-sm font-medium">{{ $department }}</label>
+                                                </div>
+                                            @endforeach
+                                        </div>
+
+                                        <button type="submit"
+                                            class="mt-4 w-full inline-flex items-center justify-center py-2 px-4 text-sm font-medium text-white bg-blue-600 bg-primary-600 rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-4 focus:ring-primary-300">Filter</button>
                                     </div>
-
-                                    <button type="submit"
-                                        class="mt-4 w-full inline-flex items-center justify-center py-2 px-4 text-sm font-medium text-white bg-blue-600 bg-primary-600 rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-4 focus:ring-primary-300">Filter</button>
-                                </div>
-                            </form>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endif
             </div>
             <div class="overflow-x-auto">
                 <table class="min-w-full border-collapse sm:rounded-xl">

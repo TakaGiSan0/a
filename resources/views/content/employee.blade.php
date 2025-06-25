@@ -292,7 +292,7 @@
                         }
 
                         trainingRecordsContent += `
-                                <p class="text-lg font-bold text-left mb-4 dark:text-white">${category.name}</p>
+                                <p class="text-lg font-bold text-left text-black mb-4 dark:text-white">${category.name}</p>
                                 <table class="w-full text-sm text-center text-gray-500 dark:text-gray-400 mb-7">
                                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                         <tr>
@@ -313,19 +313,19 @@
 
                                 trainingRecordsContent += `
                 <tr class="">
-                    <th scope="row" class="px-4 py-3 font-medium text-gray-400 text-center whitespace-normal break-words  overflow-hidden max-w-xs">
+                    <th scope="row" class="px-4 py-3 font-medium text-gray-700 text-center whitespace-normal break-words  overflow-hidden max-w-xs">
                         ${training.training_name ?? '-'}
                     </th>
-                    <td class="px-4 py-3 font-medium text-gray-400 whitespace-nowrap text-center ">
+                    <td class="px-4 py-3 font-medium text-gray-700 whitespace-nowrap text-center ">
                         ${training.trainer_name ?? '-'}
                     </td>
-                    <td class="px-4 py-3 font-medium text-gray-400 whitespace-nowrap text-center ">
+                    <td class="px-4 py-3 font-medium text-gray-700 whitespace-nowrap text-center ">
                         ${training.date_formatted ?? '-'}
                     </td>
-                    <td class="px-4 py-3 font-medium text-gray-400 whitespace-nowrap text-center ">
+                    <td class="px-4 py-3 font-medium text-gray-700 whitespace-nowrap text-center ">
                         ${level}
                     </td>
-                    <td class="px-4 py-3 font-medium text-gray-400 whitespace-nowrap text-center ">
+                    <td class="px-4 py-3 font-medium text-gray-700 whitespace-nowrap text-center ">
                         ${finalJudgement}
                     </td>
                 </tr>`;
