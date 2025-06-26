@@ -55,7 +55,11 @@
                     </button>
                 </div>
             </div>
-
+            @if (session('success'))
+                <div class="alert alert-success ml-4">
+                    {{ session('success') }}
+                </div>
+            @endif
             <div class="overflow-x-auto">
                 <table class="w-full text-sm text-center text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -65,12 +69,7 @@
                             <th scope="col" class="px-4 py-3">Badge No</th>
                             <th scope="col" class="px-4 py-3">Dept</th>
                             <th scope="col" class="px-4 py-3">Description</th>
-                            @foreach ($request as $r)
-
-                                @if (auth()->user()->id === $r->user_id_login)
-                                    <th scope="col" class="px-4 py-3">Action</th>
-                                @endif
-                            @endforeach
+                            <th scope="col" class="px-4 py-3">Action</th>
                         </tr>
                     </thead>
                     <?php $no = 0; ?>
@@ -91,35 +90,60 @@
                                     {{ $r->peserta->dept ?? 'Tidak ditemukan' }}
                                 </td>
                                 <td class="px-4 py-3">
-                                    {{ Str::words($r->description ?? 'Tidak ditemukan', 10, '...') }}
+
+                                    {{ Str::words($r->description ?? 'Tidak ditemukan', 5, '...') }}
+
                                 </td>
-                                @if (auth()->user()->id === $r->user_id_login)
-                                    <td class="relative px-4 py-3 text-center">
-                                        <!-- Trigger & Dropdown wrapper -->
-                                        <div class="inline-block text-left">
-                                            <!-- Button -->
-                                            <form action="{{ route('training-request.destroy', $r->id) }}" method="POST"
-                                                onsubmit="return confirm('Are you sure you want to delete this request?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <!-- Button Hapus -->
-                                                <button
-                                                    class="w-full flex items-center gap-2 text-left px-4 py-2 text-red-600 hover:bg-red-100">
-                                                    <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor"
-                                                        stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round"
-                                                        stroke-linejoin="round">
-                                                        <polyline points="3 6 5 6 21 6" />
-                                                        <path
-                                                            d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6m5 0V4a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v2" />
-                                                        <line x1="10" y1="11" x2="10" y2="17" />
-                                                        <line x1="14" y1="11" x2="14" y2="17" />
-                                                    </svg>
-                                                  
-                                                </button>
-                                            </form>
+                                <td class="relative px-4 py-3 text-center">
+
+
+                                    <div class="inline-block text-left">
+                                        <button onclick="toggleDropdown(event, this)"
+                                            class="hover:bg-gray-100 dark:hover:bg-gray-600 rounded-full p-2">
+                                            <!-- SVG icon -->
+                                            <svg class="h-6 w-6 text-gray-500" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                stroke-linejoin="round">
+                                                <circle cx="12" cy="12" r="1" />
+                                                <circle cx="12" cy="5" r="1" />
+                                                <circle cx="12" cy="19" r="1" />
+                                            </svg>
+                                        </button>
+
+                                        <div
+                                            class="dropdown-menu hidden absolute top-0 right-full ml-2 bg-white border rounded shadow-md z-50 w-32">
+
+                                            <button type="button" data-modal-target="viewModal" data-modal-toggle="viewModal"
+                                                data-id="{{ $r->id }}" id="openViewDetailModalBtn"
+                                                class="openViewDetailModalBtn w-full flex items-center gap-2 text-left px-4 py-2 hover:bg-gray-100">
+                                                <svg class="w-4 h-4 flex-shrink-0 text-slate-500"
+                                                    xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor">
+                                                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                                        d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" />
+                                                </svg>
+                                                View
+                                            </button>
+                                            @if (auth()->user()->id === $r->user_id_login)
+                                                <form action="{{ route('training-request.destroy', $r->id) }}" method="POST"
+                                                    onsubmit="return confirm('Are you sure you want to delete this request?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <!-- Button Hapus -->
+                                                    <button
+                                                        class="w-full flex items-center gap-2 text-left px-4 py-2 text-red-600 hover:bg-red-100">
+                                                        <svg class="h-4 w-4 text-red-600" fill="none" viewBox="0 0 24 24"
+                                                            stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                        </svg>
+                                                        Delete
+                                                    </button>
+                                                </form>
+                                            @endif
                                         </div>
-                                    </td>
-                                @endif
+                                    </div>
+                                </td>
                             </tr>
                         </tbody>
                     @endforeach
@@ -138,8 +162,6 @@
     <div id="jobSkillModal" class="hidden fixed inset-0  items-center justify-center bg-black bg-opacity-50 z-50">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 max-w-2xl w-full">
             <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4 text-center"> Training Request</h2>
-
-
             <div class="overflow-x-auto max-h-96">
                 <form action="{{ route('training-request.store') }}" method="POST">
                     @csrf
@@ -182,35 +204,159 @@
         </div>
     </div>
 
+    <div id="viewModal" class="hidden fixed inset-0  items-center justify-center bg-black bg-opacity-50 z-50">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 max-w-2xl w-full">
+            <div class="flex items-center pb-3 border-b border-gray-200">
+                <div class="flex-1">
+                    <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4 text-center"> Training Request</h2>
+                </div>
+
+                <!-- Tombol Close -->
+                <svg xmlns="http://www.w3.org/2000/svg"
+                    class="w-3 ml-2 cursor-pointer shrink-0 fill-gray-400 hover:fill-red-500 closeViewModalBtn" id="closeViewModalBtn" data-modal-hide="viewModal">
+                    viewBox="0 0 320.591 320.591">
+                    <path
+                        d="M30.391 318.583a30.37 30.37 0 0 1-21.56-7.288c-11.774-11.844-11.774-30.973 0-42.817L266.643 10.665c12.246-11.459 31.462-10.822 42.921 1.424 10.362 11.074 10.966 28.095 1.414 39.875L51.647 311.295a30.366 30.366 0 0 1-21.256 7.288z"
+                        data-original="#000000"></path>
+                    <path
+                        d="M287.9 318.583a30.37 30.37 0 0 1-21.257-8.806L8.83 51.963C-2.078 39.225-.595 20.055 12.143 9.146c11.369-9.736 28.136-9.736 39.504 0l259.331 257.813c12.243 11.462 12.876 30.679 1.414 42.922-.456.487-.927.958-1.414 1.414a30.368 30.368 0 0 1-23.078 7.288z"
+                        data-original="#000000"></path>
+                </svg>
+            </div>
+            
+            <div class="overflow-x-auto max-h-96">
+                <div class="space-y-4 viewModalContent" id="viewModalContent">
+
+                </div>
+                
+
+            </div>
+
+        </div>
+    </div>
+
 
 
 @endsection
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const modal = document.getElementById("jobSkillModal");
-        const openModalBtn = document.getElementById("openModalBtn");
-        const closeModalBtn = document.getElementById("closeModalBtn");
+        // Referensi ke modal job skill (jika masih digunakan)
+        const jobSkillModal = document.getElementById("jobSkillModal");
+        const openJobSkillModalBtn = document.getElementById("openModalBtn");
+        const closeJobSkillModalBtn = document.getElementById("closeModalBtn");
 
-        openModalBtn.addEventListener("click", function () {
-            modal.classList.remove("hidden");
-            modal.classList.add("flex");
+        // Referensi ke modal view detail (baru)
+        const viewModal = document.getElementById("viewModal");
+        const openViewDetailModalBtns = document.querySelectorAll(".openViewDetailModalBtn");
+        const closeViewModalBtn = document.getElementById("closeViewModalBtn");
+        const viewModalContentArea = viewModal.querySelector('#viewModalContent');
+
+        
+        // --- Job Skill Modal Functionality (jika masih relevan) ---
+        if (openJobSkillModalBtn && jobSkillModal) {
+            openJobSkillModalBtn.addEventListener("click", function () {
+                jobSkillModal.classList.remove("hidden");
+                jobSkillModal.classList.add("flex");
+            });
+        }
+
+        if (closeJobSkillModalBtn && jobSkillModal) {
+            closeJobSkillModalBtn.addEventListener("click", function () {
+                jobSkillModal.classList.add("hidden");
+                jobSkillModal.classList.remove("flex"); // Pastikan flex juga dihapus
+            });
+        }
+
+        if (jobSkillModal) {
+            window.addEventListener("click", function (event) {
+                if (event.target === jobSkillModal) {
+                    jobSkillModal.classList.add("hidden");
+                    jobSkillModal.classList.remove("flex");
+                }
+            });
+        }
+
+        // --- View Detail Modal Functionality ---
+
+        // Melampirkan event listener ke setiap tombol 'View'
+        openViewDetailModalBtns.forEach(btn => {
+            btn.addEventListener("click", async function () {
+                viewModal.classList.remove("hidden");
+                viewModal.classList.add("flex");
+
+                const requestId = this.dataset.id; // Ambil ID dari atribut data-id tombol yang diklik
+                if (requestId) {
+                    await fetchAndDisplayTrainingRequest(requestId);
+                }
+            });
         });
 
-        closeModalBtn.addEventListener("click", function () {
-            modal.classList.add("hidden");
-        });
+        // Event listener untuk menutup modal detail jika diklik di luar kontennya
+        if (viewModal) {
+            window.addEventListener("click", function (event) {
+                if (event.target === viewModal) {
+                    viewModal.classList.add("hidden");
+                    viewModal.classList.remove("flex");
+                }
+            });
+        }
 
-        // Tutup modal jika klik di luar kontennya
-        window.addEventListener("click", function (event) {
-            if (event.target === modal) {
-                modal.classList.add("hidden");
+        // --- Fungsi untuk mengambil dan menampilkan data ---
+        async function fetchAndDisplayTrainingRequest(id) {
+            if (!viewModalContentArea) {
+                console.error("Elemen dengan ID 'viewModalContent' tidak ditemukan di dalam viewModal.");
+                return;
             }
-        });
-    });
 
+            viewModalContentArea.innerHTML = '<p class="text-center text-gray-500 dark:text-gray-400">Memuat detail...</p>'; // Pesan loading
+
+            try {
+                // URL ini harus sesuai dengan route Laravel Anda untuk fungsi show
+                const response = await fetch(`/training-request/show/${id}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const data = await response.json();
+
+                // Bangun HTML untuk menampilkan data (termasuk deskripsi)
+                let htmlContent = `
+                <div class="space-y-3">
+                    
+                    <div>
+                            <label class="block text-sm font-medium text-gray-700">Name</label>
+                            <input type="text" name="employee_name"
+                                readonly class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" value='${data.peserta ? data.peserta.employee_name : 'N/A'}'>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Badge No</label>
+                            <input type="text" name="badge_no"
+                                readonly class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" value='${data.peserta ? data.peserta.badge_no : 'N/A'}'>
+                        </div>
+                    <div>
+                            <label class="block text-sm font-medium text-gray-700">Department</label>
+                            <input type="text" name="dept"
+                                readonly class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" value='${data.peserta ? data.peserta.dept : 'N/A'}'>
+                        </div>
+                     <div>
+                            <label class="block text-sm font-medium text-gray-700">Description</label>
+                            <textarea name="description"
+                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" rows="3" readonly>${data.description || 'Tidak ada deskripsi.'}</textarea>
+                        </div>
+                    
+                </div>
+            `;
+
+                viewModalContentArea.innerHTML = htmlContent;
+
+            } catch (error) {
+                console.error("Gagal mengambil data pelatihan:", error);
+                viewModalContentArea.innerHTML = '<p class="text-red-500 text-center">Gagal memuat detail. Silakan coba lagi.</p>';
+            }
+        }
+    });
     function toggleDropdown(event, btn) {
-        event.stopPropagation(); // cegah event bubbling
+        event.stopPropagation(); 
         const dropdown = btn.nextElementSibling;
         const allDropdowns = document.querySelectorAll('.dropdown-menu');
 
@@ -227,4 +373,6 @@
             document.querySelectorAll('.dropdown-menu').forEach(d => d.classList.add('hidden'));
         }
     });
+
+
 </script>

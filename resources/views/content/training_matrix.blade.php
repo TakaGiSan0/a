@@ -170,7 +170,7 @@
 
             </div>
             <div class="mt-4">
-                {{ $pesertas->appends(['dept' => request('dept')])->links()  }}
+                {{ $pesertas->appends(['dept' => request('dept'), 'searchQuery' => request('searchQuery')])->links()  }}
             </div>
 
 

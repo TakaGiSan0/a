@@ -38,6 +38,7 @@ class FormController extends Controller
 
         // Query training_records dengan filter pencarian, tahun, dan byUserRole
         $training_records = Training_Record::with('latestComment')
+            ->byUserRole($user)
             ->when($searchQuery, function ($query, $searchQuery) {
                 return $query->where('training_name', 'like', "%{$searchQuery}%");
             })
@@ -185,7 +186,6 @@ class FormController extends Controller
                 if ($participant['evaluation'] == '1' && $hasilPeserta) {
                     DB::table('training_evaluation')->insert([
                         'hasil_peserta_id' => $hasilPeserta->id,
-                        'status' => 'Pending', // atau nilai default lain sesuai kebutuhan
                         'created_at' => now(),
                         'updated_at' => now(),
                     ]);
@@ -221,7 +221,7 @@ class FormController extends Controller
         $pathToFile = $record->attachment; // <-- Gunakan nama kolom yang benar dari $record
 
         $attachmentUrl = $pathToFile
-            ? asset("storage/" . urlencode($pathToFile))
+            ? asset("storage/" . ($pathToFile))
             : null;
 
         return response()->json([
@@ -284,19 +284,17 @@ class FormController extends Controller
 
         $currentAttachmentPath = $trainingRecord->attachment; // Simpan path attachment saat ini
 
-        if ($request->hasFile('attachment')) { // 2. Cek jika ada file baru
+        if ($request->hasFile('attachment')) { 
             $pdfFile = $request->file('attachment');
 
             $originalName = $pdfFile->getClientOriginalName();
-            // $fileName = str_replace(' ', '_', time() . '_' . $originalName); // Alternatif nama file yang lebih unik
             $fileName = str_replace(' ', '+', $originalName); // Sesuai logika Anda sebelumnya
 
             try {
                 // 3b. Simpan file baru
                 // $filePath akan berisi sesuatu seperti 'attachments/namafile.pdf'
-                $newFilePath = $pdfFile->storeAs('attachments', $fileName, 'public');
-                Log::info('File baru berhasil disimpan untuk update: ' . $newFilePath);
-
+                $newFilePath = $pdfFile->storeAs('attachment', $fileName, 'public');
+  
                 // 3c. Jika file baru berhasil disimpan DAN ada file lama, hapus file lama
                 if ($newFilePath && $currentAttachmentPath) {
                     if (Storage::disk('public')->exists($currentAttachmentPath)) {
@@ -334,7 +332,7 @@ class FormController extends Controller
             'date_start' => $data['date_start'],
             'date_end' => $data['date_end'],
             'category_id' => $data['category_id'],
-            'attachment' => $currentAttachmentPath,
+            'attachment' => $trainingRecord->attachment,
             'training_duration' => $formattedTime
         ]);
 
@@ -391,7 +389,6 @@ class FormController extends Controller
             // atau jika Anda tidak menghapus semua di langkah 2.
             DB::table('training_evaluation')->insert([
                 'hasil_peserta_id' => $hasil->id,
-                'status' => 'Pending',
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
@@ -459,7 +456,7 @@ class FormController extends Controller
             'date_end' => 'required|date',
             'training_duration' => 'required|integer',
 
-            'attachment' => 'file|mimes:pdf|max:2048',
+            'attachment' => 'required|file|mimes:pdf|max:2048',
             'category_id' => 'required|integer|exists:categories,id',
             'participants.*.badge_no' => 'max:255',
             'participants.*.employee_name' => 'max:255',

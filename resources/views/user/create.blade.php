@@ -40,20 +40,23 @@
                         <label class="block text-gray-700 dark:text-white text-sm font-bold mb-2" for="username">
                             Name
                         </label>
-                        <select
+                        <input
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            id="name" type="text" name="employee_name" placeholder="Name">
-                            <option value="">Pilih Peserta</option>
+                            id="name" type="text" name="employee_name" placeholder="Name" list="employeeNames">
+                        <datalist id="employeeNames">
                             @foreach ($pesertaTanpaUser as $peserta)
-                                <option value="{{ $peserta->employee_name }}" {{ old('employee') == $peserta->employee_name ? 'selected' : '' }}>
-                                    {{ $peserta->employee_name }} -  {{ $peserta->badge_no }}
+                                <option value="{{ $peserta->employee_name }}">
+                                    {{ $peserta->employee_name }} - {{ $peserta->badge_no }}
                                 </option>
                             @endforeach
-                        </select>
+                        </datalist>
+
+                        </input>
                     </div>
+                    
                     @php
-                        $role = auth()->user()->role; // Ambil role user yang login
-                        $dept = auth()->user()->dept; // Ambil dept user yang login
+                        $role = auth()->user()->role;
+                        $dept = auth()->user()->dept; 
                     @endphp
 
                     <div class="mb-4">

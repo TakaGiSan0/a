@@ -43,7 +43,7 @@
                         Dark Mode
                     </button>
 
-                    <form method="POST" action="{{ route('logout') }}">
+                    <form method="POST" action="{{ route('logout.post') }}">
                         @csrf
 
                         <button type="submit" id="logout-button"

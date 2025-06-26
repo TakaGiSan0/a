@@ -77,7 +77,11 @@
                     </div>
                 @endif
             </div>
-
+            @if (session('success'))
+                <div class="alert alert-success ml-4">
+                    {{ session('success') }}
+                </div>
+            @endif
             <div class="overflow-x-auto">
                 @if($trainingEvaluations->isEmpty())
                     <p class="text-center text-gray-600">Tidak ada evaluasi yang ditemukan.</p>
@@ -185,8 +189,6 @@
 
                 <form id="commentForm" action="" method="POST" enctype="multipart/form-data">
                     <div class="p-6 space-y-6">
-
-
                         @csrf
                         @method('PUT')
                         <div><label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">1.
@@ -267,11 +269,8 @@
             // Fungsi untuk membuka modal dan mengisi data
             $('.trigger-modal').on('click', function () {
                 const id = $(this).data('id');
-
-                $('#commentForm')[0].reset();
-                $('#commentForm textarea').val('');
-                 window.baseURL = '{{ url('/') }}'
-
+                window.baseURL = '{{ url('/') }}'
+                
                 $.ajax({
                     url:  window.baseURL +'/evaluation/' + id + '/edit',
                     type: 'GET',
@@ -301,7 +300,7 @@
                         }
 
                         // Atur action form
-                        $('#commentForm').attr('action', '/evaluation/' + id);
+                        $('#commentForm').attr('action', '/evaluation/update/' + id);
 
                         // Tampilkan modal menggunakan jQuery
                         $('#readProductModal').show();

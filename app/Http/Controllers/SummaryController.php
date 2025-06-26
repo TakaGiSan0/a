@@ -18,12 +18,27 @@ class SummaryController extends Controller
         $date_start = $request->input('date_start');
         $search = $request->input('search');
         $station = $request->input('station');
+        $category_id = $request->input('category');
 
         $user = Auth::user();
 
-        $query = training_record::select('id', 'training_name', 'status', 'date_start', 'category_id', 'station', 'doc_ref')
-            ->with(['trainingCategory:id,name']) // Ensure 'name' is a field in your Category model
+        $query = training_record::select('id', 'training_name', 'status', 'date_start', 'date_end', 'category_id', 'station', 'doc_ref')
+            ->with(['trainingCategory:id,name'])
             ->where('status', 'Completed');
+
+        $query->when($search, function ($query, $search) {
+            $query->where('training_name', 'like', '%' . $search . '%');
+        })
+            ->when($date_start, function ($query, $date_start) {
+                $query->whereDate('date_start', $date_start);
+            })
+
+            ->when($station, function ($query, $station) {
+                $query->where('station', $station);
+            })
+            ->when($category_id, function ($query, $cat_id) {
+                $query->where('category_id', $cat_id);
+            });
 
 
         if ($user->role === 'Admin' || $user->role === 'Super Admin') {
@@ -31,28 +46,26 @@ class SummaryController extends Controller
             $query->whereHas('pesertas', function ($q_peserta) use ($user) {
                 $q_peserta->where('user_id_login', $user->id);
             });
-
-            $query->when($search, function ($query, $search) {
-                $query->where('training_name', 'like', '%' . $search . '%');
-            })
-                ->when($date_start, function ($query, $date_start) {
-                    $query->whereDate('date_start', $date_start);
-                })
-
-                ->when($station, function ($query, $station) { // Gunakan $station_input
-                    $query->where('station', $station);
-                });
         }
         $trainingRecords = $query->orderBy('date_start', 'desc')
             ->paginate(10);
 
         $training_categories = Category::all();
+        $availableTrainingQuery = training_record::query()
+            ->where('status', 'Completed');
 
-        $station = Training_Record::select('station')
-            ->distinct()
-            ->where('status', 'Completed')
-            ->pluck('station');
+        if ($user->role === 'Admin' || $user->role === 'Super Admin') {
+            // Admin/Super Admin: Ambil semua stasiun/kategori dari training yang Completed
+            // Tidak perlu menambah filter khusus pada $availableTrainingQuery
+        } else {
+            // Peserta: Ambil stasiun/kategori hanya dari training yang mereka ikuti
+            $availableTrainingQuery->whereHas('pesertas', function ($q_peserta) use ($user) {
+                $q_peserta->where('user_id_login', $user->id);
+            });
+        }
 
+     
+        $station = $availableTrainingQuery->distinct()->pluck('station')->filter()->all();
 
         return view('content.summary', compact('trainingRecords', 'training_categories', 'date_start', 'search', 'station'));
     }

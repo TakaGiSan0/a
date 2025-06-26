@@ -48,10 +48,11 @@ class hasil_peserta extends Model
     public function scopeByUserRole($query, $user)
     {
         if ($user->role === 'Super Admin') {
-            return $query; // Super Admin bisa melihat semua data
+            return $query;
         } elseif ($user->role === 'Admin' || $user->role === 'User') {
-            return $query->whereHas('pesertas', function ($q) use ($user) {
-                $q->where('dept', $user->dept); // Filter berdasarkan departemen dari user yang membuat training_record
+            $dept = $user->pesertaLogin->dept;
+            return $query->whereHas('pesertas', function ($q) use ($dept) {
+                $q->where('dept', $dept);
             });
         }
 

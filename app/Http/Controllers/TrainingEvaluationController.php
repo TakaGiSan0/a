@@ -35,7 +35,8 @@ class TrainingEvaluationController extends Controller
                         ->orWhere('badge_no', 'like', '%' . $searchTerm . '%');
                 });
             }
-            $trainingEvaluations = $query->first()->get(); // Eksekusi query
+            $trainingEvaluations = $query->get(); // Eksekusi query
+       
         } else {
             // Ambil ID peserta milik user ini (asumsi: relasi user ke peserta)
             $pesertaId = optional($user->pesertaLogin)->id;

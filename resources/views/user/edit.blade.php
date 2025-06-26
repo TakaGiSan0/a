@@ -34,30 +34,30 @@
                             Username
                         </label>
                         <input
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500""
-                    name=" user" id="user" type="text" value="{{ old('user', $user->user) }}">
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold dark:text-white mb-2 " for="username">
-                            Name
-                        </label>
-                        <input
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            id="name" type="text" name="name" value="{{ old('name', $user->name) }}">
+                            name=" user" id="user" type="text" value="{{ old('user', $user->user) }}">
                     </div>
                     <div class="mb-4">
-                        <label class="block text-gray-700 dark:text-white text-sm font-bold mb-2" for="username">
+                        <label class="block text-white
+                         dark:text-wh  ite text-sm font-bold mb-2" for="username">
                             Name
                         </label>
                         <select
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                             id="name" type="text" name="employee_name" placeholder="Name">
                             <option value="">Pilih Peserta</option>
-                            @foreach ($pesertaTanpaUser as $peserta)
-                                <option value="{{ $peserta->employee_name }}" {{ old('employee') == $peserta->employee_name ? 'selected' : '' }}>
-                                    {{ $peserta->employee_name }} -  {{ $peserta->badge_no }}
-                                </option>
-                            @endforeach
+                            @foreach ($pesertaAvailableForSelection as $peserta)
+                        @php
+                            $expectedEmployeeName = strtolower(trim(old('employee_name', $user->pesertaLogin->employee_name ?? '')));
+
+                            // Mendapatkan employee_name dari opsi peserta saat ini dalam loop.
+                            $optionEmployeeName = strtolower(trim($peserta->employee_name));
+                        @endphp
+                        <option value="{{ $peserta->employee_name }}"
+                            {{ ($expectedEmployeeName == $optionEmployeeName) ? 'selected' : '' }}>
+                            {{ $peserta->employee_name }} - {{ $peserta->badge_no }}
+                        </option>
+                    @endforeach
                         </select>
                     </div>
                     @php
@@ -72,10 +72,10 @@
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                             @if (auth()->user()->role === 'Super Admin')
                                 <option value="Super Admin" {{ old('role', $user->role ?? '') === 'Super Admin' ? 'selected' : '' }}>Super Admin</option>
-                                <option value="admin" {{ old('role', $user->role ?? '') === 'admin' ? 'selected' : '' }}>Admin
+                                <option value="Admin" {{ old('role', $user->role ?? '') === 'Admin' ? 'selected' : '' }}>Admin
                                 </option>
                             @endif
-                            <option name="user">User</option>
+                            <option value="User" {{ old('role', $user->role ?? '') === 'User' ? 'selected' : '' }}>User
                         </select>
                     </div>
                     <div class="mb-6">
@@ -101,4 +101,5 @@
             </div>
         </div>
     </div>
+
 </body>

@@ -34,7 +34,8 @@ Route::get('/memory', function () {
 // Login Route
 Route::post('login', [AuthenticatedSessionController::class, 'store'])
     ->name('login');
-Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+Route::get('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout.post');
 Route::get('/test-pdf', [FormController::class, 'showpdf'])->name('show.pdf');
 Route::post('/test-pdf', [FormController::class, 'testpdf'])->name('testpdf');
 // Route AllRole
@@ -60,13 +61,15 @@ Route::middleware(['auth:web'])->group(function () {
     Route::get('/training-request/dashboard', [TrainingRequestController::class, 'index'])->name('training-request.index');
     Route::post('/training-request/store', [TrainingRequestController::class, 'store'])->name('training-request.store');
     Route::delete('/training-request/destory/{id}', [TrainingRequestController::class, 'destroy'])->name('training-request.destroy');
+    Route::get('/training-request/show/{id}', [TrainingRequestController::class, 'show'])->name('training-request.destroy');
+
 
     //Dashboard Training Evaluation
     Route::get('/training-evaluation/dashboard', [TrainingEvaluationController::class, 'index'])->name('training-evaluation.index');
     Route::get('/evaluation/{id}/edit', [TrainingEvaluationController::class, 'edit'])->name('evaluation.edit');
 
     // Untuk update data
-    Route::put('/evaluation/{id}', [TrainingEvaluationController::class, 'update'])->name('evaluation.update');
+    Route::put('/evaluation/update/{id}', [TrainingEvaluationController::class, 'update'])->name('evaluation.update');
 
     // Search SummaryTraining Record
     Route::post('/api/trainings/search', [SummaryController::class, 'search']);

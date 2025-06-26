@@ -31,59 +31,73 @@
                             Badge No
                         </label>
                         <input
-                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            id="badge_no" name="badge_no" type="text">
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            id="badge_no" name="badge_no" type="text" required>
                     </div>
                     <div class="mb-4">
                         <label class="block text-gray-700 dark:text-white text-sm font-bold mb-2" for="employee_name">
                             Employee Name
                         </label>
                         <input
-                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            id="employee_name" name="employee_name" type="text">
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            id="employee_name" name="employee_name"
+                            type="text" required>
                     </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700 dark:text-white text-sm font-bold mb-2" for="dept">
+                    <div class="relative mb-6">
+                        <label class="block text-gray-700 dark:text-white text-sm font-bold mb-2" for="status">
                             Dept
                         </label>
-                        <input
-                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            id="dept" name="dept" type="text">
+                        <select
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            id="dept" name="dept">
+                            <option value="ENG">ENG</option>
+                            <option value="FACI">FACI</option>
+                            <option value="FIN">FIN</option>
+                            <option value="HRD">HRD</option>
+                            <option value="IT">IT</option>
+                            <option value="LOG">LOG</option>
+                            <option value="MAG">MAG</option>
+                            <option value="MOL1">MOL1</option>
+                            <option value="MOL2">MOL2</option>
+                            <option value="PLAN">PLAN</option>
+                            <option value="PROD">PROD</option>
+                            <option value="PSP">PSP</option>
+                            <option value="PURC">PURC</option>
+                            <option value="QC">QC</option>
+                            <option value="TOOL">TOOL</option>
+                        </select>
+
+                        
                     </div>
                     <div class="mb-6">
                         <label class="block text-gray-700 dark:text-white text-sm font-bold mb-2" for="position">
                             Position
                         </label>
                         <input
-                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            id="position" name="position" type="text">
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                        id="position" name="position" type="text" required>
                     </div>
                     <div class="mb-6">
                         <label class="block text-gray-700 dark:text-white text-sm font-bold mb-2" for="position">
                             Join Date
                         </label>
                         <input
-                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            id="join_date" name="join_date" type="date">
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                          id="join_date" name="join_date"
+                            type="date" required>
                     </div>
                     <div class="relative mb-6">
                         <label class="block text-gray-700 dark:text-white text-sm font-bold mb-2" for="status">
                             Status
                         </label>
                         <select
-                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                             id="status" name="status">
                             <option value="Active">Active</option>
                             <option value="Non Active">Non Active</option>
                         </select>
 
-                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-white">
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd"
-                                    d="M5.23 7.21a.75.75 0 011.06.02L10 11.084l3.71-3.854a.75.75 0 111.08 1.04l-4.25 4.417a.75.75 0 01-1.08 0L5.25 8.27a.75.75 0 01-.02-1.06z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                        </div>
+                        
                     </div>
 
 
@@ -92,27 +106,21 @@
                             Category Level
                         </label>
                         <input
-                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            id="category_level" name="category_level" type="text">
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            id="category_level" name="category_level" type="text" required>
                     </div>
                     <div class="relative mb-6">
                         <label class="block text-gray-700 dark:text-white text-sm font-bold mb-2" for="gender">
                             Gender
                         </label>
                         <select
-                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                             id="gender" name="gender">
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
                         </select>
 
-                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-white">
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd"
-                                    d="M5.23 7.21a.75.75 0 011.06.02L10 11.084l3.71-3.854a.75.75 0 111.08 1.04l-4.25 4.417a.75.75 0 01-1.08 0L5.25 8.27a.75.75 0 01-.02-1.06z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                        </div>
+                        
                     </div>
 
                     <div class="flex items-center justify-between">

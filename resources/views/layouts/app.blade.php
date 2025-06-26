@@ -82,16 +82,10 @@
         
         idleTimer = setTimeout(logoutUser, sessionLifetime);
 
-        // --- Logika untuk Console Log Hitung Mundur ---
         let timeLeftInSeconds = sessionLifetimeInMinutes * 60;
-        console.clear();
-        console.log(`Timer direset. Logout otomatis dalam ${sessionLifetimeInMinutes} menit.`);
-        
+
         countdownLogInterval = setInterval(() => {
             timeLeftInSeconds--;
-            const minutes = Math.floor(timeLeftInSeconds / 60);
-            const seconds = timeLeftInSeconds % 60;
-            console.log(`Sesi akan berakhir dalam: ${minutes} menit ${seconds} detik`);
             if (timeLeftInSeconds <= 0) {
                 clearInterval(countdownLogInterval);
             }
@@ -110,14 +104,6 @@
 </script>
 @endauth
 <script src="https://cdn.jsdelivr.net/npm/flowbite@2.4.1/dist/flowbite.min.js"></script>
-<script>
-    document.addEventListener("alpine:init", () => {
-        Alpine.data("layout", () => ({
-            profileOpen: false,
-            asideOpen: true,
-        }));
-    });
 
-</script>
 
 </html>

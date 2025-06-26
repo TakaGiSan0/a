@@ -210,7 +210,7 @@
 
                                             @if (Auth::user()->role == 'Super Admin')
                                                 <form action="{{ route('dashboard.destroy', $rc->id) }}" method="POST"
-                                                    onsubmit="return confirm('Apakah Anda yakin ingin menghapus peserta ini?');">
+                                                    onsubmit="return confirm('Are you sure you want to delete this Training?');">
                                                     @csrf
                                                     @method('DELETE')
                                                     <!-- Button Hapus -->
@@ -236,7 +236,7 @@
         </div>
 
         <div class="mt-4 ">
-            {{ $training_records->appends(['year' => request('year')])->links() }}
+            {{ $training_records->appends(['year' => request('year'),'search' => request('search')])->links() }}
         </div>
     </section>
 

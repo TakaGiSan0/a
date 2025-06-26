@@ -50,4 +50,23 @@ class peserta extends Model
     {
         return $this->belongsTo(User::class, 'user_id_login');
     }
+    
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($peserta) {
+            if ($peserta->akunLogin) {
+                $peserta->akunLogin->delete();
+            }
+        });
+
+        static::updating(function ($peserta) {
+            if ($peserta->isDirty('status') && $peserta->status === 'Non Active') {
+                if ($peserta->akunLogin) {
+                    $peserta->akunLogin()->delete();
+                }
+            }
+        });
+    }
 }

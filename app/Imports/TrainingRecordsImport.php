@@ -39,16 +39,24 @@ class TrainingRecordsImport implements ToModel, WithHeadingRow
             $category = Category::firstOrCreate(['name' => 'N/A']);
         }
 
-        if (is_numeric($row['training_date'])) {
-            $trainingDate = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['training_date']);
-            $formattedDateStart = $trainingDate->format('Y-m-d');
-            $formattedDateEnd = $trainingDate->format('Y-m-d');
+        if (is_numeric($row['training_start'])) {
+            $formattedDateStart = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['training_start'])->format('Y-m-d');
         } else {
-            $dates = $this->parseDateRange($row['training_date']);
+            $dates = $this->parseDateRange($row['training_start']);
             $formattedDateStart = $dates['start'];
+        }
+        
+        if (is_numeric($row['training_end'])) {
+            $formattedDateEnd = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['training_end'])->format('Y-m-d');
+        } else {
+            $dates = $this->parseDateRange($row['training_end']);
             $formattedDateEnd = $dates['end'];
         }
-
+        
+        $minutes = (int) $row['training_duration_minute'];
+        $hours = floor($minutes / 60);
+        $mins = $minutes % 60;
+        $durationTime = sprintf('%02d:%02d:00', $hours, $mins);
 
         // Cek apakah peserta sudah ada berdasarkan badge_no
         $peserta = Peserta::where('badge_no', $row["badge_no"])->first();
@@ -66,9 +74,10 @@ class TrainingRecordsImport implements ToModel, WithHeadingRow
             'station' => $row['station'],
             'date_start' => $formattedDateStart,
             'date_end' => $formattedDateEnd,
+            'training_duration'=> $durationTime,
             'trainer_name' => $row['trainer_name'],
             'category_id' => $category->id,
-            'status' => 'completed',
+            'status' => 'Completed',
             'user_id' => auth('web')->id(), // Ambil user_id dari session
 
         ]);
@@ -81,7 +90,7 @@ class TrainingRecordsImport implements ToModel, WithHeadingRow
             'practical_result' => $row['practical_result'],
             'level' => $row['level'],
             'final_judgement' => $row['final_judgement'],
-            'license' => (!empty($row['license']) && $row['license'] == ['✔', '☑']) ? '1' : '0',
+            'license' => ($row['license_certification'] == '√' ? '1' : '0'),
         ]);
 
         training_comment::firstOrCreate([
