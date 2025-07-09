@@ -229,7 +229,7 @@
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                             <option value="Pass" @selected(old("participants.$index.theory_result", $participant->pivot->theory_result) == 'Pass')>Pass</option>
                                             <option value="Fail" @selected(old("participants.$index.theory_result", $participant->pivot->theory_result) == 'Fail')>Fail</option>
-                                            <option value="N/A" @selected(old("participants.$index.theory_result", $participant->pivot->theory_result) == 'N/A')>N/A</option>
+                                            <option value="NA" @selected(old("participants.$index.theory_result", $participant->pivot->theory_result) == 'NA')>NA</option>
                                         </select>
                                     </td>
                                     <td scope="col" class="px-1">
@@ -238,7 +238,7 @@
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                             <option value="Pass" @selected(old("participants.$index.practical_result", $participant->pivot->practical_result) == 'Pass')>Pass</option>
                                             <option value="Fail" @selected(old("participants.$index.practical_result", $participant->pivot->practical_result) == 'Fail')>Fail</option>
-                                            <option value="N/A" @selected(old("participants.$index.practical_result", $participant->pivot->practical_result) == 'N/A')>N/A</option>
+                                            <option value="NA" @selected(old("participants.$index.practical_result", $participant->pivot->practical_result) == 'NA')>NA</option>
 
                                         </select>
                                     </td>
@@ -258,7 +258,7 @@
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                             <option value="Attend" @selected(old("participants.$index.final_judgement", $participant->pivot->final_judgement) == 'Attend')>Attend</option>
                                             <option value="Competence" @selected(old("participants.$index.final_judgement", $participant->pivot->final_judgement) == 'Competence')>Competence</option>
-                                            <option value="N/A" @selected(old("participants.$index.final_judgement", $participant->pivot->final_judgement) == 'N/A')>N/A</option>
+                                            <option value="NA" @selected(old("participants.$index.final_judgement", $participant->pivot->final_judgement) == 'NA')>NA</option>
 
                                         </select>
                                     </td>
@@ -396,7 +396,7 @@
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                 <option name="Pass" value="Pass">Pass</option>
                                 <option name="Fail" value="Fail">Fail</option>
-                                <option name="N/A" value="N/A">N/A</option>
+                                <option name="NA" value="NA">NA</option>
 
                             </select>
                         </td>
@@ -405,7 +405,7 @@
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                 <option name="Pass" value="Pass">Pass</option>
                                 <option name="Fail" value="Fail">Fail</option>
-                                <option name="N/A" value="N/A">N/A</option>
+                                <option name="NA" value="NA">NA</option>
 
                             </select>
                         </td>
@@ -416,7 +416,7 @@
                                 <option name="2" value="2">Level 2</option>
                                 <option name="3" value="3">Level 3</option>
                                 <option name="4" value="4">Level 4</option>
-                                <option name="N/A" value="N/A">N/A</option>
+                                <option name="NA" value="NA">NA</option>
                             </select>
                         </td>
                         <td scope="col" class="px-1">
@@ -424,7 +424,7 @@
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                 <option name="Attend " value="Attend ">Attend </option>
                                 <option name="Competence" value="Competence">Competence</option>
-                                <option name="N/A" value="N/A">N/A</option>
+                                <option name="NA" value="NA">NA</option>
 
                             </select>
                         </td>

@@ -22,7 +22,7 @@ class SummaryController extends Controller
 
         $user = Auth::user();
 
-        $query = training_record::select('id', 'training_name', 'status', 'date_start', 'date_end', 'category_id', 'station', 'doc_ref')
+        $query = training_record::select('id', 'training_name', 'status', 'date_start', 'date_end', 'category_id', 'station', 'doc_ref', 'rev', 'trainer_name')
             ->with(['trainingCategory:id,name'])
             ->where('status', 'Completed');
 
@@ -55,8 +55,7 @@ class SummaryController extends Controller
             ->where('status', 'Completed');
 
         if ($user->role === 'Admin' || $user->role === 'Super Admin') {
-            // Admin/Super Admin: Ambil semua stasiun/kategori dari training yang Completed
-            // Tidak perlu menambah filter khusus pada $availableTrainingQuery
+         
         } else {
             // Peserta: Ambil stasiun/kategori hanya dari training yang mereka ikuti
             $availableTrainingQuery->whereHas('pesertas', function ($q_peserta) use ($user) {

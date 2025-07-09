@@ -151,4 +151,8 @@ Route::middleware(['auth', 'role:Super Admin'])->group(function () {
     // Route Job Skill
     Route::post('/job-skill/create', [FormController::class, 'jobs_skill_store'])->name('jobs_skill.store');
     Route::delete('/job-skill/delete/{id}', [FormController::class, 'jobs_skill_destroy'])->name('jobs_skill.destroy');
+
+    // Route product_code
+    Route::post('/product-code/create', [FormController::class, 'product_code_store'])->name('product_code.store');
+    Route::post('/product-code/update/{id}', [FormController::class, 'product_update'])->name('product_code.update');
 });

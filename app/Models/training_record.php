@@ -67,13 +67,35 @@ class training_record extends Model
         return "{$start} - {$end}";
     }
 
+    public function getDateStartFormattedAttribute()
+    {
+        return Carbon::parse($this->date_start)->format('d-m-Y');
+    }
+
+    public function getDateEndFormattedAttribute()
+    {
+        return Carbon::parse($this->date_end)->format('d-m-Y');
+    }
+
+    public function getDateDurationFormattedAttribute()
+    {
+        // Pastikan kolom waktu bukan null
+        if (!$this->training_duration) {
+            return 0;
+        }
+
+        $time = Carbon::createFromFormat('H:i:s', $this->training_duration);
+
+        return ($time->hour * 60) + $time->minute;
+    }
+
     public function scopeByUserRole($query, $user)
     {
         if ($user->role === 'Super Admin') {
             return $query;
         } elseif ($user->role === 'Admin' || $user->role === 'User') {
             $dept = $user->pesertaLogin->dept;
-            return $query->whereHas('pesertas', function ($q) use ($dept) {
+            return $query->whereHas('user.pesertaLogin', function ($q) use ($dept) {
                 $q->where('dept', $dept);
             });
         }

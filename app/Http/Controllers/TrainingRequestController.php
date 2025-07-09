@@ -13,7 +13,7 @@ class TrainingRequestController extends Controller
     public function index()
     {
         $request = TrainingRequest::with('peserta')
-            ->byUserRole(auth('')->user())
+            ->byUserRoleRequest(auth('')->user())
             ->paginate(10);
 
         return view('request.index', compact('request'));
@@ -59,9 +59,9 @@ class TrainingRequestController extends Controller
     public function show($id)
     {
         $trainingRequest = TrainingRequest::with('peserta')
-            ->byUserRole(auth('')->user())
+            ->byUserRoleRequest(auth('')->user())
             ->where('id', $id)
-            ->first(); // Menggunakan first() untuk mendapatkan satu model
+            ->first(); 
 
         if (!$trainingRequest) {
             return response()->json(['message' => 'Permintaan pelatihan tidak ditemukan.'], 404);

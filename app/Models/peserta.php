@@ -37,20 +37,18 @@ class peserta extends Model
     {
         $user = auth('')->user();
 
-        if ($user->role !== 'Super Admin' && $user->pesertaLogin) {
-            return $query->whereHas('akunLogin', function ($q) use ($user) {
-                $q->where('dept', $user->pesertaLogin->dept);
-            });
+        if ($user->role === 'Super Admin' || $user->role === 'Admin') {
+            return $query;
         }
-
-        return $query;
+        if ($user->pesertaLogin && $user->pesertaLogin->dept) {
+            return $query->where('dept', $user->pesertaLogin->dept);
+        }
     }
-
     public function akunLogin()
     {
         return $this->belongsTo(User::class, 'user_id_login');
     }
-    
+
     protected static function boot()
     {
         parent::boot();

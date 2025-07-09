@@ -90,7 +90,7 @@ class TrainingRecordsImport implements ToModel, WithHeadingRow
             'practical_result' => $row['practical_result'],
             'level' => $row['level'],
             'final_judgement' => $row['final_judgement'],
-            'license' => ($row['license_certification'] == '√' ? '1' : '0'),
+            'license' => ($row['lisence_certification'] == '√' ? '1' : '0'),
         ]);
 
         training_comment::firstOrCreate([

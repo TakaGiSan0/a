@@ -77,6 +77,7 @@
                             <th scope="col" class="px-4 py-3">Certificate No</th>
                             <th scope="col" class="px-4 py-3">Expired Date</th>
                             <th scope="col" class="px-4 py-3">Category</th>
+                            <th scope="col" class="px-4 py-3">attachment</th>
                             <th scope="col" class="px-4 py-3">Status</th>
                             @if (auth()->user()->role == 'Super Admin')
                                 <th scope="col" class="px-4 py-3">Action</th>
@@ -119,6 +120,32 @@
                                 </td>
                                 <td class="px-4 py-3">
                                     {{ $item->category ?? '-' }}
+                                </td>
+                                <td class="px-4 py-3">
+                               
+                                    {{-- Periksa apakah variabel $item->attachment tidak null --}}
+                                    @if ($item->attachment)
+                                        <div class="flex items-center">
+                                            {{-- Ikon File --}}
+                                            <svg class="h-8 w-8 text-slate-500" width="24" height="24" viewBox="0 0 24 24"
+                                                stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+                                                stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" />
+                                                <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                                                <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+                                                <line x1="9" y1="9" x2="10" y2="9" />
+                                                <line x1="9" y1="13" x2="15" y2="13" />
+                                                <line x1="9" y1="17" x2="15" y2="17" />
+                                            </svg>
+
+                                            {{-- Tautan View, dengan sedikit jarak ke kiri (ml-2) --}}
+                                            <a href="{{ Storage::url($item->attachment) }}" target="_blank"
+                                                class="text-blue-500 underline ml-2">
+                                                View
+                                            </a>
+                                        </div>
+                                    @endif
+                                
                                 </td>
                                 <td class="px-4 py-3">
                                     {{ $item->status }}
@@ -196,6 +223,14 @@
                             <input type="text" name="category" id='category'
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         </div>
+                        <div>
+                            <label for="attachment" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                Attachment
+                            </label>
+                            <input type="file" name="attachment" id="attachment" accept=".pdf"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                >
+                        </div>
 
                     </div>
                     <!-- Modal footer -->
@@ -230,9 +265,9 @@
         editButtons.forEach(button => {
             button.addEventListener('click', () => {
                 const recordId = button.getAttribute('data-id');
-window.baseURL = '{{ url('/') }}'
+                window.baseURL = '{{ url('/') }}'
                 // Fetch data dari server
-                fetch(window.baseURL +`/matrix/${recordId}`)
+                fetch(window.baseURL + `/matrix/${recordId}`)
                     .then(response => response.json())
                     .then(data => {
                         if (data.message) {
@@ -241,7 +276,7 @@ window.baseURL = '{{ url('/') }}'
                         }
 
                         // Set form action
-                        commentForm.action = window.baseURL +`/matrix/update/${recordId}`;
+                        commentForm.action = window.baseURL + `/matrix/update/${recordId}`;
 
                         certificateField.value = data.certificate;
                         expiredField.value = data.expired_date;

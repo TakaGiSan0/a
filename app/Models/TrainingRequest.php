@@ -22,19 +22,18 @@ class TrainingRequest extends Model
         return $this->belongsTo(Peserta::class, 'peserta_id');
     }
 
-    public function scopeByUserRole($query, $user)
+    public function scopeByUserRoleRequest($query, $user)
 {
     $user = auth("")->user();
 
     if (!$user) {
-        return $query->whereRaw('1 = 0'); // Tidak menampilkan apa pun jika tidak login
+        return $query->whereRaw('1 = 0'); 
     }
 
     if ($user->role === 'Super Admin') {
-        return $query; // Super Admin bisa lihat semua request
+        return $query; 
     }
 
-    // Untuk role User atau Admin hanya lihat request mereka sendiri
     return $query->where('user_id_login', $user->id);
 }
     

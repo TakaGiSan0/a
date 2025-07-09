@@ -118,7 +118,7 @@
 
       
             @php
-                $chunks = $legendSkills->chunk(5);
+                $chunks = $masterSkills->chunk(5);
             @endphp
 
             <div

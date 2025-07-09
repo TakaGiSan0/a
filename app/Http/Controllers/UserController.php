@@ -16,10 +16,39 @@ class UserController extends Controller
     {
         $userLogin = auth('web')->user();
 
-        $user = User::select('users.*')->leftJoin('pesertas', 'pesertas.user_id_login', '=', 'users.id')->byUserRole($userLogin)->orderBy('pesertas.employee_name', 'asc')->paginate(10);
+        $user = User::with('pesertaLogin')
+            ->select('users.*')
+            ->leftJoin('pesertas', 'pesertas.user_id_login', '=', 'users.id')
+            ->byUserRole($userLogin)
+            ->orderBy('pesertas.employee_name', 'asc')
+            ->paginate(10);
 
-        // Pastikan $message selalu terdefinisi
+
         $message = $user->isEmpty() ? 'No results found for your search.' : '';
+
+        $user->getCollection()->map(function ($user_data) use ($userLogin) {
+
+            // Default-nya, user tidak bisa diedit
+            $user_data->can_be_edited = false;
+
+            // --- BLOK LOGIKA OTORISASI ---
+            if ($userLogin->role === 'Super Admin' && optional($userLogin->pesertaLogin)->dept === 'IT') {
+                $user_data->can_be_edited = true;
+            } elseif ($userLogin->role === 'Admin' && optional($userLogin->pesertaLogin)) {
+                if ($user_data->role === 'User') {
+                    $user_data->can_be_edited = true;
+                }
+            } elseif ($userLogin->role === 'Super Admin') {
+                if ($user_data->role === 'Admin' || $user_data-> role === 'User') {
+                    $user_data->can_be_edited = true;
+                }
+            }
+
+            // --- AKHIR BLOK LOGIKA ---
+
+            return $user_data; // Kembalikan objek user yang sudah dimodifikasi
+        });
+
 
         // Kembalikan view dengan data user dan pesan
         return response()->view(
@@ -27,6 +56,7 @@ class UserController extends Controller
             [
                 'user' => $user,
                 'message' => $message,
+
             ],
             200,
         );
@@ -80,7 +110,7 @@ class UserController extends Controller
 
         // Jika role pengguna adalah admin, set role user baru menjadi 'user'
         if ($userRole === 'Admin') {
-            $user->role = 'user';
+            $user->role = 'User';
         } elseif ($userRole === 'Super Admin') {
             // Jika bukan admin, set role sesuai kebutuhan (misalnya dari input atau default)
             $user->role = $request->input('role'); // Ganti 'default_role' dengan nilai default yang diinginkan
@@ -111,20 +141,20 @@ class UserController extends Controller
      * Show the form for editing the specified resource.
      */
     public function edit($id)
-{
+    {
 
-    $user = User::with('pesertaLogin')->findOrFail($id);
+        $user = User::with('pesertaLogin')->findOrFail($id);
 
-    $pesertaAvailableForSelection = Peserta::select('id', 'employee_name', 'badge_no', 'user_id_login')
-        ->whereNull('user_id_login')
-        ->orWhere('user_id_login', $user->id)
-        ->get(); 
+        $pesertaAvailableForSelection = Peserta::select('id', 'employee_name', 'badge_no', 'user_id_login')
+            ->whereNull('user_id_login')
+            ->orWhere('user_id_login', $user->id)
+            ->get();
 
-    return view('user.edit', [
-        'user' => $user,
-        'pesertaAvailableForSelection' => $pesertaAvailableForSelection,
-    ])->with('hideSidebar', true);
-}
+        return view('user.edit', [
+            'user' => $user,
+            'pesertaAvailableForSelection' => $pesertaAvailableForSelection,
+        ])->with('hideSidebar', true);
+    }
     /**
      * Update the specified resource in storage.
      */
@@ -136,7 +166,9 @@ class UserController extends Controller
         $validatedData = $request->validate(
             [
                 'employee_name' => 'required|string|max:255', // Nama peserta wajib diisi
-                'user' => 'required', 'string', 'max:255',
+                'user' => 'required',
+                'string',
+                'max:255',
                 'password' => 'nullable|string',
             ],
             [

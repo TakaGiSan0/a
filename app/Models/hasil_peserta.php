@@ -47,9 +47,9 @@ class hasil_peserta extends Model
 
     public function scopeByUserRole($query, $user)
     {
-        if ($user->role === 'Super Admin') {
+        if ($user->role === 'Super Admin' || $user->role === 'Admin') {
             return $query;
-        } elseif ($user->role === 'Admin' || $user->role === 'User') {
+        } elseif ($user->role === 'User') {
             $dept = $user->pesertaLogin->dept;
             return $query->whereHas('pesertas', function ($q) use ($dept) {
                 $q->where('dept', $dept);

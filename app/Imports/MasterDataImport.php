@@ -61,8 +61,8 @@ class MasterDataImport implements ToModel, WithStartRow
         'join_date' => $formattedDate,
         'category_level' => $row[5],
         'status' => 'Active',
-        'gender' => ($row[6] === 'M'? 'Male' : ($row[6] === 'F' ? 'Female': null)),
-        'user_id' => $this->userId, // Ambil user_id dari auth
+        'gender' => ($row[6] === 'M' ? 'Male' : ($row[6] === 'F' ? 'Female': null)),
+        'user_id' => $this->userId, 
     ]);
 }
 

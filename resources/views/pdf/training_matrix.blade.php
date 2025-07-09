@@ -150,32 +150,43 @@
         </tbody>
     </table>
     <table class="footer-table">
+        @php
+            $chunks = $masterSkills->values()->chunk(5);
+            $chunksn = $product->values()->chunk(5);
+
+        @endphp
+
         <thead>
-            <tr>
-                <td>LEGEND PRODUCT CODE:</td>
-                <td>MDL : MEDELA<br>SSS : Swiss Spa System<br>WSA(SMI) : WSAudiology(Shamios)</td>
-                <td>CHG : WSA CHARGER<br>SLC : WSA SlimRic RBS<br>MC : WSA SmartRic RB</td>
-                <td>THS : THIS<br>AGBRN : Bemina<br>PNC : Phasonic</td>
-                <td>KCR : KAERCHER<br>KRU : Karolum<br>SHT : Starkey Hearing Technologies</td>
-                <td>PHV : PHILIPS VOL<br>CARSON : Sorion<br>ACL : Alcon</td>
-                <td>KBT : KUBOTA<br>GWF AG : Gas, Electricity and Heating</td>
-            </tr>
-        </thead>
-        <tbody>
+
             <tr>
                 <td>LEGEND SKILL CODE :</td>
-                <td>A1 : MANUAL<br>A2 : Semi-Automatic<br>A3 : Clean Room<br>TC : Component<br>MP : Material Prepsilon
-                </td>
-                <td>PP : PCR AGING PRODUCT<br>M1 : Mechanical<br>M2 : Electric<br>MC : Video Contact Angle<br>PP :
-                    Packaging Product</td>
-                <td>R : REWORK<br>S : Solder Part<br>V1 : Visual Inspection<br>P1 : Printing Manual<br>P2 : Printing
-                    Automatic</td>
-                <td>R1 : REWORK MECHANICAL<br>R2 : Flexible Electrical<br>S1 : Solder Wire<br>S2 : Solder Port<br>S3 :
-                    Fine Pitch</td>
-                <td>NC : NANO COATS<br>C : Body Painting<br>PP : Packaging Product<br>T1 : Testing Mechanical<br>V1 :
-                    Visual Inspection Eyes</td>
-                <td>V2 : VISUAL INSPECTION MICROGRAPE<br>W1 : Winning MW<br>W2 : Winning SE<br>J1 : Jigging<br>L1 :
-                    Loading-Unloading</td>
+                @foreach ($chunksn as $chunka)
+                    <td>
+                        @foreach ($chunka as $product)
+                            {{ $product->product_code }} : {{ $product->product_name }}<br>
+                        @endforeach
+                    </td>
+                @endforeach
+            </tr>
+            <tr>
+                <td>SKILL LEVEL :</td>
+                <td>1 = LEVEL 1 (work under supervision)<br>2 = LEVEL 2 (work according to standards)<br>3 = Level 3
+                    (expert)<br>4 = Level 4 (expert & trainer)</td>
+            </tr>
+        </thead>
+
+
+        <tbody>
+
+            <tr>
+                <td>LEGEND SKILL CODE :</td>
+                @foreach ($chunks as $chunk)
+                    <td>
+                        @foreach ($chunk as $skill)
+                            {{ $skill->skill_code }} : {{ $skill->job_skill }}<br>
+                        @endforeach
+                    </td>
+                @endforeach
             </tr>
             <tr>
                 <td>SKILL LEVEL :</td>

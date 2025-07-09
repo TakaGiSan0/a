@@ -46,8 +46,10 @@ class TrainingRecordExport implements FromCollection, WithHeadings
                     'employee_name' => $hasil->pesertas->employee_name ?? '-',
                     'dept' => $hasil->pesertas->dept ?? '-',
                     'position' => $hasil->pesertas->position ?? '-',
-                    'training_date' => $this->formatTrainingDate($record->date_start, $record->date_end),
+                    'Training Start' => $record->date_start_formatted,
+                    'Training End' => $record->date_end_formatted,
                     'trainer_name' => $record->trainer_name,
+                    'training_duration' => $record->date_duration_formatted,
                     'theory_result' => $hasil->theory_result,
                     'practical_result' => $hasil->practical_result,
                     'level' => $hasil->level,
@@ -73,7 +75,7 @@ class TrainingRecordExport implements FromCollection, WithHeadings
      */
     public function headings(): array
     {
-        return ['No', 'DOC. REF', 'REV', 'Training Name', 'Station', 'Job Skill', 'Skill Code', 'Badge No', 'Emp Name', 'Dept', 'Position', 'Training Date', 'Trainer Name', 'Theory Result', 'Practical Result', 'Level', 'Final Judgement', 'Category', 'License'];
+        return ['No', 'DOC. REF', 'REV', 'Training Name', 'Station', 'Job Skill', 'Skill Code', 'Badge No', 'Emp Name', 'Dept', 'Position', 'Training Start', 'Training End', 'Trainer Name','Training Duration', 'Theory Result', 'Practical Result', 'Level', 'Final Judgement', 'Category', 'License'];
     }
 
     private function formatTrainingDate($start, $end)

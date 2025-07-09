@@ -4,6 +4,21 @@
 <head>
     <title>Training Report for {{ $peserta->employee_name }}</title>
     <style>
+        @page {
+            margin: 100px 50px 50px 50px;
+            /* top right bottom left */
+        }
+
+        header {
+            position: fixed;
+            top: -80px;
+            left: 0px;
+            right: 0px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
         body {
             font-family: 'Arial', sans-serif;
             font-size: 10px;
@@ -29,7 +44,9 @@
 </head>
 
 <body>
-    <h1 style="text-align: center;">Training Report for {{ $peserta->employee_name }}</h1>
+    <header>
+        Training Report for {{ $peserta->employee_name }}
+    </header>
     <p><strong>Badge No:</strong> {{ $peserta->badge_no }}</p>
     <p><strong>Department:</strong> {{ $peserta->dept }}</p>
     <p><strong>Position:</strong> {{ $peserta->position }}</p>
@@ -44,16 +61,16 @@
             <h2>@if ($category->name === 'Internal')
                 Internal Training
             @elseif ($category->name === 'External')
-                External Training
-            @elseif ($category->name === 'Neo')
-            New Employee Induction (NEO)
-            @elseif ($category->name === 'Project')
-                Project Training
-            @elseif ($category->name === 'N/A')
-                Unknown Training
-            @else
-                Unknown Training    
-            @endif
+                    External Training
+                @elseif ($category->name === 'Neo')
+                    New Employee Induction (NEO)
+                @elseif ($category->name === 'Project')
+                    Project Training
+                @elseif ($category->name === 'N/A')
+                    Unknown Training
+                @else
+                    Unknown Training
+                @endif
             </h2>
             <table class="table">
                 <thead>

@@ -53,12 +53,32 @@ class MatrixController extends Controller
             'certificate' => 'required|string|max:255',
             'expired_date' => 'required|date|max:255',
             'category' => 'required|string|max:255',
+            'attachment' => 'nullable|file|mimes:pdf|max:2048',
         ]);
+
+        $filePath = null; // Inisialisasi path file untuk penyimpanan
+        if ($request->hasFile('attachment')) {
+            $pdfFile = $request->file('attachment');
+
+            // Buat nama file unik untuk menghindari konflik
+            $fileName = str_replace(' ', '+', $pdfFile->getClientOriginalName());
+
+            try {
+                $filePath = $pdfFile->storeAs('matrix_attachment', $fileName, 'public');
+                
+            } catch (\Exception $e) {
+                
+                return redirect()->back()->with('error', 'Gagal mengunggah file. Silakan coba lagi.');
+            }
+        }
+        
 
         $matrix = hasil_peserta::findOrFail($id);
         $matrix->certificate = $validated['certificate'];
         $matrix->expired_date = $validated['expired_date'];
         $matrix->category = $validated['category'];
+        $matrix->attachment = $filePath;
+
 
         $matrix->save();
 

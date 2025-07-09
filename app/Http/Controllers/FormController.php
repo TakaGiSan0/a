@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Escape;
+use App\Models\product_code;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use App\Models\training_record;
@@ -34,7 +35,7 @@ class FormController extends Controller
             ->pluck('year');
 
         // Ambil role user
-        $user = auth('web')->user();
+        $user = auth('')->user();
 
         // Query training_records dengan filter pencarian, tahun, dan byUserRole
         $training_records = Training_Record::with('latestComment')
@@ -57,8 +58,10 @@ class FormController extends Controller
             ->paginate(10);
 
         $jobskill = training_skill::select('id', 'job_skill', 'skill_code')->get();
+        $product_code = product_code::select('id', 'product_code', 'product_name', 'status')->get();
 
-        return view('dashboard.index', compact('training_records', 'years', 'searchQuery', 'selectedYear', 'jobskill'));
+
+        return view('dashboard.index', compact('training_records', 'years', 'searchQuery', 'selectedYear', 'jobskill', 'product_code'));
     }
 
 
@@ -241,9 +244,12 @@ class FormController extends Controller
      */
     public function edit($id)
     {
-        $trainingRecord = Training_Record::with(['pesertas', 'training_skills' => function ($query) {
-            $query->withTrashed(); // <-- Ini kuncinya
-        }])->findOrFail($id);
+        $trainingRecord = Training_Record::with([
+            'pesertas',
+            'training_skills' => function ($query) {
+                $query->withTrashed(); // <-- Ini kuncinya
+            }
+        ])->findOrFail($id);
         $time = $trainingRecord->training_duration;
 
         if (!empty($time) && str_contains($time, ':')) {
@@ -284,7 +290,7 @@ class FormController extends Controller
 
         $currentAttachmentPath = $trainingRecord->attachment; // Simpan path attachment saat ini
 
-        if ($request->hasFile('attachment')) { 
+        if ($request->hasFile('attachment')) {
             $pdfFile = $request->file('attachment');
 
             $originalName = $pdfFile->getClientOriginalName();
@@ -294,7 +300,7 @@ class FormController extends Controller
                 // 3b. Simpan file baru
                 // $filePath akan berisi sesuatu seperti 'attachments/namafile.pdf'
                 $newFilePath = $pdfFile->storeAs('attachment', $fileName, 'public');
-  
+
                 // 3c. Jika file baru berhasil disimpan DAN ada file lama, hapus file lama
                 if ($newFilePath && $currentAttachmentPath) {
                     if (Storage::disk('public')->exists($currentAttachmentPath)) {
@@ -507,6 +513,40 @@ class FormController extends Controller
         return redirect()->route('dashboard.index')->with('success', 'Job Skill Succesfully Deleted. (soft deleted).');
     }
 
+    public function product_code_store(Request $request)
+    {
+        $request->validate([
+            'product_code' => 'required|string|max:255',
+            'product_name' => 'required|string|max:100',
+        ]);
+
+        product_code::create([
+            'product_code' => $request->product_code,
+            'product_name' => $request->product_name,
+        ]);
+
+        return redirect()->back()->with('success', 'Product Code successfully created');
+    }
+
+    public function product_update(Request $request, $id)
+    {
+        $product = product_code::find($id);
+
+        if (!$product) {
+            return redirect()->route('dashboard.index')->with('error', 'Product code not found.');
+        }
+
+        // Ambil status tujuan dari form
+        $newStatus = $request->input('status');
+
+        // Update status
+        $product->status = $newStatus;
+        $product->save();
+
+        return redirect()->route('dashboard.index')->with('success', 'Product status updated to ' . $newStatus . '.');
+    }
+
+
     public function getJobSkill($skillCode)
     {
         $skill = Training_Skill::where('skill_code', $skillCode)->first();
@@ -514,7 +554,7 @@ class FormController extends Controller
         if ($skill) {
             return response()->json([
                 'job_skill' => $skill->job_skill,
-                'id' => $skill->id 
+                'id' => $skill->id
             ]);
         }
 
