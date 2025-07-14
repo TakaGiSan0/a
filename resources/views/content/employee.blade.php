@@ -249,8 +249,7 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    console.log('Data diterima:', data); // Debugging: lihat data yang diterima
-
+                   
                     // Update detail karyawan di modal
                     document.getElementById('id').innerText = data.peserta.id ?? 'N/A';
                     document.getElementById('employeeName').innerText = data.peserta.employee_name ?? 'N/A';
@@ -274,18 +273,35 @@
                     {
                         id: 4,
                         name: 'External Training'
-                    }
+                    },
+                    {
+                        id: 4,
+                        name: 'External Training'
+                    },
+                    {
+                        id: 5,
+                        name: 'Employee Promotion Training'
+                    },
+                    {
+                        id: 6,
+                        name: 'Transfer Knowledge Training'
+                    },
+                    {
+                        id: 7,
+                        name: 'Read & Review Training'
+                    },
+                    
                     ];
 
                     let trainingRecordsContent = '';
                     const groupedRecords = data.grouped_records || {};
 
-                    let hasTraining = false; // Flag untuk mengecek apakah ada training records
+                    let hasTraining = false; 
 
                     categories.forEach(category => {
                         const category_id = category.id;
                         const records = groupedRecords[category_id] ||
-                            []; // Ambil data atau set sebagai array kosong jika tidak ada data
+                            []; 
 
                         if (records.length > 0) {
                             hasTraining = true; // Set flag jika ada training

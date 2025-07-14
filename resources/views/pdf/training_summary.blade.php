@@ -8,22 +8,33 @@
             font-family: sans-serif;
             color: #333;
             font-size: 12px;
-            /* Ukuran font kecil */
         }
 
         .header {
             display: flex;
-            align-items: center;
+            flex-direction: column;
+            align-items: flex-start;
             margin-bottom: 20px;
-            /* Jarak bawah header */
+        }
+
+        .logo {
+
+            height: 30px;
+            margin-bottom: 10px;
+        }
+
+        .header-text {
+            text-align: center;
         }
 
         .header h1 {
-            flex-grow: 1;
-            /* Agar judul tetap di tengah */
-            text-align: center;
             margin: 0;
-            /* Hilangkan margin default */
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .event-number {
+            font-size: 14px;
         }
 
         .content {
@@ -88,12 +99,19 @@
             text-align: center font-size: 14px;
             /* Ukuran teks event number */
         }
+
+        .footer {
+            margin-top: 20px;
+            text-align: left;
+            font-size: 12px;
+            padding-top: 10px;
+        }
     </style>
 </head>
 
 <body>
     <div class="header">
-
+        <img src="{{ public_path('images/icon.png') }}" class="logo">
         <h1>Summary Training Record</h1>
         <div class="event-number" style="text-align: center; font-size: 14px;">
             Event Number : TR-{{ $no }}
@@ -123,14 +141,14 @@
                 <td width="50%">
                     <strong>Skill Code:</strong>
                     @foreach ($skills as $skill)
-                      <BR> {{ $skill['skill_code'] }}
+                        <BR> {{ $skill['skill_code'] }}
                     @endforeach
 
                 </td>
                 <td width="50%">
                     <strong>Job Skill:</strong>
                     @foreach ($skills as $skill)
-                    <BR> {{ $skill['job_skill'] }}
+                        <BR> {{ $skill['job_skill'] }}
                     @endforeach
                 </td>
             </tr>
@@ -168,6 +186,38 @@
                     </tr>
                 @endforeach
             </tbody>
+        </table>
+    </div>
+    <div class="footer">
+        <p style="text-align: left; font-size: 12px; margin-top: 20px;">
+        History Approval - Requestor = {{ $requestor }}
+            <table style="width: 50%; margin-top: 10px; border: 1px solid #ccc; border-collapse: collapse; font-size: 12px;">
+            <thead>
+                <tr>
+                    <th style="text-align: center;">No</th>
+                    <th style="text-align: center;">Approval</th>
+                    <th style="text-align: center;">Comment</th>
+                    <th style="text-align: center;">Date</th>
+                </tr>
+            </thead>
+            @php $no = 0; @endphp
+            @foreach ($history as $index => $row)
+            
+            <tr>
+                <td style="text-align: center; font-size: 12px;">
+                    {{ ++$no }}
+                </td>
+                <td style="text-align: center; font-size: 12px;">
+                    {{ $row['approval'] }}
+                </td>
+                <td style="text-align: center; font-size: 12px;">
+                    {{ $row['comment'] ?? '-' }}
+                </td>
+                <td style="text-align: center; font-size: 12px;">
+                {{ \Carbon\Carbon::parse($row['updated_at'])->format('d M Y, H.i') }}
+                </td>
+            </tr>
+            @endforeach
         </table>
     </div>
 </body>

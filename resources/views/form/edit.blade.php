@@ -107,7 +107,7 @@
                     </div>
                     <div>
                         <label for="attachment"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Attachment</label>
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Attachment (Max 5Mb)</label>
 
                         @php
                             $fileName = $trainingRecord->attachment ? basename($trainingRecord->attachment) : null;
@@ -449,7 +449,7 @@
                        
                 
     `;
-            console.log(`Adding participant with index ${index}`);
+           
             container.appendChild(newRow);
             hiddenInput.value = checkbox.checked ? "1" : "0";
         });

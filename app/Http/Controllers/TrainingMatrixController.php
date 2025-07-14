@@ -21,7 +21,7 @@ class TrainingMatrixController extends Controller
         $departments = Peserta::whereHas('trainingRecords', fn($q) => $q->where('status', 'completed'))
             ->distinct()->pluck('dept')->toArray();
 
-            $product_code = product_code::where('status', 'Active')->get();
+        $product_code = product_code::where('status', 'Active')->get();
 
         $masterSkills = Training_Skill::withTrashed()
             ->where('skill_code', '!=', 'NA')
@@ -157,17 +157,22 @@ class TrainingMatrixController extends Controller
 
     public function downloadpdf(Request $request)
     {
-        $dept = $request->input('dept');
-        $deptList = is_array($dept) ? implode(', ', $dept) : $dept;
+        ini_set('memory_limit', '512M');
+        set_time_limit(300);
+        $dept = $request->input('dept', null);
+
+        $deptList = (!empty($dept))
+            ? (is_array($dept) ? implode(', ', $dept) : $dept)
+            : 'All Department';
 
         $product = product_code::where('status', 'Active')->get();
 
-
+        \Log::info('Dept filter:', ['dept' => $dept]);
         $masterSkills = Training_Skill::withTrashed()
             ->where('skill_code', '!=', 'NA')
             ->where('skill_code', '!=', 'N/A')
-            ->whereNotNull('skill_code') // Memastikan tidak null
-            ->where('skill_code', '!=', '')     // Memastikan tidak string kosong
+            ->whereNotNull('skill_code')
+            ->where('skill_code', '!=', '')
             ->get()
             ->keyBy('skill_code');
 
@@ -185,20 +190,35 @@ class TrainingMatrixController extends Controller
             ->sort()
             ->values();
 
+
         $allPeserta = Peserta::query()
-            ->whereHas('trainingRecords', fn($q) => $q->where('status', 'completed'))
+            ->where(function ($query) {
+                $query->whereHas('trainingRecords', function ($q) {
+                    $q->where('status', 'Completed')
+                        ->where(function ($subq) {
+                            $subq->whereNotNull('status')
+                                ->where('station', '!=', '')
+                                ->whereRaw("UPPER(station) NOT IN ('NA', 'N/A')");
+                        });
+                })->orWhereHas('trainingRecords.training_Skills', function ($q) {
+                    $q->whereNotNull('skill_code')
+                        ->where('skill_code', '!=', '')
+                        ->whereRaw("UPPER(station) NOT IN ('NA', 'N/A')");
+                });
+            })
             ->when($dept, function ($query) use ($dept) {
-                is_array($dept) ? $query->whereIn('dept', $dept) : $query->where('dept', $dept);
+                is_array($dept)
+                    ? $query->whereIn('dept', $dept)
+                    : $query->where('dept', $dept);
             })
             ->with([
-                // Eager Load relasi untuk menghindari N+1 Query
                 'trainingRecords' => function ($query) {
                     $query->where('status', 'completed')->with('training_Skills');
                 }
             ])
             ->orderBy('employee_name', 'asc')
             ->get();
-
+        \Log::info('Total peserta untuk PDF: ' . $allPeserta->count());
         $participantDataMap = [];
         foreach ($allPeserta as $peserta) {
             // --- Proses SKILL ---

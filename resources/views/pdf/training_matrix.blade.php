@@ -86,6 +86,8 @@
 </head>
 
 <body>
+
+    <img src="{{ public_path('images/icon.png') }}" alt="Logo" style="width: 100px; height: auto;">
     <h2 style="text-align: center;">Training Matrix Report</h2>
     @if(!empty($deptList))
         <h4 class="subtitle">Departemen: {{ strtoupper($deptList) }}</h4>
@@ -95,6 +97,7 @@
     <table class="table-main">
         <thead>
             <tr>
+                <th rowspan="2" class="px-4 py-4 border border-gray-300">No</th>
                 <th rowspan="2" class="px-4 py-4 border border-gray-300">Badge No</th>
                 <th rowspan="2" class="px-4 py-4 border border-gray-300">Emp Name</th>
                 <th rowspan="2" class="px-4 py-4 border border-gray-300">Date of Join</th>
@@ -114,8 +117,10 @@
             </tr>
         </thead>
         <tbody>
+            @php $no = 0; @endphp
             @foreach($results as $row)
                 <tr>
+                    <td>{{ ++$no }}</td>
                     <td>{{ $row['badge_no'] }}</td>
                     <td>{{ $row['employee_name'] }}</td>
                     <td>{{ $row['join_date'] }}</td>

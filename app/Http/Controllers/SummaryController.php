@@ -6,7 +6,7 @@ use App\Models\category;
 use App\Models\peserta;
 use Illuminate\Http\Request;
 use App\Models\Training_Record;
-
+use App\Models\Training_comment;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
@@ -55,7 +55,7 @@ class SummaryController extends Controller
             ->where('status', 'Completed');
 
         if ($user->role === 'Admin' || $user->role === 'Super Admin') {
-         
+
         } else {
             // Peserta: Ambil stasiun/kategori hanya dari training yang mereka ikuti
             $availableTrainingQuery->whereHas('pesertas', function ($q_peserta) use ($user) {
@@ -63,7 +63,7 @@ class SummaryController extends Controller
             });
         }
 
-     
+
         $station = $availableTrainingQuery->distinct()->pluck('station')->filter()->all();
 
         return view('content.summary', compact('trainingRecords', 'training_categories', 'date_start', 'search', 'station'));
@@ -135,7 +135,17 @@ class SummaryController extends Controller
 
     public function downloadSummaryPdf($id)
     {
-        $trainingRecord = Training_Record::with('pesertas', 'training_skills')->findOrFail($id);
+        $trainingRecord = Training_Record::with('pesertas', 'training_skills', 'user')->findOrFail($id);
+
+        $history = training_comment::with('trainingRecord')
+        ->where('training_record_id', $id)
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        if ($history->isEmpty()) {
+            Log::info('History tidak ditemukan untuk ID: ' . $id);
+            return response()->json(['message' => 'Data tidak ditemukan'], 404);
+        }
 
         $trainingRecord->training_duration = \Carbon\Carbon::parse($trainingRecord->training_duration)->diffInMinutes(\Carbon\Carbon::parse('00:00:00'));
         $trainingRecord->training_duration = abs($trainingRecord->training_duration);
@@ -143,6 +153,8 @@ class SummaryController extends Controller
         $data = [
             'training_name' => $trainingRecord->training_name,
             'doc_ref' => $trainingRecord->doc_ref,
+            'requestor' => $trainingRecord->user->user ?? '-',
+            'history' => $history,
             'trainer_name' => $trainingRecord->trainer_name,
             'rev' => $trainingRecord->rev,
             'station' => $trainingRecord->station,

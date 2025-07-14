@@ -11,17 +11,36 @@
 
         header {
             position: fixed;
-            top: -80px;
-            left: 0px;
-            right: 0px;
+            top: -60px;
+            left: 0;
+            right: 0;
+            height: 100px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .logo {
+            position: absolute;
+            top: 10px;
+            /* Naikkan logo */
+            left: 20px;
+            height: 30px;
+        }
+
+        .title {
             text-align: center;
             font-size: 20px;
             font-weight: bold;
+            line-height: 100px;
+            padding: 0 80px;
+            word-break: break-word;
         }
+
+
 
         body {
             font-family: 'Arial', sans-serif;
             font-size: 10px;
+            padding-top: 100px;
         }
 
         .table {
@@ -43,10 +62,14 @@
     </style>
 </head>
 
-<body>
-    <header>
+<header>
+    <img src="{{ public_path('images/icon.png') }}" class="logo">
+    <div class="title">
         Training Report for {{ $peserta->employee_name }}
-    </header>
+    </div>
+</header>
+
+<body>
     <p><strong>Badge No:</strong> {{ $peserta->badge_no }}</p>
     <p><strong>Department:</strong> {{ $peserta->dept }}</p>
     <p><strong>Position:</strong> {{ $peserta->position }}</p>
@@ -66,6 +89,12 @@
                     New Employee Induction (NEO)
                 @elseif ($category->name === 'Project')
                     Project Training
+                @elseif ($category->name === 'Employee Promotion')
+                    Employee Promotion Training
+                @elseif ($category->name === 'Transfer Knowledge')
+                    Transfer Knowledge Training
+                @elseif ($category->name === 'Read & Review')
+                    Read & Review Training
                 @elseif ($category->name === 'N/A')
                     Unknown Training
                 @else

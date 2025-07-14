@@ -304,16 +304,13 @@ class FormController extends Controller
                 // 3c. Jika file baru berhasil disimpan DAN ada file lama, hapus file lama
                 if ($newFilePath && $currentAttachmentPath) {
                     if (Storage::disk('public')->exists($currentAttachmentPath)) {
-                        Storage::disk('public')->delete($currentAttachmentPath);
-                        Log::info('File lama berhasil dihapus: ' . $currentAttachmentPath);
+                        Storage::disk('public')->delete($currentAttachmentPath);            
                     } else {
-                        Log::warning('File lama tidak ditemukan untuk dihapus: ' . $currentAttachmentPath);
                     }
                 }
                 $trainingRecord->attachment = $newFilePath; // 3d. Update path di record dengan yang baru
 
             } catch (\Exception $e) {
-                Log::error('File upload error saat update: ' . $e->getMessage());
                 return redirect()->back()->with('error', 'Gagal mengunggah file baru. Silakan coba lagi.');
             }
         }
@@ -454,15 +451,13 @@ class FormController extends Controller
         return [
             'training_name' => 'required|string|max:255',
             'doc_ref' => 'required|string|max:255',
-
             'trainer_name' => 'required|string|max:255',
             'rev' => 'required|string|max:255',
             'station' => 'required|string|max:255',
             'date_start' => 'required|date',
             'date_end' => 'required|date',
             'training_duration' => 'required|integer',
-
-            'attachment' => 'required|file|mimes:pdf|max:2048',
+            'attachment' => 'required|file|mimes:pdf|max:5048',
             'category_id' => 'required|integer|exists:categories,id',
             'participants.*.badge_no' => 'max:255',
             'participants.*.employee_name' => 'max:255',

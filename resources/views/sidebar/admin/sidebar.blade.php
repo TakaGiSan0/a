@@ -3,7 +3,8 @@
 <aside id="sidebar"
     class="z-20 w-64 h-full text-white bg-[#2D435F] dark:bg-gray-800 overflow-y-auto transition-transform duration-300 ease-in-out flex inset-y-0 left-0 transform">
     <div class="py-4 text-[#F1F1F1] dark:text-gray-400 text-center">
-        <a class="text-lg font-bold text-white dark:text-gray-200 text-center" href="#">
+        
+    <a class="text-lg font-bold text-white dark:text-gray-200 text-center" href="#">
             @auth
                 {{ Auth::user()->role }}
             @endauth

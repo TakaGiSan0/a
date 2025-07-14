@@ -2,6 +2,7 @@
 <aside
     class="z-20 w-64 h-full text-white bg-[#2D435F] dark:bg-gray-800 overflow-y-auto transition-transform duration-300 ease-in-out flex inset-y-0 left-0 transform">
     <div class="py-4 text-[#F1F1F1] dark:text-gray-400 text-center">
+        <img src="{{ asset('/images/icon.png') }}" alt="Logo" style="display: block; margin: 0 auto; width: 100px; height: auto;">
         <a class="text-lg font-bold text-white dark:text-gray-200 text-center" href="#">
             @auth
                 {{ Auth::user()->role }}
@@ -12,7 +13,13 @@
                 <a href="{{ route('dashboard.index') }}" class="relative flex items-center px-6 py-3 w-full text-sm font-semibold transition-colors duration-150
                         {{ request()->routeIs('dashboard.index') ? 'bg-white text-[#2D435F]' : ' hover:text-white' }}">
 
-                        <svg class="h-5 w-5"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <rect x="3" y="4" width="18" height="4" rx="2" />  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />  <line x1="10" y1="12" x2="14" y2="12" /></svg>
+                    <svg class="h-5 w-5" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+                        stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" />
+                        <rect x="3" y="4" width="18" height="4" rx="2" />
+                        <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+                        <line x1="10" y1="12" x2="14" y2="12" />
+                    </svg>
 
                     <span class="ml-4">Event Handling Manual</span>
                 </a>
@@ -104,7 +111,7 @@
                     <span class="">Production Competency Matrix</span>
                 </a>
             </li>
-            
+
             <li>
                 <a href="{{ route('training-evaluation.index') }}"
                     class="relative flex items-center px-6 py-3 w-full text-sm font-semibold transition-colors duration-150

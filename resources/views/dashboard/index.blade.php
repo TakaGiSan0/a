@@ -175,7 +175,7 @@
                                     <!-- Trigger & Dropdown wrapper -->
                                     <div class="inline-block text-left">
                                         <!-- Button -->
-                                        @if (auth()->user()->role === 'Super Admin' || auth()->user()->id === $rc->user_id)
+                                        @if (auth()->user()->role === 'Super Admin' || (auth()->user()->id === $rc->user_id && in_array($rc->status, ['Pending', 'Waiting Approval'])) )
                                             <button onclick="toggleDropdown(event, this)"
                                                 class="hover:bg-gray-100 dark:hover:bg-gray-600 rounded-full p-2">
                                                 <!-- SVG icon -->
@@ -560,7 +560,7 @@
                                                                 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600
                                                             @if (!$isSuperAdmin) text-gray-400 @endif" @if (!$isSuperAdmin)
                                                             readonly @endif
-                            placeholder="{{ !$isSuperAdmin ? 'Tunggu komentar dari super admin' : '' }}">{{ old('comment', $comment ?? '') }}</textarea>
+                            placeholder="{{ !$isSuperAdmin ? 'Tunggu komentar dari super admin' : '' }}" required>{{ old('comment', $comment ?? '') }}</textarea>
                         @if (Auth::user()->role == 'Super Admin')
                             <div>
                                 <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -693,7 +693,7 @@
                                 approvalField.value = data.approval;
                                 statusField.value = data.status;
                             }
-                            console.log('Set form action:', commentForm.action);
+                           
 
                             // Set attachment (PDF)
                             if (data.attachment) {

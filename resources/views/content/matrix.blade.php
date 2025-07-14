@@ -139,7 +139,7 @@
                                             </svg>
 
                                             {{-- Tautan View, dengan sedikit jarak ke kiri (ml-2) --}}
-                                            <a href="{{ Storage::url($item->attachment) }}" target="_blank"
+                                            <a href="{{ asset('storage/' . $item->attachment) }}" target="_blank"
                                                 class="text-blue-500 underline ml-2">
                                                 View
                                             </a>
@@ -286,7 +286,7 @@
                         modal.classList.remove('hidden');
                         modal.classList.add('flex');
 
-                        console.log(data);
+                      
                     })
                     .catch(error => {
                         console.error('Error fetching data:', error);

@@ -275,7 +275,7 @@
                     url:  window.baseURL +'/evaluation/' + id + '/edit',
                     type: 'GET',
                     success: function (data) {
-                        console.log(data); // Untuk debug
+                       
 
                         // Isi form
                         $('#question_1').val(data.evaluation.question_1);
