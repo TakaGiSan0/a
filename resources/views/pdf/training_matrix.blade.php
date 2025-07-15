@@ -130,14 +130,14 @@
                     @endforeach
                     @foreach ($masterSkills as $skillCode => $skillModel)
                         <td class="text-center">
-                            {{-- Ambil nilai ✓ atau - dari array 'skills' di dalam $row --}}
+                         
                             {{ $row['skills'][$skillCode] ?? '-' }}
                         </td>
                     @endforeach
                 </tr>
             @endforeach
             <tr>
-                <td colspan="4" class="px-4 py-3 text-center border border-gray-300">Supply</strong></td>
+                <td colspan="5" class="px-4 py-3 text-center border border-gray-300">Supply</strong></td>
                 @foreach($supplyRow as $supply)
                     <td class="px-4 py-2 text-center border border-gray-300">{{ $supply }}</td>
                 @endforeach
@@ -147,7 +147,7 @@
 
             </tr>
             <tr>
-                <td colspan="4"><strong>Gap</strong></td>
+                <td colspan="5"><strong>Gap</strong></td>
                 @foreach($gapRow as $gap)
                     <td>{{ $gap }}</td>
                 @endforeach
@@ -172,11 +172,6 @@
                         @endforeach
                     </td>
                 @endforeach
-            </tr>
-            <tr>
-                <td>SKILL LEVEL :</td>
-                <td>1 = LEVEL 1 (work under supervision)<br>2 = LEVEL 2 (work according to standards)<br>3 = Level 3
-                    (expert)<br>4 = Level 4 (expert & trainer)</td>
             </tr>
         </thead>
 

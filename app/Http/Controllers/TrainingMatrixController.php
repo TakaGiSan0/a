@@ -100,7 +100,7 @@ class TrainingMatrixController extends Controller
                 $levelsForStation = collect($stationLevels[$station] ?? [])->filter();
                 $angkaLevels = $levelsForStation->filter(fn($l) => is_numeric($l))->all();
                 $naLevels = $levelsForStation->filter(fn($l) => strtoupper($l) === 'NA')->isNotEmpty();
-                $stationResults[$station] = !empty($angkaLevels) ? max($angkaLevels) : ($naLevels ? 'NA' : '-');
+                $stationResults[$station] = !empty($angkaLevels)? max($angkaLevels): '-';
             }
 
             // --- Proses Skills untuk peserta ini ---
@@ -182,7 +182,6 @@ class TrainingMatrixController extends Controller
             ->flatMap(fn($s) => explode(', ', $s))
             ->unique()
             ->filter(function ($station) {
-                // Hanya ambil station yang tidak kosong dan bukan 'NA' atau 'N/A'
                 $trimmedStation = trim($station);
                 $upperStation = strtoupper($trimmedStation);
                 return !empty($trimmedStation) && $upperStation !== 'NA' && $upperStation !== 'N/A';
@@ -242,7 +241,7 @@ class TrainingMatrixController extends Controller
                 $levelsForStation = collect($stationLevels[$station] ?? [])->filter();
                 $angkaLevels = $levelsForStation->filter(fn($l) => is_numeric($l))->all();
                 $naLevels = $levelsForStation->filter(fn($l) => strtoupper($l) === 'NA')->isNotEmpty();
-                $stationResults[$station] = !empty($angkaLevels) ? max($angkaLevels) : ($naLevels ? 'NA' : '-');
+                $stationResults[$station] = !empty($angkaLevels) ? max($angkaLevels): '-';
             }
 
             // Simpan data yang sudah diproses ke dalam map

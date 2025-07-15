@@ -275,10 +275,6 @@
                         name: 'External Training'
                     },
                     {
-                        id: 4,
-                        name: 'External Training'
-                    },
-                    {
                         id: 5,
                         name: 'Employee Promotion Training'
                     },

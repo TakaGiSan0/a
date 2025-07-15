@@ -37,13 +37,24 @@ class hasil_peserta extends Model
 
 
     public function getStatusAttribute()
-    {
-        $originalExpiredDate = $this->getRawOriginal('expired_date'); // Ambil nilai asli dari database
-        if (empty($originalExpiredDate)) {
-            return 'Non Active';
-        }
-        return Carbon::parse($originalExpiredDate)->isPast() && !Carbon::parse($originalExpiredDate)->isToday() ? 'Non Active' : 'Active';
+{
+    $expired = $this->getRawOriginal('expired_date');
+    $certificate = $this->certificate;
+    $category = $this->category;
+
+    if (empty($expired) && !empty($certificate) && !empty($category)) {
+        return 'Active';
     }
+
+    if (!empty($expired) && !empty($certificate) && !empty($category)) {
+        return Carbon::parse($expired)->isPast() && !Carbon::parse($expired)->isToday()
+            ? 'Non Active'
+            : 'Active';
+    }
+
+    // Selain itu, anggap Non Active
+    return 'Non Active';
+}
 
     public function scopeByUserRole($query, $user)
     {

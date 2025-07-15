@@ -17,7 +17,7 @@ class MatrixController extends Controller
             ->whereHas('trainingrecord', function ($query) {
                 $query->where('status', 'completed');
             })
-            ->whereHas('pesertas', function ($query) use ($searchQuery) { // Gunakan whereHas ke peserta
+            ->whereHas('pesertas', function ($query) use ($searchQuery) { 
                 $query->where('employee_name', 'like', "%$searchQuery%")
                     ->orWhere('badge_no', 'like', "%$searchQuery%");
             })
@@ -51,7 +51,7 @@ class MatrixController extends Controller
     {
         $validated = $request->validate([
             'certificate' => 'required|string|max:255',
-            'expired_date' => 'required|date|max:255',
+            'expired_date' => 'date|max:255',
             'category' => 'required|string|max:255',
             'attachment' => 'nullable|file|mimes:pdf|max:2048',
         ]);
