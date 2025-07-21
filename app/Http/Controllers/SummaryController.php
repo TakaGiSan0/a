@@ -57,7 +57,6 @@ class SummaryController extends Controller
         if ($user->role === 'Admin' || $user->role === 'Super Admin') {
 
         } else {
-            // Peserta: Ambil stasiun/kategori hanya dari training yang mereka ikuti
             $availableTrainingQuery->whereHas('pesertas', function ($q_peserta) use ($user) {
                 $q_peserta->where('user_id_login', $user->id);
             });

@@ -24,6 +24,7 @@ class TrainingMatrixController extends Controller
         $product_code = product_code::where('status', 'Active')->get();
 
         $masterSkills = Training_Skill::withTrashed()
+            ->where('status', 'Active')
             ->where('skill_code', '!=', 'NA')
             ->where('skill_code', '!=', 'N/A')
             ->whereNotNull('skill_code')
@@ -44,38 +45,37 @@ class TrainingMatrixController extends Controller
 
         $user = auth('')->user();
 
-        // Query untuk peserta
         $pesertasQuery = Peserta::query()
             ->ByDept()
             ->with([
                 'trainingRecords' => function ($query) {
-                    $query->where('status', 'completed')
+                    // Ini akan mengambil semua record yang completed untuk ditampilkan di view
+                    $query->where('status', 'Completed')
                         ->with('training_Skills');
                 }
             ])
-            ->whereHas('trainingRecords', fn($q) => $q->where('status', 'completed'))
-            ->where(function ($query) {
-                $query->whereHas('trainingRecords', function ($q) {
-                    $q->where('status', 'Completed')
-                        ->where(function ($subq) {
-                            $subq->whereNotNull('status')
-                                ->where('station', '!=', '')
-                                ->whereRaw("UPPER(station) NOT IN ('NA', 'N/A')");
+            // Filter utama: Peserta harus punya completed training yang valid.
+            ->whereHas('trainingRecords', function ($q) {
+                $q->where('status', 'Completed')
+                    ->where(function ($subq) {
+                        // Syarat 1: Memiliki station yang valid (bukan NA/N/A)
+                        $subq->whereNotNull('station')
+                            ->where('station', '!=', '')
+                            ->whereRaw("UPPER(station) NOT IN ('NA', 'N/A')")
+                            // Syarat 2: ATAU memiliki skill_code yang valid
+                            ->orWhereHas('training_Skills', function ($skillQ) {
+                            $skillQ->whereNotNull('skill_code')
+                                ->where('skill_code', '!=', '')
+                                ->whereRaw("UPPER(skill_code) NOT IN ('NA', 'N/A')");
                         });
-                })->orWhereHas("trainingRecords.training_Skills", function ($q) {
-                    $q->whereNotNull('skill_code')
-                        ->where('skill_code', '!=', '')
-                        ->whereRaw("UPPER(station) NOT IN ('NA', 'N/A')");
-                });
+                    });
             })
             ->when($request->dept, fn($q) => $q->whereIn('dept', (array) $request->dept))
             ->when($request->searchQuery, fn($q) => $q->where(function ($subq) use ($request) {
                 $subq->where('employee_name', 'like', "%{$request->searchQuery}%")
                     ->orWhere('badge_no', 'like', "%{$request->searchQuery}%");
             }))
-
             ->orderBy('employee_name');
-
 
 
         $pesertas = $pesertasQuery->select('id', 'badge_no', 'join_date', 'employee_name', 'dept')->paginate(10);
@@ -100,7 +100,7 @@ class TrainingMatrixController extends Controller
                 $levelsForStation = collect($stationLevels[$station] ?? [])->filter();
                 $angkaLevels = $levelsForStation->filter(fn($l) => is_numeric($l))->all();
                 $naLevels = $levelsForStation->filter(fn($l) => strtoupper($l) === 'NA')->isNotEmpty();
-                $stationResults[$station] = !empty($angkaLevels)? max($angkaLevels): '-';
+                $stationResults[$station] = !empty($angkaLevels) ? max($angkaLevels) : '-';
             }
 
             // --- Proses Skills untuk peserta ini ---
@@ -241,7 +241,7 @@ class TrainingMatrixController extends Controller
                 $levelsForStation = collect($stationLevels[$station] ?? [])->filter();
                 $angkaLevels = $levelsForStation->filter(fn($l) => is_numeric($l))->all();
                 $naLevels = $levelsForStation->filter(fn($l) => strtoupper($l) === 'NA')->isNotEmpty();
-                $stationResults[$station] = !empty($angkaLevels) ? max($angkaLevels): '-';
+                $stationResults[$station] = !empty($angkaLevels) ? max($angkaLevels) : '-';
             }
 
             // Simpan data yang sudah diproses ke dalam map

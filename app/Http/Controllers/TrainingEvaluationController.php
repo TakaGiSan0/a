@@ -16,8 +16,6 @@ class TrainingEvaluationController extends Controller
     public function index(Request $request)
     {
         $user = auth('web')->user();
-
-        // Ambil nilai pencarian dari request
         $searchTerm = $request->input('search'); // 'search' adalah nama parameter di URL, cth: ?search=John
 
         // Mulai query untuk TrainingEvaluation
@@ -35,7 +33,7 @@ class TrainingEvaluationController extends Controller
                         ->orWhere('badge_no', 'like', '%' . $searchTerm . '%');
                 });
             }
-            $trainingEvaluations = $query->get();
+            $trainingEvaluations = $query->paginate(10);
        
         } else {
             // Ambil ID peserta milik user ini (asumsi: relasi user ke peserta)
@@ -55,7 +53,7 @@ class TrainingEvaluationController extends Controller
             $trainingEvaluations = $query->paginate(10); // Eksekusi query
         }
 
-        return view('evaluation.index', compact('trainingEvaluations'));
+        return view('evaluation.index', compact('trainingEvaluations', 'searchTerm'));
     }
 
 

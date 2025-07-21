@@ -82,7 +82,7 @@
                 @endif
             </div>
             @if (session('success'))
-                <div class="alert alert-success ml-4">
+                <div class="alert alert-success ml-4 dark:bg-gray-800 dark:text-gray-400">
                     {{ session('success') }}
                 </div>
             @endif
@@ -134,54 +134,54 @@
                                     <td class="px-4 py-3">{{ optional($p->user)->user ?? 'Tidak ada user' }}<br>
                                         {{ optional($p->user)->updated_at ?? '' }}</td>
                                     @if (auth()->user()->role == 'Super Admin')
-                                    <td class="relative px-4 py-3 text-center">
-                                        <!-- Trigger & Dropdown wrapper -->
-                                        <div class="inline-block text-left">
-                                            <!-- Button -->
-                                            <button onclick="toggleDropdown(event, this)"
-                                                class="hover:bg-gray-100 dark:hover:bg-gray-600 rounded-full p-2">
-                                                <!-- SVG icon -->
-                                                <svg class="h-6 w-6 text-gray-500" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                                    stroke-linejoin="round">
-                                                    <circle cx="12" cy="12" r="1" />
-                                                    <circle cx="12" cy="5" r="1" />
-                                                    <circle cx="12" cy="19" r="1" />
-                                                </svg>
-                                            </button>
-                                            <div
-                                                class="dropdown-menu hidden absolute top-0 right-full ml-2 bg-white border rounded shadow-md z-50 w-32">
+                                        <td class="relative px-4 py-3 text-center">
+                                            <!-- Trigger & Dropdown wrapper -->
+                                            <div class="inline-block text-left">
+                                                <!-- Button -->
+                                                <button onclick="toggleDropdown(event, this)"
+                                                    class="hover:bg-gray-100 dark:hover:bg-gray-600 rounded-full p-2">
+                                                    <!-- SVG icon -->
+                                                    <svg class="h-6 w-6 text-gray-500" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                        stroke-linejoin="round">
+                                                        <circle cx="12" cy="12" r="1" />
+                                                        <circle cx="12" cy="5" r="1" />
+                                                        <circle cx="12" cy="19" r="1" />
+                                                    </svg>
+                                                </button>
+                                                <div
+                                                    class="dropdown-menu hidden absolute top-0 right-full ml-2 bg-white border rounded shadow-md z-50 w-32">
 
-                                                <!-- Button Edit -->
-                                                @if (auth()->user()->role == 'Super Admin')
-                                                    <a href="{{ route('peserta.edit', $p->id) }}"
-                                                        class="w-full flex items-center gap-2 text-left px-4 py-2 hover:bg-gray-100">
-                                                        <svg class="h-4 w-4 text-blue-500" fill="none" stroke="currentColor"
-                                                            stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round"
-                                                            stroke-linejoin="round">
-                                                            <path d="M12 20h9" />
-                                                            <path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4 12.5-12.5z" />
-                                                        </svg>
-                                                        Edit
-                                                    </a>
-                                                    <form action="{{ route('peserta.destroy', $p->id) }}" method="POST"
-                                                        onsubmit="return confirm('Are you sure you want to delete this Employee?');">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button
-                                                            class="w-full flex items-center gap-2 text-left px-4 py-2 text-red-600 hover:bg-red-100">
-                                                            <svg class="h-4 w-4 text-red-600" fill="none" viewBox="0 0 24 24"
-                                                                stroke="currentColor">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                    <!-- Button Edit -->
+                                                    @if (auth()->user()->role == 'Super Admin')
+                                                        <a href="{{ route('peserta.edit', $p->id) }}"
+                                                            class="w-full flex items-center gap-2 text-left px-4 py-2 hover:bg-gray-100">
+                                                            <svg class="h-4 w-4 text-blue-500" fill="none" stroke="currentColor"
+                                                                stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round"
+                                                                stroke-linejoin="round">
+                                                                <path d="M12 20h9" />
+                                                                <path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4 12.5-12.5z" />
                                                             </svg>
-                                                            Delete
-                                                        </button>
-                                                    </form>
-                                                @endif
+                                                            Edit
+                                                        </a>
+                                                        <form action="{{ route('peserta.destroy', $p->id) }}" method="POST"
+                                                            onsubmit="return confirm('Are you sure you want to delete this Employee?');">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button
+                                                                class="w-full flex items-center gap-2 text-left px-4 py-2 text-red-600 hover:bg-red-100">
+                                                                <svg class="h-4 w-4 text-red-600" fill="none" viewBox="0 0 24 24"
+                                                                    stroke="currentColor">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                                </svg>
+                                                                Delete
+                                                            </button>
+                                                        </form>
+                                                    @endif
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
+                                        </td>
                                     @endif
                                 </tr>
                             @endforeach
@@ -203,11 +203,11 @@
         <!-- Overlay (background hitam) -->
         <div class="fixed inset-0 bg-black bg-opacity-50"></div>
         <!-- Konten Modal -->
-        <div class="w-full max-w-lg bg-white shadow-lg rounded-lg p-6 relative z-10">
+        <div class="dark:bg-gray-800 w-full max-w-lg bg-white shadow-lg rounded-lg p-6 relative z-10">
             <div class="flex items-center pb-3 border-b border-gray-200">
                 <div class="flex-1">
-                    <h3 class="text-gray-800 text-xl font-bold">Upload File</h3>
-                    <p class="text-gray-600 text-xs mt-1">Upload file to this project</p>
+                    <h3 class="text-gray-800 text-xl font-bold dark:text-white">Import Excel</h3>
+                    <p class="text-gray-600 text-xs mt-1 dark:text-white">Upload file to this project</p>
                 </div>
 
                 <!-- Tombol Close -->
@@ -270,21 +270,21 @@
     });
 
     function toggleDropdown(event, btn) {
-            event.stopPropagation(); // cegah event bubbling
-            const dropdown = btn.nextElementSibling;
-            const allDropdowns = document.querySelectorAll('.dropdown-menu');
+        event.stopPropagation(); // cegah event bubbling
+        const dropdown = btn.nextElementSibling;
+        const allDropdowns = document.querySelectorAll('.dropdown-menu');
 
-            allDropdowns.forEach(d => {
-                if (d !== dropdown) d.classList.add('hidden');
-            });
-
-            dropdown.classList.toggle('hidden');
-        }
-
-        // Tutup dropdown saat klik di luar
-        document.addEventListener('click', function (e) {
-            if (!e.target.closest('.dropdown-menu') && !e.target.closest('button')) {
-                document.querySelectorAll('.dropdown-menu').forEach(d => d.classList.add('hidden'));
-            }
+        allDropdowns.forEach(d => {
+            if (d !== dropdown) d.classList.add('hidden');
         });
+
+        dropdown.classList.toggle('hidden');
+    }
+
+    // Tutup dropdown saat klik di luar
+    document.addEventListener('click', function (e) {
+        if (!e.target.closest('.dropdown-menu') && !e.target.closest('button')) {
+            document.querySelectorAll('.dropdown-menu').forEach(d => d.classList.add('hidden'));
+        }
+    });
 </script>

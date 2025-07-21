@@ -21,7 +21,7 @@
             <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                 <div class="w-full md:w-1/2">
                     <form class="flex items-center">
-                        <label for="simple-search" class="sr-only">Search</label>
+                        
                         <div class="relative w-full">
                             <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                 <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor"
@@ -127,7 +127,7 @@
                                         </button>
 
                                         <div
-                                            class="dropdown-menu hidden absolute top-0 right-full ml-2 bg-white border rounded shadow-md z-50 w-32">
+                                            class="dropdown-menu hidden absolute top-0 right-full ml-2 bg-white border rounded shadow-md z-50 w-32 dark:bg-gray-800 dark:text-gray-400">
 
                                             @if (in_array(Auth::user()->role, ['Super Admin', 'Admin']))
                                                 <a href="{{ route('download.employee', $rc->id) }}">
@@ -147,7 +147,7 @@
                                             @endif
                                             <button type="button" data-modal-target="readProductModal"
                                                 data-modal-toggle="readProductModal" onclick="BukaModal({{ $rc->id }})"
-                                                class="w-full flex items-center gap-2 text-left px-4 py-2 hover:bg-gray-100">
+                                                class="w-full flex items-center gap-2 text-left px-4 py-2 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-400">
                                                 <svg class="w-4 h-4 flex-shrink-0" xmlns="http://www.w3.org/2000/svg"
                                                     viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                                     <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
@@ -325,19 +325,19 @@
 
                                 trainingRecordsContent += `
                 <tr class="">
-                    <th scope="row" class="px-4 py-3 font-medium text-gray-700 text-center whitespace-normal break-words  overflow-hidden max-w-xs">
+                    <th scope="row" class="px-4 py-3 font-medium text-gray-700 text-center whitespace-normal break-words  overflow-hidden max-w-xs dark:text-gray-400">
                         ${training.training_name ?? '-'}
                     </th>
-                    <td class="px-4 py-3 font-medium text-gray-700 whitespace-nowrap text-center ">
+                    <td class="px-4 py-3 font-medium text-gray-700 whitespace-nowrap text-center dark:text-gray-400">
                         ${training.trainer_name ?? '-'}
                     </td>
-                    <td class="px-4 py-3 font-medium text-gray-700 whitespace-nowrap text-center ">
+                    <td class="px-4 py-3 font-medium text-gray-700 whitespace-nowrap text-center dark:text-gray-400">
                         ${training.date_formatted ?? '-'}
                     </td>
-                    <td class="px-4 py-3 font-medium text-gray-700 whitespace-nowrap text-center ">
+                    <td class="px-4 py-3 font-medium text-gray-700 whitespace-nowrap text-center dark:text-gray-400">
                         ${level}
                     </td>
-                    <td class="px-4 py-3 font-medium text-gray-700 whitespace-nowrap text-center ">
+                    <td class="px-4 py-3 font-medium text-gray-700 whitespace-nowrap text-center dark:text-gray-400">
                         ${finalJudgement}
                     </td>
                 </tr>`;

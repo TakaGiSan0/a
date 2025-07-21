@@ -127,7 +127,7 @@
                                     <td class="px-4 py-3">{{ $rc->formatted_date_range ?? 'N/A' }}</td>
                                     <td class="px-4 py-3">TR-{{ $rc->id }}</td>
                                     <td class="relative px-4 py-3 text-center">
-                                        <div class="inline-block text-left">
+                                        <div class="inline-block text-left ">
                                             <button onclick="toggleDropdown(event, this)"
                                                 class="hover:bg-gray-100 dark:hover:bg-gray-600 rounded-full p-2">
                                                 <!-- SVG icon -->
@@ -141,7 +141,7 @@
                                             </button>
 
                                             <div
-                                                class="dropdown-menu hidden absolute top-0 right-full ml-2 bg-white border rounded shadow-md z-50 w-32">
+                                                class="dropdown-menu hidden absolute top-0 right-full ml-2 bg-white border rounded shadow-md z-50 w-32 dark:bg-gray-800 dark:text-gray-400">
 
                                                 @if (in_array(Auth::user()->role, ['Super Admin', 'Admin']))
                                                     <a href="{{ route('download.summary', $rc->id) }}">
@@ -161,7 +161,7 @@
                                                 @endif
                                                 <button type="button" data-modal-target="readProductModal"
                                                     data-modal-toggle="readProductModal" onclick="openModal({{ $rc->id }})"
-                                                    class="w-full flex items-center gap-2 text-left px-4 py-2 hover:bg-gray-100">
+                                                    class="w-full flex items-center gap-2 text-left px-4 py-2 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-400">
                                                     <svg class="w-4 h-4 flex-shrink-0" xmlns="http://www.w3.org/2000/svg"
                                                         viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                                         <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />

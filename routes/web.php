@@ -61,7 +61,7 @@ Route::middleware(['auth:web'])->group(function () {
     Route::get('/training-request/dashboard', [TrainingRequestController::class, 'index'])->name('training-request.index');
     Route::post('/training-request/store', [TrainingRequestController::class, 'store'])->name('training-request.store');
     Route::delete('/training-request/destory/{id}', [TrainingRequestController::class, 'destroy'])->name('training-request.destroy');
-    Route::get('/training-request/show/{id}', [TrainingRequestController::class, 'show'])->name('training-request.destroy');
+    Route::get('/training-request/show/{id}', [TrainingRequestController::class, 'show'])->name('training-request.show');
 
 
     //Dashboard Training Evaluation
@@ -150,7 +150,7 @@ Route::middleware(['auth', 'role:Super Admin'])->group(function () {
 
     // Route Job Skill
     Route::post('/job-skill/create', [FormController::class, 'jobs_skill_store'])->name('jobs_skill.store');
-    Route::delete('/job-skill/delete/{id}', [FormController::class, 'jobs_skill_destroy'])->name('jobs_skill.destroy');
+    Route::post('/job_skill/update/{id}', [FormController::class, 'jobs_skill_update'])->name('jobs_skill.update');
 
     // Route product_code
     Route::post('/product-code/create', [FormController::class, 'product_code_store'])->name('product_code.store');

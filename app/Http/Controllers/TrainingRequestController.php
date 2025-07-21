@@ -33,7 +33,7 @@ class TrainingRequestController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'description' => 'nullable|string|max:1000',
+            'description' => 'required|string|max:1000',
         ]);
 
         $user = auth("")->user();

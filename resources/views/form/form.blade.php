@@ -196,7 +196,7 @@
                         Add Skill Code
                     </button>
                     @if (session('success'))
-                        <div class="alert alert-success">
+                        <div class="alert alert-success ml-4 dark:bg-gray-800 dark:text-gray-400">
                             {{ session('success') }}
                         </div>
                     @endif

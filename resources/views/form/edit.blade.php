@@ -250,6 +250,7 @@
                                             <option value="2" @selected(old("participants.$index.level", $participant->pivot->level) == '2')>2</option>
                                             <option value="3" @selected(old("participants.$index.level", $participant->pivot->level) == '3')>3</option>
                                             <option value="4" @selected(old("participants.$index.level", $participant->pivot->level) == '4')>4</option>
+                                            <option value="NA" @selected(old("participants.$index.level", $participant->pivot->level) == 'NA')>NA</option>
                                         </select>
                                     </td>
                                     <td scope="col" class="px-1">

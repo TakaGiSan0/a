@@ -60,7 +60,7 @@
                 @endif
             </div>
             @if (session('success'))
-                <div class="alert alert-success ml-4">
+                <div class="alert alert-success ml-4 dark:bg-gray-800 dark:text-gray-400">
                     {{ session('success') }}
                 </div>
             @endif
@@ -225,7 +225,7 @@
                         </div>
                         <div>
                             <label for="attachment" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                Attachment
+                                Attachment (Max 5MB)
                             </label>
                             <input type="file" name="attachment" id="attachment" accept=".pdf"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"

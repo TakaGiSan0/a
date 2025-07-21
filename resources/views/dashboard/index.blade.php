@@ -21,7 +21,7 @@
         <div class="bg-white dark:bg-gray-800 relative shadow-lg sm:rounded-xl overflow-hidden border border-gray-200 ">
             <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                 <div class="w-full md:w-1/2">
-                    <form class="flex items-center">
+                    <form class="flex items-center" method="GET" action="{{ route('dashboard.index') }}">
                         <label for="simple-search" class="sr-only">Search</label>
                         <div class="relative w-full">
                             <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -34,7 +34,7 @@
                             </div>
                             <input type="text" id="simple-search" name="search" id="search"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="Training Name" value="{{ request('searchQuery') }}">
+                                placeholder="Training Name" value="{{ request('search') }}">
                         </div>
                     </form>
                 </div>
@@ -127,7 +127,7 @@
                 </div>
             </div>
             @if (session('success'))
-                <div class="alert alert-success ml-4">
+                <div class="alert alert-success ml-4 dark:bg-gray-800 dark:text-gray-400">
                     {{ session('success') }}
                 </div>
             @endif
@@ -189,7 +189,7 @@
                                             </button>
                                         @endif
                                         <div
-                                            class="dropdown-menu hidden absolute top-0 right-full ml-2 bg-white border rounded shadow-md z-50 w-32">
+                                            class="dropdown-menu hidden absolute top-0 right-full ml-2 bg-white border rounded shadow-md z-50 w-32 dark:bg-gray-800 dark:text-gray-400">
 
                                             <!-- Button Edit -->
 
@@ -209,7 +209,7 @@
 
                                             <button type="button" data-modal-target="readProductModal"
                                                 data-modal-toggle="readProductModal" data-id="{{ $rc->id }}" id="trigger-modal"
-                                                class="w-full flex items-center gap-2 text-left px-4 py-2 hover:bg-gray-100">
+                                                class="w-full flex items-center gap-2 text-left px-4 py-2 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-400">
                                                 <svg class="w-4 h-4 flex-shrink-0 text-slate-500"
                                                     xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor">
                                                     <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
@@ -227,7 +227,7 @@
                                                     @method('DELETE')
                                                     <!-- Button Hapus -->
                                                     <button
-                                                        class="w-full flex items-center gap-2 text-left px-4 py-2 text-red-600 hover:bg-red-100">
+                                                        class="w-full flex items-center gap-2 text-left px-4 py-2 text-red-600 hover:bg-red-100 dark:bg-gray-800 dark:text-gray-400">
                                                         <svg class="h-4 w-4 text-red-600" fill="none" viewBox="0 0 24 24"
                                                             stroke="currentColor">
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -264,26 +264,32 @@
                             <th class="px-4 py-3 border">No</th>
                             <th class="px-4 py-3 border">Skill Code</th>
                             <th class="px-4 py-3 border">Job Skill</th>
+                            <th class="px-4 py-3 border">Status</th>
                             <th class="px-4 py-3 border">Action</th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white">
+                    <tbody class="bg-white dark:bg-gray-800 dark:text-gray-400">
                         @php $no = 1; @endphp
                         @foreach ($jobskill as $js)
                             <tr>
                                 <td class="px-4 py-3 text-center border">{{ $no++ }}</td>
                                 <td class="px-4 py-3 text-center border">{{ $js->skill_code }}</td>
                                 <td class="px-4 py-3 text-center border">{{ $js->job_skill }}</td>
+                                <td class="px-4 py-3 text-center border">{{ $js->status }}</td>
                                 <td class="px-4 py-3 text-center border">
                                     <!-- FORM DELETE DIPISAH -->
-                                    <form action="{{ route('jobs_skill.destroy', $js->id) }}" method="POST"
-                                        onsubmit="return confirm('Are You Sure Delete Job Skill?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">
-                                            Delete
-                                        </button>
-                                    </form>
+                                  
+                                <form action="{{ route('jobs_skill.update', $js->id) }}" method="POST"
+                                    onsubmit="return confirm('Are you sure you want to change the visibility of this product?');">
+                                    @csrf
+                                    <input type="hidden" name="status" value="{{ $js->status === 'Active' ? 'Non Active' : 'Active' }}">
+
+                                    <button type="submit" 
+                                        class="px-3 py-1 {{ $js->status === 'Active' ? 'bg-yellow-500 hover:bg-yellow-600' : 'bg-green-500 hover:bg-green-600' }} text-white rounded">
+                                        {{ $js->status === 'Active' ? 'Hide' : 'Show' }}
+                                    </button>
+                                </form>
+                               
                                 </td>
                             </tr>
                         @endforeach
@@ -323,8 +329,8 @@
             <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4 text-center">Tambah Product Skill</h2>
 
             <!-- TABEL -->
-            <div class="overflow-x-auto max-h-96">
-                <table class="w-full text-sm text-gray-500 border">
+            <div class="overflow-x-auto max-h-96 dark:bg-gray-800">
+                <table class="w-full text-sm text-gray-500 border dark:bg-gray-800">
                     <thead>
                         <tr>
                             <th class="px-4 py-3 border">No</th>
@@ -334,7 +340,7 @@
                             <th class="px-4 py-3 border">Action</th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white">
+                    <tbody class="bg-white dark:bg-gray-800 dark:text-gray-400">
                         @php $no = 1; @endphp
                         @foreach ($product_code as $pc)
                             <tr>
@@ -400,7 +406,7 @@
         <div class="w-full max-w-lg bg-white shadow-lg rounded-lg p-6 relative z-10 dark:bg-gray-700 dark:text-[#f1f1f1]">
             <div class="flex items-center pb-3 border-b border-gray-200">
                 <div class="flex-1">
-                    <h3 class="text-gray-800 text-xl font-bold dark:text-white">Upload File</h3>
+                    <h3 class="text-gray-800 text-xl font-bold dark:text-white">Import Excel</h3>
                     <p class="text-gray-600 text-xs mt-1 dark:text-white">Upload file to this project</p>
                 </div>
 

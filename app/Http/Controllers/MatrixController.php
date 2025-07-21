@@ -51,9 +51,9 @@ class MatrixController extends Controller
     {
         $validated = $request->validate([
             'certificate' => 'required|string|max:255',
-            'expired_date' => 'date|max:255',
+            'expired_date' => 'nullable|date|max:255',
             'category' => 'required|string|max:255',
-            'attachment' => 'nullable|file|mimes:pdf|max:2048',
+            'attachment' => 'nullable|file|mimes:pdf|max:5048',
         ]);
 
         $filePath = null; // Inisialisasi path file untuk penyimpanan

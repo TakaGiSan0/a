@@ -15,23 +15,31 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $userLogin = auth('web')->user();
+        $search = $request->input('search');
 
-        $user = User::with('pesertaLogin')
+        $search = $request->input('search');
+
+        $query = User::with('pesertaLogin')
             ->select('users.*')
             ->leftJoin('pesertas', 'pesertas.user_id_login', '=', 'users.id')
             ->byUserRole($userLogin)
-            ->orderBy('pesertas.employee_name', 'asc')
-            ->paginate(10);
+            ->orderBy('pesertas.employee_name', 'asc');
 
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('users.user', 'like', "%{$search}%")
+                    ->orWhere('pesertas.employee_name', 'like', "%{$search}%");
+            });
+        }
+
+        $user = $query->paginate(10);
 
         $message = $user->isEmpty() ? 'No results found for your search.' : '';
 
         $user->getCollection()->map(function ($user_data) use ($userLogin) {
-
-            // Default-nya, user tidak bisa diedit
             $user_data->can_be_edited = false;
 
-            // --- BLOK LOGIKA OTORISASI ---
+
             if ($userLogin->role === 'Super Admin' && optional($userLogin->pesertaLogin)->dept === 'IT') {
                 $user_data->can_be_edited = true;
             } elseif ($userLogin->role === 'Admin' && optional($userLogin->pesertaLogin)) {
@@ -39,12 +47,11 @@ class UserController extends Controller
                     $user_data->can_be_edited = true;
                 }
             } elseif ($userLogin->role === 'Super Admin') {
-                if ($user_data->role === 'Admin' || $user_data-> role === 'User') {
+                if ($user_data->role === 'Admin' || $user_data->role === 'User') {
                     $user_data->can_be_edited = true;
                 }
             }
 
-            // --- AKHIR BLOK LOGIKA ---
 
             return $user_data; // Kembalikan objek user yang sudah dimodifikasi
         });
@@ -56,7 +63,7 @@ class UserController extends Controller
             [
                 'user' => $user,
                 'message' => $message,
-
+                'search' => $search,
             ],
             200,
         );

@@ -19,7 +19,7 @@
         <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
             <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                 <div class="w-full md:w-1/2">
-                    <form class="flex items-center" method="GET" action="{{ route('dashboard.peserta') }}">
+                    <form class="flex items-center" method="GET" action="{{ route('user.index') }}">
                         <label for="simple-search" class="sr-only">Search</label>
                         <div class="relative w-full">
                             <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -32,7 +32,7 @@
                             </div>
                             <input type="text" id="simple-search"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="Search" name="badge_no">
+                                placeholder="Search" name="search" value="{{ request('search') }}">
                         </div>
                     </form>
                     @if ($message)
@@ -54,7 +54,7 @@
                 </div>
             </div>
             @if (session('success'))
-                <div class="alert alert-success">
+                <div class="alert alert-success ml-4 dark:bg-gray-800 dark:text-gray-400">
                     {{ session('success') }}
                 </div>
             @endif

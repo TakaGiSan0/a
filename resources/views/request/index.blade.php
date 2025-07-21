@@ -56,7 +56,7 @@
                 </div>
             </div>
             @if (session('success'))
-                <div class="alert alert-success ml-4">
+                <div class="alert alert-success ml-4 dark:bg-gray-800 dark:text-gray-400">
                     {{ session('success') }}
                 </div>
             @endif
@@ -91,7 +91,7 @@
                                 </td>
                                 <td class="px-4 py-3">
 
-                                    {{ Str::words($r->description ?? 'Tidak ditemukan', 5, '...') }}
+                                    {{ Str::words($r->description ?? '-', 5, '...') }}
 
                                 </td>
                                 <td class="relative px-4 py-3 text-center">
@@ -111,7 +111,7 @@
                                         </button>
 
                                         <div
-                                            class="dropdown-menu hidden absolute top-0 right-full ml-2 bg-white border rounded shadow-md z-50 w-32">
+                                            class="dropdown-menu hidden absolute top-0 right-full ml-2 bg-white border rounded shadow-md z-50 w-32 dark:bg-gray-800 dark:text-gray-400">
 
                                             <button type="button" data-modal-target="viewModal" data-modal-toggle="viewModal"
                                                 data-id="{{ $r->id }}" id="openViewDetailModalBtn"
@@ -131,7 +131,7 @@
                                                     @method('DELETE')
                                                     <!-- Button Hapus -->
                                                     <button
-                                                        class="w-full flex items-center gap-2 text-left px-4 py-2 text-red-600 hover:bg-red-100">
+                                                        class="w-full flex items-center gap-2 text-left px-4 py-2 text-red-600 hover:bg-red-100 dark:bg-gray-800 dark:text-gray-400">
                                                         <svg class="h-4 w-4 text-red-600" fill="none" viewBox="0 0 24 24"
                                                             stroke="currentColor">
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -170,23 +170,24 @@
                             <label class="block text-sm font-medium text-gray-700">Name</label>
                             <input type="text" name="employee_name"
                                 value="{{ auth()->user()->pesertaLogin->employee_name }}" readonly
-                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm">
+                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm dark:text-gray-200 dark:bg-gray-700">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Badge No</label>
                             <input type="text" name="badge_no" value="{{ auth()->user()->pesertaLogin->badge_no }}" readonly
-                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm">
+                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm dark:text-gray-200 dark:bg-gray-700">
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Department</label>
                             <input type="text" name="dept" value="{{ auth()->user()->pesertaLogin->dept }}" readonly
-                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm">
+                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm dark:text-gray-200 dark:bg-gray-700">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Description</label>
                             <textarea name="description"
-                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" rows="3"></textarea>
+                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm dark:text-gray-200 dark:bg-gray-700" rows="3"
+                                required></textarea>
                         </div>
                     </div>
                     <div class="flex justify-end space-x-2 mt-4">
@@ -208,27 +209,22 @@
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 max-w-2xl w-full">
             <div class="flex items-center pb-3 border-b border-gray-200">
                 <div class="flex-1">
-                    <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4 text-center"> Training Request</h2>
+                    <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4 text-center">Training Request</h2>
                 </div>
 
                 <!-- Tombol Close -->
                 <svg xmlns="http://www.w3.org/2000/svg"
-                    class="w-3 ml-2 cursor-pointer shrink-0 fill-gray-400 hover:fill-red-500 closeViewModalBtn" id="closeViewModalBtn" data-modal-hide="viewModal">
-                    viewBox="0 0 320.591 320.591">
-                    <path
-                        d="M30.391 318.583a30.37 30.37 0 0 1-21.56-7.288c-11.774-11.844-11.774-30.973 0-42.817L266.643 10.665c12.246-11.459 31.462-10.822 42.921 1.424 10.362 11.074 10.966 28.095 1.414 39.875L51.647 311.295a30.366 30.366 0 0 1-21.256 7.288z"
-                        data-original="#000000"></path>
-                    <path
-                        d="M287.9 318.583a30.37 30.37 0 0 1-21.257-8.806L8.83 51.963C-2.078 39.225-.595 20.055 12.143 9.146c11.369-9.736 28.136-9.736 39.504 0l259.331 257.813c12.243 11.462 12.876 30.679 1.414 42.922-.456.487-.927.958-1.414 1.414a30.368 30.368 0 0 1-23.078 7.288z"
-                        data-original="#000000"></path>
+                    class="w-5 h-5 ml-2 cursor-pointer shrink-0 fill-gray-400 hover:fill-red-500 closeViewModalBtn"
+                    id="closeViewModalBtn" data-modal-hide="viewModal" viewBox="0 0 24 24">
+                    <path d="M6 6L18 18M6 18L18 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                 </svg>
             </div>
-            
+
             <div class="overflow-x-auto max-h-96">
                 <div class="space-y-4 viewModalContent" id="viewModalContent">
 
                 </div>
-                
+
 
             </div>
 
@@ -252,7 +248,7 @@
         const closeViewModalBtn = document.getElementById("closeViewModalBtn");
         const viewModalContentArea = viewModal.querySelector('#viewModalContent');
 
-        
+
         // --- Job Skill Modal Functionality (jika masih relevan) ---
         if (openJobSkillModalBtn && jobSkillModal) {
             openJobSkillModalBtn.addEventListener("click", function () {
@@ -312,8 +308,8 @@
             viewModalContentArea.innerHTML = '<p class="text-center text-gray-500 dark:text-gray-400">Memuat detail...</p>'; // Pesan loading
 
             try {
-                // URL ini harus sesuai dengan route Laravel Anda untuk fungsi show
-                const response = await fetch(`/training-request/show/${id}`);
+                window.baseURL = '{{ url('/') }}'
+                const response = await fetch(window.baseURL + `/training-request/show/${id}`);
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
@@ -326,22 +322,22 @@
                     <div>
                             <label class="block text-sm font-medium text-gray-700">Name</label>
                             <input type="text" name="employee_name"
-                                readonly class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" value='${data.peserta ? data.peserta.employee_name : 'N/A'}'>
+                                readonly class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm dark:text-gray-200 dark:bg-gray-700" value='${data.peserta ? data.peserta.employee_name : 'N/A'}'>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Badge No</label>
                             <input type="text" name="badge_no"
-                                readonly class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" value='${data.peserta ? data.peserta.badge_no : 'N/A'}'>
+                                readonly class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm dark:text-gray-200 dark:bg-gray-700" value='${data.peserta ? data.peserta.badge_no : 'N/A'}'>
                         </div>
                     <div>
                             <label class="block text-sm font-medium text-gray-700">Department</label>
                             <input type="text" name="dept"
-                                readonly class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" value='${data.peserta ? data.peserta.dept : 'N/A'}'>
+                                readonly class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm dark:text-gray-200 dark:bg-gray-700" value='${data.peserta ? data.peserta.dept : 'N/A'}'>
                         </div>
                      <div>
                             <label class="block text-sm font-medium text-gray-700">Description</label>
                             <textarea name="description"
-                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" rows="3" readonly>${data.description || 'Tidak ada deskripsi.'}</textarea>
+                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm dark:text-gray-200 dark:bg-gray-700" rows="3" readonly>${data.description || '-'}</textarea>
                         </div>
                     
                 </div>
@@ -356,7 +352,7 @@
         }
     });
     function toggleDropdown(event, btn) {
-        event.stopPropagation(); 
+        event.stopPropagation();
         const dropdown = btn.nextElementSibling;
         const allDropdowns = document.querySelectorAll('.dropdown-menu');
 

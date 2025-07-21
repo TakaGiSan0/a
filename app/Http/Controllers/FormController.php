@@ -57,7 +57,7 @@ class FormController extends Controller
             ->orderBy('date_end', 'desc')
             ->paginate(10);
 
-        $jobskill = training_skill::select('id', 'job_skill', 'skill_code')->get();
+        $jobskill = training_skill::select('id', 'job_skill', 'skill_code', 'status')->get();
         $product_code = product_code::select('id', 'product_code', 'product_name', 'status')->get();
 
 
@@ -304,7 +304,7 @@ class FormController extends Controller
                 // 3c. Jika file baru berhasil disimpan DAN ada file lama, hapus file lama
                 if ($newFilePath && $currentAttachmentPath) {
                     if (Storage::disk('public')->exists($currentAttachmentPath)) {
-                        Storage::disk('public')->delete($currentAttachmentPath);            
+                        Storage::disk('public')->delete($currentAttachmentPath);
                     } else {
                     }
                 }
@@ -494,18 +494,22 @@ class FormController extends Controller
         return redirect()->back()->with('success', 'Job Skill successfully created');
     }
 
-    public function jobs_skill_destroy($id)
+    public function jobs_skill_update(Request $request, $id)
     {
-        $trainingSkill = Training_Skill::find($id);
+        $trainingskill = training_skill::find($id);
 
-        if (!$trainingSkill) {
-            return redirect()->route('dashboard.index')->with('error', 'Skill tidak ditemukan.');
+        if (!$trainingskill) {
+            return redirect()->route('dashboard.index')->with('error', 'Skill code not found.');
         }
 
-        // Melakukan soft delete
-        $trainingSkill->delete(); // Ini akan mengisi kolom `deleted_at`
+        // Ambil status tujuan dari form
+        $newStatus = $request->input('status');
 
-        return redirect()->route('dashboard.index')->with('success', 'Job Skill Succesfully Deleted. (soft deleted).');
+        // Update status
+        $trainingskill->status = $newStatus;
+        $trainingskill->save();
+
+        return redirect()->route('dashboard.index')->with('success', 'Skill Code status updated to ' . $newStatus . '.');
     }
 
     public function product_code_store(Request $request)
