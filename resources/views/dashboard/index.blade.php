@@ -527,7 +527,7 @@
                                 <line x1="9" y1="17" x2="15" y2="17" />
                             </svg>
                             <a id="modal-attachment" href="#" target="_blank" class="text-blue-500 underline">
-                                Lihat PDF
+                                View PDF
                             </a>
                         </div>
                         <div class="mt-4">

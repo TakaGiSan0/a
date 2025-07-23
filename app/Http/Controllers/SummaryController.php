@@ -63,9 +63,9 @@ class SummaryController extends Controller
         }
 
 
-        $station = $availableTrainingQuery->distinct()->pluck('station')->filter()->all();
+        $availableTrainingstation = $availableTrainingQuery->distinct()->pluck('station')->filter()->all();
 
-        return view('content.summary', compact('trainingRecords', 'training_categories', 'date_start', 'search', 'station'));
+        return view('content.summary', compact('trainingRecords', 'training_categories', 'date_start', 'search', 'station', 'availableTrainingstation'));
     }
 
     public function show($id)

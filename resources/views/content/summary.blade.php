@@ -42,8 +42,8 @@
                             <option value=""
                                 class="dark:bg-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                 All Station</option>
-                            @if(isset($station))
-                                @foreach ($station as $nama_stasiun)
+                            @if(isset($availableTrainingstation))
+                                @foreach ($availableTrainingstation as $nama_stasiun)
                                     <option value="{{ $nama_stasiun }}" {{ (isset($station) && $station == $nama_stasiun) ? 'selected' : '' }}>{{ $nama_stasiun }}
                                     </option>
                                 @endforeach
